@@ -15,6 +15,7 @@
     - TF-Luna lidar *(connected to HL MCU)*
     - BMP180 pressure sensor *(connected to HL MCU)*
     - QMC5883l magnetometer *(connected to HL MCU)*
+    - 4 motors w/ propellers
     - 4 speed controllers (1 per motor)
     - 2-4S LiPo battery
     - Voltage divider on battery
