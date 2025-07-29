@@ -1,0 +1,66 @@
+# Drone2: Scout's Successor
+- Radio Controller (single MCU)
+    - Rasberry Pi Pico
+    - 16x2 LCD
+    - SD-1306 OLED
+- Quadcopter
+    - HC-12 radio communication module
+    - MPU-6050 IMU
+    - TF-Luna lidar (mounted on belly)
+    - BMP180 pressure sensor
+    - QMC5883l magnetometer (compass)
+    - 2-4S LiPo battery
+    - "High Level" MCU: Rasperry Pi Pico
+        - Read input from HC-12 (sent from remote control)
+            - Throttle (2 bytes)
+            - Roll input (2 bytes): roll stick input, can be used to calculate desired roll rate or angle
+            - Pitch input (2 bytes): pitch stick input, can be used to calculate desired pitch rate or angle
+            - Yaw input (2 bytes): yaw input, can be used to calculate desired yaw rate
+            - "\r\n" end line (2 bytes)
+        - Read from TF-Luna
+        - Pass fight control inputs on to LL MCU via UART
+        
+    - "Low Level" MCU: Rasperry Pi Pico
+        - Input from HL MCU via UART @ 9600 baud, 50 Hz:
+            - "Control byte"
+                - Pack identifier (2 bits): identifies data packet type
+                    - `00` = PID value configuration
+                    - `01` = standard control packet
+                - Flying (boolean, 1 bit): controls whether props can spin at all or not
+                - Control mode (1 bit): basic rate matching control or advanced attitude control
+                - *Reserved: 4 bits*
+            - "PID value config Packet"
+                - Roll_P (4 bytes): roll P value
+                - Roll_I (4 bytes): roll I value
+                - Roll_D (4 bytes): roll D value
+                - Pitch_P (4 bytes): pitch P value
+                - Pitch_I (4 bytes): pitch I value
+                - Pitch_D (4 bytes): pitch D value
+                - Yaw_P (4 bytes): yaw P value
+                - Yaw_I (4 bytes): yaw I value
+                - Yaw_D (4 bytes): yaw D value
+            - "Standard Control Packet"
+                - Throttle (2 bytes)
+                - Roll input (2 bytes): roll stick input, can be used to calculate desired roll rate or angle
+                - Pitch input (2 bytes): pitch stick input, can be used to calculate desired pitch rate or angle
+                - Yaw input (2 bytes): yaw input, can be used to calculate desired yaw rate
+                - "\r\n" end line (2 bytes)
+        - Connected to
+            - IMU (MPU-6050)
+            - Motors
+        - Runs PID loop at 250 Hz
+            - Read gyro + accel from IMU
+            - Pass through PID loop to determine M1-4 throttles
+            - Use complementary fiter to estimate roll & pitch angles
+            - Set M1-4 throttles
+        - Output back to HL MCU via UART @ 9600 baud, 10 Hz:
+            - M1 throttle (2 bytes)
+            - M2 throttle (2 bytes)
+            - M3 throttle (2 bytes)
+            - M4 throttle (2 bytes)
+            - Actual Roll Rate (2 bytes)
+            - Actual Pitch Rate (2 bytes)
+            - Actual Yaw Rate (2 bytes)
+            - Roll Angle Estimate (2 bytes): from complementary filter
+            - Pitch Angle Estimate (2 bytes): from complementary filter
+            - "\r\n" end line (2 bytes)
