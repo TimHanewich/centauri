@@ -3,33 +3,37 @@
     - Rasberry Pi Pico
     - 16x2 LCD
     - SD-1306 OLED
+    - HC-12
+    - Throttle potentiometer
+    - Trigger- potentiometer (for yaw)
+    - Trigger+ potentiometer (for yaw)
+    - Joystick for pitch + roll
+    - LiPo battery
 - Quadcopter
     - HC-12 radio communication module
-    - MPU-6050 IMU
-    - TF-Luna lidar (mounted on belly)
-    - BMP180 pressure sensor
-    - QMC5883l magnetometer (compass)
+    - MPU-6050 IMU *(connected to LL MCU)*
+    - TF-Luna lidar *(connected to HL MCU)*
+    - BMP180 pressure sensor *(connected to HL MCU)*
+    - QMC5883l magnetometer *(connected to HL MCU)*
+    - 4 speed controllers (1 per motor)
     - 2-4S LiPo battery
+    - Voltage divider on battery
+    - 5v buck converter (if speed controllers do not have BEC)
     - "High Level" MCU: Rasperry Pi Pico
-        - Read input from HC-12 (sent from remote control)
-            - Throttle (2 bytes)
-            - Roll input (2 bytes): roll stick input, can be used to calculate desired roll rate or angle
-            - Pitch input (2 bytes): pitch stick input, can be used to calculate desired pitch rate or angle
-            - Yaw input (2 bytes): yaw input, can be used to calculate desired yaw rate
-            - "\r\n" end line (2 bytes)
-        - Read from TF-Luna
+        - Read input from HC-12 (control commands from remote control)
         - Pass fight control inputs on to LL MCU via UART
-        
+        - Read incoming status packet from LL MCU
+        - Read from TF-Luna and append to status packet
+        - Read from BMP180 pressure sensor and append to status packet
+        - Read from QMC5883L magnetometer and append to status packet
+        - Read battery level (voltage divider) and append to status packet
+        - Send status packet back to remote controller via HC-12
     - "Low Level" MCU: Rasperry Pi Pico
-        - Input from HL MCU via UART @ 9600 baud, 50 Hz:
-        - Connected to
-            - IMU (MPU-6050)
-            - Motors
-        - Runs PID loop at 250 Hz
-            - Read gyro + accel from IMU
-            - Pass through PID loop to determine M1-4 throttles
-            - Use complementary fiter to estimate roll & pitch angles
-            - Set M1-4 throttles
+        - Read input from HL MCU via UART
+        - Read gyro + accel from IMU
+        - Pass through PID loop to determine M1-4 throttles
+        - Use complementary fiter to estimate roll & pitch angles
+        - Set M1-4 throttles
 
 ## PID Value Config Packet
 Remote controller --> HL MCU via HC-12, HL MCU --> LL MCU via UART.
@@ -79,4 +83,9 @@ LL MCU --> HL MCU via UART, HL MCU --> Remote Controller via HC-12.
 - Actual Yaw Rate (2 bytes)
 - Roll Angle Estimate (2 bytes): from complementary filter performed on LL MCU
 - Pitch Angle Estimate (2 bytes): from complementary filter performed on LL MCU
+- *HL MCU will append...*
+    - Battery level as % (1 byte)
+    - TF Luna reading (? bytes)
+    - BMP180 reading (? bytes)
+    - QMC5883L reading (? bytes)
 - "\r\n" end line (2 bytes)
