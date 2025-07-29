@@ -18,7 +18,7 @@
     - 4 motors w/ propellers
     - 4 speed controllers (1 per motor)
     - 2-4S LiPo battery
-    - Voltage divider on battery
+    - Voltage divider for battery
     - 5v buck converter (if speed controllers do not have BEC)
     - "High Level" MCU: Rasperry Pi Pico
         - Read input from HC-12 (control commands from remote control)
@@ -36,7 +36,19 @@
         - Use complementary fiter to estimate roll & pitch angles
         - Set M1-4 throttles
 
-## PID Value Config Packet
+## Communication Protocol
+Two HC-12 radio transceiver modules will be used to facilitate bidirectional remote communications between the remote controller and the drone. Serial UART will be used to facillitate bidirectional communication between the HL MCU and LL MCU.
+
+Communication Timing:
+- Remote controller sends control packets at 50 Hz
+- HL MCU receives control packets at 50 Hz
+- HL MCU provides control packets to LL MCU at 50 Hz
+- LL MCU provides status updates to HL MCU at 10 Hz
+- HL MCU provides sends status updates to remote controller at 10 Hz
+
+The communication packet structures are described below:
+
+###  PID Value Config Packet
 Remote controller --> HL MCU via HC-12, HL MCU --> LL MCU via UART.
 
 Used to update the PID gains used by the LL MCU on the go without having to manually re-flash code.
@@ -54,7 +66,7 @@ Used to update the PID gains used by the LL MCU on the go without having to manu
 - Yaw_I (4 bytes): yaw I value
 - Yaw_D (4 bytes): yaw D value        
 
-## The Standard Packet
+###  The Standard Packet
 Remote controller --> HL MCU via HC-12, HL MCU --> LL MCU via UART.
 
 This data packet contains all necessary data for controlling normal flight characteristics of the drone.
@@ -70,9 +82,7 @@ This data packet contains all necessary data for controlling normal flight chara
 - Yaw input (2 bytes): yaw input, can be used to calculate desired yaw rate
 - "\r\n" end line (2 bytes)
 
-
-
-## Status Packet
+###  Status Packet
 LL MCU --> HL MCU via UART, HL MCU --> Remote Controller via HC-12.
 
 - M1 throttle (2 bytes)
