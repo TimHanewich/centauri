@@ -1,4 +1,7 @@
-# Drone2: Scout's Successor
+# Centauri: Multi-MCU Quadcopter Flight Controller
+The successor to my [Scout flight controller](https://github.com/TimHanewich/scout).
+
+## High-Level System Design
 - Radio Controller (single MCU)
     - Rasberry Pi Pico
     - 16x2 LCD
