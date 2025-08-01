@@ -98,7 +98,7 @@ LL MCU --> HL MCU via UART, HL MCU --> Remote Controller via HC-12.
 - Roll Angle Estimate (2 bytes): from complementary filter performed on LL MCU
 - Pitch Angle Estimate (2 bytes): from complementary filter performed on LL MCU
 - *HL MCU will append...*
-    - Battery level as % (1 byte)
+    - Battery level as voltage (2 bytes)
     - TF Luna reading (? bytes)
     - BMP180 reading (? bytes)
     - QMC5883L reading (? bytes)
