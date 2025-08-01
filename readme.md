@@ -106,7 +106,7 @@ LL MCU --> HL MCU via UART, HL MCU --> Remote Controller via HC-12.
 - Actual Yaw Rate (2 bytes)
 - Roll Angle Estimate (2 bytes): from complementary filter performed on LL MCU
 - Pitch Angle Estimate (2 bytes): from complementary filter performed on LL MCU
-- *HL MCU will append...*
+- *HL MCU will append efore sending to remote controller via HC-12...*
     - Battery level as voltage (2 bytes)
     - TF Luna reading (? bytes)
     - BMP180 reading (? bytes)
