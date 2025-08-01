@@ -73,16 +73,21 @@ Used to update settings on the LL MCU on the go without having to manually re-fl
 - Max_Yaw (4 bytes): max yaw rate (degrees per second) in either direction
 - I_Limit (4 bytes): max I-term limit (from PID equation) to prevent over-spooling    
 
-###  The Standard Packet
+### Control Packet
 Remote controller --> HL MCU via HC-12, HL MCU --> LL MCU via UART.
 
 This data packet contains all necessary data for controlling normal flight characteristics of the drone.
 
 - Metadata byte (1 byte)
-    - `01` as Pack identifier (2 bits)
-    - Flying (1 bit): controls whether props can spin at all or not
-    - Control mode (1 bit): basic rate matching control or advanced attitude control
-    - *Reserved: 4 bits*
+    - Bit 7: *reserved*
+    - Bit 6: *reserved*
+    - Bit 5: *reserved*
+    - Bit 4: *reserved*
+    - Bit 3: **control mode**. 0 = rate mode, 1 = attitude (angle) mode
+    - Bit 2: **flying**. 0 = idle on ground, motors arrested. 1 = fight mode. Motors at least idling at min throttle.
+    - Bit 1 and 0: **pack identifier**
+        - Bit 1 = `0`
+        - Bit 0 = `1`
 - Throttle (2 bytes)
 - Roll input (2 bytes): roll stick input, can be used to calculate desired roll rate or angle
 - Pitch input (2 bytes): pitch stick input, can be used to calculate desired pitch rate or angle
