@@ -51,10 +51,10 @@ Communication Timing:
 
 The communication packet structures are described below:
 
-###  PID Value Config Packet
+### Config Packet
 Remote controller --> HL MCU via HC-12, HL MCU --> LL MCU via UART.
 
-Used to update the PID gains used by the LL MCU on the go without having to manually re-flash code.
+Used to update settings on the LL MCU on the go without having to manually re-flash code. **Note that the LL MCU will NOT save these to hard storarage and "memorize" these when re-booted. So, this shoud be sent at every boot.**
 
 - Metadata byte (1 byte)
     - `00` as Pack identifier (2 bits)
@@ -67,7 +67,11 @@ Used to update the PID gains used by the LL MCU on the go without having to manu
 - Pitch_D (4 bytes): pitch D value
 - Yaw_P (4 bytes): yaw P value
 - Yaw_I (4 bytes): yaw I value
-- Yaw_D (4 bytes): yaw D value        
+- Yaw_D (4 bytes): yaw D value    
+- Max_Roll (4 bytes): max roll rate (degrees per second), in either direction
+- Max_Pitch (4 bytes): max pitch rate (degrees per second) in either direction
+- Max_Yaw (4 bytes): max yaw rate (degrees per second) in either direction
+- I_Limit (4 bytes): max I-term limit (from PID equation) to prevent over-spooling    
 
 ###  The Standard Packet
 Remote controller --> HL MCU via HC-12, HL MCU --> LL MCU via UART.
