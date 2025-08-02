@@ -10,7 +10,7 @@ gyro_z_bias:float = -0.2 # Z degrees per second when resting (bias/error we will
 
 # set up I2C
 i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17))
-print(i2c.scan())
+print(i2c.scan()) # 0x68 (104) should be in there, that is the address of the MPU-6050
 
 # MPU-6050 configuration
 i2c.writeto_mem(0x68, 0x6B, bytes([0])) # wake up
@@ -26,7 +26,7 @@ last_time = time.ticks_ms()
 
 while True:
     
-    # read data
+    # read gyro data
     gyro:bytes = i2c.readfrom_mem(0x68, 0x43, 6) # read 6 bytes: gyro X high, gyro X low, gyro Y high, gyro Y low, gyro Z high, gyro Z low
     
     # convert bytes to 16-bit ints
@@ -55,6 +55,7 @@ while True:
     gyro_z = gyro_z - gyro_z_bias
 
     # now we will do accelerometer!
+    # read acceleromete data
     accel:bytes = i2c.readfrom_mem(0x68, 0x3B, 6) # read 6 bytes for accelerometer data: Accel X High, Accel X Low, Accel Y High, Accel Y Low, Accel Z High, Accel Z Low
 
     # convert bytes to 16 bit ints
