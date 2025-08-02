@@ -4,14 +4,15 @@ The successor to my [Scout flight controller](https://github.com/TimHanewich/sco
 ## High-Level System Design
 - Radio Controller (single MCU)
     - Rasberry Pi Pico
-    - 16x2 LCD
-    - SD-1306 OLED
+    - SSD-1306 OLED
     - HC-12
-    - Throttle potentiometer
+    - Throttle potentiometer = [sliding potentiometer](https://a.co/d/7xYnKI3)
     - Trigger- potentiometer (for yaw)
     - Trigger+ potentiometer (for yaw)
-    - Joystick for pitch + roll
-    - LiPo battery
+    - [Joystick for pitch + roll](https://a.co/d/1TQdeZK)
+    - 18650 cell
+    - MT3608 voltage booster
+    - TP4056 cell charger
 - Quadcopter
     - HC-12 radio communication module
     - MPU-6050 IMU *(connected to LL MCU)*
