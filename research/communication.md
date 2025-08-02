@@ -1,4 +1,4 @@
-## Communication Protocol
+# Centauri Communication Protocol
 Two HC-12 radio transceiver modules will be used to facilitate bidirectional remote communications between the remote controller and the drone. Serial UART will be used to facillitate bidirectional communication between the HL MCU and LL MCU.
 
 Communication Timing:
@@ -8,15 +8,10 @@ Communication Timing:
 - LL MCU provides status updates to HL MCU at 10 Hz
 - HL MCU provides sends status updates to remote controller at 10 Hz
 
+## Controller --> Quadcopter Communication
 Of the data packets that are sent from the remote controller --> quadcopter, there are 2 bits used for 4 separate packet types:
 - `00` = config packet
 - `01` = control packet
-
-Of the data packets that are sent from quadcopter --> controller, there is 1 bit used for 2 separate packet types:
-- `0` = status packet
-- `1` = special packet (free-form text)
-
-The communication packet structures are described below:
 
 ### Config Packet
 Remote controller --> HL MCU via HC-12, HL MCU --> LL MCU via UART.
@@ -60,6 +55,12 @@ This data packet contains all necessary data for controlling normal flight chara
 - Pitch input (2 bytes): pitch stick input, can be used to calculate desired pitch rate or angle
 - Yaw input (2 bytes): yaw input, can be used to calculate desired yaw rate
 - "\r\n" end line (2 bytes)
+
+
+## Quadcopter --> Remote Controller
+Of the data packets that are sent from quadcopter --> controller, there is 1 bit used for 2 separate packet types:
+- `0` = status packet
+- `1` = special packet (free-form text)
 
 ###  Status Packet
 LL MCU --> HL MCU via UART, HL MCU --> Remote Controller via HC-12.
