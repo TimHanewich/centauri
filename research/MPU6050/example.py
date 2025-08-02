@@ -9,7 +9,7 @@ gyro_z_bias:float = -0.2 # Z degrees per second when resting (bias/error we will
 ################
 
 # set up I2C
-i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17))
+i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17), freq=400000) # set freq to 400,000 instead of the default 100,000 to ensure we can good throughput. I believe in practice, leaving it at the default freq of 100,000 will get slow read rates, bottle necking to < 250 Hz.
 print(i2c.scan()) # 0x68 (104) should be in there, that is the address of the MPU-6050
 
 # MPU-6050 configuration
