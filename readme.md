@@ -49,6 +49,14 @@ Communication Timing:
 - LL MCU provides status updates to HL MCU at 10 Hz
 - HL MCU provides sends status updates to remote controller at 10 Hz
 
+Of the data packets that are sent from the remote controller --> quadcopter, there are 2 bits used for 4 separate packet types:
+- `00` = config packet
+- `01` = control packet
+
+Of the data packets that are sent from quadcopter --> controller, there is 1 bit used for 2 separate packet types:
+- `0` = status packet
+- `1` = special packet (free-form text)
+
 The communication packet structures are described below:
 
 ### Config Packet
