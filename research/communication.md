@@ -19,8 +19,15 @@ Remote controller --> HL MCU via HC-12, HL MCU --> LL MCU via UART.
 Used to update settings on the LL MCU on the go without having to manually re-flash code. **Note that the LL MCU will NOT save these to hard storarage and "memorize" these when re-booted. So, this shoud be sent at every boot.**
 
 - Metadata byte (1 byte)
-    - `00` as Pack identifier (2 bits)
-    - *Reserved: 6 bits*
+    - Bit 7: *reserved*
+    - Bit 6: *reserved*
+    - Bit 5: *reserved*
+    - Bit 4: *reserved*
+    - Bit 3: *reserved*
+    - Bit 2: *reserved*
+    - Bit 0 and 1: pack identifier
+        - Bit 1: `0`
+        - Bit 0: `0`
 - Roll_P (4 bytes): roll P value
 - Roll_I (4 bytes): roll I value
 - Roll_D (4 bytes): roll D value
@@ -33,7 +40,8 @@ Used to update settings on the LL MCU on the go without having to manually re-fl
 - Max_Roll (4 bytes): max roll rate (degrees per second), in either direction
 - Max_Pitch (4 bytes): max pitch rate (degrees per second) in either direction
 - Max_Yaw (4 bytes): max yaw rate (degrees per second) in either direction
-- I_Limit (4 bytes): max I-term limit (from PID equation) to prevent over-spooling    
+- I_Limit (4 bytes): max I-term limit (from PID equation) to prevent over-spooling
+- "\r\n" (2 bytes): endline to mark the end of the packet
 
 ### Control Packet
 Remote controller --> HL MCU via HC-12, HL MCU --> LL MCU via UART.
@@ -56,7 +64,6 @@ This data packet contains all necessary data for controlling normal flight chara
 - Yaw input (2 bytes): yaw input, can be used to calculate desired yaw rate
 - "\r\n" end line (2 bytes)
 
-
 ## Quadcopter --> Remote Controller
 Of the data packets that are sent from quadcopter --> controller, there is 1 bit used for 2 separate packet types:
 - `0` = status packet
@@ -65,16 +72,25 @@ Of the data packets that are sent from quadcopter --> controller, there is 1 bit
 ###  Status Packet
 LL MCU --> HL MCU via UART, HL MCU --> Remote Controller via HC-12.
 
+- Metadata byte (1 byte)
+    - Bit 7: *reserved*
+    - Bit 6: *reserved*
+    - Bit 5: *reserved*
+    - Bit 4: *reserved*
+    - Bit 3: *reserved*
+    - Bit 2: *reserved*
+    - Bit 1: *reserved*
+    - Bit 0: packet identifier (set to `0` to declare as status packet)
 - M1 throttle (2 bytes)
 - M2 throttle (2 bytes)
 - M3 throttle (2 bytes)
 - M4 throttle (2 bytes)
-- Actual Roll Rate (2 bytes)
-- Actual Pitch Rate (2 bytes)
-- Actual Yaw Rate (2 bytes)
+- Actual Roll Rate, in degrees per second (2 bytes)
+- Actual Pitch Rate, in degrees per second (2 bytes)
+- Actual Yaw Rate, in degrees per second (2 bytes)
 - Roll Angle Estimate (2 bytes): from complementary filter performed on LL MCU
 - Pitch Angle Estimate (2 bytes): from complementary filter performed on LL MCU
-- *HL MCU will append efore sending to remote controller via HC-12...*
+- *HL MCU will append before sending to remote controller via HC-12...*
     - Battery level as voltage (2 bytes)
     - TF Luna reading (? bytes)
     - BMP180 reading (? bytes)
