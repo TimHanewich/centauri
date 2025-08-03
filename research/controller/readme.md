@@ -9,3 +9,26 @@
 - B button = disarm (motors off)
 - LB = select rate mode
 - RB = select angle (attitude) mode
+
+## Displayed on screen
+- Controls being sent
+    - Control mode
+    - Armed
+    - Throttle
+    - Pitch
+    - Roll
+    - Yaw
+- Quadcopter status
+    - Quadcopter battery level
+    - M1 throttle
+    - M2 throttle
+    - M3 throttle
+    - M4 throttle
+    - Actual roll rate
+    - Actual pitch rate
+    - Actual yaw rate
+    - Pitch angle estimate
+    - Roll angle estime
+    - TF Luna reading (on belly)
+    - BMP180 reading
+    - QMC5883L
