@@ -39,7 +39,7 @@ class DisplayPack:
         # messages being received from the drone
         self.messages:list[str] = []
 
-def display(dp:DisplayPack) -> None:
+def display(dp:DisplayPack) -> rich.table.Table:
 
     # check size of console
     size = shutil.get_terminal_size()
@@ -100,36 +100,6 @@ def display(dp:DisplayPack) -> None:
     if len(txt_messages) > 0:
         txt_messages = txt_messages[0:len(txt_messages)-1] # trim off last newline
 
-    # clear console
-    cls()
 
-    # add and display
     table.add_row(txt_controls, txt_status, txt_messages)
-    c = rich.console.Console()
-    c.print(table, markup=True)
-
-def test() -> None:
-    dp = DisplayPack()
-    dp.armed = True
-    dp.mode = False
-    dp.throttle = 0.55
-    dp.pitch = 0.25
-    dp.roll = 0.0
-    dp.yaw = 0.0
-
-    dp.messages.append("CONFIG OK")
-    dp.messages.append("ready")
-    dp.messages.append("Yes dsfkl sdkf ksdfl; ksd;fkl kl;skdl;fk ;lkl;fk kdfkl kdlfkqwpkapsodm fkl; fl jkdjfkj fjk jdkfjjidjf--d 90duf0 f f9sdfj90sdj90fj09sjd")
-    dp.messages.append("dsd ")
-    dp.messages.append("Hello there!")
-    dp.messages.append("What's up?")
-    dp.messages.append("System initializing...")
-    dp.messages.append("Error: File not found.")
-    dp.messages.append("Update complete.")
-    dp.messages.append("Launching app...")
-    dp.messages.append("Goodbye!")
-    dp.messages.append("User logged in.")
-    dp.messages.append("Warning: Low battery.")
-    dp.messages.append("Message sent successfully.")
-
-    display(dp)
+    return table
