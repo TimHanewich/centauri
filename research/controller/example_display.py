@@ -74,9 +74,9 @@ def display(dp:DisplayPack) -> None:
 
     # construct what to display in telemety column (telemetry from quadcopter)
     txt_status:str = ""
-    txt_status = txt_status + "Battery: " + str(round(dp.drone_battery, 1))
-    txt_status = txt_status + "\n" + "Pitch Angle: " + str(dp.pitch_angle)
-    txt_status = txt_status + "\n" + "Roll Angle: " + str(dp.roll_angle)
+    txt_status = txt_status + "Battery: " + str(round(dp.drone_battery, 1)) + " volts"
+    txt_status = txt_status + "\n" + "Pitch Angle: " + str(dp.pitch_angle) + " °"
+    txt_status = txt_status + "\n" + "Roll Angle: " + str(dp.roll_angle) + " °"
     txt_status = txt_status + "\n" + "Pitch Rate: " + str(dp.pitch_rate) + " °/s"
     txt_status = txt_status + "\n" + "Roll Rate: " + str(dp.roll_rate) + " °/s"
     txt_status = txt_status + "\n" + "Yaw Rate: " + str(dp.yaw_rate) + " °/s"
@@ -85,13 +85,18 @@ def display(dp:DisplayPack) -> None:
     txt_status = txt_status + "\n" + "M3: " + str(int(dp.M3_throttle * 100)) + "%"
     txt_status = txt_status + "\n" + "M4: " + str(int(dp.M4_throttle * 100)) + "%"
 
-    # construct what to display in messages columdn
+    # construct what to display in messages column
+    max_messages:int = 10 # maxiumum number of messages that can be displayed
+    messages_to_display:list[str] = [] # create empty list
+    messages_to_display.extend(dp.messages) # copy all
+    while len(messages_to_display) > max_messages: # until it fits...
+        messages_to_display.pop(0) # remove the first
     txt_messages:str = ""
-    for msg in txt_messages:
+    for msg in messages_to_display:
         if len(msg) <= width_messages:
-            txt_messages = txt_messages + msg
+            txt_messages = txt_messages + msg + "\n"
         else: # the message exceeds the width of this column
-            txt_messages = txt_messages + msg[0:width_messages - 3] + "..."
+            txt_messages = txt_messages + msg[0:width_messages - 10] + "..." + "\n"
     if len(txt_messages) > 0:
         txt_messages = txt_messages[0:len(txt_messages)-1] # trim off last newline
 
@@ -111,5 +116,22 @@ dp.throttle = 0.55
 dp.pitch = 0.25
 dp.roll = 0.0
 dp.yaw = 0.0
+
+dp.messages.append("CONFIG OK")
+dp.messages.append("ready")
+dp.messages.append("Yes dsfkl sdkf ksdfl; ksd;fkl kl;skdl;fk ;lkl;fk kdfkl kdlfkqwpkapsodm fkl; fl jkdjfkj fjk jdkfjjidjf--d 90duf0 f f9sdfj90sdj90fj09sjd")
+dp.messages.append("dsd ")
+dp.messages.append("Hello there!")
+dp.messages.append("What's up?")
+dp.messages.append("System initializing...")
+dp.messages.append("Error: File not found.")
+dp.messages.append("Update complete.")
+dp.messages.append("Launching app...")
+dp.messages.append("Goodbye!")
+dp.messages.append("User logged in.")
+dp.messages.append("Warning: Low battery.")
+dp.messages.append("Message sent successfully.")
+
+
 
 display(dp)
