@@ -11,6 +11,10 @@
 - RB = select angle (attitude) mode
 
 ## Displayed on screen
+- Other info
+    - Packets received
+    - Packet last received (ms ago)
+    - Packets sent
 - Controls being sent
     - Control mode
     - Armed
