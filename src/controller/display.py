@@ -58,7 +58,7 @@ def construct(dp:DisplayPack) -> rich.table.Table:
     # construct what to display in controls column
     txt_controls:str = ""
     if dp.armed:
-        txt_controls = txt_controls + "[bold]ARMED[/]"
+        txt_controls = txt_controls + "[bold][blue]ARMED[/][/]"
     else:
         txt_controls = txt_controls + "Unarmed"
     if dp.mode == False:

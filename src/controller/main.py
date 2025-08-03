@@ -8,8 +8,12 @@ import rich.live
 
 async def main() -> None:
 
+    # say hello
+    print("Hello and welcome to the Centauri control system.")
+
 
     # Initialize pygame and joystick module
+    print("Initializing pygame for controller reads...")
     pygame.init()
     pygame.joystick.init()
 
@@ -122,6 +126,10 @@ async def main() -> None:
 
                 # wait
                 await asyncio.sleep(0.01)
+
+    # we are all set and ready to go. Confirm.
+    print()
+    input("All set and ready to go! Enter to continue.")
 
     # get all threads going
     task_read_xbox = asyncio.create_task(continuous_read_xbox())
