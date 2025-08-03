@@ -108,30 +108,28 @@ def display(dp:DisplayPack) -> None:
     c = rich.console.Console()
     c.print(table, markup=True)
 
+def test() -> None:
+    dp = DisplayPack()
+    dp.armed = True
+    dp.mode = False
+    dp.throttle = 0.55
+    dp.pitch = 0.25
+    dp.roll = 0.0
+    dp.yaw = 0.0
 
-dp = DisplayPack()
-dp.armed = True
-dp.mode = False
-dp.throttle = 0.55
-dp.pitch = 0.25
-dp.roll = 0.0
-dp.yaw = 0.0
+    dp.messages.append("CONFIG OK")
+    dp.messages.append("ready")
+    dp.messages.append("Yes dsfkl sdkf ksdfl; ksd;fkl kl;skdl;fk ;lkl;fk kdfkl kdlfkqwpkapsodm fkl; fl jkdjfkj fjk jdkfjjidjf--d 90duf0 f f9sdfj90sdj90fj09sjd")
+    dp.messages.append("dsd ")
+    dp.messages.append("Hello there!")
+    dp.messages.append("What's up?")
+    dp.messages.append("System initializing...")
+    dp.messages.append("Error: File not found.")
+    dp.messages.append("Update complete.")
+    dp.messages.append("Launching app...")
+    dp.messages.append("Goodbye!")
+    dp.messages.append("User logged in.")
+    dp.messages.append("Warning: Low battery.")
+    dp.messages.append("Message sent successfully.")
 
-dp.messages.append("CONFIG OK")
-dp.messages.append("ready")
-dp.messages.append("Yes dsfkl sdkf ksdfl; ksd;fkl kl;skdl;fk ;lkl;fk kdfkl kdlfkqwpkapsodm fkl; fl jkdjfkj fjk jdkfjjidjf--d 90duf0 f f9sdfj90sdj90fj09sjd")
-dp.messages.append("dsd ")
-dp.messages.append("Hello there!")
-dp.messages.append("What's up?")
-dp.messages.append("System initializing...")
-dp.messages.append("Error: File not found.")
-dp.messages.append("Update complete.")
-dp.messages.append("Launching app...")
-dp.messages.append("Goodbye!")
-dp.messages.append("User logged in.")
-dp.messages.append("Warning: Low battery.")
-dp.messages.append("Message sent successfully.")
-
-
-
-display(dp)
+    display(dp)
