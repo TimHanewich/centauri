@@ -12,8 +12,6 @@ def cls() -> None:
     else: # if on linux, just run clear
         os.system("clear")
 
-
-
 # define display function
 class DisplayPack:
     def __init__(self):
@@ -38,7 +36,31 @@ class DisplayPack:
         self.pitch_angle:int = 0 # -90 to 90
         self.roll_angle:int = 0 # -90 to 90
 
+        # messages being received from the drone
+        self.messages:list[str] = []
+
 def display(dp:DisplayPack) -> None:
+
+    # construct what to display in controls column
+    txt_controls:str = ""
+    if dp.armed:
+        txt_controls = txt_controls + "[bold]ARMED[/]"
+    else:
+        txt_controls = txt_controls + "Unarmed"
+    if dp.mode == False:
+        txt_controls = txt_controls + "\n" + "[bold]Rate[/] mode"
+    else:
+        txt_controls = txt_controls + "\n" + "[bold]Angle[/] mode"
+    txt_controls = txt_controls + "\n" + "Throttle: " + str(int(dp.throttle * 100)) + "%"
+    txt_controls = txt_controls + "\n" + "Pitch: " + str(int(dp.pitch * 100)) + "%"
+    txt_controls = txt_controls + "\n" + "Roll: " + str(int(dp.roll * 100)) + "%"
+    txt_controls = txt_controls + "\n" + "Yaw: " + str(int(dp.roll * 100)) + " %"
+
+    # construct what to display in telemety column (telemetry from quadcopter)
+    txt_telemetry:str = ""
+
+    # construct what to display in messages columdn
+    txt_messages:str = ""
 
     # clear console
     cls()
@@ -47,10 +69,30 @@ def display(dp:DisplayPack) -> None:
     size = shutil.get_terminal_size()
     TerminalWidth = size.columns # how wide the console is, in characters
 
+    # determine width of all three columns
+    width_controls:int = int(TerminalWidth * 0.2) # 20% of console
+    width_telemetry:int = int(TerminalWidth * 0.2) # 20% of console
+    width_messages:int = TerminalWidth - width_controls - width_telemetry
+
+    # construct table
     table:rich.table.Table = rich.table.Table()
     table.title = "Centauri Control"
-    table.add_column("Controls")
-    table.add_column("Status")
-    table.add_column("Messages")
+    table.add_column("Controls", width=width_controls)
+    table.add_column("Status", width=width_telemetry)
+    table.add_column("Messages", width=width_messages)
 
-    
+    # add and display
+    table.add_row(txt_controls, txt_telemetry, txt_messages)
+    c = rich.console.Console()
+    c.print(table, markup=True)
+
+
+dp = DisplayPack()
+dp.armed = True
+dp.mode = False
+dp.throttle = 0.55
+dp.pitch = 0.25
+dp.roll = 0.0
+dp.yaw = 0.0
+
+display(dp)
