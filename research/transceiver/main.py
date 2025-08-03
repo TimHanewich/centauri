@@ -14,14 +14,14 @@ while True:
         
         # Send back confirmation of what we received
         ToSend:str = "Just received this data: " + str(read) + "\r\n"
-        sys.stdout.write(ToSend.encode())
-    else:
+        sys.stdout.buffer.write(ToSend.encode())
+    else: 
         ToSend:str = "Nothing received.\r\n"
-        sys.stdout.write(ToSend.encode())
+        sys.stdout.buffer.write(ToSend.encode())
 
     # send something
     ToSend:str = str(time.ticks_ms()) + "\r\n"
-    sys.stdout.write(ToSend.encode())
+    sys.stdout.buffer.write(ToSend.encode())
 
     # wait
     time.sleep(0.25)
