@@ -9,7 +9,7 @@ last_send = time.time()
 while True:
 
     # read
-    if ser.in_waiting:
+    if ser.in_waiting > 0: # more than 0 bytes waiting!
         data = ser.read(ser.in_waiting)
         print("Received data: " + str(data))
 
