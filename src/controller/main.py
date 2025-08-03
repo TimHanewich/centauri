@@ -83,13 +83,6 @@ async def main() -> None:
                     else:
                         #print("Button pressed: " + str(event.button))
                         pass
-                
-            # if unarmed, drop all inputs to 0.0
-            if not armed:
-                throttle = 0.0
-                pitch = 0.0
-                roll = 0.0
-                yaw = 0.0
             
             # wait a moment
             await asyncio.sleep(0.05)
