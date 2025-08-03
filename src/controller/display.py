@@ -70,7 +70,7 @@ def display(dp:DisplayPack) -> None:
     txt_controls = txt_controls + "\n" + "Throttle: " + str(int(dp.throttle * 100)) + "%"
     txt_controls = txt_controls + "\n" + "Pitch: " + str(int(dp.pitch * 100)) + "%"
     txt_controls = txt_controls + "\n" + "Roll: " + str(int(dp.roll * 100)) + "%"
-    txt_controls = txt_controls + "\n" + "Yaw: " + str(int(dp.roll * 100)) + " %"
+    txt_controls = txt_controls + "\n" + "Yaw: " + str(int(dp.yaw * 100)) + " %"
 
     # construct what to display in telemety column (telemetry from quadcopter)
     txt_status:str = ""
