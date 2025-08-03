@@ -15,23 +15,23 @@ while True:
         # take off the "\r\n" at the end (two bytes, 13 and 10)
         data = data[0:-2]
 
-        # if it starts with "SEND" encoded as bytes, we know the PC intends only for us to pass this along to the HC-12 to be sent, so do that.
-        # otherwise, it is a message for US, not the the HC-12!
-        if data.startswith("SEND".encode()): # 83, 69, 78, 68 in bytes = "SEND". Meaning the PC wants us to just pass it along to the HC-12 to be sent to the drone
-            data = data[4:] # strip the "SEND" off (first four bytes)
-            # send it to HC-12 now
-        else: # it did not start with SEND, so it is a message from the PC for us!
+        # If the incoming message has "TRAN" prepended to it, that means the PC is intending to talk to us, the transceiver, directly!
+        # if it does NOT have "TRAN" preprended, the message it is giving it intends to be passed along to the drone via HC-12 as is
+        if data.startswith("TRAN".encode()):
+            data = data[4:] # strip the "TRAN" off (first four bytes)
             if data == "PING".encode():
                 ToSend:str = "TRAN" + "PONG" + "\r\n" # "TRAN" means it is a message from the transceiver... not something we are passing along from the quadcopter
                 sys.stdout.buffer.write(ToSend.encode())
             else: # unknow message
                 ToSend:str = "TRAN" + "?" + "\r\n"
                 sys.stdout.buffer.write(ToSend.encode())
+        else:
+            # send it to HC-12 now
+            pass
 
 
     # check if we have received data from the HC-12 (something from the drone!)
     # check here
-
 
     # wait
     time.sleep(0.01)
