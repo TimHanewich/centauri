@@ -65,10 +65,11 @@ def construct(dp:DisplayPack) -> rich.table.Table:
         txt_controls = txt_controls + "\n" + "[bold]Rate[/] mode"
     else:
         txt_controls = txt_controls + "\n" + "[bold]Angle[/] mode"
-    txt_controls = txt_controls + "\n" + "Throttle: " + str(int(dp.throttle * 100)) + "%"
-    txt_controls = txt_controls + "\n" + "Pitch: " + str(int(dp.pitch * 100)) + "%"
-    txt_controls = txt_controls + "\n" + "Roll: " + str(int(dp.roll * 100)) + "%"
-    txt_controls = txt_controls + "\n" + "Yaw: " + str(int(dp.yaw * 100)) + " %"
+    input_style:str = "blue bold" if dp.armed else "grey89"
+    txt_controls = txt_controls + "\n" + "Throttle: [" + input_style + "]" + str(int(dp.throttle * 100)) + "%[/]"
+    txt_controls = txt_controls + "\n" + "Pitch: [" + input_style + "]" + str(int(dp.pitch * 100)) + "%[/]"
+    txt_controls = txt_controls + "\n" + "Roll: [" + input_style + "]" + str(int(dp.roll * 100)) + "%[/]"
+    txt_controls = txt_controls + "\n" + "Yaw: [" + input_style + "]" + str(int(dp.yaw * 100)) + " %[/]"
 
     # construct what to display in telemety column (telemetry from quadcopter)
     txt_status:str = ""
