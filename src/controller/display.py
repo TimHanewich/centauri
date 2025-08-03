@@ -36,7 +36,8 @@ class DisplayPack:
         # messages being received from the drone
         self.messages:list[str] = []
 
-def display(dp:DisplayPack) -> rich.table.Table:
+def construct(dp:DisplayPack) -> rich.table.Table:
+    """Construct the telemetry table to dispaly"""
 
     # check size of console
     size = shutil.get_terminal_size()

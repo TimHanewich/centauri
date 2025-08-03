@@ -115,7 +115,7 @@ async def main() -> None:
                 dp.yaw = yaw
                 
                 # get table
-                tbl = display.display(dp)
+                tbl = display.construct(dp)
 
                 # update live
                 l.update(tbl)
