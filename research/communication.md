@@ -54,7 +54,7 @@ This data packet contains all necessary data for controlling normal flight chara
     - Bit 5: *reserved*
     - Bit 4: *reserved*
     - Bit 3: **control mode**. 0 = rate mode, 1 = attitude (angle) mode
-    - Bit 2: **flying**. 0 = idle on ground, motors arrested. 1 = fight mode. Motors at least idling at min throttle.
+    - Bit 2: **arm**. 0 = unarmed, idle on ground, motors arrested. 1 = armed, motors at least idling at min throttle but no lift.
     - Bit 1 and 0: **pack identifier**
         - Bit 1 = `0`
         - Bit 0 = `1`
