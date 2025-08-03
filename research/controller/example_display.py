@@ -25,7 +25,7 @@ class DisplayPack:
         self.yaw:float = 0.0
 
         # telemetry being received from drone
-        self.drone_battery:float = 0.0 # battery voltage or battery level?
+        self.drone_battery:float = 0.0 # battery voltage
         self.M1_throttle:float = 0.0 # 0.0 to 1.0
         self.M2_throttle:float = 0.0
         self.M3_throttle:float = 0.0
@@ -40,30 +40,6 @@ class DisplayPack:
         self.messages:list[str] = []
 
 def display(dp:DisplayPack) -> None:
-
-    # construct what to display in controls column
-    txt_controls:str = ""
-    if dp.armed:
-        txt_controls = txt_controls + "[bold]ARMED[/]"
-    else:
-        txt_controls = txt_controls + "Unarmed"
-    if dp.mode == False:
-        txt_controls = txt_controls + "\n" + "[bold]Rate[/] mode"
-    else:
-        txt_controls = txt_controls + "\n" + "[bold]Angle[/] mode"
-    txt_controls = txt_controls + "\n" + "Throttle: " + str(int(dp.throttle * 100)) + "%"
-    txt_controls = txt_controls + "\n" + "Pitch: " + str(int(dp.pitch * 100)) + "%"
-    txt_controls = txt_controls + "\n" + "Roll: " + str(int(dp.roll * 100)) + "%"
-    txt_controls = txt_controls + "\n" + "Yaw: " + str(int(dp.roll * 100)) + " %"
-
-    # construct what to display in telemety column (telemetry from quadcopter)
-    txt_telemetry:str = ""
-
-    # construct what to display in messages columdn
-    txt_messages:str = ""
-
-    # clear console
-    cls()
 
     # check size of console
     size = shutil.get_terminal_size()
@@ -81,8 +57,49 @@ def display(dp:DisplayPack) -> None:
     table.add_column("Status", width=width_telemetry)
     table.add_column("Messages", width=width_messages)
 
+    # construct what to display in controls column
+    txt_controls:str = ""
+    if dp.armed:
+        txt_controls = txt_controls + "[bold]ARMED[/]"
+    else:
+        txt_controls = txt_controls + "Unarmed"
+    if dp.mode == False:
+        txt_controls = txt_controls + "\n" + "[bold]Rate[/] mode"
+    else:
+        txt_controls = txt_controls + "\n" + "[bold]Angle[/] mode"
+    txt_controls = txt_controls + "\n" + "Throttle: " + str(int(dp.throttle * 100)) + "%"
+    txt_controls = txt_controls + "\n" + "Pitch: " + str(int(dp.pitch * 100)) + "%"
+    txt_controls = txt_controls + "\n" + "Roll: " + str(int(dp.roll * 100)) + "%"
+    txt_controls = txt_controls + "\n" + "Yaw: " + str(int(dp.roll * 100)) + " %"
+
+    # construct what to display in telemety column (telemetry from quadcopter)
+    txt_status:str = ""
+    txt_status = txt_status + "Battery: " + str(round(dp.drone_battery, 1))
+    txt_status = txt_status + "\n" + "Pitch Angle: " + str(dp.pitch_angle)
+    txt_status = txt_status + "\n" + "Roll Angle: " + str(dp.roll_angle)
+    txt_status = txt_status + "\n" + "Pitch Rate: " + str(dp.pitch_rate) + " °/s"
+    txt_status = txt_status + "\n" + "Roll Rate: " + str(dp.roll_rate) + " °/s"
+    txt_status = txt_status + "\n" + "Yaw Rate: " + str(dp.yaw_rate) + " °/s"
+    txt_status = txt_status + "\n" + "M1: " + str(int(dp.M1_throttle * 100)) + "%"
+    txt_status = txt_status + "\n" + "M2: " + str(int(dp.M2_throttle * 100)) + "%"
+    txt_status = txt_status + "\n" + "M3: " + str(int(dp.M3_throttle * 100)) + "%"
+    txt_status = txt_status + "\n" + "M4: " + str(int(dp.M4_throttle * 100)) + "%"
+
+    # construct what to display in messages columdn
+    txt_messages:str = ""
+    for msg in txt_messages:
+        if len(msg) <= width_messages:
+            txt_messages = txt_messages + msg
+        else: # the message exceeds the width of this column
+            txt_messages = txt_messages + msg[0:width_messages - 3] + "..."
+    if len(txt_messages) > 0:
+        txt_messages = txt_messages[0:len(txt_messages)-1] # trim off last newline
+
+    # clear console
+    cls()
+
     # add and display
-    table.add_row(txt_controls, txt_telemetry, txt_messages)
+    table.add_row(txt_controls, txt_status, txt_messages)
     c = rich.console.Console()
     c.print(table, markup=True)
 
