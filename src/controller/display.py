@@ -13,6 +13,11 @@ def cls() -> None:
 class DisplayPack:
     def __init__(self):
 
+        # system info
+        self.packets_sent:int = 0
+        self.packets_received:int = 0
+        self.packet_last_received_ago_ms:int = 0
+
         # controls being sent to drone
         self.armed:bool = False
         self.mode:bool = False # False = Rate, True = angle
@@ -44,6 +49,7 @@ def construct(dp:DisplayPack) -> rich.table.Table:
     TerminalWidth = size.columns # how wide the console is, in characters
 
     # determine width of all three columns
+    width_system:int = int(TerminalWidth * 0.2) # 20% of console
     width_controls:int = int(TerminalWidth * 0.2) # 20% of console
     width_telemetry:int = int(TerminalWidth * 0.2) # 20% of console
     width_messages:int = TerminalWidth - width_controls - width_telemetry
@@ -51,9 +57,17 @@ def construct(dp:DisplayPack) -> rich.table.Table:
     # construct table
     table:rich.table.Table = rich.table.Table()
     table.title = "Centauri Control"
+    table.add_column("System Info", width=width_system)
     table.add_column("Control Input", width=width_controls)
     table.add_column("Drone Status", width=width_telemetry)
     table.add_column("Drone Messages", width=width_messages)
+
+    # construct what to display for system info
+    txt_system:str = ""
+    txt_system = txt_system + "Packets Sent: " + str(dp.packets_sent)
+    txt_system = txt_system + "\n" + "Packets Received: " + str(dp.packets_received)
+    txt_system = txt_system + "\n" + "Packet Last Recv: " + str(dp.packet_last_received_ago_ms) + " ms"
+    txt_system = "[grey70]" + txt_system + "[/]" # wrap the whole thing in a grey color
 
     # construct what to display in controls column
     txt_controls:str = ""
@@ -100,5 +114,5 @@ def construct(dp:DisplayPack) -> rich.table.Table:
         txt_messages = txt_messages[0:len(txt_messages)-1] # trim off last newline
 
 
-    table.add_row(txt_controls, txt_status, txt_messages)
+    table.add_row(txt_system, txt_controls, txt_status, txt_messages)
     return table
