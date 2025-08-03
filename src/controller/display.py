@@ -1,9 +1,6 @@
 import os
 import shutil
 import rich.table
-import rich.console
-import time
-import random
 
 # define console-clearing command
 def cls() -> None:
