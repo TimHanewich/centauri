@@ -2,6 +2,9 @@ import pygame
 import time
 import display
 import asyncio
+import rich.table
+import rich.console
+import rich.live
 
 async def main() -> None:
 
@@ -98,22 +101,27 @@ async def main() -> None:
         nonlocal roll
         nonlocal yaw
 
-        while True:
+        # display with live
+        with rich.live.Live(refresh_per_second=60, screen=True) as l: # the refresh_per_second sets the upper limit for refresh rate
+            while True:
 
-            # prepare to print with display packet
-            dp:display.DisplayPack = display.DisplayPack()
-            dp.armed = armed
-            dp.mode = mode
-            dp.throttle = throttle
-            dp.pitch = pitch
-            dp.roll = roll
-            dp.yaw = yaw
-            
-            # display!
-            display.display(dp)
+                # prepare to print with display packet
+                dp:display.DisplayPack = display.DisplayPack()
+                dp.armed = armed
+                dp.mode = mode
+                dp.throttle = throttle
+                dp.pitch = pitch
+                dp.roll = roll
+                dp.yaw = yaw
+                
+                # get table
+                tbl = display.display(dp)
 
-            # wait
-            await asyncio.sleep(0.25)
+                # update live
+                l.update(tbl)
+
+                # wait
+                await asyncio.sleep(0.01)
 
     # get all threads going
     task_read_xbox = asyncio.create_task(continuous_read_xbox())
