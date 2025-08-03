@@ -19,16 +19,19 @@
     - Roll
     - Yaw
 - Quadcopter status
-    - Quadcopter battery level
-    - M1 throttle
-    - M2 throttle
-    - M3 throttle
-    - M4 throttle
-    - Actual roll rate
-    - Actual pitch rate
-    - Actual yaw rate
-    - Pitch angle estimate
-    - Roll angle estime
-    - TF Luna reading (on belly)
-    - BMP180 reading
-    - QMC5883L
+    - Status
+        - Quadcopter battery level
+        - M1 throttle
+        - M2 throttle
+        - M3 throttle
+        - M4 throttle
+        - Actual roll rate
+        - Actual pitch rate
+        - Actual yaw rate
+        - Pitch angle estimate
+        - Roll angle estime
+        - TF Luna reading (on belly)
+        - BMP180 reading
+        - QMC5883L
+    - Messages (unstructured data, in text)
+        - Time it came in and message (in text)
