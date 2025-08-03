@@ -51,9 +51,9 @@ def construct(dp:DisplayPack) -> rich.table.Table:
     # construct table
     table:rich.table.Table = rich.table.Table()
     table.title = "Centauri Control"
-    table.add_column("Controls", width=width_controls)
-    table.add_column("Status", width=width_telemetry)
-    table.add_column("Messages", width=width_messages)
+    table.add_column("Control Input", width=width_controls)
+    table.add_column("Drone Status", width=width_telemetry)
+    table.add_column("Drone Messages", width=width_messages)
 
     # construct what to display in controls column
     txt_controls:str = ""
