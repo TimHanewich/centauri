@@ -1,5 +1,6 @@
 import pygame
 import time
+import display
 
 # Initialize pygame and joystick module
 pygame.init()
@@ -67,20 +68,17 @@ while True:
         roll = 0.0
         yaw = 0.0
     
-    # print unified status
-    ToPrint:str = ""
-    if armed:
-        ToPrint = "ARMED"
-    else:
-        ToPrint = "DISARMED"
-    if mode == False:
-        ToPrint = ToPrint + ", Rate Mode"
-    else:
-        ToPrint = ToPrint + ", Angle Mode"
-    ToPrint = ToPrint + ", " + str(int(throttle * 100)) + "% throttle"
-    ToPrint = ToPrint + ", " + str(int(pitch * 100)) + "% pitch"
-    ToPrint = ToPrint + ", " + str(int(roll * 100)) + " % roll"
-    ToPrint = ToPrint + ", " + str(int(yaw * 100)) + " % yaw"
-    print(ToPrint)
+    # prepare to print with display packet
+    dp:display.DisplayPack = display.DisplayPack()
+    dp.armed = armed
+    dp.mode = mode
+    dp.throttle = throttle
+    dp.pitch = pitch
+    dp.roll = roll
+    dp.yaw = yaw
+    
+    # display!
+    display.display(dp)
 
+    # wait
     time.sleep(0.05)
