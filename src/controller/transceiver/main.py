@@ -53,6 +53,9 @@ except Exception as ex:
     print("HC-12 transmit power set failed! Failing. Msg: " + str(ex))
     ERROR_SEQ()
 
+# declare buffer of receied bytes we will add to and pull from as data comes in
+buffer:bytes = bytes()
+
 # infinite respond loop
 led.on() # turn on LED light
 while True:
@@ -73,19 +76,26 @@ while True:
             if data == "PING".encode():
                 ToSend:str = "TRAN" + "PONG" + "\r\n" # "TRAN" means it is a message from the transceiver... not something we are passing along from the quadcopter
                 sys.stdout.buffer.write(ToSend.encode())
-            elif data == "STATUS?".encode():
-                ToSend:str = "TRAN" + str(hc12.status) + "\r\n"
+            elif data == "STATUS?".encode(): # an inquiry of the HC-12's status
+                ToSend:str = "TRAN" + str(hc12.status) + "\r\n" # hc12.status includes the mode, channel, and power, i.e. "{'mode': 3, 'channel': 1, 'power': 8}"
                 sys.stdout.buffer.write(ToSend.encode())
             else: # it is an unknow message, so just return with a question mark so the PC knows we had no idea what it wanted
                 ToSend:str = "TRAN" + "?" + "\r\n"
                 sys.stdout.buffer.write(ToSend.encode())
         else: # it is intended to be directly delivered to the drone, so just pass it along via HC-12
-            # send it to HC-12 now
-            pass
-
+            hc12.send(data) # send all the data. Including the \r\n at the end!
 
     # check if we have received data from the HC-12 (something from the drone!) that must be passed along to the PC
-    # check here
+    buffer = buffer + hc12.receive() # append any received bytes
+    while "\r\n".encode() in buffer: # if we have at least one full line
 
+        # ge the line
+        loc:int = buffer.find("\r\n".encode())
+        ThisLine:bytes = buffer[0:loc+2] # include the \r\n at the end (why we +2)
+        buffer = buffer[loc+2:] # remove the line
+
+        # send the line to the PC (including the "\r\n"!)
+        hc12.send(ThisLine)
+    
     # wait
     time.sleep(0.01)
