@@ -1,15 +1,10 @@
 # Centauri Design
-- Radio Controller (single MCU)
-    - Rasberry Pi Pico
-    - SSD-1306 OLED
-    - HC-12
-    - Throttle potentiometer = [sliding potentiometer](https://a.co/d/7xYnKI3)
-    - Trigger- potentiometer (for yaw)
-    - Trigger+ potentiometer (for yaw)
-    - [Joystick for pitch + roll](https://a.co/d/1TQdeZK)
-    - 18650 cell
-    - MT3608 voltage booster
-    - TP4056 cell charger
+- Radio Controller:
+    - PC (windows/linux)
+    - Xbox controller plugged in via USB
+    - Transceiver plugged in via USB
+        - Raspberry Pi Pico
+        - HC-12
 - Quadcopter
     - 3D printed body
         - Diagonal Propeller Distance: 225mm
