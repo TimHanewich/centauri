@@ -57,45 +57,49 @@ except Exception as ex:
 buffer:bytes = bytes()
 
 # infinite respond loop
-led.on() # turn on LED light
-while True:
-    
-    # Check if we have received data from the PC that we may need to respond to or pass along to the drone (via HC-12)
-    if select.select([sys.stdin], [], [], 0)[0]: # if there is data to read. That expression returns a list of data available to read. In Python, if a list is empty, it returns False. If it has something in it, it returns True
+try:
+    led.on() # turn on LED light
+    while True:
         
-        # collect all bytes, separarated by line
-        data:bytes = bytes()
-        while not data.endswith("\r\n".encode()): # read until new line
-            data = data + sys.stdin.buffer.read(1) # read 1 byte. yes, it is ok to block on this as the \r\n should be coming in a moment...
+        # Check if we have received data from the PC that we may need to respond to or pass along to the drone (via HC-12)
+        if select.select([sys.stdin], [], [], 0)[0]: # if there is data to read. That expression returns a list of data available to read. In Python, if a list is empty, it returns False. If it has something in it, it returns True
+            
+            # collect all bytes, separarated by line
+            data:bytes = bytes()
+            while not data.endswith("\r\n".encode()): # read until new line
+                data = data + sys.stdin.buffer.read(1) # read 1 byte. yes, it is ok to block on this as the \r\n should be coming in a moment...
 
-        # If the incoming message has "TRAN" prepended to it, that means the PC is intending to talk to us, the transceiver, directly!
-        # if it does NOT have "TRAN" preprended, the message it is giving it intends to be passed along to the drone via HC-12 as is
-        if data.startswith("TRAN".encode()):
-            data = data[4:] # strip the "TRAN" off (first four bytes)
-            data = data[0:-2] # take off the "\r\n" at the end (two bytes, 13 and 10)
-            if data == "PING".encode():
-                ToSend:str = "TRAN" + "PONG" + "\r\n" # "TRAN" means it is a message from the transceiver... not something we are passing along from the quadcopter
-                sys.stdout.buffer.write(ToSend.encode())
-            elif data == "STATUS?".encode(): # an inquiry of the HC-12's status
-                ToSend:str = "TRAN" + str(hc12.status) + "\r\n" # hc12.status includes the mode, channel, and power, i.e. "{'mode': 3, 'channel': 1, 'power': 8}"
-                sys.stdout.buffer.write(ToSend.encode())
-            else: # it is an unknow message, so just return with a question mark so the PC knows we had no idea what it wanted
-                ToSend:str = "TRAN" + "?" + "\r\n"
-                sys.stdout.buffer.write(ToSend.encode())
-        else: # it is intended to be directly delivered to the drone, so just pass it along via HC-12
-            hc12.send(data) # send all the data. Including the \r\n at the end!
+            # If the incoming message has "TRAN" prepended to it, that means the PC is intending to talk to us, the transceiver, directly!
+            # if it does NOT have "TRAN" preprended, the message it is giving it intends to be passed along to the drone via HC-12 as is
+            if data.startswith("TRAN".encode()):
+                data = data[4:] # strip the "TRAN" off (first four bytes)
+                data = data[0:-2] # take off the "\r\n" at the end (two bytes, 13 and 10)
+                if data == "PING".encode():
+                    ToSend:str = "TRAN" + "PONG" + "\r\n" # "TRAN" means it is a message from the transceiver... not something we are passing along from the quadcopter
+                    sys.stdout.buffer.write(ToSend.encode())
+                elif data == "STATUS?".encode(): # an inquiry of the HC-12's status
+                    ToSend:str = "TRAN" + str(hc12.status) + "\r\n" # hc12.status includes the mode, channel, and power, i.e. "{'mode': 3, 'channel': 1, 'power': 8}"
+                    sys.stdout.buffer.write(ToSend.encode())
+                else: # it is an unknow message, so just return with a question mark so the PC knows we had no idea what it wanted
+                    ToSend:str = "TRAN" + "?" + "\r\n"
+                    sys.stdout.buffer.write(ToSend.encode())
+            else: # it is intended to be directly delivered to the drone, so just pass it along via HC-12
+                hc12.send(data) # send all the data. Including the \r\n at the end!
 
-    # check if we have received data from the HC-12 (something from the drone!) that must be passed along to the PC
-    buffer = buffer + hc12.receive() # append any received bytes
-    while "\r\n".encode() in buffer: # if we have at least one full line
+        # check if we have received data from the HC-12 (something from the drone!) that must be passed along to the PC
+        buffer = buffer + hc12.receive() # append any received bytes
+        while "\r\n".encode() in buffer: # if we have at least one full line
 
-        # get the line
-        loc:int = buffer.find("\r\n".encode())
-        ThisLine:bytes = buffer[0:loc+2] # include the \r\n at the end (why we +2)
-        buffer = buffer[loc+2:] # remove the line
+            # get the line
+            loc:int = buffer.find("\r\n".encode())
+            ThisLine:bytes = buffer[0:loc+2] # include the \r\n at the end (why we +2)
+            buffer = buffer[loc+2:] # remove the line
 
-        # send the line to the PC (including the "\r\n"!)
-        hc12.send(ThisLine)
-    
-    # wait
-    time.sleep(0.01)
+            # send the line to the PC (including the "\r\n"!)
+            hc12.send(ThisLine)
+        
+        # wait
+        time.sleep(0.01)
+except Exception as ex:
+    print("FATAL ERROR IN TRANSCEIVER: " + str(ex))
+    ERROR_SEQ()
