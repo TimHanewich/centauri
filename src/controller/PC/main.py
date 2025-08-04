@@ -185,26 +185,26 @@ async def main() -> None:
 
             # Add throttle bytes
             asint16:int = int(throttle * 65535) # express as number between 0 and 65535
-            ToSend.append(asint16.to_bytes(2, "big"))
+            ToSend.extend(asint16.to_bytes(2, "big"))
 
             # add pitch bytes
             aspop:float = (pitch + 1) / 2 # as percent of range
             asint16:int = int(aspop * 65535)
-            ToSend.append(asint16.to_bytes(2, "big"))
+            ToSend.extend(asint16.to_bytes(2, "big"))
 
             # add roll bytes
             aspop:float = (roll + 1) / 2 # as percent of range
             asint16:int = int(aspop * 65535)
-            ToSend.append(asint16.to_bytes(2, "big"))
+            ToSend.extend(asint16.to_bytes(2, "big"))
 
             # add yaw bytes
             aspop:float = (yaw + 1) / 2 # as percent of range
             asint16:int = int(aspop * 65535)
-            ToSend.append(asint16.to_bytes(2, "big"))
+            ToSend.extend(asint16.to_bytes(2, "big"))
 
             # send it
-            FullToSend:bytes = bytes(ToSend) + "\r\n".encode()
-            ser.write(FullToSend)
+            ToSend.extend("\r\n".encode())
+            ser.write(bytes(ToSend))
             packets_sent = packets_sent + 1
 
             # wait
