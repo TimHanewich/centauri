@@ -89,16 +89,18 @@ try:
                 pass
 
         # check if we have received data from the HC-12 (something from the drone!) that must be passed along to the PC
-        buffer = buffer + hc12.receive() # append any received bytes
-        while "\r\n".encode() in buffer: # if we have at least one full line
+        newdata:bytes = hc12.receive() # receive new data. hc12.receive returns b'' (empty bytes) if there is nothing new to be had.
+        if len(newdata) > 0:
+            buffer = buffer + hc12.receive() # append any received bytes
+            while "\r\n".encode() in buffer: # if we have at least one full line
 
-            # get the line
-            loc:int = buffer.find("\r\n".encode())
-            ThisLine:bytes = buffer[0:loc+2] # include the \r\n at the end (why we +2)
-            buffer = buffer[loc+2:] # remove the line
+                # get the line
+                loc:int = buffer.find("\r\n".encode())
+                ThisLine:bytes = buffer[0:loc+2] # include the \r\n at the end (why we +2)
+                buffer = buffer[loc+2:] # remove the line
 
-            # send the line to the PC (including the "\r\n"!)
-            hc12.send(ThisLine)
+                # send the line to the PC (including the "\r\n"!)
+                hc12.send(ThisLine)
         
         # wait
         time.sleep(0.01)
