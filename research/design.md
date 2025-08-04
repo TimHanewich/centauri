@@ -37,3 +37,16 @@
         - Pass through PID loop to determine M1-4 throttles
         - Use complementary fiter to estimate roll & pitch angles
         - Set M1-4 throttles
+
+## Body Design Inspiration
+![exaple](https://3dprinting.com/wp-content/uploads/2015/05/hframe-3d-printed-quadcopter.jpg)
+
+![example](https://axelsdiy.brinkeby.se/wp-content/uploads/2017/07/1200_DSC_6927.jpg)
+
+![example](https://kingroon.com/cdn/shop/articles/3D_Printed_Drone.jpg?v=1725266590)
+
+![example](https://www.robots.co.uk/wp-content/uploads/2015/10/drone5.png)
+
+![example](https://fbi.cults3d.com/uploaders/25297494/illustration-file/e9fb86ac-7ee3-4442-9882-9c307f14eb75/Testing.jpg)
+
+![example](https://blog.quadmeup.com/assets/2017/12/3d-printed-racing-drone--1024x590.jpg)
