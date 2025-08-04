@@ -70,10 +70,8 @@ try:
         # Check if we have received data from the PC that we may need to respond to or pass along to the drone (via HC-12)
         if select.select([sys.stdin], [], [], 0)[0]: # if there is data to read. That expression returns a list of data available to read. In Python, if a list is empty, it returns False. If it has something in it, it returns True
             
-            # collect all bytes, separarated by line
-            data:bytes = bytes()
-            while not data.endswith("\r\n".encode()): # read until new line
-                data = data + sys.stdin.buffer.read(1) # read 1 byte. yes, it is ok to block on this as the \r\n should be coming in a moment...
+            # collect bytes by new line 
+            data:bytes = sys.stdin.buffer.readline() # yes, it is acceptable to block here
 
             # If the incoming message has "TRAN" prepended to it, that means the PC is intending to talk to us, the transceiver, directly!
             # if it does NOT have "TRAN" preprended, the message it is giving it intends to be passed along to the drone via HC-12 as is
