@@ -73,7 +73,10 @@ while True:
             if data == "PING".encode():
                 ToSend:str = "TRAN" + "PONG" + "\r\n" # "TRAN" means it is a message from the transceiver... not something we are passing along from the quadcopter
                 sys.stdout.buffer.write(ToSend.encode())
-            else: # unknow message
+            elif data == "STATUS?".encode():
+                ToSend:str = "TRAN" + str(hc12.status) + "\r\n"
+                sys.stdout.buffer.write(ToSend.encode())
+            else: # it is an unknow message, so just return with a question mark so the PC knows we had no idea what it wanted
                 ToSend:str = "TRAN" + "?" + "\r\n"
                 sys.stdout.buffer.write(ToSend.encode())
         else: # it is intended to be directly delivered to the drone, so just pass it along via HC-12
