@@ -14,6 +14,12 @@ def ERROR_SEQ() -> None:
         led.off()
         time.sleep(1.0)
 
+# define sending transceiver message to PC
+def send_tran_msg(msg:str) -> None:
+    """Send a transceiver-level message to the PC via USB, flagged as such. Note, this is NOT for sending the normal payload from the drone to the PC. Instead, this is ONLY for sending transceiver-level communication to the PC; messages that originate from this transceiver itself, not the drone (not passing along a message from the drone)."""
+    ToSend:str = "TRAN" + msg + "\r\n"
+    sys.stdout.buffer.write(ToSend.encode())
+
 # set up HC-12
 uart = machine.UART(0, rx=machine.Pin(17), tx=machine.Pin(16), baudrate=9600)
 set_pin:int = 22
