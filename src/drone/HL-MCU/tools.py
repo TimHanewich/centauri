@@ -12,19 +12,19 @@ def pack_status_packet(m1_throttle:float, m2_throttle:float, m3_throttle:float, 
 
     # add M1 throttle
     asint16:int = min(max(int(m1_throttle * 65535), 0), 65535)
-    ToReturn.append(asint16.to_bytes(2, "big"))
+    ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add M2 throttle
     asint16:int = min(max(int(m2_throttle * 65535), 0), 65535)
-    ToReturn.append(asint16.to_bytes(2, "big"))
+    ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add M3 throttle
     asint16:int = min(max(int(m3_throttle * 65535), 0), 65535)
-    ToReturn.append(asint16.to_bytes(2, "big"))
+    ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add M4 throttle
     asint16:int = min(max(int(m4_throttle * 65535), 0), 65535)
-    ToReturn.append(asint16.to_bytes(2, "big"))
+    ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # pitch rate, roll rate, and yaw rate will all be 
     # expressed as a percentage of the range from -180 d/s to 180 d/s
@@ -32,17 +32,17 @@ def pack_status_packet(m1_throttle:float, m2_throttle:float, m3_throttle:float, 
 
     # add pitch rate
     aspop:float = (pitch_rate + 180) / 360
-    asint16:int = min(max(int(aspop * 65535), 0, 65535))
+    asint16 = min(max(int(aspop * 65535), 0), 65535)
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add roll rate
     aspop:float = (roll_rate + 180) / 360
-    asint16:int = min(max(int(aspop * 65535), 0, 65535))
+    asint16 = min(max(int(aspop * 65535), 0), 65535)
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add yaw rate
     aspop:float = (yaw_rate + 180) / 360
-    asint16:int = min(max(int(aspop * 65535), 0, 65535))
+    asint16 = min(max(int(aspop * 65535), 0), 65535)
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # pitch and roll angle will be expressed as a % of the range of -90 and 90
@@ -51,10 +51,16 @@ def pack_status_packet(m1_throttle:float, m2_throttle:float, m3_throttle:float, 
 
     # add pitch angle
     aspop:float = (pitch_angle + 90) / 180
-    asint16:int = min(max(int(aspop * 65535), 0, 65535))
+    asint16 = min(max(int(aspop * 65535), 0), 65535)
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add roll angle
     aspop:float = (roll_angle + 90) / 180
-    asint16:int = min(max(int(aspop * 65535), 0, 65535))
+    asint16 = min(max(int(aspop * 65535), 0), 65535)
     ToReturn.extend(asint16.to_bytes(2, "big"))
+
+    return bytes(ToReturn)
+
+data = pack_status_packet(0.55, 0.45, 0.34, 0.55, 25.4, -34.3, 2.3, 3, -4.5)
+print(str(len(data)))
+print(data)
