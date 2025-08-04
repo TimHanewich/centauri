@@ -85,7 +85,8 @@ try:
                 else: # it is an unknow message, so just return with a question mark so the PC knows we had no idea what it wanted
                     send_tran_msg("?")
             else: # it is intended to be directly delivered to the drone, so just pass it along via HC-12
-                hc12.send(data) # send all the data. Including the \r\n at the end!
+                #hc12.send(data) # send all the data. Including the \r\n at the end!
+                pass
 
         # check if we have received data from the HC-12 (something from the drone!) that must be passed along to the PC
         buffer = buffer + hc12.receive() # append any received bytes
