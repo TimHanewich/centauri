@@ -5,6 +5,7 @@ import asyncio
 import rich.table
 import rich.console
 import rich.live
+import serial
 
 async def main() -> None:
 
@@ -34,6 +35,38 @@ async def main() -> None:
     controller = pygame.joystick.Joystick(0)
     controller.init()
     print("Controller #0, '" + controller.get_name() + "' will be used.")
+
+    # ask what serial peripheral path to use for communications
+    print()
+    ser_port:str = input("Serial port of your transceiver (i.e. 'COM3' or '/dev/ACM0'): ")
+    print("Will use serial '" + ser_port + "'")
+    print()
+
+    # try to establish comms with serial device
+    for i in range(0, 3):
+        print("Trying to establish comms with transceiver in " + str(3 - i) + "... ")
+        time.sleep(1.0)
+    print("Opening serial port...")
+    ser:serial.Serial = serial.Serial(port=ser_port, baudrate=9600, timeout=5)
+    if ser.in_waiting > 0:
+        ser.read(ser.in_waiting) # clear out buffer
+    PING_MSG:str = "TRAN" + "PING" + "\r\n"
+    print("Sending ping message...")
+    ser.write(PING_MSG.encode())
+    print("Waiting for response...")
+    time.sleep(0.25)
+    if ser.in_waiting == 0:
+        print("Transceiver did not respond to ping. Are you sure it is connected and working properly?")
+        ser.close()
+        exit()
+    response:bytes = ser.read(ser.in_waiting)
+    print("Response of " + str(len(response)) + " bytes received from transceiver.")
+    if response == "TRANPONG\r\n".encode(): # the expected response
+        print("Transceiver ping successful! It is operating normally.")
+    else:
+        print("Transceiver responded abnormally. Are you sure it is working correctly? Response: " + str(response))
+        ser.close()
+        exit()
 
     # set up control inputs
     armed:bool = False
