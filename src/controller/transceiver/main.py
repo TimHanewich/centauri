@@ -57,8 +57,8 @@ except Exception as ex:
 buffer:bytes = bytes()
 
 # infinite respond loop
+led.on() # turn on LED light
 try:
-    led.on() # turn on LED light
     while True:
         
         # Check if we have received data from the PC that we may need to respond to or pass along to the drone (via HC-12)
