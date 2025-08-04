@@ -76,6 +76,11 @@ async def main() -> None:
     roll:float = 0.0
     yaw:float = 0.0
 
+    # set up system info variables
+    packets_sent:int = 0
+    packets_received:int = 0
+    packets_last_received_ms_ago:int = 9999
+
     # set up continous Xbox controller read function
     async def continuous_read_xbox() -> None:
 
@@ -153,6 +158,58 @@ async def main() -> None:
                 # wait
                 await asyncio.sleep(0.01)
 
+    # set up continuous radio sending
+    async def continuous_radio_tx() -> None:
+
+        # declare variables from main we will be using
+        nonlocal armed
+        nonlocal mode
+        nonlocal throttle
+        nonlocal pitch
+        nonlocal roll
+        nonlocal yaw
+        nonlocal packets_sent
+        nonlocal ser # serial port
+
+        while True:
+
+            ToSend:bytearray = bytearray()
+
+            # Add header byte (metadata byte)
+            # bit 7, 6, 5, 4 are reserved (unused)
+            header:int = 0b00000000 # start with 0
+            header = header | 0b00000001 # set up pack identifier to 1, a control packet
+            if armed: header = header | 0b00000100 # if armed, make the 3rd bit 1. Otherwise, if unarmed, leave it as 0
+            if mode: header = header | 0b00001000 # if in angle mode, set the 4th bit to 1. Othewise, if in rate mode, leave it as 0
+            ToSend.append(header)
+
+            # Add throttle bytes
+            asint16:int = int(throttle * 65535) # express as number between 0 and 65535
+            ToSend.append(asint16.to_bytes(2, "big"))
+
+            # add pitch bytes
+            aspop:float = (pitch + 1) / 2 # as percent of range
+            asint16:int = int(aspop * 65535)
+            ToSend.append(asint16.to_bytes(2, "big"))
+
+            # add roll bytes
+            aspop:float = (roll + 1) / 2 # as percent of range
+            asint16:int = int(aspop * 65535)
+            ToSend.append(asint16.to_bytes(2, "big"))
+
+            # add yaw bytes
+            aspop:float = (yaw + 1) / 2 # as percent of range
+            asint16:int = int(aspop * 65535)
+            ToSend.append(asint16.to_bytes(2, "big"))
+
+            # send it
+            FullToSend:bytes = bytes(ToSend) + "\r\n".encode()
+            ser.write(FullToSend)
+            packets_sent = packets_sent + 1
+
+            # wait
+            await asyncio.sleep(0.02) # 50 hz
+
     # we are all set and ready to go. Confirm.
     print()
     input("All set and ready to go! Enter to continue.")
@@ -160,7 +217,7 @@ async def main() -> None:
     # get all threads going
     task_read_xbox = asyncio.create_task(continuous_read_xbox())
     task_display = asyncio.create_task(continuous_display())
-    await asyncio.gather(task_read_xbox, task_display) # infinitely wait for all to finish (which will never happen since they are infinitely running)
+    await asyncio.gather(task_read_xbox, task_display, continuous_radio_tx) # infinitely wait for all to finish (which will never happen since they are infinitely running)
 
 
 # run main program via asyncio
