@@ -137,6 +137,7 @@ async def main() -> None:
         nonlocal pitch
         nonlocal roll
         nonlocal yaw
+        nonlocal packets_sent
 
         # display with live
         with rich.live.Live(refresh_per_second=60, screen=True) as l: # the refresh_per_second sets the upper limit for refresh rate
@@ -150,6 +151,7 @@ async def main() -> None:
                 dp.pitch = pitch
                 dp.roll = roll
                 dp.yaw = yaw
+                dp.packets_sent = packets_sent
                 
                 # get table
                 tbl = display.construct(dp)
