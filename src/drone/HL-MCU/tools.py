@@ -60,7 +60,3 @@ def pack_status_packet(m1_throttle:float, m2_throttle:float, m3_throttle:float, 
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     return bytes(ToReturn)
-
-data = pack_status_packet(0.55, 0.45, 0.34, 0.55, 25.4, -34.3, 2.3, 3, -4.5)
-print(str(len(data)))
-print(data)
