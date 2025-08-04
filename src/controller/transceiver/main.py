@@ -91,7 +91,7 @@ try:
         # check if we have received data from the HC-12 (something from the drone!) that must be passed along to the PC
         newdata:bytes = hc12.receive() # receive new data. hc12.receive returns b'' (empty bytes) if there is nothing new to be had. Note: I know it can be tempting here just to append hc12.receive() to the buffer every time, and that is what I originally had. However, this is very performanced-prohibitive and results in memory being used up after only a few thousand cycles because each time this happens, a new bytes object has to be made.
         if len(newdata) > 0:
-            buffer = buffer + hc12.receive() # append any received bytes
+            buffer = buffer + newdata # append any received bytes. May be more efficient to use bytearray here and "extend" what is being received
             while "\r\n".encode() in buffer: # if we have at least one full line
 
                 # get the line
