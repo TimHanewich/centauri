@@ -89,7 +89,7 @@ while True:
     buffer = buffer + hc12.receive() # append any received bytes
     while "\r\n".encode() in buffer: # if we have at least one full line
 
-        # ge the line
+        # get the line
         loc:int = buffer.find("\r\n".encode())
         ThisLine:bytes = buffer[0:loc+2] # include the \r\n at the end (why we +2)
         buffer = buffer[loc+2:] # remove the line
