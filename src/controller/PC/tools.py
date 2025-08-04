@@ -35,7 +35,3 @@ def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll
 
     # return it
     return bytes(ToReturn)
-
-data = pack_control_packet(True, False, 0.55, 0.22, -0.3, -0.02)
-print(data)
-print(str(len(data)))
