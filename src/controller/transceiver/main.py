@@ -32,7 +32,7 @@ for _ in range(5): # attempts
         time.sleep(0.25)
         pulsed = hc12.pulse
 if not pulsed:
-    print("HC-12 not confirmed to be connected! Unable to establish communications.")
+    send_tran_msg("HC-12 not confirmed to be connected! Unable to establish communications.")
     ERROR_SEQ()
 
 # Set up operating mode of HC12
@@ -40,7 +40,7 @@ time.sleep(0.5)
 try:
     hc12.mode = 3 # Set to FU3 (default), general-purpose mode
 except Exception as ex:
-    print("Failure while setting HC-12 operating mode to FU3! Failing. Msg: " + str(ex))
+    send_tran_msg("Failure while setting HC-12 operating mode to FU3! Failing. Msg: " + str(ex))
     ERROR_SEQ()
 
 # Configure the HC-12: channel
@@ -48,7 +48,7 @@ time.sleep(0.5)
 try:
     hc12.channel = 2
 except Exception as ex:
-    print("HC-12 channel setting to 1 unsuccesful. Failing. Msg: " + str(ex))
+    send_tran_msg("HC-12 channel setting to 1 unsuccesful. Failing. Msg: " + str(ex))
     ERROR_SEQ()
 
 # Configure the HC-12: Transmit power
@@ -56,7 +56,7 @@ time.sleep(0.5)
 try:
     hc12.power = 8
 except Exception as ex:
-    print("HC-12 transmit power set failed! Failing. Msg: " + str(ex))
+    send_tran_msg("HC-12 transmit power set failed! Failing. Msg: " + str(ex))
     ERROR_SEQ()
 
 # declare buffer of receied bytes we will add to and pull from as data comes in
@@ -107,5 +107,5 @@ try:
         # wait
         time.sleep(0.01)
 except Exception as ex:
-    print("FATAL ERROR IN TRANSCEIVER: " + str(ex))
+    send_tran_msg("FATAL ERROR IN TRANSCEIVER: " + str(ex))
     ERROR_SEQ()
