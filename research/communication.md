@@ -2,11 +2,12 @@
 Two HC-12 radio transceiver modules will be used to facilitate bidirectional remote communications between the remote controller and the drone. Serial UART will be used to facillitate bidirectional communication between the HL MCU and LL MCU.
 
 Communication Timing:
-- Remote controller sends control packets at 50 Hz
-- HL MCU receives control packets at 50 Hz
-- HL MCU provides control packets to LL MCU at 50 Hz
+- PC sends control packets to transceiver at 50 Hz
+- Transceiver checks for new control packets at 100 Hz and sends via HC-12 right away (effective 50 Hz)
+- HL MCU checks for new packets received via HC-12 at 100 Hz
+- HL MCU provides control packets to LL MCU when they are receive (effective 50 Hz)
 - LL MCU provides status updates to HL MCU at 10 Hz
-- HL MCU provides sends status updates to remote controller at 10 Hz
+- HL MCU sends status updates to remote controller via HC-12 at 10 Hz
 
 ## Controller --> Quadcopter Communication
 Of the data packets that are sent from the remote controller --> quadcopter, there are 2 bits used for 4 separate packet types:
@@ -28,19 +29,24 @@ Used to update settings on the LL MCU on the go without having to manually re-fl
     - Bit 0 and 1: pack identifier
         - Bit 1: `0`
         - Bit 0: `0`
-- Roll_P (4 bytes): roll P value
-- Roll_I (4 bytes): roll I value
-- Roll_D (4 bytes): roll D value
-- Pitch_P (4 bytes): pitch P value
-- Pitch_I (4 bytes): pitch I value
-- Pitch_D (4 bytes): pitch D value
-- Yaw_P (4 bytes): yaw P value
-- Yaw_I (4 bytes): yaw I value
-- Yaw_D (4 bytes): yaw D value    
-- Max_Roll (4 bytes): max roll rate (degrees per second), in either direction
-- Max_Pitch (4 bytes): max pitch rate (degrees per second) in either direction
-- Max_Yaw (4 bytes): max yaw rate (degrees per second) in either direction
-- I_Limit (4 bytes): max I-term limit (from PID equation) to prevent over-spooling
+- PID Settings: Used by LL MCU
+    - Roll_P (4 bytes): roll P value
+    - Roll_I (4 bytes): roll I value
+    - Roll_D (4 bytes): roll D value
+    - Pitch_P (4 bytes): pitch P value
+    - Pitch_I (4 bytes): pitch I value
+    - Pitch_D (4 bytes): pitch D value
+    - Yaw_P (4 bytes): yaw P value
+    - Yaw_I (4 bytes): yaw I value
+    - Yaw_D (4 bytes): yaw D value
+    - I_Limit (4 bytes): max I-term limit (from PID equation) to prevent over-spooling, applied to Roll, Pitch, and Yaw PIDs
+- Rate mode settings: used by LL MCU
+    - Max_Roll_Rate (4 bytes): max roll rate (degrees per second), in either direction
+    - Max_Pitch_Rate (4 bytes): max pitch rate (degrees per second) in either direction
+    - Max_Yaw_Rate (4 bytes): max yaw rate (degrees per second) in either direction
+- Angle mode settings: used by HL MCU
+    - Max_Pitch_Angle (4 bytes): max pitch angle in either direction, left or right
+    - Max_Roll_Angle (4 bytes): max roll angle in either direction, left or right
 - "\r\n" (2 bytes): endline to mark the end of the packet
 
 ### Control Packet
