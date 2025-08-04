@@ -1,13 +1,4 @@
 # Centauri Design
-- Motors: [Readytosky 2300KV brushless motors](https://a.co/d/6Pua6ZV)
-    - 5mm center
-    - 19x16mm mounting holes on bottom
-- Propellers: [5-inch, 3-blade, 4-inch pitch propellers](https://a.co/d/6pNksCt)
-- ESCs: [20A 2-4S BLHeli ESCs](https://a.co/d/6Rvq71s)
-- Body
-    - Diagonal Propeller Distance: 225mm
-
-## High-Level System Design
 - Radio Controller (single MCU)
     - Rasberry Pi Pico
     - SSD-1306 OLED
@@ -20,13 +11,19 @@
     - MT3608 voltage booster
     - TP4056 cell charger
 - Quadcopter
+    - 3D printed body
+        - Diagonal Propeller Distance: 225mm
     - HC-12 radio communication module
     - MPU-6050 IMU *(connected to LL MCU)*
     - TF-Luna lidar *(connected to HL MCU)*
     - BMP180 pressure sensor *(connected to HL MCU)*
     - QMC5883l magnetometer *(connected to HL MCU)*
-    - 4 motors w/ propellers
-    - 4 speed controllers (1 per motor)
+    - 4 motors
+        - [Readytosky 2300KV brushless motors](https://a.co/d/6Pua6ZV)
+        - 5mm center
+        - 19x16mm mounting holes on bottom
+    - Propellers: [5-inch, 3-blade, 4-inch pitch propellers](https://a.co/d/6pNksCt)
+    - 4 ESCs: [20A 2-4S BLHeli ESCs](https://a.co/d/6Rvq71s)
     - 2-4S LiPo battery
     - Voltage divider for battery
     - 5v buck converter (if speed controllers do not have BEC)
