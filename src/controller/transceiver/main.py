@@ -1,7 +1,35 @@
 import sys
 import time
 import select
+import machine
+from HC12 import HC12
 
+# define LED error sequence
+led = machine.Pin("LED", machine.Pin.OUT)
+def ERROR_SEQ() -> None:
+    while True:
+        led.on()
+        time.sleep(1.0)
+        led.off()
+        time.sleep(1.0)
+
+# set up HC-12
+uart = machine.UART(0, rx=machine.Pin(17), tx=machine.Pin(16), baudrate=9600)
+set_pin:int = 22
+hc12 = HC12(uart, set_pin)
+
+# pulse HC-12
+pulsed:bool = False
+for _ in range(5): # attempts
+    if not pulsed:
+        time.sleep(0.25)
+        pulsed = hc12.pulse
+if not pulsed:
+    print("HC-12 not confirmed to be connected! Unable to establish communications.")
+    ERROR_SEQ()
+
+# infinite respond loop
+led.on() # turn on LED light
 while True:
     
     # Check if we have received data from the PC that we may need to respond to or pass along to the drone (via HC-12)
