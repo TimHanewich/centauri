@@ -70,6 +70,10 @@ async def main() -> None:
         ser.close()
         exit()
 
+    # Send a ping to the drone now to confirm it is on and operating
+
+    # Send a config packet to the drone to set settings
+
     # set up control inputs
     armed:bool = False
     mode:bool = False
