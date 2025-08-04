@@ -6,6 +6,7 @@ from HC12 import HC12
 
 # define LED error sequence
 led = machine.Pin("LED", machine.Pin.OUT)
+led.off() # ensure LED is off while setting up.
 def ERROR_SEQ() -> None:
     while True:
         led.on()
