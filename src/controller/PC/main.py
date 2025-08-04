@@ -217,7 +217,8 @@ async def main() -> None:
     # get all threads going
     task_read_xbox = asyncio.create_task(continuous_read_xbox())
     task_display = asyncio.create_task(continuous_display())
-    await asyncio.gather(task_read_xbox, task_display, continuous_radio_tx) # infinitely wait for all to finish (which will never happen since they are infinitely running)
+    task_radio_tx = asyncio.create_task(continuous_radio_tx())
+    await asyncio.gather(task_read_xbox, task_display, task_radio_tx) # infinitely wait for all to finish (which will never happen since they are infinitely running)
 
 
 # run main program via asyncio
