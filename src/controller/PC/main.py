@@ -6,6 +6,7 @@ import rich.table
 import rich.console
 import rich.live
 import serial
+import tools
 
 async def main() -> None:
 
@@ -174,37 +175,10 @@ async def main() -> None:
 
         while True:
 
-            ToSend:bytearray = bytearray()
-
-            # Add header byte (metadata byte)
-            # bit 7, 6, 5, 4 are reserved (unused)
-            header:int = 0b00000000 # start with 0
-            header = header | 0b00000001 # set up pack identifier to 1, a control packet
-            if armed: header = header | 0b00000100 # if armed, make the 3rd bit 1. Otherwise, if unarmed, leave it as 0
-            if mode: header = header | 0b00001000 # if in angle mode, set the 4th bit to 1. Othewise, if in rate mode, leave it as 0
-            ToSend.append(header)
-
-            # Add throttle bytes
-            asint16:int = min(max(int(throttle * 65535), 0), 65535) # express as number between 0 and 65535
-            ToSend.extend(asint16.to_bytes(2, "big"))
-
-            # add pitch bytes
-            aspop:float = (pitch + 1) / 2 # as percent of range
-            asint16:int = min(max(int(aspop * 65535), 0), 65535)
-            ToSend.extend(asint16.to_bytes(2, "big"))
-
-            # add roll bytes
-            aspop:float = (roll + 1) / 2 # as percent of range
-            asint16:int = min(max(int(aspop * 65535), 0), 65535)
-            ToSend.extend(asint16.to_bytes(2, "big"))
-
-            # add yaw bytes
-            aspop:float = (yaw + 1) / 2 # as percent of range
-            asint16:int = min(max(int(aspop * 65535), 0), 65535)
-            ToSend.extend(asint16.to_bytes(2, "big"))
-
+            # pack into control packet
+            ToSend:bytes = tools.pack_control_packet(armed, mode, throttle, pitch, roll, yaw)
+            
             # send it
-            ToSend.extend("\r\n".encode())
             ser.write(bytes(ToSend))
             packets_sent = packets_sent + 1
 
