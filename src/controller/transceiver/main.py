@@ -17,7 +17,7 @@ def ERROR_SEQ() -> None:
 # define sending transceiver message to PC
 def send_tran_msg(msg:str) -> None:
     """Send a transceiver-level message to the PC via USB, flagged as such. Note, this is NOT for sending the normal payload from the drone to the PC. Instead, this is ONLY for sending transceiver-level communication to the PC; messages that originate from this transceiver itself, not the drone (not passing along a message from the drone)."""
-    ToSend:str = "TRAN" + msg + "\r\n"
+    ToSend:str = "TRAN" + msg + "\r\n" # "TRAN" means it is a message from the transceiver... not something we are passing along from the quadcopter
     sys.stdout.buffer.write(ToSend.encode())
 
 # set up HC-12
@@ -81,14 +81,11 @@ try:
                 data = data[4:] # strip the "TRAN" off (first four bytes)
                 data = data[0:-2] # take off the "\r\n" at the end (two bytes, 13 and 10)
                 if data == "PING".encode():
-                    ToSend:str = "TRAN" + "PONG" + "\r\n" # "TRAN" means it is a message from the transceiver... not something we are passing along from the quadcopter
-                    sys.stdout.buffer.write(ToSend.encode())
+                    send_tran_msg("PONG")
                 elif data == "STATUS?".encode(): # an inquiry of the HC-12's status
-                    ToSend:str = "TRAN" + str(hc12.status) + "\r\n" # hc12.status includes the mode, channel, and power, i.e. "{'mode': 3, 'channel': 1, 'power': 8}"
-                    sys.stdout.buffer.write(ToSend.encode())
+                    send_tran_msg(str(hc12.status)) # hc12.status includes the mode, channel, and power, i.e. "{'mode': 3, 'channel': 1, 'power': 8}"
                 else: # it is an unknow message, so just return with a question mark so the PC knows we had no idea what it wanted
-                    ToSend:str = "TRAN" + "?" + "\r\n"
-                    sys.stdout.buffer.write(ToSend.encode())
+                    send_tran_msg("?")
             else: # it is intended to be directly delivered to the drone, so just pass it along via HC-12
                 hc12.send(data) # send all the data. Including the \r\n at the end!
 
