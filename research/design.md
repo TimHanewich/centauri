@@ -54,3 +54,4 @@
 
 ## Credit to Designs Used
 - Slightly modified version of [MPU-6050 basic case by MaximvonAZ](https://www.thingiverse.com/thing:2800169)
+- TF Luna Dummy: https://www.thingiverse.com/thing:4356740
