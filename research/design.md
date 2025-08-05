@@ -20,6 +20,7 @@
     - BMP180 pressure sensor *(connected to HL MCU)*
     - QMC5883l magnetometer *(connected to HL MCU)*
     - [4S LiPo battery](https://a.co/d/5QyLvZG)
+        - 135mm x 42mm x 30mm
     - Voltage divider for battery
     - LM2596 buck converter set to +5V
     - "High Level" MCU: Rasperry Pi Pico
