@@ -51,3 +51,6 @@
 ![example](https://fbi.cults3d.com/uploaders/25297494/illustration-file/e9fb86ac-7ee3-4442-9882-9c307f14eb75/Testing.jpg)
 
 ![example](https://blog.quadmeup.com/assets/2017/12/3d-printed-racing-drone--1024x590.jpg)
+
+## Credit to Designs Used
+- Slightly modified version of [MPU-6050 basic case by MaximvonAZ](https://www.thingiverse.com/thing:2800169)
