@@ -52,6 +52,9 @@
 
 ![example](https://blog.quadmeup.com/assets/2017/12/3d-printed-racing-drone--1024x590.jpg)
 
+## Misc Notes
+- If a UART multiplexer is needed, the CD4053 may be a good option. Check out a video on it [here](https://youtu.be/Up68IgKUZy4?si=PsPbn5xtIKbIRIJK).
+
 ## Credit to Designs Used
 - Slightly modified version of [MPU-6050 basic case by MaximvonAZ](https://www.thingiverse.com/thing:2800169)
 - TF Luna Dummy: https://www.thingiverse.com/thing:4356740
