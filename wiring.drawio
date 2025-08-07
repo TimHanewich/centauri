@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0" version="28.0.7">
   <diagram name="Page-1" id="W1gebfnubh0FSxZTr-fW">
-    <mxGraphModel dx="2923" dy="2265" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3960" dy="2848" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -906,6 +906,15 @@
         </mxCell>
         <mxCell id="9aAEH4lfcey32dS3GUYK-215" value="" style="ellipse;whiteSpace=wrap;html=1;fillColor=#2F3840;strokeColor=#314354;fontColor=#ffffff;" vertex="1" parent="1">
           <mxGeometry x="443" y="414" width="10" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="9aAEH4lfcey32dS3GUYK-216" value="Centauri: Quadcopter Flight Controller Wiring" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=28;fontStyle=5" vertex="1" parent="1">
+          <mxGeometry x="-202" y="-55" width="645" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="9aAEH4lfcey32dS3GUYK-217" value="github.com/TimHanewich/centauri" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="-51.25" y="-14" width="343.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="9aAEH4lfcey32dS3GUYK-218" value="© Tim Hanewich 2025" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="-51.25" y="9" width="343.5" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
