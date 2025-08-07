@@ -14,11 +14,11 @@
         - 19x16mm mounting holes on bottom
     - Propellers: [5-inch, 3-blade, 4-inch pitch propellers](https://a.co/d/6pNksCt)
     - 4 ESCs: [20A 2-4S BLHeli ESCs](https://a.co/d/6Rvq71s)
-    - HC-12 radio communication module
-    - MPU-6050 IMU *(connected to LL MCU)*
-    - TF-Luna lidar *(connected to HL MCU)*
-    - BMP180 pressure sensor *(connected to HL MCU)*
-    - QMC5883l magnetometer *(connected to HL MCU)*
+    - HC-12 radio communication module, **5v**
+    - MPU-6050 IMU *(connected to LL MCU)*, **3.3v**
+    - TF-Luna lidar *(connected to HL MCU)*, **5v**
+    - BMP180 pressure sensor *(connected to HL MCU)* **3.3v**
+    - QMC5883l magnetometer *(connected to HL MCU)*, **3.3v**
     - [4S LiPo battery](https://a.co/d/5QyLvZG)
         - 135mm x 42mm x 30mm
     - Voltage divider for battery
