@@ -2,10 +2,7 @@
 The successor to my [Scout flight controller](https://github.com/TimHanewich/scout).
 
 ## To Do:
-- Buy, test, and validate TF Luna
-- Buy, test, and validate ESCs
 - Get better pressure sensor than BMP180?
-- Design the body
 - Print the body
 - Assemble and wire up
 - Develop drone-side code
