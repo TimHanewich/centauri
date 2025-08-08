@@ -30,6 +30,13 @@ def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll
     asint16:int = min(max(int(aspop * 65535), 0), 65535)
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
+    # Add XOR-chain-based checksum
+    checksum:int = 0x00 # start with 0
+    for byte in ToReturn: # for each byte added so far
+        checksum = checksum ^ byte
+    ToReturn.append(checksum)
+    print("Checksum: " + str(checksum))
+
     # append \r\n
     ToReturn.extend("\r\n".encode())
 
