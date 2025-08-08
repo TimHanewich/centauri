@@ -33,7 +33,7 @@ def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll
     # Add XOR-chain-based checksum
     checksum:int = 0x00 # start with 0
     for byte in ToReturn: # for each byte added so far
-        checksum = checksum ^ byte
+        checksum = checksum ^ byte # XOR operation
     ToReturn.append(checksum)
     print("Checksum: " + str(checksum))
 
