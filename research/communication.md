@@ -68,6 +68,7 @@ This data packet contains all necessary data for controlling normal flight chara
 - Roll input (2 bytes): roll stick input, can be used to calculate desired roll rate or angle
 - Pitch input (2 bytes): pitch stick input, can be used to calculate desired pitch rate or angle
 - Yaw input (2 bytes): yaw input, can be used to calculate desired yaw rate
+- **Checksum** (1 byte): XOR chain based on all the above bytes
 - "\r\n" end line (2 bytes)
 
 ## Quadcopter --> Remote Controller
