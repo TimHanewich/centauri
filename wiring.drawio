@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0" version="28.0.7">
   <diagram name="Page-1" id="W1gebfnubh0FSxZTr-fW">
-    <mxGraphModel dx="2314" dy="1922" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1887" dy="1683" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -970,10 +970,10 @@
             <mxPoint x="70" y="310" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="VM7HQNPjBxC0RBLDggB8-8" value="R1 Resistor&lt;div&gt;X Ohms&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=8;" vertex="1" parent="1">
+        <mxCell id="VM7HQNPjBxC0RBLDggB8-8" value="R1 Resistor&lt;div&gt;100,000 Ohms&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=8;" vertex="1" parent="1">
           <mxGeometry x="40" y="267" width="60" height="23" as="geometry" />
         </mxCell>
-        <mxCell id="VM7HQNPjBxC0RBLDggB8-9" value="R2 Resistor&lt;div&gt;X Ohms&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=8;" vertex="1" parent="1">
+        <mxCell id="VM7HQNPjBxC0RBLDggB8-9" value="R2 Resistor&lt;div&gt;22,000 Ohms&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=8;" vertex="1" parent="1">
           <mxGeometry x="40" y="331" width="60" height="23" as="geometry" />
         </mxCell>
         <mxCell id="VM7HQNPjBxC0RBLDggB8-10" value="" style="endArrow=none;html=1;rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" edge="1" parent="1">
