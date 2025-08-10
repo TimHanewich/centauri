@@ -52,6 +52,9 @@
 
 ![example](https://blog.quadmeup.com/assets/2017/12/3d-printed-racing-drone--1024x590.jpg)
 
+## Blender Design Dumps
+- [August 10, 2025 - complete design](https://github.com/TimHanewich/centauri/releases/download/1/design.zip)
+
 ## Misc Notes
 - If a UART multiplexer is needed, the CD4053 may be a good option. Check out a video on it [here](https://youtu.be/Up68IgKUZy4?si=PsPbn5xtIKbIRIJK).
 
