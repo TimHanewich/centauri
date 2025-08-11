@@ -60,3 +60,17 @@ def pack_status_packet(m1_throttle:float, m2_throttle:float, m3_throttle:float, 
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     return bytes(ToReturn)
+
+def pack_special_packet(msg:str) -> bytes:
+    """Does NOT append \r\n at the end"""
+
+    ToReturn:bytearray = bytearray()
+
+    # header byte
+    ToReturn.append(0b00000001) # bit 0 1 to declare as special packet
+
+    # message
+    ToUse:str = msg[0:50] # truncate to 50 characters
+    ToReturn.extend(ToUse.encode("ascii"))
+
+    return bytes(ToReturn)
