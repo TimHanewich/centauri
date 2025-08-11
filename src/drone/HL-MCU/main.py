@@ -59,7 +59,7 @@ if 0x10 not in i2c_scan:
 luna:TFLuna = TFLuna(i2c)
 if luna.signature:
     print("TF Luna connected!")
-    hc12.send(tools.pack_special_packet("TF-Luna good") + "\r\n".encode())
+    hc12.send(tools.pack_special_packet("luna good") + "\r\n".encode())
 else:
     print("TF-Luna not connected! Signature unsuccessful.")
     hc12.send(tools.pack_special_packet("no luna sig") + "\r\n".encode())
@@ -71,8 +71,15 @@ if 0x77 in i2c_scan:
     hc12.send(tools.pack_special_packet("BMP180 good") + "\r\n".encode())
 else:
     print("BMP180 not found on expected I2C bus!")
+    hc12.send(tools.pack_special_packet("no BMP180") + "\r\n".encode())
     FATAL_ERROR()
-bmp180 = BMP180(i2c)
+bmp180:BMP180 = None
+try:
+    bmp180 = BMP180(i2c)
+except:
+    hc12.send(tools.pack_special_packet("BMP180 init fail") + "\r\n".encode())
+    print("BMP180 initialization fail.")
+    FATAL_ERROR()
 
 # confirm if QMC5883L is connected
 if 0x0D in i2c_scan:
@@ -80,7 +87,14 @@ if 0x0D in i2c_scan:
     hc12.send(tools.pack_special_packet("QMC5883L good") + "\r\n".encode())
 else:
     print("QMC5883L not connected!")
+    hc12.send(tools.pack_special_packet("no QMC5883L") + "\r\n".encode())
     FATAL_ERROR()
-qmc = QMC5883L(i2c)
+qmc:QMC5883L = None
+try:
+    qmc = QMC5883L(i2c)
+except:
+    hc12.send(tools.pack_special_packet("QMC5883L init fail") + "\r\n".encode())
+    print("QMC5883L initialization fail.")
+    FATAL_ERROR()
 
 
