@@ -76,7 +76,7 @@ Of the data packets that are sent from quadcopter --> controller, there is 1 bit
 - `0` = status packet
 - `1` = special packet (free-form text)
 
-###  Status Packet
+### Status Packet
 LL MCU --> HL MCU via UART, HL MCU --> Remote Controller via HC-12.
 
 - Metadata byte (1 byte)
@@ -102,4 +102,19 @@ LL MCU --> HL MCU via UART, HL MCU --> Remote Controller via HC-12.
     - TF Luna reading (? bytes)
     - BMP180 reading (? bytes)
     - QMC5883L reading (? bytes)
+- "\r\n" end line (2 bytes)
+
+### Special Packet (free text)
+Drone --> HC-12 --> HC-12 --> Transceiver --> PC
+
+- Metadata byte (1 byte)
+    - Bit 7: *reserved*
+    - Bit 6: *reserved*
+    - Bit 5: *reserved*
+    - Bit 4: *reserved*
+    - Bit 3: *reserved*
+    - Bit 2: *reserved*
+    - Bit 1: *reserved*
+    - Bit 0: packet identifier (set to `1` to declare as special packet)
+- Message bytes (plain text encoded as ASCII) - *any number of bytes*
 - "\r\n" end line (2 bytes)
