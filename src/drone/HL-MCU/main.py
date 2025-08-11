@@ -41,40 +41,39 @@ print("Sending online message...")
 #hc12.send(tools.pack_special_packet("online") + "\r\n".encode())
 print("Online message sent.")
 
+# set up I2C bus for all 3 I2C devices connected to the HL MCU: TF Luna (0x10), BMP180 (0x77), and QMC5883L (0x0D)
+i2c = machine.I2C(1, sda=machine.Pin(6), scl=machine.Pin(7))
+i2c_scan:list[int] = i2c.scan()
+print("I2C scan: " + str(i2c_scan))
+
 # confirm TF Luna is connected
 from TFLuna import TFLuna
-i2c_luna = machine.I2C(1, sda=machine.Pin(6), scl=machine.Pin(7))
-print("IC2 Luna bus scan: " + str(i2c_luna.scan()))
-luna:TFLuna = TFLuna(i2c_luna)
+luna:TFLuna = TFLuna(i2c)
 if luna.signature:
     print("TF Luna connected!")
-    #hc12.send(tools.pack_special_packet("TF-Luna good") + "\r\n".encode())
+    hc12.send(tools.pack_special_packet("TF-Luna good") + "\r\n".encode())
 else:
     print("TF-Luna not connected! Signature unsuccessful.")
     FATAL_ERROR()
 
 # confirm if BMP180 is connected
 from bmp085 import BMP180
-i2c_bmp180 = machine.I2C(1, sda=machine.Pin(10), scl=machine.Pin(11))
-print("I2C BMP180 bus scan: " + str(i2c_bmp180.scan()))
-if 0x77 in i2c_bmp180.scan():
+if 0x77 in i2c_scan:
     print("BMP180 confirmed to be connected.")
-    #hc12.send(tools.pack_special_packet("BMP180 good") + "\r\n".encode())
+    hc12.send(tools.pack_special_packet("BMP180 good") + "\r\n".encode())
 else:
     print("BMP180 not found on expected I2C bus!")
     FATAL_ERROR()
-bmp180 = BMP180(i2c_bmp180)
+bmp180 = BMP180(i2c)
 
 # confirm if QMC5883L is connected
 from QMC5883L import QMC5883L
-i2c_qmc = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
-print("I2C QMC5883L bus scan: " + str(i2c_qmc.scan()))
-if 0x0D in i2c_qmc.scan():
+if 0x0D in i2c_scan:
     print("QMC5883L confirmed to be connected!")
-    #hc12.send(tools.pack_special_packet("QMC5883L good") + "\r\n".encode())
+    hc12.send(tools.pack_special_packet("QMC5883L good") + "\r\n".encode())
 else:
     print("QMC5883L not connected!")
     FATAL_ERROR()
-qmc = QMC5883L(i2c_qmc)
+qmc = QMC5883L(i2c)
 
 
