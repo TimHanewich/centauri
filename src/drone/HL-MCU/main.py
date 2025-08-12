@@ -103,6 +103,25 @@ async def main() -> None:
 
     # Confirm LL MCU is operating
     uart_llmcu = machine.UART(0, tx=machine.Pin(16), rx=machine.Pin(17), baudrate=115200)
+    print("Sending PING to LL-MCU...")
+    uart_llmcu.write("TIMHPING\r\n".encode()) # send ping
+    LLMCU_Ponged:bool = False
+    started = time.ticks_ms()
+    while (time.ticks_ms() - started) < 5000: # wait for a max of 5 seconds
+        if uart_llmcu.any() > 0:
+            print("Data available! Reading line...")
+            data = uart_llmcu.readline()
+            if "TIMHPONG\r\n".encode() in data:
+                print("LL-MCU ponged!")
+                LLMCU_Ponged = True
+                break
+        time.sleep(0.1)
+
+    # if the LL MCU did not pong back, fail
+    if LLMCU_Ponged == False:
+        print("LLMCU did not pong back. Failing.")
+        hc12.send(tools.pack_special_packet("LLMCU no pong") + "\r\n".encode())
+        FATAL_ERROR()
 
     # Declare all variables that will be tracked and reported on
     llmcu_status_data:bytes = None # the status packet that arrived from the LL MCU
