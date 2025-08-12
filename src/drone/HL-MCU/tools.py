@@ -61,6 +61,47 @@ def pack_status_packet_part1(m1_throttle:float, m2_throttle:float, m3_throttle:f
 
     return bytes(ToReturn)
 
+def pack_status_packet_part2(battery:float, tfluna_distance:int, tfluna_strength:int, altitude:float, heading:float) -> bytes:
+    """Packs the second portion of the status packet, the portion that originates from the HL MCU, into bytes"""
+
+    ToReturn:bytearray = bytearray()
+
+    # battery voltage
+    # Fully charged 4S = 16.8v
+    # Full discharged 2S = 6.0v
+    # So a range of 10.8 volts, over 65,636 unique values (uint16) = ~6,068 per volt. High resolution!
+    aspor:float = (battery - 6.0) / (16.8 - 6.0) # percent of range
+    asint16:int = min(max(int(aspor * 65535), 0), 65535)
+    ToReturn.extend(asint16.to_bytes(2, "big"))
+
+    # TF Luna Reading: Distance
+    asint16:int = min(max(tfluna_distance, 0), 65535)
+    ToReturn.extend(asint16.to_bytes(2, "big"))
+
+    # TF Luna Reading: Strength
+    asint16:int = min(max(tfluna_strength, 0), 65535)
+    ToReturn.extend(asint16.to_bytes(2, "big"))
+
+    # BMP180: Altitude, in meters
+    # BMP180's min pressure reading: 300 hPa = 9,165.16 meters
+    # BMP180's max pressure reading: 1,100 hPa = -698.42 meters
+    # thus, the range in meters is 9,863.58
+    # We are able to express that over 65,536 unique values (uint16)
+    # Which would be 6.64 per meter
+    aspor:float = (altitude + 698.42) / 9863.58 # percent of range
+    asint16:int = min(max(int(aspor * 65535), 0), 65535)
+    ToReturn.extend(asint16.to_bytes(2, "big"))
+
+    # Heading
+    # heading can be 0 to 360
+    # however, since it isn't very sensitive, we will use a single byte here
+    valb:int = int(heading / (256 / 360))
+    valb = min(max(valb, 0), 255)
+    ToReturn.append(valb)
+
+    return bytes(ToReturn)
+
+
 def pack_special_packet(msg:str) -> bytes:
     """Does NOT append \r\n at the end"""
 
