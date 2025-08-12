@@ -144,15 +144,19 @@ async def main() -> None:
         """Handles receiving of any data from the HL MCU"""
 
         # declare nonlocal variables
-        nonlocal uart
+        nonlocal uart # the interface with the HL-MCU, which the incoming data will be coming from
 
         while True:
             if uart.any() > 0:
                 data:bytes = uart.readline()
 
                 # handle according to what it is
-                if data == "TIMHPING\r\n".encode(): # simple check of life
-                    uart.write("TIMHPONG\r\n".encode()) # respond pong
+                if data == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
+                    uart.write("TIMHPONG\r\n".encode()) # respond pong to confirm we are online and alive
+                elif data == "": # Settings update (config)
+                    pass
+                elif data == "": # Desired rate packet (control)
+                    pass
                 else:
                     print("Unknown data received: " + str(data))
             
