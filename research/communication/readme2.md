@@ -18,11 +18,9 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
 
 ## Communication Between Transceiver and HL-MCU (via HC-12)
 - Transceiver --> HL-MCU
-    - PING (request for confirmation of life): `TIMHPING\r\n`
     - Settings Update
     - Control Packet
 - HL-MCU --> Transceiver
-    - PONG (confirmation of life): `TIMHPONG\r\n`
     - Status Packet
     - Special Packet (text) 
     
