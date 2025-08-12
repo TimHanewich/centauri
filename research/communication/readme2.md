@@ -18,19 +18,19 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
 
 ## Communication Between Transceiver and HL-MCU (via HC-12)
 - Transceiver --> HL-MCU
-    - Settings Update
+    - Settings Update 1
     - Control Packet
 - HL-MCU --> Transceiver
-    - Status Packet
+    - Status Packet 2
     - Special Packet (text) 
     
 ## Communication Between HL-MCU and LL-MCU
 If the communication between the HL-MCU and LL-MCU begins with "TIMH", that means it is an "internal message", intended to only be shared between them. If it does not begin with that, it is merely intended to "pass through" to the remote controller.
 - HL-MCU --> LL-MCU:
     - PING (request for confirmation of life): `TIMHPING\r\n`
-    - Settings Update
+    - Settings Update 2
     - Desired Rates (normal control)
 - LL-MCU --> HL-MCU:
     - PONG (confirmation of life): `TIMHPING\r\n`
-    - Status Packet
+    - Status Packet 1
     
