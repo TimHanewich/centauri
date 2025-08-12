@@ -18,8 +18,57 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
 
 ## Communication Between Transceiver and HL-MCU (via HC-12)
 - Transceiver --> HL-MCU
-    - Settings Update 1
+    - Control Settings Update
+        - Metadata byte:
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: `0` (packet identifier)
+            - Bit 0: `0` (packet identifier)
+        - Idle Throttle: 2 bytes
+        - Max Throttle: 2 bytes
+        - Max Pitch Rate (Rate Mode): 2 bytes
+        - Max Roll Rate (Rate Mode): 2 bytes
+        - Max Yaw Rate (Rate Mode): 2 bytes
+        - Max Pitch Angle (Angle Mode): 2 bytes
+        - Max Roll angle (Angle Mode): 2 bytes
+    - PID Settings Update
+        - Metadata byte:
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: `0` (packet identifier)
+            - Bit 0: `1` (packet identifier)
+        - Pitch P Gain
+        - Pitch I Gain
+        - Pitch D Gain
+        - Roll P Gain
+        - Roll I Gain
+        - Roll D Gain
+        - Yaw P Gain
+        - Yaw I Gain
+        - Yaw D Gain
+        - PID I Limit
     - Control Packet
+        - Metadata byte:
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: **control mode**. 0 = rate mode, 1 = angle mode
+            - Bit 2: **armed**. 0 = unarmed, idle on ground. 1 = armed, motors spin at idle speed.
+            - Bit 1: `1` (packet identifier)
+            - Bit 0: `0` (packet identifier)
+        - Throttle (2 bytes)
+        - Pitch (2 bytes)
+        - Roll (2 bytes)
+        - Yaw (2 bytes)
 - HL-MCU --> Transceiver
     - Status Packet 2
     - Special Packet (text) 
