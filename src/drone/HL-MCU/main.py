@@ -15,6 +15,7 @@ def FATAL_ERROR() -> None:
         time.sleep(1.0)
 
 # all imports
+print("Importing libraries...")
 import asyncio
 import tools
 from HC12 import HC12
@@ -99,6 +100,14 @@ async def main() -> None:
         hc12.send(tools.pack_special_packet("QMC5883L init fail") + "\r\n".encode())
         print("QMC5883L initialization fail.")
         FATAL_ERROR()
+
+    # Create functions for threads
+    # - update TF Luna reading
+    # - update BMP180 reading
+    # - update QMC5883L reading
+    # - update battery voltage reading
+    # - Check for new messages on HC-12 and handle them
+    # - Send HC-12 messages (status packets)
 
 # run main program via asyncio
 asyncio.run(main())
