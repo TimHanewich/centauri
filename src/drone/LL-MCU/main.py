@@ -104,7 +104,19 @@ async def main() -> None:
     gyro_bias_z:float = gzs / samples
     print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
 
-    # declare variables that will be used throughout multiple coroutines
+    # declare variables that will be used accross multiple coroutines: flight control loop
+    pitch_kp:float = 0.0
+    pitch_ki:float = 0.0
+    pitch_kd:float = 0.0
+    roll_kp:float = 0.0
+    roll_ki:float = 0.0
+    roll_kd:float = 0.0
+    yaw_kp:float = 0.0
+    yaw_ki:float = 0.0
+    yaw_kd:float = 0.0
+    i_limit:float = 0.0
+
+    # declare variables that will be used accross multiple coroutines: status
     m1_throttle:float = 0.0
     m2_throttle:float = 0.0
     m3_throttle:float = 0.0
@@ -114,6 +126,10 @@ async def main() -> None:
     yaw_rate:float = 0.0
     pitch_angle:float = 0.0
     roll_angle:float = 0.0
+
+    # overclock
+    print("Overclocking...")
+    #machine.freq(250000000)
 
     async def ledflicker() -> None:
         """Continuously flick the onboard LED."""
