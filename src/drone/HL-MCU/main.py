@@ -101,6 +101,71 @@ async def main() -> None:
         print("QMC5883L initialization fail.")
         FATAL_ERROR()
 
+    # Confirm LL MCU is operating
+    uart_llmcu = machine.UART(0, tx=machine.Pin(16), rx=machine.Pin(17), baudrate=115200)
+
+    # Declare all variables that will be tracked and reported on
+    llmcu_status_data:bytes = None # the status packet that arrived from the LL MCU
+    battery_voltage:float = 0.0
+    tfluna_distance:int = 0 # distance reading, in cm (0-800)
+    tfluna_strength:int = 0 # strength reading
+    altitude:float = 0.0 # altitude reading, in meters (inferred from pressure reading from BMP180)
+    heading:float = 0.0 # magnetic heading
+
+    async def llmcu_rx() -> None:
+        """Focused on continuously listening for received data from the LL MCU, usually a status packet."""
+
+        # declare nonlocal variables
+        nonlocal uart_llmcu
+        nonlocal llmcu_status_data
+
+        while True:
+            if uart_llmcu.any() > 0:
+                data:bytes = uart_llmcu.readline()
+
+                # handle it based on what it is
+                if data[0] == 0b00000000: # status packet
+                    if data.endswith("\r\n".encode()):
+                        data = data[0:-2] # trim off \r\n
+                    llmcu_status_data = data
+                else:
+                    print("Unknown packet from LLMCU: " + str(data))
+            
+            # wait
+            time.sleep(0.05) # 20 Hz... The LL MCU is supposed to provide at 10 Hz, so reading quicker here to ensure a backlog does not build up
+
+    async def radio_rx() -> None:
+        """Focused on continuously receiving commands from the controller via the HC-12 (radio communications)"""
+        pass
+
+    async def radio_tx() -> None:
+        """Focused on continuously sending status packets and such to the controller via the HC-12."""
+
+        # declare nonlocal variables
+        nonlocal hc12 # what we will use to send info!
+        nonlocal llmcu_status_data
+        nonlocal battery_voltage
+        nonlocal tfluna_distance
+        nonlocal tfluna_strength
+        nonlocal altitude
+        nonlocal heading
+
+        # continuously send data
+        while True:
+            if llmcu_status_data != None: # if new data is available from the LL MCU
+                
+                # prepare and send
+                ToAppend:bytes = tools.pack_status_packet_part2(battery_voltage, tfluna_distance, tfluna_strength, altitude, heading)
+                ToSend:bytes = llmcu_status_data + ToAppend + "\r\n".encode()
+                hc12.send(ToSend) # send it!
+
+                # clear out old data from LL MCU. We will only send again once we have new data
+                llmcu_status_data = None
+
+            # wait
+            time.sleep(0.1) # 10 Hz
+
+
     # Create functions for threads
     # - update TF Luna reading
     # - update BMP180 reading
