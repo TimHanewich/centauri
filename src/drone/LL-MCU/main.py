@@ -163,7 +163,7 @@ async def main() -> None:
             # wait
             await asyncio.sleep(0.01) # 100 Hz max
 
-    async def comms_tx() -> None:
+    async def status_tx() -> None:
         """Handles continuous sending of status data to HL MCU."""
 
         # do not need to declare nonlocal variables because we will only be READING from them, not writing. (nonlocal only required to write)
@@ -186,8 +186,8 @@ async def main() -> None:
     # Run all threads!
     task_led_flicker = asyncio.create_task(ledflicker())
     task_comms_rx = asyncio.create_task(comms_rx())
-    task_comms_tx = asyncio.create_task(comms_tx())
+    task_status_tx = asyncio.create_task(status_tx())
     task_fc = asyncio.create_task(flightcontrol())
-    await asyncio.gather(task_led_flicker, task_comms_rx, task_comms_tx, task_fc)
+    await asyncio.gather(task_led_flicker, task_comms_rx, task_status_tx, task_fc)
 
 asyncio.run(main())
