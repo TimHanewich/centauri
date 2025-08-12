@@ -93,6 +93,15 @@ async def main() -> None:
     pitch_angle:float = 0.0
     roll_angle:float = 0.0
 
+    async def ledflicker() -> None:
+        """Continuously flick the onboard LED."""
+        nonlocal led
+        while True:
+            led.on()
+            await asyncio.sleep(0.25)
+            led.off()
+            await asyncio.sleep(0.25)
+
     async def comms_rx() -> None:
         """Handles receiving of any data from the HL MCU"""
 
@@ -139,8 +148,9 @@ async def main() -> None:
             await asyncio.sleep(0.1) # 10 Hz
 
     # Run all threads!
+    task_led_flicker = asyncio.create_task(ledflicker())
     task_comms_rx = asyncio.create_task(comms_rx())
     task_comms_tx = asyncio.create_task(comms_tx())
-    await asyncio.gather(task_comms_rx, task_comms_tx)
+    await asyncio.gather(task_led_flicker, task_comms_rx, task_comms_tx)
 
 asyncio.run(main())
