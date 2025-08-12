@@ -11,29 +11,20 @@ First, set up:
     - Set gyro scale
     - Confirm all of those settings
 - Calibrate gyro (observe and record bias)
-- Set up motor PWMs
 - Set up universal variables that may need to be referenced accross all coroutines
-    - PID Pitch P
-    - PID Pitch I
-    - PID Pitch D
-    - PID Roll P
-    - PID Roll I
-    - PID Roll D
-    - PID Yaw P
-    - PID Yaw I
-    - PID Yaw D
-    - PID I Limit
 - Overclock
 
 The LL MCU will then run the following async coroutines in parralel:
 - Flight Control Loop:
-    - Capture raw IMU data
-    - Calculate errors to desired pitch rate, roll rate, yaw rate
-    - Perform Pitch PID Calc
-    - Perform Roll PID Calc
-    - Perform Yaw PID Calc
-    - Calculate M1-4 throttles using desired throttle + PID outputs
-    - Set M1-4 throttles
+    - Set up motor PWMs
+    - Infinite loop
+        - Capture raw IMU data
+        - Calculate errors to desired pitch rate, roll rate, yaw rate
+        - Perform Pitch PID Calc
+        - Perform Roll PID Calc
+        - Perform Yaw PID Calc
+        - Calculate M1-4 throttles using desired throttle + PID outputs
+        - Set M1-4 throttles
 - Rx Loop: handle incoming data from HL-MCU (via UART)
     - **Pings**: respond with "PONG"
     - Settings updates (PID gains, etc.)
