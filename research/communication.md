@@ -118,3 +118,20 @@ Drone --> HC-12 --> HC-12 --> Transceiver --> PC
     - Bit 0: packet identifier (set to `1` to declare as special packet)
 - Message bytes (plain text encoded as ASCII) - *any number of bytes*
 - "\r\n" end line (2 bytes)
+
+## HL MCU --> LL MCU Confirmation of Life
+The HL MCU may send the following over UART to the LL MCU to confirm it is on and okay:
+
+```
+TIMHPING\r\n
+```
+
+The "TIMH" (84, 73, 77, 72) beginning 4 bytes mark the line as an "internal message". **Not** a message from the controller, but rather a message from the HL MCU to confirm the LL MCU is working.
+
+If the LL MCU receives this, it should respond with the following:
+
+```
+TIMHPONG\r\n
+```
+
+Again, the preceeding "TIMH" marks the message as one that originates from the LL MCU, explicitly for the HL MCU, **not** something to be passed along to the controller.
