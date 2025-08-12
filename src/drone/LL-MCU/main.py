@@ -166,17 +166,7 @@ async def main() -> None:
     async def comms_tx() -> None:
         """Handles continuous sending of status data to HL MCU."""
 
-        # declare nonlocal variables
-        nonlocal uart
-        nonlocal m1_throttle
-        nonlocal m2_throttle
-        nonlocal m3_throttle
-        nonlocal m4_throttle
-        nonlocal pitch_rate
-        nonlocal roll_rate
-        nonlocal yaw_rate
-        nonlocal pitch_angle
-        nonlocal roll_angle
+        # do not need to declare nonlocal variables because we will only be READING from them, not writing. (nonlocal only required to write)
 
         while True:
 
