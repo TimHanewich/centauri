@@ -132,7 +132,7 @@ async def main() -> None:
                     print("Unknown packet from LLMCU: " + str(data))
             
             # wait
-            time.sleep(0.05) # 20 Hz... The LL MCU is supposed to provide at 10 Hz, so reading quicker here to ensure a backlog does not build up
+            await asyncio.sleep(0.05) # 20 Hz... The LL MCU is supposed to provide at 10 Hz, so reading quicker here to ensure a backlog does not build up
 
     async def radio_rx() -> None:
         """Focused on continuously receiving commands from the controller via the HC-12 (radio communications)"""
@@ -163,7 +163,7 @@ async def main() -> None:
                 llmcu_status_data = None
 
             # wait
-            time.sleep(0.1) # 10 Hz
+            await asyncio.sleep(0.1) # 10 Hz
 
 
     # Create functions for threads
