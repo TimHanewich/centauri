@@ -1,4 +1,4 @@
-def pack_status_packet_part1(m1_throttle:float, m2_throttle:float, m3_throttle:float, m4_throttle:float, pitch_rate:float, roll_rate:float, yaw_rate:float, pitch_angle:float, roll_angle:float) -> bytes:
+def pack_control_status(m1_throttle:float, m2_throttle:float, m3_throttle:float, m4_throttle:float, pitch_rate:float, roll_rate:float, yaw_rate:float, pitch_angle:float, roll_angle:float) -> bytes:
 
     ToReturn:bytearray = bytearray()
 
@@ -61,7 +61,7 @@ def pack_status_packet_part1(m1_throttle:float, m2_throttle:float, m3_throttle:f
 
     return bytes(ToReturn)
 
-def pack_status_packet_part2(battery:float, tfluna_distance:int, tfluna_strength:int, altitude:float, heading:float) -> bytes:
+def pack_system_status(battery:float, tfluna_distance:int, tfluna_strength:int, altitude:float, heading:float) -> bytes:
     """Packs the second portion of the status packet, the portion that originates from the HL MCU, into bytes"""
 
     ToReturn:bytearray = bytearray()
