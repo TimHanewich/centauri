@@ -101,7 +101,6 @@ def pack_system_status(battery:float, tfluna_distance:int, tfluna_strength:int, 
 
     return bytes(ToReturn)
 
-
 def pack_special_packet(msg:str) -> bytes:
     """Does NOT append \r\n at the end"""
 
