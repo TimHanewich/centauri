@@ -157,3 +157,26 @@ def pack_settings_update(pitch_kp:float, pitch_ki:float, pitch_kd:float, roll_kp
     ToReturn.append(checksum)
 
     return bytes(ToReturn)
+
+def pack_desired_rates(throttle_uint16:int, pitch_int16:int, roll_int16:int, yaw_int16:int) -> bytes:
+
+    ToReturn:bytearray = bytearray()
+
+    # header byte
+    ToReturn.append(0b00000001) # 1 is the packet identifier
+
+    # throttle
+    ToReturn.extend(struct.pack("<H", throttle_uint16)) # pack as unsigned short
+
+    # pitch, roll, yaw
+    ToReturn.extend(struct.pack("<h", pitch_int16)) # pack as signed short
+    ToReturn.extend(struct.pack("<h", roll_int16)) # pack as signed short
+    ToReturn.extend(struct.pack("<h", yaw_int16)) # pack as signed short
+
+    # XOR-chain based checksum:
+    checksum:int = 0x00 # start with 0
+    for byte in ToReturn:
+        checksum = checksum ^ byte # XOR operation
+    ToReturn.append(checksum)
+
+    return bytes(ToReturn)
