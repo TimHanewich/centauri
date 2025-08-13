@@ -156,4 +156,4 @@ def pack_settings_update(pitch_kp:float, pitch_ki:float, pitch_kd:float, roll_kp
         checksum = checksum ^ byte # XOR operation
     ToReturn.append(checksum)
 
-    return ToReturn
+    return bytes(ToReturn)
