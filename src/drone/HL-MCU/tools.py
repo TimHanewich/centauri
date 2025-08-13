@@ -1,3 +1,7 @@
+import struct
+
+##### TO BE SENT TO REMOTE CONTROLLER
+
 def pack_control_status(m1_throttle:float, m2_throttle:float, m3_throttle:float, m4_throttle:float, pitch_rate:float, roll_rate:float, yaw_rate:float, pitch_angle:float, roll_angle:float) -> bytes:
 
     ToReturn:bytearray = bytearray()
@@ -114,3 +118,42 @@ def pack_special_packet(msg:str) -> bytes:
     ToReturn.extend(ToUse.encode("ascii"))
 
     return bytes(ToReturn)
+
+
+
+
+### TO BE SENT TO LL-MCU
+
+def pack_settings_update(pitch_kp:float, pitch_ki:float, pitch_kd:float, roll_kp:float, roll_ki:float, roll_kd:float, yaw_kp:float, yaw_ki:float, yaw_kd:float, i_limit:float) -> bytes:
+    """Packs settings for LL-MCU into bytes, ready to be delivered to LL-MCU via UART."""
+
+    ToReturn:bytearray = bytearray()
+
+    # header byte (metadata)
+    ToReturn.append(0b00000000) # 0 in the Bit 0 position (farthest to right) as packet identifier
+
+    # Pitch values
+    ToReturn.extend(struct.pack("f", pitch_kp))
+    ToReturn.extend(struct.pack("f", pitch_ki))
+    ToReturn.extend(struct.pack("f", pitch_kd))
+
+    # Roll values
+    ToReturn.extend(struct.pack("f", roll_kp))
+    ToReturn.extend(struct.pack("f", roll_ki))
+    ToReturn.extend(struct.pack("f", roll_kd))
+
+    # Yaw values
+    ToReturn.extend(struct.pack("f", yaw_kp))
+    ToReturn.extend(struct.pack("f", yaw_ki))
+    ToReturn.extend(struct.pack("f", yaw_kd))
+
+    # i limit
+    ToReturn.extend(struct.pack("f", i_limit))
+
+    # XOR-chain based checksum:
+    checksum:int = 0x00 # start with 0
+    for byte in ToReturn:
+        checksum = checksum ^ byte # XOR operation
+    ToReturn.append(checksum)
+
+    return ToReturn
