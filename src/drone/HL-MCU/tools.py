@@ -102,7 +102,7 @@ def pack_system_status(battery:float, tfluna_distance:int, tfluna_strength:int, 
     return bytes(ToReturn)
 
 def pack_special_packet(msg:str) -> bytes:
-    """Does NOT append \r\n at the end"""
+    """Packs special packet with a message to be sent to the remote controller (via HC-12). Does NOT append \r\n at the end"""
 
     ToReturn:bytearray = bytearray()
 
