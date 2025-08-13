@@ -170,11 +170,9 @@ async def main() -> None:
 
         while True:
 
-            # pack all data
-            data:bytes = tools.pack_status_packet_part1(m1_throttle, m2_throttle, m3_throttle, m4_throttle, pitch_rate, roll_rate, yaw_rate, pitch_angle, roll_angle)
-
-            # send the data
-            uart.write(data + "\r\n".encode())
+            # pack status data
+            
+            # send satus data to HL-MCU via UART
 
             # wait
             await asyncio.sleep(0.1) # 10 Hz
