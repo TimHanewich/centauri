@@ -46,16 +46,17 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
             - Bit 2: *reserved*
             - Bit 1: `0` (packet identifier)
             - Bit 0: `1` (packet identifier)
-        - Pitch P Gain
-        - Pitch I Gain
-        - Pitch D Gain
-        - Roll P Gain
-        - Roll I Gain
-        - Roll D Gain
-        - Yaw P Gain
-        - Yaw I Gain
-        - Yaw D Gain
-        - PID I Limit
+        - Pitch P Gain (4 bytes)
+        - Pitch I Gain (4 bytes)
+        - Pitch D Gain (4 bytes)
+        - Roll P Gain (4 bytes)
+        - Roll I Gain (4 bytes)
+        - Roll D Gain (4 bytes)
+        - Yaw P Gain (4 bytes)
+        - Yaw I Gain (4 bytes)
+        - Yaw D Gain (4 bytes)
+        - I Limit (4 bytes)
+        - XOR-chain based checksum (1 byte)
     - Control Packet
         - Metadata byte:
             - Bit 7: *reserved*
