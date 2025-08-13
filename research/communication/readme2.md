@@ -28,13 +28,14 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
             - Bit 2: *reserved*
             - Bit 1: `0` (packet identifier)
             - Bit 0: `0` (packet identifier)
-        - Idle Throttle: 2 bytes
-        - Max Throttle: 2 bytes
-        - Max Pitch Rate (Rate Mode): 2 bytes
-        - Max Roll Rate (Rate Mode): 2 bytes
-        - Max Yaw Rate (Rate Mode): 2 bytes
-        - Max Pitch Angle (Angle Mode): 2 bytes
-        - Max Roll angle (Angle Mode): 2 bytes
+        - Idle Throttle: 1 byte
+        - Max Throttle: 1 byte
+        - Max Pitch Rate, in degrees per second (Rate Mode): 1 byte
+        - Max Roll Rate, in degrees per second (Rate Mode): 1 byte
+        - Max Yaw Rate, in degrees per second (Rate Mode): 1 byte
+        - Max Pitch Angle (Angle Mode): 1 byte
+        - Max Roll angle (Angle Mode): 1 byte
+        - XOR-chain based checksum
     - PID Settings Update
         - Metadata byte:
             - Bit 7: *reserved*
