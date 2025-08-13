@@ -1,7 +1,6 @@
 import machine
 import time
 import asyncio
-import tools
 
 async def main() -> None:
 
