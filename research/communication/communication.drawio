@@ -40,7 +40,7 @@
             <mxPoint y="559" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-4" value="Control Packet&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Control Mode (rate/angle)&lt;/div&gt;&lt;div&gt;Armed/Unarmed&lt;/div&gt;&lt;div&gt;Throttle&lt;/div&gt;&lt;div&gt;Pitch&lt;/div&gt;&lt;div&gt;Roll&lt;/div&gt;&lt;div&gt;Yaw&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
+        <mxCell id="9-CMpRLNuppDFcrcLKN0-4" value="Control Packet&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Control Mode (rate/angle)&lt;/div&gt;&lt;div&gt;Armed/Unarmed&lt;/div&gt;&lt;div&gt;Throttle, as %&lt;/div&gt;&lt;div&gt;Pitch, as %&lt;/div&gt;&lt;div&gt;Roll, as %&lt;/div&gt;&lt;div&gt;Yaw, as %&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="-540" y="490" width="230" height="127" as="geometry" />
         </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-7" value="&lt;u&gt;Settings&lt;/u&gt;&lt;div&gt;Idle Throttle&lt;/div&gt;&lt;div&gt;Max Throttle&lt;/div&gt;&lt;div&gt;Rate Mode: Max Pitch Rate&lt;/div&gt;&lt;div&gt;Rate Mode: Max Roll Rate&lt;/div&gt;&lt;div&gt;Rate Mode: Max Yaw Rate&lt;/div&gt;&lt;div&gt;Angle Mode: Max Pitch Angle&lt;/div&gt;&lt;div&gt;Angle Mode: Max Roll Angle&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
