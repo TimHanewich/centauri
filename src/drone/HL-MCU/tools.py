@@ -169,9 +169,9 @@ def pack_desired_rates(throttle_uint16:int, pitch_int16:int, roll_int16:int, yaw
     ToReturn.extend(struct.pack("<H", throttle_uint16)) # pack as unsigned short
 
     # pitch, roll, yaw
-    ToReturn.extend(struct.pack("<h", pitch_int16)) # pack as signed short
-    ToReturn.extend(struct.pack("<h", roll_int16)) # pack as signed short
-    ToReturn.extend(struct.pack("<h", yaw_int16)) # pack as signed short
+    ToReturn.extend(struct.pack("<h", pitch_int16)) # pack as signed short. When the LL-MCU unpacks, it will assume -32,768 is -90 degrees/second and 32,768 is +90 degrees/second.
+    ToReturn.extend(struct.pack("<h", roll_int16)) # pack as signed short. When the LL-MCU unpacks, it will assume -32,768 is -90 degrees/second and 32,768 is +90 degrees/second.
+    ToReturn.extend(struct.pack("<h", yaw_int16)) # pack as signed short. When the LL-MCU unpacks, it will assume -32,768 is -90 degrees/second and 32,768 is +90 degrees/second.
 
     # XOR-chain based checksum:
     checksum:int = 0x00 # start with 0
