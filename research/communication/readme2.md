@@ -28,13 +28,13 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
             - Bit 2: *reserved*
             - Bit 1: `0` (packet identifier)
             - Bit 0: `0` (packet identifier)
-        - Idle Throttle: 1 byte
-        - Max Throttle: 1 byte
-        - Max Pitch Rate, in degrees per second (Rate Mode): 1 byte
-        - Max Roll Rate, in degrees per second (Rate Mode): 1 byte
-        - Max Yaw Rate, in degrees per second (Rate Mode): 1 byte
-        - Max Pitch Angle (Angle Mode): 1 byte
-        - Max Roll angle (Angle Mode): 1 byte
+        - Idle Throttle: 2 bytes
+        - Max Throttle: 2 bytes
+        - Max Pitch Rate, in degrees per second (Rate Mode): 1 byte (*this is interpretted literally... i.e. a value of 30 would be 30 degrees/second*)
+        - Max Roll Rate, in degrees per second (Rate Mode): 1 byte (*this is interpretted literally... i.e. a value of 30 would be 30 degrees/second*)
+        - Max Yaw Rate, in degrees per second (Rate Mode): 1 byte (*this is interpretted literally... i.e. a value of 30 would be 30 degrees/second*)
+        - Max Pitch Angle (Angle Mode): 1 byte (*this is interpretted literally... i.e. a value of 30 would be 30 degrees*)
+        - Max Roll angle (Angle Mode): 1 byte (*this is interpretted literally... i.e. a value of 30 would be 30 degrees*)
         - XOR-chain based checksum
     - PID Settings Update
         - Metadata byte:
@@ -67,10 +67,10 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
             - Bit 2: **armed**. 0 = unarmed, idle on ground. 1 = armed, motors spin at idle speed.
             - Bit 1: `1` (packet identifier)
             - Bit 0: `0` (packet identifier)
-        - Throttle (2 bytes)
-        - Pitch (2 bytes)
-        - Roll (2 bytes)
-        - Yaw (2 bytes)
+        - Throttle input % (2 bytes, uint16)
+        - Pitch input % (2 bytes, int16)
+        - Roll input % (2 bytes, int16)
+        - Yaw input % (2 bytes, int16)
 - HL-MCU --> Transceiver
     - Control Status
     - System Status
@@ -111,10 +111,10 @@ If the communication between the HL-MCU and LL-MCU begins with "TIMH", that mean
             - Bit 2: *re served*
             - Bit 1: *reserved*
             - Bit 0: `1` = packet identifier
-        - Throttle (2 bytes)
-        - Desired Pitch Rate (4 bytes)
-        - Desired Roll Rate (4 bytes)
-        - Desired Yaw Rate (4 bytes)
+        - Throttle (2 bytes, uint16)
+        - Desired Pitch Rate (2 bytes, int16)
+        - Desired Roll Rate (2 bytes, int16)
+        - Desired Yaw Rate (2 bytes, int16)
         - XOR-chain based checksum (1 byte)
 - LL-MCU --> HL-MCU:
     - PONG (confirmation of life): `TIMHPING\r\n`
@@ -132,8 +132,8 @@ If the communication between the HL-MCU and LL-MCU begins with "TIMH", that mean
         - M2 throttle (1 byte)
         - M3 throttle (1 byte)
         - M4 throttle (1 byte)
-        - Actual Pitch Rate (4 bytes)
-        - Actual Roll Rate (4 bytes)
-        - Actual Yaw Rate (4 bytes)
-        - Estimated Pitch Angle (4 bytes)
-        - Estimated Roll Angle (4 bytes)
+        - Actual Pitch Rate (2 bytes, int16)
+        - Actual Roll Rate (2 bytes, int16)
+        - Actual Yaw Rate (2 bytes, int16)
+        - Estimated Pitch Angle (2 bytes, int16)
+        - Estimated Roll Angle (2 bytes, int16)
