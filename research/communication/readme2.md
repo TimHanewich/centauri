@@ -70,7 +70,8 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
         - Roll (2 bytes)
         - Yaw (2 bytes)
 - HL-MCU --> Transceiver
-    - Status Packet 2
+    - Control Status
+    - System Status
     - Special Packet (text) 
     
 ## Communication Between HL-MCU and LL-MCU
