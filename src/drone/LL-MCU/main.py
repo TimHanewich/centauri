@@ -107,10 +107,10 @@ async def main() -> None:
     # declare variables that will be used across multiple coroutines: desired rate inputs
     # enter in via rx coroutine
     # used in flight control (pid loop) coroutine
-    throttle_uint16:int = 0
-    pitch_int16:int = 0
-    roll_int16:int = 0
-    yaw_int16:int = 0
+    throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
+    pitch_int16:int = 0            # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
+    roll_int16:int = 0             # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
+    yaw_int16:int = 0              # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
 
     # declare variables that will be used accross multiple coroutines: flight control loop
     pitch_kp:float = 0.0
@@ -242,7 +242,140 @@ async def main() -> None:
 
     async def flightcontrol() -> None:
         """Core flight controller routine."""
-        pass
+
+        # declare nonlocal variables we will be modifying
+        nonlocal pitch_rate
+        nonlocal roll_rate
+        nonlocal yaw_rate
+        nonlocal m1_throttle
+        nonlocal m2_throttle
+        nonlocal m3_throttle
+        nonlocal m4_throttle
+        
+        # motor GPIO pins
+        gpio_motor1:int = 21 # front left, clockwise
+        gpio_motor2:int = 20 # front right, counter clockwise
+        gpio_motor3:int = 19 # rear left, counter clockwise
+        gpio_motor4:int = 18 # rear right, clockwise
+
+        # set up motor PWMs with frequency of 250 Hz and start at 0% throttle
+        M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=250, duty_u16=0)
+        M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=250, duty_u16=0)
+        M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=250, duty_u16=0)
+        M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=250, duty_u16=0)
+
+        # declare PID state variables
+        # declaring them here because their "previous state" (value from previous loop) must be referenced in each loop
+        pitch_last_i:float = 0.0
+        pitch_last_error:int = 0
+        roll_last_i:float = 0.0
+        roll_last_error:int = 0
+        yaw_last_i:float = 0.0
+        yaw_last_error:int = 0
+
+        # calculate constant: cycle time, in microseconds (us)
+        cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
+
+        # Infinite PID loop!
+        while True:
+
+            # mark start time
+            loop_begin_us:int = time.ticks_us() # ticks, in microseconds (us)
+
+            # Capture raw IMU data: gyroscope from MPU-6050
+            gyro_data:bytes = i2c.readfrom_mem(0x68, 0x43, 6) # read 6 bytes, 2 for each axis
+            gyro_x = (gyro_data[0] << 8) | gyro_data[1]
+            gyro_y = (gyro_data[2] << 8) | gyro_data[3]
+            gyro_z = (gyro_data[4] << 8) | gyro_data[5]
+            if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+            if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+            if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+            gyro_x = gyro_x / 131 # now, divide by the scale factor to get the actual degrees per second
+            gyro_y = gyro_y / 131 # now, divide by the scale factor to get the actual degrees per second
+            gyro_z = gyro_z / 131 # now, divide by the scale factor to get the actual degrees per second
+            
+            # set the nonlocal variables
+            # gyro_x = pitch rate in degrees per second
+            # gyro_y = roll rate in degrees per second
+            # gyro_x = yaw rate in degrees per second
+            pitch_rate = gyro_x
+            roll_rate = gyro_y
+            yaw_rate = gyro_z
+
+            # conver the throttle input, as a uint16, into a percentage (between 0.0 and 1.0)
+            desired_throttle:float = throttle_uint16 / 65535.0
+
+            # convert the desired pitch, roll, and yaw into degrees per second
+            desired_pitch_rate:float = pitch_int16 / 32767.0
+            desired_roll_rate:float = roll_int16 / 32767.0
+            desired_yaw_rate:float = yaw_int16 / 32767.0
+
+            # now compare those ACTUAL rates with the DESIRED rates (calculate error)
+            # error = desired - actual
+            error_pitch_rate:int = desired_pitch_rate - gyro_x
+            error_roll_rate = desired_roll_rate - gyro_y
+            error_yaw_rate = desired_yaw_rate - gyro_z
+
+            # Pitch PID calculation
+            pitch_p:float = error_pitch_rate * pitch_kp
+            pitch_i:float = pitch_last_i + (error_pitch_rate * pitch_ki * cycle_time_ms)
+            pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
+            pitch_d:float = pitch_kd * (error_pitch_rate - pitch_last_error) / cycle_time_ms
+            pitch_pid = pitch_p + pitch_i + pitch_d
+
+            # Roll PID calculation
+            roll_p:float = error_roll_rate * roll_kp
+            roll_i:float = roll_last_i + (error_roll_rate * roll_ki * cycle_time_ms)
+            roll_i = min(max(roll_i, -i_limit), i_limit) # constrain within I limit
+            roll_d:float = roll_kd * (error_roll_rate - roll_last_error) / cycle_time_ms
+            roll_pid = roll_p + roll_i + roll_d
+
+            # Yaw PID calculation
+            yaw_p:float = error_yaw_rate * yaw_kp
+            yaw_i:float = yaw_last_i + (error_yaw_rate * yaw_ki * cycle_time_ms)
+            yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
+            yaw_d:float = yaw_kd * (error_yaw_rate - yaw_last_error) / cycle_time_ms
+            yaw_pid = yaw_p + yaw_i + yaw_d
+
+            # calculate throttle values for each motor using those PID influences
+            # we are using the nonlocal variables here so the status being sent will also update
+            m1_throttle = desired_throttle + pitch_pid + roll_pid - yaw_pid
+            m2_throttle = desired_throttle + pitch_pid - roll_pid + yaw_pid
+            m3_throttle = desired_throttle - pitch_pid + roll_pid + yaw_pid
+            m4_throttle = desired_throttle - pitch_pid - roll_pid - yaw_pid
+
+            # calculate what the duty time of each motor PWM should be, in nanoseconds (not to be confused with "us", microseconds!)
+            m1_ns:int = 1000000 + int(1000000 * m1_throttle)
+            m2_ns:int = 1000000 + int(1000000 * m2_throttle)
+            m3_ns:int = 1000000 + int(1000000 * m3_throttle)
+            m4_ns:int = 1000000 + int(1000000 * m4_throttle)
+
+            # min/max those duty times
+            # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds)
+            m1_ns = min(max(m1_ns, 1000000), 2000000)
+            m2_ns = min(max(m2_ns, 1000000), 2000000)
+            m3_ns = min(max(m3_ns, 1000000), 2000000)
+            m4_ns = min(max(m4_ns, 1000000), 2000000)
+
+            # adjust throttles on PWMs
+            M1.duty_ns(m1_ns)
+            M2.duty_ns(m2_ns)
+            M3.duty_ns(m3_ns)
+            M4.duty_ns(m4_ns)
+
+            # save state values for next loop
+            pitch_last_error = error_pitch_rate
+            roll_last_error = error_roll_rate
+            yaw_last_error = error_yaw_rate
+            pitch_last_i = pitch_i
+            roll_last_i = roll_i
+            yaw_last_i = yaw_i
+
+            # wait if there is excess time
+            excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
+            if excess_us > 0:
+                await asyncio.sleep(excess_us)
+
 
     # Run all threads!
     print("Running all coroutines, here we go!")
