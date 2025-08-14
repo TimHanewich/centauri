@@ -1,7 +1,6 @@
 import machine
 import time
 import tools
-import gc
 
 # First thing is first: set up onboard LED, turn it on while loading
 print("Turning LED on...")
