@@ -318,23 +318,23 @@ async def main() -> None:
 
             # Pitch PID calculation
             pitch_p:float = error_pitch_rate * pitch_kp
-            pitch_i:float = pitch_last_i + (error_pitch_rate * pitch_ki * cycle_time_ms)
+            pitch_i:float = pitch_last_i + (error_pitch_rate * pitch_ki * cycle_time_us)
             pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
-            pitch_d:float = pitch_kd * (error_pitch_rate - pitch_last_error) / cycle_time_ms
+            pitch_d:float = pitch_kd * (error_pitch_rate - pitch_last_error) / cycle_time_us
             pitch_pid = pitch_p + pitch_i + pitch_d
 
             # Roll PID calculation
             roll_p:float = error_roll_rate * roll_kp
-            roll_i:float = roll_last_i + (error_roll_rate * roll_ki * cycle_time_ms)
+            roll_i:float = roll_last_i + (error_roll_rate * roll_ki * cycle_time_us)
             roll_i = min(max(roll_i, -i_limit), i_limit) # constrain within I limit
-            roll_d:float = roll_kd * (error_roll_rate - roll_last_error) / cycle_time_ms
+            roll_d:float = roll_kd * (error_roll_rate - roll_last_error) / cycle_time_us
             roll_pid = roll_p + roll_i + roll_d
 
             # Yaw PID calculation
             yaw_p:float = error_yaw_rate * yaw_kp
-            yaw_i:float = yaw_last_i + (error_yaw_rate * yaw_ki * cycle_time_ms)
+            yaw_i:float = yaw_last_i + (error_yaw_rate * yaw_ki * cycle_time_us)
             yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
-            yaw_d:float = yaw_kd * (error_yaw_rate - yaw_last_error) / cycle_time_ms
+            yaw_d:float = yaw_kd * (error_yaw_rate - yaw_last_error) / cycle_time_us
             yaw_pid = yaw_p + yaw_i + yaw_d
 
             # calculate throttle values for each motor using those PID influences
