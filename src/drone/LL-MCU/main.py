@@ -104,6 +104,14 @@ async def main() -> None:
     gyro_bias_z:float = gzs / samples
     print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
 
+    # declare variables that will be used across multiple coroutines: desired rate inputs
+    # enter in via rx coroutine
+    # used in flight control (pid loop) coroutine
+    throttle_uint16:int = 0
+    pitch_int16:int = 0
+    roll_int16:int = 0
+    yaw_int16:int = 0
+
     # declare variables that will be used accross multiple coroutines: flight control loop
     pitch_kp:float = 0.0
     pitch_ki:float = 0.0
@@ -155,10 +163,14 @@ async def main() -> None:
         nonlocal yaw_ki
         nonlocal yaw_kd
         nonlocal i_limit
+        nonlocal throttle_uint16
+        nonlocal pitch_int16
+        nonlocal roll_int16
+        nonlocal yaw_int16
 
         while True:
-            if uart.any() > 0:
-                data:bytes = uart.readline()
+            if uart.any() > 0: # if there is data available
+                data:bytes = uart.readline() # read until end of line (YES THIS IS BLOCKING!)
 
                 # handle according to what it is
                 if data == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
@@ -176,8 +188,15 @@ async def main() -> None:
                         yaw_ki = settings["yaw_ki"]
                         yaw_kd = settings["yaw_kd"]
                         i_limit = settings["i_limit"]
+                        print("settings updated!")
                 elif data[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
-                    pass
+                    drates:dict = tools.unpack_desired_rates(data)
+                    if drates != None: # it would return None if the checksum did not validate correcrtly
+                        throttle_uint16 = drates["throttle_uint16"]
+                        pitch_int16 = drates["pitch_int16"]
+                        roll_int16 = drates["roll_int16"]
+                        yaw_int16 = drates["yaw_int16"]
+                        print("desired rates captured!")
                 else: # unknown packet
                     print("Unknown data received: " + str(data))
             
