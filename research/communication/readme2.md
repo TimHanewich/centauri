@@ -132,8 +132,8 @@ If the communication between the HL-MCU and LL-MCU begins with "TIMH", that mean
         - M2 throttle (1 byte)
         - M3 throttle (1 byte)
         - M4 throttle (1 byte)
-        - Actual Pitch Rate (2 bytes, int16)
-        - Actual Roll Rate (2 bytes, int16)
-        - Actual Yaw Rate (2 bytes, int16)
-        - Estimated Pitch Angle (2 bytes, int16)
-        - Estimated Roll Angle (2 bytes, int16)
+        - Actual Pitch Rate: 1 signed byte, interpretted literally
+        - Actual Roll Rate: 1 signed byte, interpretted literally
+        - Actual Yaw Rate: 1 signed byte, interpretted literally
+        - Estimated Pitch Angle: 1 signed byte, interpretted literally
+        - Estimated Roll Angle: 1 signed byte, interpretted literally
