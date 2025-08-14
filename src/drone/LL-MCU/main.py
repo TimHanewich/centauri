@@ -168,42 +168,53 @@ async def main() -> None:
         nonlocal roll_int16
         nonlocal yaw_int16
 
-        while True:
-            if uart.any() > 0: # if there is data available
-                data:bytes = uart.readline() # read until end of line (YES THIS IS BLOCKING!)
+        try:           
 
-                # handle according to what it is
-                if data == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
-                    uart.write("TIMHPONG\r\n".encode()) # respond pong to confirm we are online and alive
-                elif data[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
-                    settings:dict = tools.unpack_settings_update(data)
-                    if settings != None: # it would return None if the checksum did not validate correctly
-                        pitch_kp = settings["pitch_kp"]
-                        pitch_ki = settings["pitch_ki"]
-                        pitch_kd = settings["pitch_kd"]
-                        roll_kp = settings["roll_kp"]
-                        roll_ki = settings["roll_ki"]
-                        roll_kd = settings["roll_kd"]
-                        yaw_kp = settings["yaw_kp"]
-                        yaw_ki = settings["yaw_ki"]
-                        yaw_kd = settings["yaw_kd"]
-                        i_limit = settings["i_limit"]
-                        print("settings updated!")
-                        uart.write("TIMHSETUP\r\n".encode()) # "SETUP" short for "Settings Updated"
-                elif data[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
-                    drates:dict = tools.unpack_desired_rates(data)
-                    if drates != None: # it would return None if the checksum did not validate correcrtly
-                        throttle_uint16 = drates["throttle_uint16"]
-                        pitch_int16 = drates["pitch_int16"]
-                        roll_int16 = drates["roll_int16"]
-                        yaw_int16 = drates["yaw_int16"]
-                        print("desired rates captured!")
-                        uart.write("TIMHDRATES\r\n".encode()) # will probably remove this at some point, just for testing purposes
-                else: # unknown packet
-                    print("Unknown data received: " + str(data))
-            
-            # wait
-            await asyncio.sleep(0.01) # 100 Hz max
+            while True:
+                if uart.any() > 0: # if there is data available
+                    data:bytes = uart.readline() # read until end of line (YES THIS IS BLOCKING!)
+
+                    # handle according to what it is
+                    if data == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
+                        uart.write("TIMHPONG\r\n".encode()) # respond pong to confirm we are online and alive
+                    elif data[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
+                        settings:dict = tools.unpack_settings_update(data)
+                        if settings != None: # it would return None if the checksum did not validate correctly
+                            pitch_kp = settings["pitch_kp"]
+                            pitch_ki = settings["pitch_ki"]
+                            pitch_kd = settings["pitch_kd"]
+                            roll_kp = settings["roll_kp"]
+                            roll_ki = settings["roll_ki"]
+                            roll_kd = settings["roll_kd"]
+                            yaw_kp = settings["yaw_kp"]
+                            yaw_ki = settings["yaw_ki"]
+                            yaw_kd = settings["yaw_kd"]
+                            i_limit = settings["i_limit"]
+                            print("settings updated!")
+                            uart.write("TIMHSETUP\r\n".encode()) # "SETUP" short for "Settings Updated"
+                    elif data[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
+                        drates:dict = tools.unpack_desired_rates(data)
+                        if drates != None: # it would return None if the checksum did not validate correcrtly
+                            throttle_uint16 = drates["throttle_uint16"]
+                            pitch_int16 = drates["pitch_int16"]
+                            roll_int16 = drates["roll_int16"]
+                            yaw_int16 = drates["yaw_int16"]
+                            print("desired rates captured!")
+                            uart.write("TIMHDRATES\r\n".encode()) # will probably remove this at some point, just for testing purposes
+                    else: # unknown packet
+                        print("Unknown data received: " + str(data))
+                
+                # wait
+                await asyncio.sleep(0.01) # 100 Hz max
+
+
+        except Exception as ex: # if entire comms_rx coroutine failed
+            throttle_uint16 = 0
+            pitch_int16 = 0
+            roll_int16 = 0
+            yaw_int16 = 0
+            msg:str = "TIMH" + "CommsRx Err: " + str(ex) + "\r\n"
+            uart.write(msg.encode())
 
     async def status_tx() -> None:
         """Handles continuous sending of status data to HL MCU."""
