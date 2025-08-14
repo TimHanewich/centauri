@@ -94,12 +94,12 @@ def pack_status(m1_throttle:float, m2_throttle:float, m3_throttle:float, m4_thro
     ToReturn.append(int(m4_throttle * 255))
 
     # pitch, roll, yaw rates
-    ToReturn.append(signed_to_byte(min(max(int(pitch_rate), 0), 255)))
-    ToReturn.append(signed_to_byte(min(max(int(roll_rate), 0), 255)))
-    ToReturn.append(signed_to_byte(min(max(int(yaw_rate), 0), 255)))
+    ToReturn.append(signed_to_byte(min(max(int(pitch_rate), -128), 127)))
+    ToReturn.append(signed_to_byte(min(max(int(roll_rate), -128), 255)))
+    ToReturn.append(signed_to_byte(min(max(int(yaw_rate), -128), 255)))
 
     # pitch and roll angle
-    ToReturn.append(signed_to_byte(min(max(int(pitch_angle), 0), 256)))
-    ToReturn.append(signed_to_byte(min(max(int(roll_angle), 0), 256)))
+    ToReturn.append(signed_to_byte(min(max(int(pitch_angle), -128), 127)))
+    ToReturn.append(signed_to_byte(min(max(int(roll_angle), -128), 127)))
 
     return bytes(ToReturn)
