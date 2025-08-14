@@ -1,6 +1,7 @@
 import machine
 import time
 import asyncio
+import tools
 
 async def main() -> None:
 
@@ -144,6 +145,16 @@ async def main() -> None:
 
         # declare nonlocal variables
         nonlocal uart # the interface with the HL-MCU, which the incoming data will be coming from
+        nonlocal pitch_kp
+        nonlocal pitch_ki
+        nonlocal pitch_kd
+        nonlocal roll_kp
+        nonlocal roll_ki
+        nonlocal roll_kd
+        nonlocal yaw_kp
+        nonlocal yaw_ki
+        nonlocal yaw_kd
+        nonlocal i_limit
 
         while True:
             if uart.any() > 0:
@@ -152,11 +163,22 @@ async def main() -> None:
                 # handle according to what it is
                 if data == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
                     uart.write("TIMHPONG\r\n".encode()) # respond pong to confirm we are online and alive
-                elif data == "": # Settings update (config)
+                elif data[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
+                    settings:dict = tools.unpack_settings_update(data)
+                    if settings != None: # it would return None if the checksum did not validate correctly
+                        pitch_kp = settings["pitch_kp"]
+                        pitch_ki = settings["pitch_ki"]
+                        pitch_kd = settings["pitch_kd"]
+                        roll_kp = settings["roll_kp"]
+                        roll_ki = settings["roll_ki"]
+                        roll_kd = settings["roll_kd"]
+                        yaw_kp = settings["yaw_kp"]
+                        yaw_ki = settings["yaw_ki"]
+                        yaw_kd = settings["yaw_kd"]
+                        i_limit = settings["i_limit"]
+                elif data[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
                     pass
-                elif data == "": # Desired rate packet (control)
-                    pass
-                else:
+                else: # unknown packet
                     print("Unknown data received: " + str(data))
             
             # wait
