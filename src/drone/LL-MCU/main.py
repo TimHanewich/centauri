@@ -173,11 +173,14 @@ async def main() -> None:
             while True:
                 if uart.any() > 0: # if there is data available
                     data:bytes = uart.readline() # read until end of line (YES THIS IS BLOCKING!)
+                    msg = "TIMHGot" + str(len(data)) + "bytes" + "\r\n"
+                    uart.write(msg.encode())
 
                     # handle according to what it is
                     if data == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
                         uart.write("TIMHPONG\r\n".encode()) # respond pong to confirm we are online and alive
                     elif data[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
+                        uart.write("TIMHIt is settings\r\n".encode())
                         settings:dict = tools.unpack_settings_update(data)
                         if settings != None: # it would return None if the checksum did not validate correctly
                             pitch_kp = settings["pitch_kp"]
@@ -193,6 +196,7 @@ async def main() -> None:
                             print("settings updated!")
                             uart.write("TIMHSETUP\r\n".encode()) # "SETUP" short for "Settings Updated"
                     elif data[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
+                        uart.write("TIMHitisdrates\r\n".encode())
                         drates:dict = tools.unpack_desired_rates(data)
                         if drates != None: # it would return None if the checksum did not validate correcrtly
                             throttle_uint16 = drates["throttle_uint16"]
