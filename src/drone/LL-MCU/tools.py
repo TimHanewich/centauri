@@ -1,5 +1,7 @@
 import struct
 import machine
+import asyncio
+import time
 
 ### GENERAL TOOLS #####
 
@@ -19,6 +21,12 @@ def signed_to_byte(val:int) -> int:
         return 256 + val
     else:
         return val
+    
+async def async_sleep_us(microseconds:int) -> None:
+    """Async sleep for a number of microseconds"""
+    start_us:int = time.ticks_us()
+    while time.ticks_diff(time.ticks_us(), start_us) < microseconds:
+        await asyncio.sleep(0) # yield to other coroutines for a moment (exactly as long as they need)
 
 ##### UNPACKING DATA FROM HL-MCU #####
 

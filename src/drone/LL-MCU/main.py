@@ -390,10 +390,13 @@ async def main() -> None:
                 # strategy 4: hybrid
                 # async sleep for the ms amount (bulk)
                 # time.sleep_us() for the remainder (small remainder)
-                excess_ms:int = excess_us // 1000 # whole milliseconds
-                remaining_us:int = excess_us % 1000 # leftover microseconds
-                time.sleep_us(remaining_us) # first, sleep the tiny difference
-                await asyncio.sleep_ms(excess_ms) # and then async sleep the rest (the bulk of it)
+                #excess_ms:int = excess_us // 1000 # whole milliseconds
+                #remaining_us:int = excess_us % 1000 # leftover microseconds
+                #time.sleep_us(remaining_us) # first, sleep the tiny difference
+                #await asyncio.sleep_ms(excess_ms) # and then async sleep the rest (the bulk of it)
+
+                # strategy 5: custom sleep_us
+                await tools.async_sleep_us(excess_us)
 
                 stop_at_us:int = time.ticks_us()
 
