@@ -1,6 +1,7 @@
 import machine
 import time
 import tools
+import gc
 
 # First thing is first: set up onboard LED, turn it on while loading
 print("Turning LED on...")
@@ -325,6 +326,5 @@ while True:
 
     # wait if there is excess time
     excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-    print("Excess: " + str(excess_us) + " us")
     if excess_us > 0:
         time.sleep_us(excess_us)
