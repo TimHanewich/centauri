@@ -373,6 +373,7 @@ async def main() -> None:
 
             # wait if there is excess time
             excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
+            print("Excess us: " + str(excess_us))
             if excess_us > 0:
                 await asyncio.sleep(excess_us)
 
