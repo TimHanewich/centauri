@@ -4,7 +4,7 @@ import machine
 ### GENERAL TOOLS #####
 
 def readuntil(uart:machine.UART, until:bytes = "\r\n".encode()) -> bytes:
-    """Reads from a UART interface until a certain sequence is seen."""
+    """Reads from a UART interface until a certain sequence is seen. I had to make this because the uart.readline() does not ONLY look for \r\n... \n on its own will do it too, which can occasionally show up in real data!"""
     ToReturn:bytearray = bytearray()
     while True:
         if uart.any():
