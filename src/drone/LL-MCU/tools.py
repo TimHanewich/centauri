@@ -53,7 +53,3 @@ def unpack_desired_rates(data:bytes) -> dict:
 
     # return
     return {"throttle_uint16": throttle_uint16, "pitch_int16": pitch_int16, "roll_int16": roll_int16, "yaw_int16": yaw_int16}
-
-data = b'\x01\xe9\x93#\xee\x02%=\xeeB'
-u = unpack_desired_rates(data)
-print(str(u))
