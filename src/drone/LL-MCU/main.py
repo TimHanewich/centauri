@@ -147,7 +147,6 @@ async def main() -> None:
 
     async def ledflicker() -> None:
         """Continuously flick the onboard LED."""
-        nonlocal led
         while True:
             led.on()
             await asyncio.sleep(0.25)
