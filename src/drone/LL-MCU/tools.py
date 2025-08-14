@@ -33,7 +33,27 @@ def unpack_settings_update(data:bytes) -> dict:
     # return
     return {"pitch_kp": pitch_kp, "pitch_ki": pitch_ki, "pitch_kd": pitch_kd, "roll_kp": roll_kp, "roll_ki": roll_ki, "roll_kd": roll_kd, "yaw_kp": yaw_kp, "yaw_ki": yaw_ki, "yaw_kd": yaw_kd, "i_limit": i_limit}
 
+def unpack_desired_rates(data:bytes) -> dict:
+    
+    # first, validate checksum
+    checksum:int = data[9] # it will be the 10th byte, so 9th index position
+    selfchecksum:int = 0x00
+    for byte in data[0:9]: # first 9 bytes, excluding the checksum
+        selfchecksum = selfchecksum ^ byte
+    if selfchecksum != checksum: # if the checksum we calculated did not match the checksum in the data itself, must have been a transmission error. Return nothing, fail.
+        return None
 
-data = b'\x00\x9e\xef\xe7>\n\xd7#?\xcb\xa1\xa5>\x19\x04\xa6>\x9b\xe6]>\x8f\xc2u>^\xba\xc9>5^z?\x10Xy?{\x14\xae>\xc9'
-u = unpack_settings_update(data)
-print(u)
+    # unpack throttle, an unsigned short (2-byte int)
+    throttle_uint16:int = struct.unpack("<H", data[1:3])[0]
+
+    # unpack pitch, roll, yaw: all signed shorts (2-byte int)
+    pitch_int16:int = struct.unpack("<h", data[3:5])[0]
+    roll_int16:int = struct.unpack("<h", data[5:7])[0]
+    yaw_int16:int = struct.unpack("<h", data[7:9])[0]
+
+    # return
+    return {"throttle_uint16": throttle_uint16, "pitch_int16": pitch_int16, "roll_int16": roll_int16, "yaw_int16": yaw_int16}
+
+data = b'\x01\xe9\x93#\xee\x02%=\xeeB'
+u = unpack_desired_rates(data)
+print(str(u))
