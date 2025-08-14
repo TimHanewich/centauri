@@ -1,4 +1,19 @@
 import struct
+import machine
+
+### GENERAL TOOLS #####
+
+def readuntil(uart:machine.UART, until:bytes = "\r\n".encode()) -> bytes:
+    """Reads from a UART interface until a certain sequence is seen."""
+    ToReturn:bytearray = bytearray()
+    while True:
+        if uart.any():
+            byte = uart.read(1)
+            ToReturn = ToReturn + byte
+            if ToReturn.endswith(until):
+                return ToReturn
+
+##### UNPACKING DATA FROM HL-MCU #####
 
 def unpack_settings_update(data:bytes) -> dict:
 
