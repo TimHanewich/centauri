@@ -172,7 +172,7 @@ async def main() -> None:
 
             while True:
                 if uart.any() > 0: # if there is data available
-                    data:bytes = uart.readline() # read until end of line (YES THIS IS BLOCKING!)
+                    data:bytes = tools.readuntil(uart, "\r\n".encode()) # read until \r\n at the end (newline, in bytes)... YES THIS IS BLOCKING
                     msg = "TIMHGot" + str(len(data)) + "bytes" + "\r\n"
                     uart.write(msg.encode())
 
