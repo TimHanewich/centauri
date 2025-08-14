@@ -189,6 +189,7 @@ async def main() -> None:
                         yaw_kd = settings["yaw_kd"]
                         i_limit = settings["i_limit"]
                         print("settings updated!")
+                        uart.write("TIMHSETUP\r\n".encode()) # "SETUP" short for "Settings Updated"
                 elif data[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
                     drates:dict = tools.unpack_desired_rates(data)
                     if drates != None: # it would return None if the checksum did not validate correcrtly
@@ -197,6 +198,7 @@ async def main() -> None:
                         roll_int16 = drates["roll_int16"]
                         yaw_int16 = drates["yaw_int16"]
                         print("desired rates captured!")
+                        uart.write("TIMHDRATES\r\n".encode()) # will probably remove this at some point, just for testing purposes
                 else: # unknown packet
                     print("Unknown data received: " + str(data))
             
