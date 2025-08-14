@@ -139,6 +139,12 @@ async def main() -> None:
     print("Overclocking...")
     #machine.freq(250000000)
 
+    ### HELPER FUNCTIONS ###
+    def sendtimhmsg(message:str) -> None:
+        """Send a private message (diagnostic-like) to the HL-MCU (not something intended to be sent to the remote controller)."""
+        ToSend = "TIMH" + message + "\r\n"
+        uart.write(ToSend.encode())
+
     async def ledflicker() -> None:
         """Continuously flick the onboard LED."""
         nonlocal led
@@ -173,14 +179,13 @@ async def main() -> None:
             while True:
                 if uart.any() > 0: # if there is data available
                     data:bytes = tools.readuntil(uart, "\r\n".encode()) # read until \r\n at the end (newline, in bytes)... YES THIS IS BLOCKING
-                    msg = "TIMHGot" + str(len(data)) + "bytes" + "\r\n"
-                    uart.write(msg.encode())
+                    sendtimhmsg("Got " + str(len(data)) + " bytes")
 
                     # handle according to what it is
                     if data == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
-                        uart.write("TIMHPONG\r\n".encode()) # respond pong to confirm we are online and alive
+                        sendtimhmsg("PONG")
                     elif data[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
-                        uart.write("TIMHIt is settings\r\n".encode())
+                        sendtimhmsg("It is a settings packet.")
                         settings:dict = tools.unpack_settings_update(data)
                         if settings != None: # it would return None if the checksum did not validate correctly
                             pitch_kp = settings["pitch_kp"]
@@ -194,9 +199,9 @@ async def main() -> None:
                             yaw_kd = settings["yaw_kd"]
                             i_limit = settings["i_limit"]
                             print("settings updated!")
-                            uart.write("TIMHSETUP\r\n".encode()) # "SETUP" short for "Settings Updated"
+                            sendtimhmsg("SETUP") # "SETUP" short for "Settings Updated"
                     elif data[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
-                        uart.write("TIMHitisdrates\r\n".encode())
+                        sendtimhmsg("It is a DRates packet")
                         drates:dict = tools.unpack_desired_rates(data)
                         if drates != None: # it would return None if the checksum did not validate correcrtly
                             throttle_uint16 = drates["throttle_uint16"]
@@ -204,7 +209,7 @@ async def main() -> None:
                             roll_int16 = drates["roll_int16"]
                             yaw_int16 = drates["yaw_int16"]
                             print("desired rates captured!")
-                            uart.write("TIMHDRATES\r\n".encode()) # will probably remove this at some point, just for testing purposes
+                            sendtimhmsg("DRates set!")
                     else: # unknown packet
                         print("Unknown data received: " + str(data))
                 
@@ -217,8 +222,7 @@ async def main() -> None:
             pitch_int16 = 0
             roll_int16 = 0
             yaw_int16 = 0
-            msg:str = "TIMH" + "CommsRx Err: " + str(ex) + "\r\n"
-            uart.write(msg.encode())
+            sendtimhmsg("CommsRx Err: " + str(ex))
 
     async def status_tx() -> None:
         """Handles continuous sending of status data to HL MCU."""
