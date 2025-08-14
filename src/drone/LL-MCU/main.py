@@ -187,6 +187,7 @@ while True:
     if (time.ticks_ms() - status_last_sent_ticks_ms) > 100: # every 100 ms (10 times per second)
         data:bytes = tools.pack_status(m1_throttle, m2_throttle, m3_throttle, m4_throttle, pitch_rate, roll_rate, yaw_rate, pitch_angle, roll_angle) # pack status data
         uart.write(data + "\r\n".encode()) # send it to HL-MCU via UART
+        status_last_sent_ticks_ms = time.ticks_ms()
 
     # check for received data (input data)
     # was originally planning to do this at only 50-100 hz, but doing this every loop to avoid build up
