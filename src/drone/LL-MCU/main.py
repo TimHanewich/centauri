@@ -139,11 +139,12 @@ async def main() -> None:
     print("Overclocking...")
     #machine.freq(250000000)
 
-    ### HELPER FUNCTIONS ###
+    ### SIMPLE HELPER FUNCTIONS ###
     def sendtimhmsg(message:str) -> None:
         """Send a private message (diagnostic-like) to the HL-MCU (not something intended to be sent to the remote controller)."""
         ToSend = "TIMH" + message + "\r\n"
         uart.write(ToSend.encode())
+    ########################
 
     async def ledflicker() -> None:
         """Continuously flick the onboard LED."""
