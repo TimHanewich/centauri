@@ -1,6 +1,5 @@
 import machine
 import time
-import asyncio
 import tools
 
 # First thing is first: set up onboard LED, turn it on while loading
@@ -143,233 +142,187 @@ def sendtimhmsg(message:str) -> None:
     ToSend = "TIMH" + message + "\r\n"
     uart.write(ToSend.encode())
 ########################
+   
+# motor GPIO pins
+gpio_motor1:int = 21 # front left, clockwise
+gpio_motor2:int = 20 # front right, counter clockwise
+gpio_motor3:int = 19 # rear left, counter clockwise
+gpio_motor4:int = 18 # rear right, clockwise
 
-def ledflicker() -> None:
-    """Continuously flick the onboard LED."""
-    while True:
-        led.on()
-        time.sleep(0.25)
-        led.off()
-        time.sleep(0.25)
+# set up motor PWMs with frequency of 250 Hz and start at 0% throttle
+M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=250, duty_u16=0)
+M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=250, duty_u16=0)
+M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=250, duty_u16=0)
+M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=250, duty_u16=0)
 
-def comms_rx() -> None:
-    """Handles receiving of any data from the HL MCU"""
+# declare PID state variables
+# declaring them here because their "previous state" (value from previous loop) must be referenced in each loop
+pitch_last_i:float = 0.0
+pitch_last_error:int = 0
+roll_last_i:float = 0.0
+roll_last_error:int = 0
+yaw_last_i:float = 0.0
+yaw_last_error:int = 0
 
-    # declare nonlocal variables
-    nonlocal uart # the interface with the HL-MCU, which the incoming data will be coming from
-    nonlocal pitch_kp
-    nonlocal pitch_ki
-    nonlocal pitch_kd
-    nonlocal roll_kp
-    nonlocal roll_ki
-    nonlocal roll_kd
-    nonlocal yaw_kp
-    nonlocal yaw_ki
-    nonlocal yaw_kd
-    nonlocal i_limit
-    nonlocal throttle_uint16
-    nonlocal pitch_int16
-    nonlocal roll_int16
-    nonlocal yaw_int16
+# calculate constant: cycle time, in microseconds (us)
+cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
 
+# timestamps for tracking other processes that need to be done on a schedule
+# originally was using asyncio for this but now resorting to timestamp-based
+led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was swapped, in ms ticks
+status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the HL-MCU, in ms ticks
+
+# Infinite loop for all operations!
+while True:
+
+    # mark loop start time
+    loop_begin_us:int = time.ticks_us() # ticks, in microseconds (us)
+
+    # is it time to flicker the onboard LED?
+    if (time.ticks_ms() - led_last_flickered_ticks_ms) > 250: # every 250 ms (4 times per second)
+        led.toggle()
+        led_last_flickered_ticks_ms = time.ticks_ms()
+
+    # is it time to send status (telemetry) over UART to the HL-MCU?
+    if (time.ticks_ms() - status_last_sent_ticks_ms) > 100: # every 100 ms (10 times per second)
+        data:bytes = tools.pack_status(m1_throttle, m2_throttle, m3_throttle, m4_throttle, pitch_rate, roll_rate, yaw_rate, pitch_angle, roll_angle) # pack status data
+        uart.write(data + "\r\n".encode()) # send it to HL-MCU via UART
+
+    # check for received data (input data)
+    # was originally planning to do this at only 50-100 hz, but doing this every loop to avoid build up
     try:           
+        if uart.any() > 0: # if there is data available
+            data:bytes = tools.readuntil(uart, "\r\n".encode()) # read until \r\n at the end (newline, in bytes)... YES THIS IS BLOCKING
+            sendtimhmsg("Got " + str(len(data)) + " bytes")
 
-        while True:
-            if uart.any() > 0: # if there is data available
-                data:bytes = tools.readuntil(uart, "\r\n".encode()) # read until \r\n at the end (newline, in bytes)... YES THIS IS BLOCKING
-                sendtimhmsg("Got " + str(len(data)) + " bytes")
-
-                # handle according to what it is
-                if data == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
-                    sendtimhmsg("PONG")
-                elif data[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
-                    sendtimhmsg("It is a settings packet.")
-                    settings:dict = tools.unpack_settings_update(data)
-                    if settings != None: # it would return None if the checksum did not validate correctly
-                        pitch_kp = settings["pitch_kp"]
-                        pitch_ki = settings["pitch_ki"]
-                        pitch_kd = settings["pitch_kd"]
-                        roll_kp = settings["roll_kp"]
-                        roll_ki = settings["roll_ki"]
-                        roll_kd = settings["roll_kd"]
-                        yaw_kp = settings["yaw_kp"]
-                        yaw_ki = settings["yaw_ki"]
-                        yaw_kd = settings["yaw_kd"]
-                        i_limit = settings["i_limit"]
-                        print("settings updated!")
-                        sendtimhmsg("SETUP") # "SETUP" short for "Settings Updated"
-                elif data[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
-                    sendtimhmsg("It is a DRates packet")
-                    drates:dict = tools.unpack_desired_rates(data)
-                    if drates != None: # it would return None if the checksum did not validate correcrtly
-                        throttle_uint16 = drates["throttle_uint16"]
-                        pitch_int16 = drates["pitch_int16"]
-                        roll_int16 = drates["roll_int16"]
-                        yaw_int16 = drates["yaw_int16"]
-                        print("desired rates captured!")
-                        sendtimhmsg("DRates set!")
-                else: # unknown packet
-                    print("Unknown data received: " + str(data))
-            
-            # wait
-            time.sleep(0.01) # 100 Hz max
-
-
-    except Exception as ex: # if entire comms_rx coroutine failed
+            # handle according to what it is
+            if data == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
+                sendtimhmsg("PONG")
+            elif data[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
+                sendtimhmsg("It is a settings packet.")
+                settings:dict = tools.unpack_settings_update(data)
+                if settings != None: # it would return None if the checksum did not validate correctly
+                    pitch_kp = settings["pitch_kp"]
+                    pitch_ki = settings["pitch_ki"]
+                    pitch_kd = settings["pitch_kd"]
+                    roll_kp = settings["roll_kp"]
+                    roll_ki = settings["roll_ki"]
+                    roll_kd = settings["roll_kd"]
+                    yaw_kp = settings["yaw_kp"]
+                    yaw_ki = settings["yaw_ki"]
+                    yaw_kd = settings["yaw_kd"]
+                    i_limit = settings["i_limit"]
+                    print("settings updated!")
+                    sendtimhmsg("SETUP") # "SETUP" short for "Settings Updated"
+            elif data[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
+                sendtimhmsg("It is a DRates packet")
+                drates:dict = tools.unpack_desired_rates(data)
+                if drates != None: # it would return None if the checksum did not validate correcrtly
+                    throttle_uint16 = drates["throttle_uint16"]
+                    pitch_int16 = drates["pitch_int16"]
+                    roll_int16 = drates["roll_int16"]
+                    yaw_int16 = drates["yaw_int16"]
+                    print("desired rates captured!")
+                    sendtimhmsg("DRates set!")
+            else: # unknown packet
+                print("Unknown data received: " + str(data))
+    except Exception as ex:
         throttle_uint16 = 0
         pitch_int16 = 0
         roll_int16 = 0
         yaw_int16 = 0
         sendtimhmsg("CommsRx Err: " + str(ex))
 
-def status_tx() -> None:
-    """Handles continuous sending of status data to HL MCU."""
-
-    # do not need to declare nonlocal variables because we will only be READING from them, not writing. (nonlocal only required to write)
-
-    while True:
-
-        # pack status data
-        data:bytes = tools.pack_status(m1_throttle, m2_throttle, m3_throttle, m4_throttle, pitch_rate, roll_rate, yaw_rate, pitch_angle, roll_angle)
-        
-        # send satus data to HL-MCU via UART
-        uart.write(data + "\r\n".encode())
-
-        # wait
-        time.sleep(0.1) # 10 Hz
-
-def flightcontrol() -> None:
-    """Core flight controller routine."""
-
-    # declare nonlocal variables we will be modifying
-    nonlocal pitch_rate
-    nonlocal roll_rate
-    nonlocal yaw_rate
-    nonlocal m1_throttle
-    nonlocal m2_throttle
-    nonlocal m3_throttle
-    nonlocal m4_throttle
+    # Capture raw IMU data: gyroscope from MPU-6050
+    gyro_data:bytes = i2c.readfrom_mem(0x68, 0x43, 6) # read 6 bytes, 2 for each axis
+    gyro_x = (gyro_data[0] << 8) | gyro_data[1]
+    gyro_y = (gyro_data[2] << 8) | gyro_data[3]
+    gyro_z = (gyro_data[4] << 8) | gyro_data[5]
+    if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+    if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+    if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+    gyro_x = gyro_x / 131 # now, divide by the scale factor to get the actual degrees per second
+    gyro_y = gyro_y / 131 # now, divide by the scale factor to get the actual degrees per second
+    gyro_z = gyro_z / 131 # now, divide by the scale factor to get the actual degrees per second
     
-    # motor GPIO pins
-    gpio_motor1:int = 21 # front left, clockwise
-    gpio_motor2:int = 20 # front right, counter clockwise
-    gpio_motor3:int = 19 # rear left, counter clockwise
-    gpio_motor4:int = 18 # rear right, clockwise
+    # set the nonlocal variables
+    # gyro_x = pitch rate in degrees per second
+    # gyro_y = roll rate in degrees per second
+    # gyro_x = yaw rate in degrees per second
+    pitch_rate = gyro_x
+    roll_rate = gyro_y
+    yaw_rate = gyro_z
 
-    # set up motor PWMs with frequency of 250 Hz and start at 0% throttle
-    M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=250, duty_u16=0)
-    M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=250, duty_u16=0)
-    M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=250, duty_u16=0)
-    M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=250, duty_u16=0)
+    # conver the throttle input, as a uint16, into a percentage (between 0.0 and 1.0)
+    desired_throttle:float = throttle_uint16 / 65535.0
 
-    # declare PID state variables
-    # declaring them here because their "previous state" (value from previous loop) must be referenced in each loop
-    pitch_last_i:float = 0.0
-    pitch_last_error:int = 0
-    roll_last_i:float = 0.0
-    roll_last_error:int = 0
-    yaw_last_i:float = 0.0
-    yaw_last_error:int = 0
+    # convert the desired pitch, roll, and yaw into degrees per second
+    desired_pitch_rate:float = pitch_int16 / 32767.0
+    desired_roll_rate:float = roll_int16 / 32767.0
+    desired_yaw_rate:float = yaw_int16 / 32767.0
 
-    # calculate constant: cycle time, in microseconds (us)
-    cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
+    # now compare those ACTUAL rates with the DESIRED rates (calculate error)
+    # error = desired - actual
+    error_pitch_rate:int = desired_pitch_rate - gyro_x
+    error_roll_rate = desired_roll_rate - gyro_y
+    error_yaw_rate = desired_yaw_rate - gyro_z
 
-    # Infinite PID loop!
-    while True:
+    # Pitch PID calculation
+    pitch_p:float = error_pitch_rate * pitch_kp
+    pitch_i:float = pitch_last_i + (error_pitch_rate * pitch_ki * cycle_time_us)
+    pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
+    pitch_d:float = pitch_kd * (error_pitch_rate - pitch_last_error) / cycle_time_us
+    pitch_pid = pitch_p + pitch_i + pitch_d
 
-        # mark start time
-        loop_begin_us:int = time.ticks_us() # ticks, in microseconds (us)
+    # Roll PID calculation
+    roll_p:float = error_roll_rate * roll_kp
+    roll_i:float = roll_last_i + (error_roll_rate * roll_ki * cycle_time_us)
+    roll_i = min(max(roll_i, -i_limit), i_limit) # constrain within I limit
+    roll_d:float = roll_kd * (error_roll_rate - roll_last_error) / cycle_time_us
+    roll_pid = roll_p + roll_i + roll_d
 
-        # Capture raw IMU data: gyroscope from MPU-6050
-        gyro_data:bytes = i2c.readfrom_mem(0x68, 0x43, 6) # read 6 bytes, 2 for each axis
-        gyro_x = (gyro_data[0] << 8) | gyro_data[1]
-        gyro_y = (gyro_data[2] << 8) | gyro_data[3]
-        gyro_z = (gyro_data[4] << 8) | gyro_data[5]
-        if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-        if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-        if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-        gyro_x = gyro_x / 131 # now, divide by the scale factor to get the actual degrees per second
-        gyro_y = gyro_y / 131 # now, divide by the scale factor to get the actual degrees per second
-        gyro_z = gyro_z / 131 # now, divide by the scale factor to get the actual degrees per second
-        
-        # set the nonlocal variables
-        # gyro_x = pitch rate in degrees per second
-        # gyro_y = roll rate in degrees per second
-        # gyro_x = yaw rate in degrees per second
-        pitch_rate = gyro_x
-        roll_rate = gyro_y
-        yaw_rate = gyro_z
+    # Yaw PID calculation
+    yaw_p:float = error_yaw_rate * yaw_kp
+    yaw_i:float = yaw_last_i + (error_yaw_rate * yaw_ki * cycle_time_us)
+    yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
+    yaw_d:float = yaw_kd * (error_yaw_rate - yaw_last_error) / cycle_time_us
+    yaw_pid = yaw_p + yaw_i + yaw_d
 
-        # conver the throttle input, as a uint16, into a percentage (between 0.0 and 1.0)
-        desired_throttle:float = throttle_uint16 / 65535.0
+    # calculate throttle values for each motor using those PID influences
+    # we are using the nonlocal variables here so the status being sent will also update
+    m1_throttle = desired_throttle + pitch_pid + roll_pid - yaw_pid
+    m2_throttle = desired_throttle + pitch_pid - roll_pid + yaw_pid
+    m3_throttle = desired_throttle - pitch_pid + roll_pid + yaw_pid
+    m4_throttle = desired_throttle - pitch_pid - roll_pid - yaw_pid
 
-        # convert the desired pitch, roll, and yaw into degrees per second
-        desired_pitch_rate:float = pitch_int16 / 32767.0
-        desired_roll_rate:float = roll_int16 / 32767.0
-        desired_yaw_rate:float = yaw_int16 / 32767.0
+    # calculate what the duty time of each motor PWM should be, in nanoseconds (not to be confused with "us", microseconds!)
+    m1_ns:int = 1000000 + int(1000000 * m1_throttle)
+    m2_ns:int = 1000000 + int(1000000 * m2_throttle)
+    m3_ns:int = 1000000 + int(1000000 * m3_throttle)
+    m4_ns:int = 1000000 + int(1000000 * m4_throttle)
 
-        # now compare those ACTUAL rates with the DESIRED rates (calculate error)
-        # error = desired - actual
-        error_pitch_rate:int = desired_pitch_rate - gyro_x
-        error_roll_rate = desired_roll_rate - gyro_y
-        error_yaw_rate = desired_yaw_rate - gyro_z
+    # min/max those duty times
+    # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds)
+    m1_ns = min(max(m1_ns, 1000000), 2000000)
+    m2_ns = min(max(m2_ns, 1000000), 2000000)
+    m3_ns = min(max(m3_ns, 1000000), 2000000)
+    m4_ns = min(max(m4_ns, 1000000), 2000000)
 
-        # Pitch PID calculation
-        pitch_p:float = error_pitch_rate * pitch_kp
-        pitch_i:float = pitch_last_i + (error_pitch_rate * pitch_ki * cycle_time_us)
-        pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
-        pitch_d:float = pitch_kd * (error_pitch_rate - pitch_last_error) / cycle_time_us
-        pitch_pid = pitch_p + pitch_i + pitch_d
+    # adjust throttles on PWMs
+    M1.duty_ns(m1_ns)
+    M2.duty_ns(m2_ns)
+    M3.duty_ns(m3_ns)
+    M4.duty_ns(m4_ns)
 
-        # Roll PID calculation
-        roll_p:float = error_roll_rate * roll_kp
-        roll_i:float = roll_last_i + (error_roll_rate * roll_ki * cycle_time_us)
-        roll_i = min(max(roll_i, -i_limit), i_limit) # constrain within I limit
-        roll_d:float = roll_kd * (error_roll_rate - roll_last_error) / cycle_time_us
-        roll_pid = roll_p + roll_i + roll_d
+    # save state values for next loop
+    pitch_last_error = error_pitch_rate
+    roll_last_error = error_roll_rate
+    yaw_last_error = error_yaw_rate
+    pitch_last_i = pitch_i
+    roll_last_i = roll_i
+    yaw_last_i = yaw_i
 
-        # Yaw PID calculation
-        yaw_p:float = error_yaw_rate * yaw_kp
-        yaw_i:float = yaw_last_i + (error_yaw_rate * yaw_ki * cycle_time_us)
-        yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
-        yaw_d:float = yaw_kd * (error_yaw_rate - yaw_last_error) / cycle_time_us
-        yaw_pid = yaw_p + yaw_i + yaw_d
-
-        # calculate throttle values for each motor using those PID influences
-        # we are using the nonlocal variables here so the status being sent will also update
-        m1_throttle = desired_throttle + pitch_pid + roll_pid - yaw_pid
-        m2_throttle = desired_throttle + pitch_pid - roll_pid + yaw_pid
-        m3_throttle = desired_throttle - pitch_pid + roll_pid + yaw_pid
-        m4_throttle = desired_throttle - pitch_pid - roll_pid - yaw_pid
-
-        # calculate what the duty time of each motor PWM should be, in nanoseconds (not to be confused with "us", microseconds!)
-        m1_ns:int = 1000000 + int(1000000 * m1_throttle)
-        m2_ns:int = 1000000 + int(1000000 * m2_throttle)
-        m3_ns:int = 1000000 + int(1000000 * m3_throttle)
-        m4_ns:int = 1000000 + int(1000000 * m4_throttle)
-
-        # min/max those duty times
-        # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds)
-        m1_ns = min(max(m1_ns, 1000000), 2000000)
-        m2_ns = min(max(m2_ns, 1000000), 2000000)
-        m3_ns = min(max(m3_ns, 1000000), 2000000)
-        m4_ns = min(max(m4_ns, 1000000), 2000000)
-
-        # adjust throttles on PWMs
-        M1.duty_ns(m1_ns)
-        M2.duty_ns(m2_ns)
-        M3.duty_ns(m3_ns)
-        M4.duty_ns(m4_ns)
-
-        # save state values for next loop
-        pitch_last_error = error_pitch_rate
-        roll_last_error = error_roll_rate
-        yaw_last_error = error_yaw_rate
-        pitch_last_i = pitch_i
-        roll_last_i = roll_i
-        yaw_last_i = yaw_i
-
-        # wait if there is excess time
-        excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-        if excess_us > 0:
-            time.sleep_us(excess_us)
+    # wait if there is excess time
+    excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
+    if excess_us > 0:
+        time.sleep_us(excess_us)
