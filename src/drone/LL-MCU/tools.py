@@ -9,7 +9,7 @@ def readuntil(uart:machine.UART, until:bytes = "\r\n".encode()) -> bytes:
     while True:
         if uart.any():
             byte = uart.read(1)
-            ToReturn = ToReturn + byte
+            ToReturn = ToReturn.append(byte)
             if ToReturn.endswith(until):
                 return ToReturn
             
