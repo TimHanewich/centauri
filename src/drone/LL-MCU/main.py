@@ -374,34 +374,7 @@ async def main() -> None:
             # wait if there is excess time
             excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
             if excess_us > 0:
-
-                start_at_us:int = time.ticks_us()
-
-                # strategy 0:
-                #time.sleep_us(excess_us)
-
-                # strategy 1:
-                #await asyncio.sleep_ms(excess_us // 1000)
-
-                # strategy 2:
-                #await asyncio.sleep(excess_us / 1000000)
-                #time.sleep_us(excess_us)
-
-                # strategy 4: hybrid
-                # async sleep for the ms amount (bulk)
-                # time.sleep_us() for the remainder (small remainder)
-                #excess_ms:int = excess_us // 1000 # whole milliseconds
-                #remaining_us:int = excess_us % 1000 # leftover microseconds
-                #time.sleep_us(remaining_us) # first, sleep the tiny difference
-                #await asyncio.sleep_ms(excess_ms) # and then async sleep the rest (the bulk of it)
-
-                # strategy 5: custom sleep_us
-                await tools.async_sleep_us(excess_us)
-
-                stop_at_us:int = time.ticks_us()
-
-                slept_for_us:int = stop_at_us - start_at_us
-                print("Target sleep was " + str(excess_us) + ", slept for " + str(slept_for_us) + " us")
+                time.sleep_us(excess_us)
 
 
     # Run all threads!
