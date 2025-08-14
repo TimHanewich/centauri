@@ -224,6 +224,7 @@ async def main() -> None:
         pass
 
     # Run all threads!
+    print("Running all coroutines, here we go!")
     task_led_flicker = asyncio.create_task(ledflicker())
     task_comms_rx = asyncio.create_task(comms_rx())
     task_status_tx = asyncio.create_task(status_tx())
