@@ -377,7 +377,13 @@ async def main() -> None:
 
                 start_at_us:int = time.ticks_us()
 
+                # strategy 0:
+                #time.sleep_us(excess_us)
+
+                # strategy 1:
                 #await asyncio.sleep_ms(excess_us // 1000)
+
+                # strategy 2:
                 #await asyncio.sleep(excess_us / 1000000)
                 #time.sleep_us(excess_us)
 
