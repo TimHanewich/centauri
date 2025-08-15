@@ -180,6 +180,7 @@ led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was s
 status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the HL-MCU, in ms ticks
 
 # Infinite loop for all operations!
+print("Now entering infinite operating loop!")
 while True:
 
     # mark loop start time
