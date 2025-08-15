@@ -94,9 +94,12 @@ def unpack_desired_rates_v2(data:bytes, into:list[int]) -> bool:
     into[0] = data[2] << 8 | data[1]
 
     # unpack pitch, roll, yaw: all signed shorts (int16)
-    into[1] = data[4] << 8 | data[3]
-    into[2] = data[6] << 8 | data[5]
-    into[3] = data[8] << 8 | data[9]
+    # we subtract 32,768 out of each one to shift it BACK to a int16 from a uint16
+    # if you look at the desired rates pack function the HL-MCU has, it is shifting the int16 values into uint16 values before packing to keep it simple.
+    # So we are undoing it here by shifting it back, so negatives can be preserved!
+    into[1] = (data[4] << 8 | data[3]) - 32768
+    into[2] = (data[6] << 8 | data[5]) - 32768
+    into[3] = (data[8] << 8 | data[7]) - 32768
 
     # return true to indicate the unpack was successful
     return True
@@ -128,3 +131,8 @@ def pack_status(m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:i
     # pitch and roll angle
     into[8] = shift_int8_to_uint8(pitch_angle // 1000)
     into[9] = shift_int8_to_uint8(roll_angle // 1000)
+
+data = b'\x01\x96\x0c\xd7\x83;~\xd0\nP'
+into = [0,0,0,0]
+unpack_desired_rates_v2(data, into)
+print(into)
