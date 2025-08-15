@@ -61,11 +61,10 @@ def unpack_desired_rates(data:bytes, into:list[int]) -> bool:
     """Unpack desired rates packet into throttle, desired pitch rate, desired roll rate, and desired yaw rate, into a preexisting list. Returns True if the unpack was successful, False if it did nto unpack because of the checksum failing to verify."""
 
     # first, validate checksum
-    checksum:int = data[9] # it will be the 10th byte, so 9th index position
     selfchecksum:int = 0x00
     for i in range(9): # first 9 bytes
         selfchecksum = selfchecksum ^ data[i]
-    if selfchecksum != checksum: # if the checksum we calculated did not match the checksum in the data itself, must have been a transmission error. Return nothing, fail.
+    if selfchecksum != data[9]: # the 10th byte (9th index position) is the checksum value. if the checksum we calculated did not match the checksum in the data itself, must have been a transmission error. Return nothing, fail.
         return False
     
     # unpack throttle, an unsigned short (uint16)
