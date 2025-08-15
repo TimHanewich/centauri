@@ -246,17 +246,9 @@ while True:
     if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
     if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
     if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-    gyro_x = gyro_x / 131 # now, divide by the scale factor to get the actual degrees per second
-    gyro_y = gyro_y / 131 # now, divide by the scale factor to get the actual degrees per second
-    gyro_z = gyro_z / 131 # now, divide by the scale factor to get the actual degrees per second
-    
-    # set the nonlocal variables
-    # gyro_x = pitch rate in degrees per second
-    # gyro_y = roll rate in degrees per second
-    # gyro_x = yaw rate in degrees per second
-    pitch_rate = gyro_x
-    roll_rate = gyro_y
-    yaw_rate = gyro_z
+    pitch_rate = gyro_x / 131 # now, divide by the scale factor to get the actual degrees per second
+    roll_rate = gyro_y / 131 # now, divide by the scale factor to get the actual degrees per second
+    yaw_rate = gyro_z / 131 # now, divide by the scale factor to get the actual degrees per second
 
     # conver the throttle input, as a uint16, into a percentage (between 0.0 and 1.0)
     desired_throttle:float = throttle_uint16 / 65535.0
@@ -268,9 +260,9 @@ while True:
 
     # now compare those ACTUAL rates with the DESIRED rates (calculate error)
     # error = desired - actual
-    error_pitch_rate:int = desired_pitch_rate - gyro_x
-    error_roll_rate = desired_roll_rate - gyro_y
-    error_yaw_rate = desired_yaw_rate - gyro_z
+    error_pitch_rate:int = desired_pitch_rate - pitch_rate
+    error_roll_rate = desired_roll_rate - roll_rate
+    error_yaw_rate = desired_yaw_rate - yaw_rate
 
     # Pitch PID calculation
     pitch_p:float = error_pitch_rate * pitch_kp
