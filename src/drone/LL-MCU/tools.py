@@ -63,8 +63,8 @@ def unpack_desired_rates(data:bytes, into:list[int]) -> bool:
     # first, validate checksum
     checksum:int = data[9] # it will be the 10th byte, so 9th index position
     selfchecksum:int = 0x00
-    for byte in data[0:9]: # first 9 bytes, excluding the checksum
-        selfchecksum = selfchecksum ^ byte
+    for i in range(9): # first 9 bytes
+        selfchecksum = selfchecksum ^ data[i]
     if selfchecksum != checksum: # if the checksum we calculated did not match the checksum in the data itself, must have been a transmission error. Return nothing, fail.
         return False
 
