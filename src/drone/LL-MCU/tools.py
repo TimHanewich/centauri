@@ -57,7 +57,7 @@ def unpack_settings_update(data:bytes) -> dict:
     # return
     return {"pitch_kp": pitch_kp, "pitch_ki": pitch_ki, "pitch_kd": pitch_kd, "roll_kp": roll_kp, "roll_ki": roll_ki, "roll_kd": roll_kd, "yaw_kp": yaw_kp, "yaw_ki": yaw_ki, "yaw_kd": yaw_kd, "i_limit": i_limit}
 
-def unpack_desired_rates_v2(data:bytes, into:list[int]) -> bool:
+def unpack_desired_rates(data:bytes, into:list[int]) -> bool:
     """testing"""
 
     # first, validate checksum
@@ -109,8 +109,3 @@ def pack_status(m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:i
     # pitch and roll angle
     into[8] = shift_int8_to_uint8(pitch_angle // 1000)
     into[9] = shift_int8_to_uint8(roll_angle // 1000)
-
-data = b'\x01\x96\x0c\xd7\x83;~\xd0\nP'
-into = [0,0,0,0]
-unpack_desired_rates_v2(data, into)
-print(into)

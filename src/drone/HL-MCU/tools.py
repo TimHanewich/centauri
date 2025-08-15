@@ -169,7 +169,7 @@ def pack_settings_update(pitch_kp:float, pitch_ki:float, pitch_kd:float, roll_kp
 
     return bytes(ToReturn)
 
-def pack_desired_rates_v2(throttle_uint16:int, pitch_int16:int, roll_int16:int, yaw_int16:int) -> bytes:
+def pack_desired_rates(throttle_uint16:int, pitch_int16:int, roll_int16:int, yaw_int16:int) -> bytes:
 
     ToReturn:bytearray = bytearray()
 

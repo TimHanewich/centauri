@@ -230,7 +230,7 @@ while True:
                 # check first for a desired rates packet as that is the most common thing that will come accross anyway so no need to waste time checking other things first when in the important tight pid loop
                 if ThisLine[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet.
                     t1 = time.ticks_us()
-                    if tools.unpack_desired_rates_v2(ThisLine, desired_rates_data): # returns True if successfully, False if not
+                    if tools.unpack_desired_rates(ThisLine, desired_rates_data): # returns True if successfully, False if not
                         t2 = time.ticks_us()
                         print("Delta: " + str(t2 - t1) + " us")
                         throttle_uint16 = desired_rates_data[0]
