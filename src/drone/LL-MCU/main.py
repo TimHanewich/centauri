@@ -165,8 +165,10 @@ yaw_last_i:float = 0.0
 yaw_last_error:int = 0
 
 # declare objects we will reuse in the loop instead of remaking each time
+terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (13, 10 in bytes)
 status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put status values into before sending to HL-MCU via UART. The status packet is 10 bytes worth of information, but making it 12 here with the \r\n at the end (13, 10) already appended so no need to append it manually later before sending!
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
+rxBuffer:bytearray = bytearray() # a buffer of received messages from the HL-MCU, appended to byte by byte
 
 # calculate constant: cycle time, in microseconds (us)
 cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
@@ -196,41 +198,46 @@ while True:
     # check for received data (input data)
     # was originally planning to do this at only 50-100 hz, but doing this every loop to avoid build up
     try:           
-        if uart.any() > 0: # if there is data available
-            data:bytes = tools.readuntil(uart, "\r\n".encode()) # read until \r\n at the end (newline, in bytes)... YES THIS IS BLOCKING
-            sendtimhmsg("Got " + str(len(data)) + " bytes")
+        if uart.any() > 0:
+            rxBuffer.extend(uart.read()) # read all available bytes and append to rxBuffer
+            while terminator in rxBuffer:
 
-            # handle according to what it is
-            if data == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
-                sendtimhmsg("PONG")
-            elif data[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
-                sendtimhmsg("It is a settings packet.")
-                settings:dict = tools.unpack_settings_update(data)
-                if settings != None: # it would return None if the checksum did not validate correctly
-                    pitch_kp = settings["pitch_kp"]
-                    pitch_ki = settings["pitch_ki"]
-                    pitch_kd = settings["pitch_kd"]
-                    roll_kp = settings["roll_kp"]
-                    roll_ki = settings["roll_ki"]
-                    roll_kd = settings["roll_kd"]
-                    yaw_kp = settings["yaw_kp"]
-                    yaw_ki = settings["yaw_ki"]
-                    yaw_kd = settings["yaw_kd"]
-                    i_limit = settings["i_limit"]
-                    print("settings updated!")
-                    sendtimhmsg("SETUP") # "SETUP" short for "Settings Updated"
-            elif data[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
-                sendtimhmsg("It is a DRates packet")
-                drates:dict = tools.unpack_desired_rates(data)
-                if drates != None: # it would return None if the checksum did not validate correcrtly
-                    throttle_uint16 = drates["throttle_uint16"]
-                    pitch_int16 = drates["pitch_int16"]
-                    roll_int16 = drates["roll_int16"]
-                    yaw_int16 = drates["yaw_int16"]
-                    print("desired rates captured!")
-                    sendtimhmsg("DRates set!")
-            else: # unknown packet
-                print("Unknown data received: " + str(data))
+                # get the line
+                loc:int = rxBuffer.find(terminator) # find the \r\n
+                ThisLine:bytes = rxBuffer[0:loc] # get the line, but without the \r\n terminator at the end
+                rxBuffer = rxBuffer[loc+2:] # remove the line AND the terminator after it. Yes, this does create a whole new bytearray altogether, not good for performance. But can't think of another way.
+
+                # handle according to what it is
+                if ThisLine == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
+                    sendtimhmsg("PONG")
+                elif ThisLine[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
+                    sendtimhmsg("It is a settings packet.")
+                    settings:dict = tools.unpack_settings_update(ThisLine)
+                    if settings != None: # it would return None if the checksum did not validate correctly
+                        pitch_kp = settings["pitch_kp"]
+                        pitch_ki = settings["pitch_ki"]
+                        pitch_kd = settings["pitch_kd"]
+                        roll_kp = settings["roll_kp"]
+                        roll_ki = settings["roll_ki"]
+                        roll_kd = settings["roll_kd"]
+                        yaw_kp = settings["yaw_kp"]
+                        yaw_ki = settings["yaw_ki"]
+                        yaw_kd = settings["yaw_kd"]
+                        i_limit = settings["i_limit"]
+                        print("settings updated!")
+                        sendtimhmsg("SETUP") # "SETUP" short for "Settings Updated"
+                elif ThisLine[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
+                    sendtimhmsg("It is a DRates packet")
+                    drates:dict = tools.unpack_desired_rates(ThisLine)
+                    if drates != None: # it would return None if the checksum did not validate correcrtly
+                        throttle_uint16 = drates["throttle_uint16"]
+                        pitch_int16 = drates["pitch_int16"]
+                        roll_int16 = drates["roll_int16"]
+                        yaw_int16 = drates["yaw_int16"]
+                        print("desired rates captured!")
+                        sendtimhmsg("DRates set!")
+                else: # unknown packet
+                    print("Unknown data received: " + str(ThisLine))
     except Exception as ex:
         throttle_uint16 = 0
         pitch_int16 = 0
