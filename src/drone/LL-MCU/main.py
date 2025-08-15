@@ -200,7 +200,7 @@ while True:
     try:           
         if uart.any() > 0:
             rxBuffer.extend(uart.read()) # read all available bytes and append to rxBuffer
-            while terminator in rxBuffer:
+            while terminator in rxBuffer: # if there is at least one terminator (\r\n) in the rxBuffer, process it!
 
                 # get the line
                 loc:int = rxBuffer.find(terminator) # find the \r\n
