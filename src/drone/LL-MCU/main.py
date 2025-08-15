@@ -179,12 +179,12 @@ while True:
     loop_begin_us:int = time.ticks_us() # ticks, in microseconds (us)
 
     # is it time to flicker the onboard LED?
-    if (time.ticks_ms() - led_last_flickered_ticks_ms) > 250: # every 250 ms (4 times per second)
+    if (time.ticks_ms() - led_last_flickered_ticks_ms) >= 250: # every 250 ms (4 times per second)
         led.toggle()
         led_last_flickered_ticks_ms = time.ticks_ms()
 
     # is it time to send status (telemetry) over UART to the HL-MCU?
-    if (time.ticks_ms() - status_last_sent_ticks_ms) > 100: # every 100 ms (10 times per second)
+    if (time.ticks_ms() - status_last_sent_ticks_ms) >= 100: # every 100 ms (10 times per second)
         data:bytes = tools.pack_status(m1_throttle, m2_throttle, m3_throttle, m4_throttle, pitch_rate, roll_rate, yaw_rate, pitch_angle, roll_angle) # pack status data
         uart.write(data + "\r\n".encode()) # send it to HL-MCU via UART
         status_last_sent_ticks_ms = time.ticks_ms()
