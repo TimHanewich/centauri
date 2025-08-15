@@ -54,7 +54,7 @@ def unpack_settings_update(data:bytes) -> dict:
     # return
     return {"pitch_kp": pitch_kp, "pitch_ki": pitch_ki, "pitch_kd": pitch_kd, "roll_kp": roll_kp, "roll_ki": roll_ki, "roll_kd": roll_kd, "yaw_kp": yaw_kp, "yaw_ki": yaw_ki, "yaw_kd": yaw_kd, "i_limit": i_limit}
 
-def unpack_desired_rates(data:bytes, into:list[int, int, int, int]) -> bool:
+def unpack_desired_rates(data:bytes, into:list[int]) -> bool:
     """Unpack desired rates packet into throttle, desired pitch rate, desired roll rate, and desired yaw rate, into a preexisting list. Returns True if the unpack was successful, False if it did nto unpack because of the checksum failing to verify."""
 
     # first, validate checksum
