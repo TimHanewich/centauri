@@ -148,7 +148,7 @@ yaw_kd:int = 0
 i_limit:int = 0
 
 # declare setting variable: alpha for complementary filter
-alpha:float = 0.98
+alpha:float = 98
 
 # overclock
 print("Overclocking...")
@@ -191,6 +191,7 @@ cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microsecon
 # originally was using asyncio for this but now resorting to timestamp-based
 led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was swapped, in ms ticks
 status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the HL-MCU, in ms ticks
+last_compfilt_ticks_us:int = 0 # the last time the complementary filter was used. This is used to know how much time has ELAPSED and thus calculate roughly how many degrees changed based on the degrees per second value from the gyros
 
 # Infinite loop for all operations!
 print("Now entering infinite operating loop!")
@@ -293,12 +294,24 @@ while True:
     accel_z = (accel_z * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
     # use ONLY the accelerometer data to estimate pitch and roll
+    # you can interpret this as the accelerometer's "opinion" of what pitch and roll angle is based on only its data
     # this will likely be inaccurate as the accelerometer is quite susceptible to vibrations
     # we will later "fuse" this with gyro input in the complementary filter
     # note: the pitch and roll calculated here will be in degrees * 1000. For example, a reading of 22435 can be interpreted as 22.435 degrees (we do this for integer math purposes)
-    accel_pitch:int = int(math.atan2(accel_x, math.sqrt(accel_y**2 + accel_z**2)) * 180000 / math.pi)
-    accel_roll:int = int(math.atan2(accel_y, math.sqrt(accel_x**2 + accel_z**2)) * 180000 / math.pi)
-    print("Accel Pitch: " + str(accel_pitch) + ", Accel Roll: " + str(accel_roll))
+    expected_pitch_angle_accel:int = int(math.atan2(accel_x, math.sqrt(accel_y**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the pitch angle is
+    expected_roll_angle_accel:int = int(math.atan2(accel_y, math.sqrt(accel_x**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the roll angle is
+
+    # calculate what the gyro's expected pitch and roll angle should be
+    # you can take this as the gyro's "opinion" of what the pitch and roll angle should be, just on its data
+    elapsed_us:int = time.ticks_us() - last_compfilt_ticks_us # the amount of time, in microseconds (us), that has elapsed since we did this in the last loop
+    last_compfilt_ticks_us = time.ticks_us() # update the time
+    expected_pitch_angle_gyro:int = pitch_angle + (pitch_rate * 4000 // 1000000)
+    expected_roll_angle_gyro:int = roll_angle + (roll_rate * 4000 // 1000000)
+
+    # Now use a complementary filter to determine angle (fuse gyro + accelerometer data)
+    pitch_angle = ((expected_pitch_angle_gyro * alpha) + (expected_pitch_angle_accel * (100 - alpha))) // 100
+    roll_angle = ((expected_roll_angle_gyro * alpha) + (expected_roll_angle_accel * (100 - alpha))) // 100
+    print("Pitch Angle: " + str(pitch_angle) + ", Roll Angle: " + str(roll_angle))
 
     # convert desired throttle, expressed as a uint16, into nanoseconds
     desired_throttle:int = 1000000 + (throttle_uint16 * 1000000) // 65535
