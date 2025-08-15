@@ -79,26 +79,26 @@ def unpack_desired_rates(data:bytes) -> dict:
 
 
 ##### PACKING DATA TO BE SENT TO HL-MCU #####
-def pack_status(m1_throttle:float, m2_throttle:float, m3_throttle:float, m4_throttle:float, pitch_rate:float, roll_rate:float, yaw_rate:float, pitch_angle:float, roll_angle:float) -> bytes:
+def pack_status(m1_throttle:float, m2_throttle:float, m3_throttle:float, m4_throttle:float, pitch_rate:float, roll_rate:float, yaw_rate:float, pitch_angle:float, roll_angle:float, into:bytearray) -> None:
+    """Packs status values in a preexisting 10-byte bytearray."""
 
-    ToReturn:bytearray = bytearray()
+    if len(into) != 10:
+        raise Exception("Unable to pack status data into provided bytearray: it must be 10 bytes but the one provided is " + str(len(into)) + " in length!")
 
     # header byte
-    ToReturn.append(0b00000000) # 0 in the Bit 0 position means it is a status packet
+    into[0] = 0b00000000 # 0 in the Bit 0 position means it is a status packet
 
     # m1, m2, m3, m4 throttles
-    ToReturn.append(int(m1_throttle * 255))
-    ToReturn.append(int(m2_throttle * 255))
-    ToReturn.append(int(m3_throttle * 255))
-    ToReturn.append(int(m4_throttle * 255))
+    into[1] = int(m1_throttle * 255)
+    into[2] = int(m2_throttle * 255)
+    into[3] = int(m3_throttle * 255)
+    into[4] = int(m4_throttle * 255)
 
     # pitch, roll, yaw rates
-    ToReturn.append(signed_to_byte(min(max(int(pitch_rate), -128), 127)))
-    ToReturn.append(signed_to_byte(min(max(int(roll_rate), -128), 255)))
-    ToReturn.append(signed_to_byte(min(max(int(yaw_rate), -128), 255)))
+    into[5] = signed_to_byte(min(max(int(pitch_rate), -128), 127))
+    into[6] = signed_to_byte(min(max(int(roll_rate), -128), 127))
+    into[7] = signed_to_byte(min(max(int(yaw_rate), -128), 127))
 
     # pitch and roll angle
-    ToReturn.append(signed_to_byte(min(max(int(pitch_angle), -128), 127)))
-    ToReturn.append(signed_to_byte(min(max(int(roll_angle), -128), 127)))
-
-    return bytes(ToReturn)
+    into[8] = signed_to_byte(min(max(int(pitch_angle), -128), 127))
+    into[9] = signed_to_byte(min(max(int(roll_angle), -128), 127))
