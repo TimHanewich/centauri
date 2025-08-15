@@ -222,12 +222,13 @@ while True:
     try:  
 
         # Step 1: Read Data
-        if uart.any() > 0:
+        BytesAvailable:int = uart.any()
+        if BytesAvailable > 0:
             available_space:int = rxBufferLen - write_idx # calculate how many bytes we have remaining in the buffer
             if available_space > 0:
                 target_write_window = memoryview(rxBuffer)[write_idx:write_idx + available_space] # create a memoryview pointer target to the area of the rxBuffer we want to write to with these new bytes
                 t1 = time.ticks_us()
-                bytes_read:int = uart.readinto(target_write_window, 12)
+                bytes_read:int = uart.readinto(target_write_window, BytesAvailable) # read directly into that target window, but specify the number of bytes. I don't know why, but specifying exactly how many bytes to read into drastically improves performance. From like 3,000 microseconds to like 70.
                 t2 = time.ticks_us()
                 print("Delta (us): " + str(t2 - t1))
                 write_idx = write_idx + bytes_read # increment the write location forward
