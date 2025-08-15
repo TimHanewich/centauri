@@ -139,7 +139,7 @@ roll_angle:int = 0     # the actual pitch angle, in degrees * 1000 (i.e. 14000 w
 pitch_kp:int = 0
 pitch_ki:int = 0
 pitch_kd:int = 0
-roll_kp:int= 0
+roll_kp:int = 0
 roll_ki:int = 0
 roll_kd:int = 0
 yaw_kp:int = 0
@@ -391,9 +391,10 @@ while True:
     # min/max those duty times
     # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds)
     m1_throttle = min(max(m1_throttle, 1000000), 2000000)
-    m2_throttle = min(max(m1_throttle, 1000000), 2000000)
-    m3_throttle = min(max(m1_throttle, 1000000), 2000000)
-    m4_throttle = min(max(m1_throttle, 1000000), 2000000)
+    m2_throttle = min(max(m2_throttle, 1000000), 2000000)
+    m3_throttle = min(max(m3_throttle, 1000000), 2000000)
+    m4_throttle = min(max(m4_throttle, 1000000), 2000000)
+    #print("M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
 
     # adjust throttles on PWMs
     M1.duty_ns(m1_throttle)
@@ -411,6 +412,6 @@ while True:
 
     # wait if there is excess time
     excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-    print("Excess us: " + str(excess_us))
+    #print("Excess us: " + str(excess_us))
     if excess_us > 0:
         time.sleep_us(excess_us)
