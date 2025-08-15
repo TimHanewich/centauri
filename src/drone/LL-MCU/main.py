@@ -114,16 +114,16 @@ pitch_int16:int = 0            # from -32768 to 32767, representing -90.0 to 90.
 roll_int16:int = 0             # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
 yaw_int16:int = 0              # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
 
-# declare variables: status
-m1_throttle:float = 0.0
-m2_throttle:float = 0.0
-m3_throttle:float = 0.0
-m4_throttle:float = 0.0
-pitch_rate:float = 0.0
-roll_rate:float = 0.0
-yaw_rate:float = 0.0
-pitch_angle:float = 0.0
-roll_angle:float = 0.0
+# declare variables: status (actuals)
+m1_throttle:int = 0    # between 1,000,000 and 2,000,000 (nanoseconds)
+m2_throttle:int = 0    # between 1,000,000 and 2,000,000 (nanoseconds)
+m3_throttle:int = 0    # between 1,000,000 and 2,000,000 (nanoseconds)
+m4_throttle:int = 0    # between 1,000,000 and 2,000,000 (nanoseconds)
+pitch_rate:int = 0     # the actual pitch rate, in degrees per second * 1000 (i.e. 90,000 would be +90 degrees per second)
+roll_rate:int = 0      # the actual roll rate, in degrees per second * 1000 (i.e. 90,000 would be +90 degrees per second)
+yaw_rate:int = 0       # the actual yaw rate, in degrees per second * 1000 (i.e. 90,000 would be +90 degrees per second)
+pitch_angle:int = 0    # the actual pitch angle, in degrees * 1000 (i.e. 14000 would be 14 degrees)
+roll_angle:int = 0     # the actual pitch angle, in degrees * 1000 (i.e. 14000 would be 14 degrees)
 
 # declare variables: flight control loop PID values
 pitch_kp:int = 0

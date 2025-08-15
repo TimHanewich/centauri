@@ -79,7 +79,7 @@ def unpack_desired_rates(data:bytes, into:list[int]) -> bool:
 
 
 ##### PACKING DATA TO BE SENT TO HL-MCU #####
-def pack_status(m1_throttle:float, m2_throttle:float, m3_throttle:float, m4_throttle:float, pitch_rate:float, roll_rate:float, yaw_rate:float, pitch_angle:float, roll_angle:float, into:bytearray) -> None:
+def pack_status(m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, into:bytearray) -> None:
     """Packs status values in a preexisting bytearray, updating the first 10 bytes."""
 
     if len(into) < 10:
@@ -89,16 +89,17 @@ def pack_status(m1_throttle:float, m2_throttle:float, m3_throttle:float, m4_thro
     into[0] = 0b00000000 # 0 in the Bit 0 position means it is a status packet
 
     # m1, m2, m3, m4 throttles
-    into[1] = int(m1_throttle * 255)
-    into[2] = int(m2_throttle * 255)
-    into[3] = int(m3_throttle * 255)
-    into[4] = int(m4_throttle * 255)
+    # these convert from ranges of 1,000,000-2,000,00 to 0-255
+    into[1] = ((m1_throttle - 1000000) * 255) // 1000000
+    into[2] = ((m2_throttle - 1000000) * 255) // 1000000
+    into[3] = ((m3_throttle - 1000000) * 255) // 1000000
+    into[4] = ((m4_throttle - 1000000) * 255) // 1000000
 
     # pitch, roll, yaw rates
-    into[5] = signed_to_byte(min(max(int(pitch_rate), -128), 127))
-    into[6] = signed_to_byte(min(max(int(roll_rate), -128), 127))
-    into[7] = signed_to_byte(min(max(int(yaw_rate), -128), 127))
+    into[5] = signed_to_byte(pitch_rate // 1000)
+    into[6] = signed_to_byte(roll_rate // 1000)
+    into[7] = signed_to_byte(yaw_rate // 1000)
 
     # pitch and roll angle
-    into[8] = signed_to_byte(min(max(int(pitch_angle), -128), 127))
-    into[9] = signed_to_byte(min(max(int(roll_angle), -128), 127))
+    into[8] = signed_to_byte(pitch_angle // 1000)
+    into[9] = signed_to_byte(roll_angle // 1000)
