@@ -1,6 +1,7 @@
 import machine
 import time
 import tools
+import math
 
 # First thing is first: set up onboard LED, turn it on while loading
 print("Turning LED on...")
@@ -146,6 +147,9 @@ yaw_ki:int = 0
 yaw_kd:int = 0
 i_limit:int = 0
 
+# declare setting variable: alpha for complementary filter
+alpha:float = 0.98
+
 # overclock
 print("Overclocking...")
 #machine.freq(250000000)
@@ -175,6 +179,7 @@ yaw_last_error:int = 0
 terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (13, 10 in bytes)
 status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put status values into before sending to HL-MCU via UART. The status packet is 10 bytes worth of information, but making it 12 here with the \r\n at the end (13, 10) already appended so no need to append it manually later before sending!
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
+accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
 rxBuffer:bytearray = bytearray() # a buffer of received messages from the HL-MCU, appended to byte by byte
 desired_rates_data:list[int] = [0, 0, 0, 0] # desired rate packet data: throttle (uint16), pitch (int16), roll (int16), yaw (int16)
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
@@ -202,7 +207,6 @@ while True:
 
     # is it time to send status (telemetry) over UART to the HL-MCU?
     if (time.ticks_ms() - status_last_sent_ticks_ms) >= 100: # every 100 ms (10 times per second)
-        print("Sending!")
         tools.pack_status(m1_throttle, m2_throttle, m3_throttle, m4_throttle, pitch_rate, roll_rate, yaw_rate, pitch_angle, roll_angle, status_packet) # pack status data into the preexisting and reusable "status_packet" bytearray (update the values in that bytearray)
         uart.write(status_packet) # send it to HL-MCU via UART. we do not have to append \r\n because that is already at the end of the bytearray.
         status_last_sent_ticks_ms = time.ticks_ms()
@@ -276,6 +280,26 @@ while True:
     roll_rate = roll_rate - gyro_bias_y
     yaw_rate = yaw_rate - gyro_bias_z
 
+    # Capture raw IMU data: accelerometer from MPU-6050
+    i2c.readfrom_mem_into(0x68, 0x3B, accel_data) # read 6 bytes, two for each axis for accelerometer data, directly into the "accel_data" bytearray
+    accel_x = (accel_data[0] << 8) | accel_data[1]
+    accel_y = (accel_data[2] << 8) | accel_data[3]
+    accel_z = (accel_data[4] << 8) | accel_data[5]
+    if accel_x >= 32658: accel_x = ((65535 - accel_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+    if accel_y >= 32658: accel_y = ((65535 - accel_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+    if accel_z >= 32658: accel_z = ((65535 - accel_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+    accel_x = (accel_x * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
+    accel_y = (accel_y * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
+    accel_y = (accel_y * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
+    
+    # use ONLY the accelerometer data to estimate pitch and roll
+    # this will likely be inaccurate as the accelerometer is quite susceptible to vibrations
+    # we will later "fuse" this with gyro input in the complementary filter
+    # note: the pitch and roll calculated here will be in degrees * 1000. For example, a reading of 22435 can be interpreted as 22.435 degrees (we do this for integer math purposes)
+    accel_pitch:int = int(math.atan2(accel_x, math.sqrt(accel_y**2 + accel_z**2)) * 180000 / math.pi)
+    accel_roll:int = int(math.atan2(accel_y, math.sqrt(accel_x**2 + accel_z**2)) * 180000 / math.pi)
+    print("Accel Pitch: " + str(accel_pitch) + ", Accel Roll: " + str(accel_roll))
+
     # convert desired throttle, expressed as a uint16, into nanoseconds
     desired_throttle:int = 1000000 + (throttle_uint16 * 1000000) // 65535
 
@@ -342,6 +366,6 @@ while True:
 
     # wait if there is excess time
     excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-    print("Excess us: " + str(excess_us))
+    #print("Excess us: " + str(excess_us))
     if excess_us > 0:
         time.sleep_us(excess_us)
