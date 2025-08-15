@@ -101,15 +101,24 @@ gyro_bias_y:float = gys / samples
 gyro_bias_z:float = gzs / samples
 print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
 
-# declare variables that will be used across multiple coroutines: desired rate inputs
-# enter in via rx coroutine
-# used in flight control (pid loop) coroutine
+# declare variables: desired rate inputs
 throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
 pitch_int16:int = 0            # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
 roll_int16:int = 0             # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
 yaw_int16:int = 0              # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
 
-# declare variables that will be used accross multiple coroutines: flight control loop
+# declare variables: status
+m1_throttle:float = 0.0
+m2_throttle:float = 0.0
+m3_throttle:float = 0.0
+m4_throttle:float = 0.0
+pitch_rate:float = 0.0
+roll_rate:float = 0.0
+yaw_rate:float = 0.0
+pitch_angle:float = 0.0
+roll_angle:float = 0.0
+
+# declare variables: flight control loop PID values
 pitch_kp:float = 0.0
 pitch_ki:float = 0.0
 pitch_kd:float = 0.0
@@ -120,17 +129,6 @@ yaw_kp:float = 0.0
 yaw_ki:float = 0.0
 yaw_kd:float = 0.0
 i_limit:float = 0.0
-
-# declare variables that will be used accross multiple coroutines: status
-m1_throttle:float = 0.0
-m2_throttle:float = 0.0
-m3_throttle:float = 0.0
-m4_throttle:float = 0.0
-pitch_rate:float = 0.0
-roll_rate:float = 0.0
-yaw_rate:float = 0.0
-pitch_angle:float = 0.0
-roll_angle:float = 0.0
 
 # overclock
 print("Overclocking...")
