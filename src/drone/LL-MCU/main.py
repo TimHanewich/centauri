@@ -216,7 +216,8 @@ while True:
     # was originally planning to do this at only 50-100 hz, but doing this every loop to avoid build up
     try:           
         if uart.any() > 0:
-            rxBuffer.extend(uart.read()) # read all available bytes and append to rxBuffer
+            newdata:bytes = uart.read()
+            rxBuffer.extend(newdata) # read all available bytes and append to rxBuffer
             while terminator in rxBuffer: # if there is at least one terminator (\r\n) in the rxBuffer, process it!
 
                 # get the line
@@ -377,6 +378,6 @@ while True:
 
     # wait if there is excess time
     excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-    print("Excess us: " + str(excess_us))
+    #print("Excess us: " + str(excess_us))
     if excess_us > 0:
         time.sleep_us(excess_us)
