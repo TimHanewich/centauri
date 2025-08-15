@@ -18,15 +18,16 @@ def FATAL_ERROR() -> None:
 # set up UART interface with HL MCU
 print("Establishing UART interface...")
 uart = machine.UART(0, tx=machine.Pin(12), rx=machine.Pin(13), baudrate=115200)
-print("Sending BOOTING message over UART...")
-uart.write("TIMHBOOTING\r\n".encode()) # send a single "BOOTING" message to confirm we are booting
 
-### SIMPLE HELPER FUNCTIONS ###
+# Declare helper function for sending private diagnostic message to HL-MCU
 def sendtimhmsg(message:str) -> None:
     """Send a private message (diagnostic-like) to the HL-MCU (not something intended to be sent to the remote controller)."""
     ToSend = "TIMH" + message + "\r\n"
     uart.write(ToSend.encode())
-########################
+
+# Send booting message over UART
+print("Sending BOOTING message over UART...")
+sendtimhmsg("BOOTING") # send a single "BOOTING" message to confirm we are booting
 
 # Confirm MPU-6050 is connected via I2C
 print("Setting up I2C...")
@@ -42,6 +43,7 @@ print("Reading MPU-6050 WHOAMI register...")
 whoami:int = i2c.readfrom_mem(0x68, 0x75, 1)[0]
 if whoami == 0x68:
     print("MPU-6050 WHOAMI passed!")
+    sendtimhmsg("IMU OK")
 else:
     print("MPU-6050 WHOAMI Failed!")
     FATAL_ERROR()
@@ -74,6 +76,9 @@ else:
     print("MPU-6050 low pass filter failed to set!")
     FATAL_ERROR()
 
+# Send message to confirm IMU is all set up
+sendtimhmsg("IMU SET")
+
 # measure gyro to estimate bias
 gxs:int = 0
 gys:int = 0
@@ -81,7 +86,9 @@ gzs:int = 0
 samples:int = 0
 for i in range(3):
     print("Beginning gyro calibration in " + str(3 - i) + "... ")
+    sendtimhmsg("GyroCal in " + str(3 - i))
     time.sleep(1.0)
+sendtimhmsg("CalibGyro...")
 print("Calibrating gyro...")
 started_at_ticks_ms:int = time.ticks_ms()
 while (time.ticks_ms() - started_at_ticks_ms) < 3000: # 3 seconds
@@ -108,6 +115,7 @@ gyro_bias_x:int = gxs // samples
 gyro_bias_y:int = gys // samples
 gyro_bias_z:int = gzs // samples
 print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
+sendtimhmsg("GyroCalib OK")
 
 # declare variables: desired rate inputs
 throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
@@ -181,6 +189,7 @@ status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent 
 
 # Infinite loop for all operations!
 print("Now entering infinite operating loop!")
+sendtimhmsg("READY")
 while True:
 
     # mark loop start time
