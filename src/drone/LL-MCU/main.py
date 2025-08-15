@@ -213,7 +213,7 @@ while True:
                     sendtimhmsg("PONG")
                 elif ThisLine[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
                     sendtimhmsg("It is a settings packet.")
-                    settings:dict = tools.unpack_settings_update(ThisLine)
+                    settings:dict = tools.unpack_settings_update(ThisLine) # this is quite bad performance wise. Making a new dict each time is memory intensive. However, leaving it for now because really this should happen infrequently... and while not in flight anyway, so its not a big deal.
                     if settings != None: # it would return None if the checksum did not validate correctly
                         pitch_kp = settings["pitch_kp"]
                         pitch_ki = settings["pitch_ki"]
