@@ -166,6 +166,7 @@ yaw_last_error:int = 0
 
 # declare objects we will reuse in the loop instead of remaking each time
 status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put status values into before sending to HL-MCU via UART. The status packet is 10 bytes worth of information, but making it 12 here with the \r\n at the end (13, 10) already appended so no need to append it manually later before sending!
+gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
 
 # calculate constant: cycle time, in microseconds (us)
 cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
@@ -238,7 +239,7 @@ while True:
         sendtimhmsg("CommsRx Err: " + str(ex))
 
     # Capture raw IMU data: gyroscope from MPU-6050
-    gyro_data:bytes = i2c.readfrom_mem(0x68, 0x43, 6) # read 6 bytes, 2 for each axis
+    i2c.readfrom_mem_into(0x68, 0x43, gyro_data) # read 6 bytes, 2 for each axis, into the "gyro_data" bytearray (update values in that bytearray to have to avoid creating a new bytes object)
     gyro_x = (gyro_data[0] << 8) | gyro_data[1]
     gyro_y = (gyro_data[2] << 8) | gyro_data[3]
     gyro_z = (gyro_data[4] << 8) | gyro_data[5]
