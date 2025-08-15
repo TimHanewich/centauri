@@ -191,3 +191,24 @@ def pack_desired_rates(throttle_uint16:int, pitch_int16:int, roll_int16:int, yaw
     ToReturn.append(checksum)
 
     return bytes(ToReturn)
+
+def pack_desired_rates_v2(throttle_uint16:int, pitch_int16:int, roll_int16:int, yaw_int16:int) -> bytes:
+
+    ToReturn:bytearray = bytearray()
+
+    # header byte
+    ToReturn.append(0b00000001) # 1 is the packet identifier
+
+    # pack throttle, pitch, roll, yaw
+    ToReturn.extend(throttle_uint16.to_bytes(2, "little"))
+    ToReturn.extend(shift_int16_to_uint16(pitch_int16).to_bytes(2, "little"))
+    ToReturn.extend(shift_int16_to_uint16(roll_int16).to_bytes(2, "little"))
+    ToReturn.extend(shift_int16_to_uint16(yaw_int16).to_bytes(2, "little"))
+    
+    # XOR-chain based checksum:
+    checksum:int = 0x00 # start with 0
+    for byte in ToReturn:
+        checksum = checksum ^ byte # XOR operation
+    ToReturn.append(checksum)
+
+    return bytes(ToReturn)
