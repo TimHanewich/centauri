@@ -221,7 +221,7 @@ while True:
 
                 # handle according to what it is
                 if ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
-                    sendtimhmsg("PONG")
+                    sendtimhmsg("PONG") # respond with PONG, the expected response to confirm we are operating
                 elif ThisLine[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
                     sendtimhmsg("It is a settings packet.")
                     settings:dict = tools.unpack_settings_update(ThisLine) # this is quite bad performance wise. Making a new dict each time is memory intensive. However, leaving it for now because really this should happen infrequently... and while not in flight anyway, so its not a big deal.
@@ -238,6 +238,8 @@ while True:
                         i_limit = settings["i_limit"]
                         print("settings updated!")
                         sendtimhmsg("SETUP") # "SETUP" short for "Settings Updated"
+                    else:
+                        sendtimhmsg("SETUP FAIL") # short for "Settings Update Failed" to say it failed to indicate the settings were NOT written.
                 elif ThisLine[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
                     sendtimhmsg("It is a DRates packet")
                     if tools.unpack_desired_rates(ThisLine, desired_rates_data): # returns True if successfully, False if not
@@ -249,6 +251,7 @@ while True:
                         sendtimhmsg("DRates set!")
                 else: # unknown packet
                     print("Unknown data received: " + str(ThisLine))
+                    sendtimhmsg("?") # respond with a simple question mark to indicate the message was not understood.
     except Exception as ex:
         throttle_uint16 = 0
         pitch_int16 = 0
