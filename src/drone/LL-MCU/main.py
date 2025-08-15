@@ -107,7 +107,6 @@ gyro_bias_x:int = gxs // samples
 gyro_bias_y:int = gys // samples
 gyro_bias_z:int = gzs // samples
 print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
-input("Enter to conitnue.")
 
 # declare variables: desired rate inputs
 throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
