@@ -165,7 +165,7 @@ yaw_last_i:float = 0.0
 yaw_last_error:int = 0
 
 # declare objects we will reuse in the loop instead of remaking each time
-status_packet:bytearray = bytearray(10) # used to put status values into before sending to HL-MCU via UART
+status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put status values into before sending to HL-MCU via UART. The status packet is 10 bytes worth of information, but making it 12 here with the \r\n at the end (13, 10) already appended so no need to append it manually later before sending!
 
 # calculate constant: cycle time, in microseconds (us)
 cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
@@ -189,7 +189,7 @@ while True:
     # is it time to send status (telemetry) over UART to the HL-MCU?
     if (time.ticks_ms() - status_last_sent_ticks_ms) >= 100: # every 100 ms (10 times per second)
         tools.pack_status(m1_throttle, m2_throttle, m3_throttle, m4_throttle, pitch_rate, roll_rate, yaw_rate, pitch_angle, roll_angle, status_packet) # pack status data
-        uart.write(status_packet + "\r\n".encode()) # send it to HL-MCU via UART
+        uart.write(status_packet) # send it to HL-MCU via UART
         status_last_sent_ticks_ms = time.ticks_ms()
 
     # check for received data (input data)

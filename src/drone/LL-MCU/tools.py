@@ -82,7 +82,7 @@ def unpack_desired_rates(data:bytes) -> dict:
 def pack_status(m1_throttle:float, m2_throttle:float, m3_throttle:float, m4_throttle:float, pitch_rate:float, roll_rate:float, yaw_rate:float, pitch_angle:float, roll_angle:float, into:bytearray) -> None:
     """Packs status values in a preexisting 10-byte bytearray."""
 
-    if len(into) != 10:
+    if len(into) < 10:
         raise Exception("Unable to pack status data into provided bytearray: it must be 10 bytes but the one provided is " + str(len(into)) + " in length!")
 
     # header byte
