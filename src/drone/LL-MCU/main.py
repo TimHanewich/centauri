@@ -258,7 +258,7 @@ while True:
     roll_rate = gyro_y * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
     yaw_rate = gyro_z * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
 
-    # subtract out gyro bias that was calculated during calibration phase
+    # subtract out (account for) gyro bias that was calculated during calibration phase
     pitch_rate = pitch_rate - gyro_bias_x
     roll_rate = roll_rate - gyro_bias_y
     yaw_rate = yaw_rate - gyro_bias_z
