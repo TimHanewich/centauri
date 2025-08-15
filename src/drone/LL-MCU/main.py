@@ -219,8 +219,7 @@ while True:
 
         # read any incoming data
         while uart.any() > 0:
-            uart.readinto(uart_read_target)
-            rxBuffer.extend(uart_read_target) # read all available bytes and append to rxBuffer
+            rxBuffer.extend(uart.read()) # read all available bytes and append to rxBuffer
 
         # anything to process in the rxBuffer?
         while terminator in rxBuffer: # if there is at least one terminator (\r\n) in the rxBuffer, process it!
