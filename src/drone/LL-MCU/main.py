@@ -170,6 +170,7 @@ status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put s
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
 rxBuffer:bytearray = bytearray() # a buffer of received messages from the HL-MCU, appended to byte by byte
 desired_rates_data:list[int] = [0, 0, 0, 0] # desired rate packet data: throttle (uint16), pitch (int16), roll (int16), yaw (int16)
+TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
 
 # calculate constant: cycle time, in microseconds (us)
 cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
@@ -209,7 +210,7 @@ while True:
                 rxBuffer = rxBuffer[loc+2:] # remove the line AND the terminator after it. Yes, this does create a whole new bytearray altogether, not good for performance. But can't think of another way.
 
                 # handle according to what it is
-                if ThisLine == "TIMHPING\r\n".encode(): # PING: simple check of life from the HL-MCU
+                if ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
                     sendtimhmsg("PONG")
                 elif ThisLine[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
                     sendtimhmsg("It is a settings packet.")
