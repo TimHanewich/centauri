@@ -31,3 +31,14 @@ The LL MCU will then run the following async coroutines in parralel:
     - Desired rates
 - Tx Loop: routinely send data to HL-MCU (via UART)
     - Status
+
+## Speed Auditing on August 14, 2025
+Something is causing the LL-MCU synchronous loop to occasionally dip in speed. it goes from having ~2,300 us (2.3 ms) in excess capacity every cycle to having -5,000 us free. And this is in tests WITHOUT processing any incoming control data from the HL-MCU!
+
+So I am auditing the speed of each main operation to see what it could be:
+- `gyro_data:bytes = i2c.readfrom_mem(0x68, 0x43, 6)` = ~450 us stable
+- Converting the gyro raw data into floats just after I2C read = ~280 us stable
+- Calculating all 3 axis PID values = usually ~750 us, but seeing spike to **8,827 occasionally**!
+    - Does this mean this code is bad? Nope... it actually confirms the issue is garbage collection.
+    - GC being the issue is pointed out by GPT-4.1: https://i.imgur.com/dVjSH3j.png
+    - I confirmed this is in a test. When garbage collecting at the start of every loop (super slow, but for test), it never spiked!
