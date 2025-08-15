@@ -83,7 +83,7 @@ def pack_status(m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:i
     """Packs status values in a preexisting bytearray, updating the first 10 bytes."""
 
     if len(into) < 10:
-        raise Exception("Unable to pack status data into provided bytearray: it must be 10 bytes but the one provided is " + str(len(into)) + " in length!")
+        raise Exception("Unable to pack status data into provided bytearray: it must be at least 10 bytes but the one provided is " + str(len(into)) + " in length!")
 
     # header byte
     into[0] = 0b00000000 # 0 in the Bit 0 position means it is a status packet
