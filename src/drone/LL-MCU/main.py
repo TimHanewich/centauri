@@ -21,6 +21,13 @@ uart = machine.UART(0, tx=machine.Pin(12), rx=machine.Pin(13), baudrate=115200)
 print("Sending BOOTING message over UART...")
 uart.write("TIMHBOOTING\r\n".encode()) # send a single "BOOTING" message to confirm we are booting
 
+### SIMPLE HELPER FUNCTIONS ###
+def sendtimhmsg(message:str) -> None:
+    """Send a private message (diagnostic-like) to the HL-MCU (not something intended to be sent to the remote controller)."""
+    ToSend = "TIMH" + message + "\r\n"
+    uart.write(ToSend.encode())
+########################
+
 # Confirm MPU-6050 is connected via I2C
 print("Setting up I2C...")
 i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17))
@@ -133,13 +140,6 @@ i_limit:float = 0.0
 # overclock
 print("Overclocking...")
 #machine.freq(250000000)
-
-### SIMPLE HELPER FUNCTIONS ###
-def sendtimhmsg(message:str) -> None:
-    """Send a private message (diagnostic-like) to the HL-MCU (not something intended to be sent to the remote controller)."""
-    ToSend = "TIMH" + message + "\r\n"
-    uart.write(ToSend.encode())
-########################
    
 # motor GPIO pins
 gpio_motor1:int = 21 # front left, clockwise
