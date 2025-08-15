@@ -227,14 +227,12 @@ while True:
                 # handle according to what it is
                 # check first for a desired rates packet as that is the most common thing that will come accross anyway so no need to waste time checking other things first when in the important tight pid loop
                 if ThisLine[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet.
-                    sendtimhmsg("It is a DRates packet")
                     if tools.unpack_desired_rates(ThisLine, desired_rates_data): # returns True if successfully, False if not
                         throttle_uint16 = desired_rates_data[0]
                         pitch_int16 = desired_rates_data[1]
                         roll_int16 = desired_rates_data[2]
                         yaw_int16 = desired_rates_data[3]
                         #print("desired rates captured: " + str(throttle_uint16) + ", " + str(pitch_int16) + ", " + str(roll_int16) + ", " + str(yaw_int16))
-                        sendtimhmsg("DRates set!")
                 elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
                     sendtimhmsg("PONG") # respond with PONG, the expected response to confirm we are operating
                 elif ThisLine[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
