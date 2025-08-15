@@ -311,7 +311,6 @@ while True:
     # Now use a complementary filter to determine angle (fuse gyro + accelerometer data)
     pitch_angle = ((expected_pitch_angle_gyro * alpha) + (expected_pitch_angle_accel * (100 - alpha))) // 100
     roll_angle = ((expected_roll_angle_gyro * alpha) + (expected_roll_angle_accel * (100 - alpha))) // 100
-    print("Pitch Angle: " + str(pitch_angle) + ", Roll Angle: " + str(roll_angle))
 
     # convert desired throttle, expressed as a uint16, into nanoseconds
     desired_throttle:int = 1000000 + (throttle_uint16 * 1000000) // 65535
@@ -379,6 +378,6 @@ while True:
 
     # wait if there is excess time
     excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-    #print("Excess us: " + str(excess_us))
+    print("Excess us: " + str(excess_us))
     if excess_us > 0:
         time.sleep_us(excess_us)
