@@ -75,9 +75,9 @@ else:
     FATAL_ERROR()
 
 # measure gyro to estimate bias
-gxs:float = 0.0
-gys:float = 0.0
-gzs:float = 0.0
+gxs:int = 0
+gys:int = 0
+gzs:int = 0
 samples:int = 0
 for i in range(3):
     print("Beginning gyro calibration in " + str(3 - i) + "... ")
@@ -92,9 +92,9 @@ while (time.ticks_ms() - started_at_ticks_ms) < 3000: # 3 seconds
     if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
     if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
     if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-    gyro_x = gyro_x / 131 # now, divide by the scale factor to get the actual degrees per second
-    gyro_y = gyro_y / 131 # now, divide by the scale factor to get the actual degrees per second
-    gyro_z = gyro_z / 131 # now, divide by the scale factor to get the actual degrees per second
+    gyro_x = gyro_x * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
+    gyro_y = gyro_y * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
+    gyro_z = gyro_z * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
     gxs = gxs + gyro_x
     gys = gys + gyro_y
     gzs = gzs + gyro_z
@@ -103,10 +103,11 @@ while (time.ticks_ms() - started_at_ticks_ms) < 3000: # 3 seconds
 
 # calculate gyro bias
 print(str(samples) + " gyro samples collected.")
-gyro_bias_x:float = gxs / samples
-gyro_bias_y:float = gys / samples
-gyro_bias_z:float = gzs / samples
+gyro_bias_x:int = gxs // samples
+gyro_bias_y:int = gys // samples
+gyro_bias_z:int = gzs // samples
 print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
+input("Enter to conitnue.")
 
 # declare variables: desired rate inputs
 throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
