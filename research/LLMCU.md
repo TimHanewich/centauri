@@ -54,3 +54,21 @@ Can be expressed as:
 ```
 pitch_rate = gyro_x * 1000 // 131 
 ```
+
+## Figuring out which part of UART read on LLMCU is taking up so much time on August 15, 2025
+- `rxBuffer.extend(uart.read())` takes up **2700 microseconds**!!!!!!!!!
+    - Splitting it up further:
+    - `newdata = uart.read()` takes up 2600 microseconds
+    - `rxBuffer.extend(newdata)` takes up 50 microseconds
+
+Instead of `uart.read()`, i tried setting up a buffer for the uart to read into. It got much better performance w/ like 60 us I think, but occasionally spiking due to garbage collection.
+
+- `while terminator in rxBuffer` = 42 microseconds
+- `loc:int = rxBuffer.find(terminator)` = 50 microseconds
+- `ThisLine:bytes = rxBuffer[0:loc]` = 80 microseconds
+- `rxBuffer = rxBuffer[loc+2:]` = 40 microseconds
+- `if ThisLine[0] & 0b00000001 != 0:` = 43 microseconds
+- `if tools.unpack_desired_rates(ThisLine, desired_rates_data):` = 520 microseconds
+    - Got this down to **260 microseconds** after stop using Struct.pack and used to bitwise shifting
+
+- Setting all 4 desired vals after: 45 microseconds
