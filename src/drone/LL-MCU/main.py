@@ -221,6 +221,10 @@ while True:
     # was originally planning to do this at only 50-100 hz, but doing this every loop to avoid build up
     try:  
 
+        # This uses a rather complicated "conveyer belt" approach
+        # I know it is complex, but we do this to avoid constantly uart.read() which creates a new bytes. Slow and memory leak.
+        # So we want to uart.readinto() which requires an rxBuffer, which requires all of this:
+
         # Step 1: Read Data
         BytesAvailable:int = uart.any()
         if BytesAvailable > 0:
