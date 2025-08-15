@@ -102,6 +102,7 @@ while (time.ticks_ms() - started_at_ticks_ms) < 3000: # 3 seconds
     time.sleep(0.01)
 
 # calculate gyro bias
+# the resulting gyro bias will be in degrees per second * 1000 (with no decimal). We do this instead of a floating point number because integer math is faster.
 print(str(samples) + " gyro samples collected.")
 gyro_bias_x:int = gxs // samples
 gyro_bias_y:int = gys // samples
@@ -256,6 +257,11 @@ while True:
     pitch_rate = gyro_x * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
     roll_rate = gyro_y * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
     yaw_rate = gyro_z * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
+
+    # subtract out gyro bias that was calculated during calibration phase
+    pitch_rate = pitch_rate - gyro_bias_x
+    roll_rate = roll_rate - gyro_bias_y
+    yaw_rate = yaw_rate - gyro_bias_z
 
     # convert desired throttle, expressed as a uint16, into nanoseconds
     desired_throttle:int = 1000000 + (throttle_uint16 * 1000000) // 65535
