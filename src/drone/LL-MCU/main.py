@@ -226,11 +226,8 @@ while True:
         if BytesAvailable > 0:
             available_space:int = rxBufferLen - write_idx # calculate how many bytes we have remaining in the buffer
             if available_space > 0:
-                target_write_window = memoryview(rxBuffer)[write_idx:write_idx + available_space] # create a memoryview pointer target to the area of the rxBuffer we want to write to with these new bytes
-                t1 = time.ticks_us()
+                target_write_window = memoryview(rxBuffer)[write_idx:write_idx + BytesAvailable] # create a memoryview pointer target to the area of the rxBuffer we want to write to with these new bytes
                 bytes_read:int = uart.readinto(target_write_window, BytesAvailable) # read directly into that target window, but specify the number of bytes. I don't know why, but specifying exactly how many bytes to read into drastically improves performance. From like 3,000 microseconds to like 70.
-                t2 = time.ticks_us()
-                print("Delta (us): " + str(t2 - t1))
                 write_idx = write_idx + bytes_read # increment the write location forward
             else:
                 write_idx = 0 # if there is no space, reset the write location for next time around 
@@ -284,6 +281,7 @@ while True:
             search_from = loc + 2 # +2 to jump after \r\n
 
         # Step 3: move the conveyer belt
+        # the conveyer belt will only be moved if not every byte was processed and thus we are done with
         if search_from > 0: # if search_from was moved, that means at least one line was extracted and processed.
             unprocessed_byte_count:int = write_idx - search_from # how many bytes are on the conveyer and still unprocessed
             if unprocessed_byte_count > 0:
