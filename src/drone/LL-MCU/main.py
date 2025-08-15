@@ -188,7 +188,7 @@ while True:
 
     # is it time to send status (telemetry) over UART to the HL-MCU?
     if (time.ticks_ms() - status_last_sent_ticks_ms) >= 100: # every 100 ms (10 times per second)
-        tools.pack_status(m1_throttle, m2_throttle, m3_throttle, m4_throttle, pitch_rate, roll_rate, yaw_rate, pitch_angle, roll_angle, status_packet) # pack status data
+        tools.pack_status(m1_throttle, m2_throttle, m3_throttle, m4_throttle, pitch_rate, roll_rate, yaw_rate, pitch_angle, roll_angle, status_packet) # pack status data into the preexisting and reusable "status_packet" bytearray (update the values in that bytearray)
         uart.write(status_packet) # send it to HL-MCU via UART
         status_last_sent_ticks_ms = time.ticks_ms()
 
