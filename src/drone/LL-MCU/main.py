@@ -126,16 +126,16 @@ pitch_angle:float = 0.0
 roll_angle:float = 0.0
 
 # declare variables: flight control loop PID values
-pitch_kp:float = 0.0
-pitch_ki:float = 0.0
-pitch_kd:float = 0.0
-roll_kp:float = 0.0
-roll_ki:float = 0.0
-roll_kd:float = 0.0
-yaw_kp:float = 0.0
-yaw_ki:float = 0.0
-yaw_kd:float = 0.0
-i_limit:float = 0.0
+pitch_kp:int = 0
+pitch_ki:int = 0
+pitch_kd:int = 0
+roll_kp:int= 0
+roll_ki:int = 0
+roll_kd:int = 0
+yaw_kp:int = 0
+yaw_ki:int = 0
+yaw_kd:int = 0
+i_limit:int = 0
 
 # overclock
 print("Overclocking...")
@@ -155,11 +155,11 @@ M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=250, duty_u16=0)
 
 # declare PID state variables
 # declaring them here because their "previous state" (value from previous loop) must be referenced in each loop
-pitch_last_i:float = 0.0
+pitch_last_i:int = 0
 pitch_last_error:int = 0
-roll_last_i:float = 0.0
+roll_last_i:int = 0
 roll_last_error:int = 0
-yaw_last_i:float = 0.0
+yaw_last_i:int = 0
 yaw_last_error:int = 0
 
 # declare objects we will reuse in the loop instead of remaking each time
@@ -253,70 +253,65 @@ while True:
     if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
     if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
     if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-    pitch_rate = gyro_x / 131 # now, divide by the scale factor to get the actual degrees per second
-    roll_rate = gyro_y / 131 # now, divide by the scale factor to get the actual degrees per second
-    yaw_rate = gyro_z / 131 # now, divide by the scale factor to get the actual degrees per second
+    pitch_rate = gyro_x * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
+    roll_rate = gyro_y * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
+    yaw_rate = gyro_z * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
 
-    # conver the throttle input, as a uint16, into a percentage (between 0.0 and 1.0)
-    desired_throttle:float = throttle_uint16 / 65535.0
+    # convert desired throttle, expressed as a uint16, into nanoseconds
+    desired_throttle:int = 1000000 + (throttle_uint16 * 1000000) // 65535
 
     # convert the desired pitch, roll, and yaw into degrees per second
-    desired_pitch_rate:float = pitch_int16 / 32767.0
-    desired_roll_rate:float = roll_int16 / 32767.0
-    desired_yaw_rate:float = yaw_int16 / 32767.0
+    # Multiply by 90,000 because each are expressed as an int16 for a range of -90 to +90
+    # but multiply it all by 1,000 (not 90) so we can do integer math
+    desired_pitch_rate:int = (pitch_int16 * 90000) // 32767
+    desired_roll_rate:int = (roll_int16 * 90000) // 32767
+    desired_yaw_rate:int = (yaw_int16 * 90000) // 32767
 
     # now compare those ACTUAL rates with the DESIRED rates (calculate error)
     # error = desired - actual
     error_pitch_rate:int = desired_pitch_rate - pitch_rate
-    error_roll_rate = desired_roll_rate - roll_rate
-    error_yaw_rate = desired_yaw_rate - yaw_rate
+    error_roll_rate:int = desired_roll_rate - roll_rate
+    error_yaw_rate:int = desired_yaw_rate - yaw_rate
 
     # Pitch PID calculation
-    pitch_p:float = error_pitch_rate * pitch_kp
-    pitch_i:float = pitch_last_i + (error_pitch_rate * pitch_ki * cycle_time_us)
+    pitch_p:int = error_pitch_rate * pitch_kp
+    pitch_i:int = pitch_last_i + (error_pitch_rate * pitch_ki * cycle_time_us)
     pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
-    pitch_d:float = pitch_kd * (error_pitch_rate - pitch_last_error) / cycle_time_us
+    pitch_d:int = pitch_kd * (error_pitch_rate - pitch_last_error) // cycle_time_us
     pitch_pid = pitch_p + pitch_i + pitch_d
 
     # Roll PID calculation
-    roll_p:float = error_roll_rate * roll_kp
-    roll_i:float = roll_last_i + (error_roll_rate * roll_ki * cycle_time_us)
+    roll_p:int = error_roll_rate * roll_kp
+    roll_i:int = roll_last_i + (error_roll_rate * roll_ki * cycle_time_us)
     roll_i = min(max(roll_i, -i_limit), i_limit) # constrain within I limit
-    roll_d:float = roll_kd * (error_roll_rate - roll_last_error) / cycle_time_us
+    roll_d:int = roll_kd * (error_roll_rate - roll_last_error) // cycle_time_us
     roll_pid = roll_p + roll_i + roll_d
 
     # Yaw PID calculation
-    yaw_p:float = error_yaw_rate * yaw_kp
-    yaw_i:float = yaw_last_i + (error_yaw_rate * yaw_ki * cycle_time_us)
+    yaw_p:int = error_yaw_rate * yaw_kp
+    yaw_i:int = yaw_last_i + (error_yaw_rate * yaw_ki * cycle_time_us)
     yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
-    yaw_d:float = yaw_kd * (error_yaw_rate - yaw_last_error) / cycle_time_us
+    yaw_d:int = yaw_kd * (error_yaw_rate - yaw_last_error) // cycle_time_us
     yaw_pid = yaw_p + yaw_i + yaw_d
 
     # calculate throttle values for each motor using those PID influences
-    # we are using the nonlocal variables here so the status being sent will also update
     m1_throttle = desired_throttle + pitch_pid + roll_pid - yaw_pid
     m2_throttle = desired_throttle + pitch_pid - roll_pid + yaw_pid
     m3_throttle = desired_throttle - pitch_pid + roll_pid + yaw_pid
     m4_throttle = desired_throttle - pitch_pid - roll_pid - yaw_pid
 
-    # calculate what the duty time of each motor PWM should be, in nanoseconds (not to be confused with "us", microseconds!)
-    m1_ns:int = 1000000 + int(1000000 * m1_throttle)
-    m2_ns:int = 1000000 + int(1000000 * m2_throttle)
-    m3_ns:int = 1000000 + int(1000000 * m3_throttle)
-    m4_ns:int = 1000000 + int(1000000 * m4_throttle)
-
     # min/max those duty times
     # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds)
-    m1_ns = min(max(m1_ns, 1000000), 2000000)
-    m2_ns = min(max(m2_ns, 1000000), 2000000)
-    m3_ns = min(max(m3_ns, 1000000), 2000000)
-    m4_ns = min(max(m4_ns, 1000000), 2000000)
+    m1_throttle = min(max(m1_throttle, 1000000), 2000000)
+    m2_throttle = min(max(m1_throttle, 1000000), 2000000)
+    m3_throttle = min(max(m1_throttle, 1000000), 2000000)
+    m4_throttle = min(max(m1_throttle, 1000000), 2000000)
 
     # adjust throttles on PWMs
-    M1.duty_ns(m1_ns)
-    M2.duty_ns(m2_ns)
-    M3.duty_ns(m3_ns)
-    M4.duty_ns(m4_ns)
+    M1.duty_ns(m1_throttle)
+    M2.duty_ns(m2_throttle)
+    M3.duty_ns(m3_throttle)
+    M4.duty_ns(m4_throttle)
 
     # save state values for next loop
     pitch_last_error = error_pitch_rate
@@ -328,6 +323,8 @@ while True:
 
     # wait if there is excess time
     excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-    print("Excess us: " + str(excess_us))
+    #print("Excess us: " + str(excess_us))
     if excess_us > 0:
         time.sleep_us(excess_us)
+    else:
+        print("Down: " + str(excess_us))
