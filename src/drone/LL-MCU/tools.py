@@ -11,17 +11,16 @@ def readuntil(uart:machine.UART, until:bytes = "\r\n".encode()) -> bytes:
             ToReturn = ToReturn.append(uart.read(1)[0])
             if ToReturn.endswith(until):
                 return ToReturn
-            
-def int8_to_uint8(val:int) -> int:
-    """Converts an integer between -128 to 127 to a signed byte value (i.e. -4 would be 252)"""
-    if val < -128: # if goes below int8 bottom range, just return -128 as uint8, which would be 128
-        return 128
-    elif val > 127: # if exceeds int8 top range, return int8 top range
-        return 127
-    elif val < 0:
-        return 256 + val
+    
+def shift_int8_to_uint8(val:int) -> int:
+    """Does a simple 'shift' of a int8 (-128 to 127) to a uint8 (0 to 255) just by adding 128. It can later be shifted back by subtract 128. Super simple."""
+    if val > 127: # 127 is upper limit of int8, beyond what we could represent with a uint8
+        return 255
+    elif val < -128: # -128 is lower limit of int8, beyond what we could represent with a uint8
+        return 0
     else:
-        return val
+        return val + 128
+    
 
 ##### UNPACKING DATA FROM HL-MCU #####
 
@@ -100,10 +99,10 @@ def pack_status(m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:i
     into[4] = ((m4_throttle - 1000000) * 255) // 1000000
 
     # pitch, roll, yaw rates
-    into[5] = int8_to_uint8(pitch_rate // 1000)
-    into[6] = int8_to_uint8(roll_rate // 1000)
-    into[7] = int8_to_uint8(yaw_rate // 1000)
+    into[5] = shift_int8_to_uint8(pitch_rate // 1000)
+    into[6] = shift_int8_to_uint8(roll_rate // 1000)
+    into[7] = shift_int8_to_uint8(yaw_rate // 1000)
 
     # pitch and roll angle
-    into[8] = int8_to_uint8(pitch_angle // 1000)
-    into[9] = int8_to_uint8(roll_angle // 1000)
+    into[8] = shift_int8_to_uint8(pitch_angle // 1000)
+    into[9] = shift_int8_to_uint8(roll_angle // 1000)
