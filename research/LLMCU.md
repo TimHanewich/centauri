@@ -42,3 +42,15 @@ So I am auditing the speed of each main operation to see what it could be:
     - Does this mean this code is bad? Nope... it actually confirms the issue is garbage collection.
     - GC being the issue is pointed out by GPT-4.1: https://i.imgur.com/dVjSH3j.png
     - I confirmed this is in a test. When garbage collecting at the start of every loop (super slow, but for test), it never spiked!
+
+I also learned that floating point math also has a memory leak. Every time a floating point math is done, a new float is made. 
+
+For example:
+```
+pitch_rate = gyro_x / 131 
+```
+
+Can be expressed as:
+```
+pitch_rate = gyro_x * 1000 // 131 
+```
