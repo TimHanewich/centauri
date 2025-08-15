@@ -183,6 +183,7 @@ accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer readi
 rxBuffer:bytearray = bytearray() # a buffer of received messages from the HL-MCU, appended to byte by byte
 desired_rates_data:list[int] = [0, 0, 0, 0] # desired rate packet data: throttle (uint16), pitch (int16), roll (int16), yaw (int16)
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
+uart_read_target:bytearray = bytearray(12)
 
 # calculate constant: cycle time, in microseconds (us)
 cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
@@ -216,8 +217,8 @@ while True:
     # was originally planning to do this at only 50-100 hz, but doing this every loop to avoid build up
     try:           
         if uart.any() > 0:
-            newdata:bytes = uart.read()
-            rxBuffer.extend(newdata) # read all available bytes and append to rxBuffer
+            uart.readinto(uart_read_target)
+            rxBuffer.extend(uart_read_target) # read all available bytes and append to rxBuffer
             while terminator in rxBuffer: # if there is at least one terminator (\r\n) in the rxBuffer, process it!
 
                 # get the line
