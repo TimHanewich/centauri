@@ -169,6 +169,7 @@ terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (
 status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put status values into before sending to HL-MCU via UART. The status packet is 10 bytes worth of information, but making it 12 here with the \r\n at the end (13, 10) already appended so no need to append it manually later before sending!
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
 rxBuffer:bytearray = bytearray() # a buffer of received messages from the HL-MCU, appended to byte by byte
+desired_rates_data:list[int, int, int, int] = [0, 0, 0, 0] # desired rate packet data: throttle (uint16), pitch (int16), roll (int16), yaw (int16)
 
 # calculate constant: cycle time, in microseconds (us)
 cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
@@ -228,12 +229,11 @@ while True:
                         sendtimhmsg("SETUP") # "SETUP" short for "Settings Updated"
                 elif ThisLine[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet
                     sendtimhmsg("It is a DRates packet")
-                    drates:dict = tools.unpack_desired_rates(ThisLine)
-                    if drates != None: # it would return None if the checksum did not validate correcrtly
-                        throttle_uint16 = drates["throttle_uint16"]
-                        pitch_int16 = drates["pitch_int16"]
-                        roll_int16 = drates["roll_int16"]
-                        yaw_int16 = drates["yaw_int16"]
+                    if tools.unpack_desired_rates(ThisLine, desired_rates_data): # returns True if successfully, False if not
+                        throttle_uint16 = desired_rates_data[0]
+                        pitch_int16 = desired_rates_data[1]
+                        roll_int16 = desired_rates_data[2]
+                        yaw_int16 = desired_rates_data[3]
                         print("desired rates captured!")
                         sendtimhmsg("DRates set!")
                 else: # unknown packet
