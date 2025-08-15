@@ -305,8 +305,8 @@ while True:
     # you can take this as the gyro's "opinion" of what the pitch and roll angle should be, just on its data
     elapsed_us:int = time.ticks_us() - last_compfilt_ticks_us # the amount of time, in microseconds (us), that has elapsed since we did this in the last loop
     last_compfilt_ticks_us = time.ticks_us() # update the time
-    expected_pitch_angle_gyro:int = pitch_angle + (pitch_rate * 4000 // 1000000)
-    expected_roll_angle_gyro:int = roll_angle + (roll_rate * 4000 // 1000000)
+    expected_pitch_angle_gyro:int = pitch_angle + (pitch_rate * elapsed_us // 1000000)
+    expected_roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_us // 1000000)
 
     # Now use a complementary filter to determine angle (fuse gyro + accelerometer data)
     pitch_angle = ((expected_pitch_angle_gyro * alpha) + (expected_pitch_angle_accel * (100 - alpha))) // 100
