@@ -226,10 +226,13 @@ while True:
             available_space:int = rxBufferLen - write_idx # calculate how many bytes we have remaining in the buffer
             if available_space > 0:
                 target_write_window = memoryview(rxBuffer)[write_idx:write_idx + available_space] # create a memoryview pointer target to the area of the rxBuffer we want to write to with these new bytes
-                bytes_read:int = uart.readinto(target_write_window)
+                t1 = time.ticks_us()
+                bytes_read:int = uart.readinto(target_write_window, 12)
+                t2 = time.ticks_us()
+                print("Delta (us): " + str(t2 - t1))
                 write_idx = write_idx + bytes_read # increment the write location forward
             else:
-                write_idx = 0 # if there is no space, reset the write location for next time around
+                write_idx = 0 # if there is no space, reset the write location for next time around 
 
         # Step 2: Process Lines
         search_from:int = 0
@@ -408,6 +411,6 @@ while True:
 
     # wait if there is excess time
     excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-    print("Excess us: " + str(excess_us))
+    #print("Excess us: " + str(excess_us))
     if excess_us > 0:
         time.sleep_us(excess_us)
