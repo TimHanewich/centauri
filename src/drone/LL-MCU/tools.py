@@ -57,28 +57,6 @@ def unpack_settings_update(data:bytes) -> dict:
     # return
     return {"pitch_kp": pitch_kp, "pitch_ki": pitch_ki, "pitch_kd": pitch_kd, "roll_kp": roll_kp, "roll_ki": roll_ki, "roll_kd": roll_kd, "yaw_kp": yaw_kp, "yaw_ki": yaw_ki, "yaw_kd": yaw_kd, "i_limit": i_limit}
 
-def unpack_desired_rates(data:bytes, into:list[int]) -> bool:
-    """Unpack desired rates packet into throttle, desired pitch rate, desired roll rate, and desired yaw rate, into a preexisting list. Returns True if the unpack was successful, False if it did nto unpack because of the checksum failing to verify."""
-
-    # first, validate checksum
-    checksum:int = data[9] # it will be the 10th byte, so 9th index position
-    selfchecksum:int = 0x00
-    for i in range(9): # first 9 bytes
-        selfchecksum = selfchecksum ^ data[i]
-    if selfchecksum != checksum: # if the checksum we calculated did not match the checksum in the data itself, must have been a transmission error. Return nothing, fail.
-        return False
-
-    # unpack throttle, an unsigned short (2-byte int)
-    into[0] = struct.unpack("<H", data[1:3])[0]
-
-    # unpack pitch, roll, yaw: all signed shorts (2-byte int)
-    into[1] = struct.unpack("<h", data[3:5])[0] # pitch_int16
-    into[2] = struct.unpack("<h", data[5:7])[0] # roll_int16
-    into[3] = struct.unpack("<h", data[7:9])[0] # yaw_int16
-
-    # return True to indicate the unpack was successful
-    return True
-
 def unpack_desired_rates_v2(data:bytes, into:list[int]) -> bool:
     """testing"""
 
