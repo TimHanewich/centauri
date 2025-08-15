@@ -176,7 +176,6 @@ yaw_last_i:int = 0
 yaw_last_error:int = 0
 
 # declare objects we will reuse in the loop instead of remaking each time
-
 status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put status values into before sending to HL-MCU via UART. The status packet is 10 bytes worth of information, but making it 12 here with the \r\n at the end (13, 10) already appended so no need to append it manually later before sending!
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
@@ -414,6 +413,6 @@ while True:
 
     # wait if there is excess time
     excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-    #print("Excess us: " + str(excess_us))
+    print("Excess us: " + str(excess_us))
     if excess_us > 0:
         time.sleep_us(excess_us)
