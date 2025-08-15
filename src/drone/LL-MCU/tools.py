@@ -79,6 +79,28 @@ def unpack_desired_rates(data:bytes, into:list[int]) -> bool:
     # return True to indicate the unpack was successful
     return True
 
+def unpack_desired_rates_v2(data:bytes, into:list[int]) -> bool:
+    """testing"""
+
+    # first, validate checksum
+    checksum:int = data[9] # it will be the 10th byte, so 9th index position
+    selfchecksum:int = 0x00
+    for i in range(9): # first 9 bytes
+        selfchecksum = selfchecksum ^ data[i]
+    if selfchecksum != checksum: # if the checksum we calculated did not match the checksum in the data itself, must have been a transmission error. Return nothing, fail.
+        return False
+    
+    # unpack throttle, an unsigned short (uint16)
+    into[0] = data[2] << 8 | data[1]
+
+    # unpack pitch, roll, yaw: all signed shorts (int16)
+    into[1] = data[4] << 8 | data[3]
+    into[2] = data[6] << 8 | data[5]
+    into[3] = data[8] << 8 | data[9]
+
+    # return true to indicate the unpack was successful
+    return True
+
 
 
 ##### PACKING DATA TO BE SENT TO HL-MCU #####
