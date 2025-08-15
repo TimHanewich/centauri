@@ -12,9 +12,13 @@ def readuntil(uart:machine.UART, until:bytes = "\r\n".encode()) -> bytes:
             if ToReturn.endswith(until):
                 return ToReturn
             
-def signed_to_byte(val:int) -> int:
+def int8_to_uint8(val:int) -> int:
     """Converts an integer between -128 to 127 to a signed byte value (i.e. -4 would be 252)"""
-    if val < 0:
+    if val < -128: # if goes below int8 bottom range, just return -128 as uint8, which would be 128
+        return 128
+    elif val > 127: # if exceeds int8 top range, return int8 top range
+        return 127
+    elif val < 0:
         return 256 + val
     else:
         return val
@@ -96,10 +100,10 @@ def pack_status(m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:i
     into[4] = ((m4_throttle - 1000000) * 255) // 1000000
 
     # pitch, roll, yaw rates
-    into[5] = signed_to_byte(pitch_rate // 1000)
-    into[6] = signed_to_byte(roll_rate // 1000)
-    into[7] = signed_to_byte(yaw_rate // 1000)
+    into[5] = int8_to_uint8(pitch_rate // 1000)
+    into[6] = int8_to_uint8(roll_rate // 1000)
+    into[7] = int8_to_uint8(yaw_rate // 1000)
 
     # pitch and roll angle
-    into[8] = signed_to_byte(pitch_angle // 1000)
-    into[9] = signed_to_byte(roll_angle // 1000)
+    into[8] = int8_to_uint8(pitch_angle // 1000)
+    into[9] = int8_to_uint8(roll_angle // 1000)
