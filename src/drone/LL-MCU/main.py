@@ -176,14 +176,18 @@ yaw_last_i:int = 0
 yaw_last_error:int = 0
 
 # declare objects we will reuse in the loop instead of remaking each time
-terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (13, 10 in bytes)
+
 status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put status values into before sending to HL-MCU via UART. The status packet is 10 bytes worth of information, but making it 12 here with the \r\n at the end (13, 10) already appended so no need to append it manually later before sending!
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
-rxBuffer:bytearray = bytearray() # a buffer of received messages from the HL-MCU, appended to byte by byte
 desired_rates_data:list[int] = [0, 0, 0, 0] # desired rate packet data: throttle (uint16), pitch (int16), roll (int16), yaw (int16)
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
-uart_read_target:bytearray = bytearray(12)
+
+# declare uart conveyer read objects
+rxBufferLen:int = 128
+rxBuffer:bytearray = bytearray(rxBufferLen) # a buffer of received messages from the HL-MCU
+write_idx:int = 0 # last write location into the rxBuffer
+terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (13, 10 in bytes)
 
 # calculate constant: cycle time, in microseconds (us)
 cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
@@ -217,17 +221,27 @@ while True:
     # was originally planning to do this at only 50-100 hz, but doing this every loop to avoid build up
     try:  
 
-        # read any incoming data
-        while uart.any() > 0:
-            rxBuffer.extend(uart.read()) # read all available bytes and append to rxBuffer
+        # Step 1: Read Data
+        if uart.any() > 0:
+            available_space:int = rxBufferLen - write_idx # calculate how many bytes we have remaining in the buffer
+            if available_space > 0:
+                target_write_window = memoryview(rxBuffer)[write_idx:write_idx + available_space] # create a memoryview pointer target to the area of the rxBuffer we want to write to with these new bytes
+                bytes_read:int = uart.readinto(target_write_window)
+                write_idx = write_idx + bytes_read # increment the write location forward
+            else:
+                write_idx = 0 # if there is no space, reset the write location for next time around
 
-        # anything to process in the rxBuffer?
-        while terminator in rxBuffer: # if there is at least one terminator (\r\n) in the rxBuffer, process it!
+        # Step 2: Process Lines
+        search_from:int = 0
+        while True:
 
-            # get the line
-            loc:int = rxBuffer.find(terminator) # find the \r\n
-            ThisLine:bytes = rxBuffer[0:loc] # get the line, but without the \r\n terminator at the end
-            rxBuffer = rxBuffer[loc+2:] # remove the line AND the terminator after it. Yes, this does create a whole new bytearray altogether, not good for performance. But can't think of another way.
+            # find terminator
+            loc = rxBuffer.find(terminator, search_from, write_idx) # search for a terminator somewhere in the new data
+            if loc == -1:
+                break
+            
+            # Get line
+            ThisLine = memoryview(rxBuffer)[search_from:write_idx]
 
             # handle according to what it is
             # check first for a desired rates packet as that is the most common thing that will come accross anyway so no need to waste time checking other things first when in the important tight pid loop
@@ -261,6 +275,18 @@ while True:
             else: # unknown packet
                 print("Unknown data received: " + str(ThisLine))
                 sendtimhmsg("?") # respond with a simple question mark to indicate the message was not understood.
+
+            # increment search start location... there is possibly another \r\n in there (and thus a new line to process)
+            search_from = loc + 2 # +2 to jump after \r\n
+
+        # Step 3: move the conveyer belt
+        if search_from > 0: # if search_from was moved, that means at least one line was extracted and processed.
+            unprocessed_byte_count:int = write_idx - search_from # how many bytes are on the conveyer and still unprocessed
+            if unprocessed_byte_count > 0:
+                rxBuffer[0:unprocessed_byte_count] = rxBuffer[search_from:write_idx]
+            write_idx = unprocessed_byte_count
+
+
     except Exception as ex:
         throttle_uint16 = 0
         pitch_int16 = 0
