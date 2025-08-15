@@ -215,52 +215,56 @@ while True:
 
     # check for received data (input data)
     # was originally planning to do this at only 50-100 hz, but doing this every loop to avoid build up
-    try:           
-        if uart.any() > 0:
+    try:  
+
+        # read any incoming data
+        while uart.any() > 0:
             uart.readinto(uart_read_target)
             rxBuffer.extend(uart_read_target) # read all available bytes and append to rxBuffer
-            while terminator in rxBuffer: # if there is at least one terminator (\r\n) in the rxBuffer, process it!
 
-                # get the line
-                loc:int = rxBuffer.find(terminator) # find the \r\n
-                ThisLine:bytes = rxBuffer[0:loc] # get the line, but without the \r\n terminator at the end
-                rxBuffer = rxBuffer[loc+2:] # remove the line AND the terminator after it. Yes, this does create a whole new bytearray altogether, not good for performance. But can't think of another way.
+        # anything to process in the rxBuffer?
+        while terminator in rxBuffer: # if there is at least one terminator (\r\n) in the rxBuffer, process it!
 
-                # handle according to what it is
-                # check first for a desired rates packet as that is the most common thing that will come accross anyway so no need to waste time checking other things first when in the important tight pid loop
-                if ThisLine[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet.
-                    t1 = time.ticks_us()
-                    if tools.unpack_desired_rates(ThisLine, desired_rates_data): # returns True if successfully, False if not
-                        t2 = time.ticks_us()
-                        print("Delta: " + str(t2 - t1) + " us")
-                        throttle_uint16 = desired_rates_data[0]
-                        pitch_int16 = desired_rates_data[1]
-                        roll_int16 = desired_rates_data[2]
-                        yaw_int16 = desired_rates_data[3]
-                        #print("desired rates captured: " + str(throttle_uint16) + ", " + str(pitch_int16) + ", " + str(roll_int16) + ", " + str(yaw_int16))
-                elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
-                    sendtimhmsg("PONG") # respond with PONG, the expected response to confirm we are operating
-                elif ThisLine[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
-                    sendtimhmsg("It is a settings packet.")
-                    settings:dict = tools.unpack_settings_update(ThisLine) # this is quite bad performance wise. Making a new dict each time is memory intensive. However, leaving it for now because really this should happen infrequently... and while not in flight anyway, so its not a big deal.
-                    if settings != None: # it would return None if the checksum did not validate correctly
-                        pitch_kp = settings["pitch_kp"]
-                        pitch_ki = settings["pitch_ki"]
-                        pitch_kd = settings["pitch_kd"]
-                        roll_kp = settings["roll_kp"]
-                        roll_ki = settings["roll_ki"]
-                        roll_kd = settings["roll_kd"]
-                        yaw_kp = settings["yaw_kp"]
-                        yaw_ki = settings["yaw_ki"]
-                        yaw_kd = settings["yaw_kd"]
-                        i_limit = settings["i_limit"]
-                        print("settings updated!")
-                        sendtimhmsg("SETUP") # "SETUP" short for "Settings Updated"
-                    else:
-                        sendtimhmsg("SETUP FAIL") # short for "Settings Update Failed" to say it failed to indicate the settings were NOT written.
-                else: # unknown packet
-                    print("Unknown data received: " + str(ThisLine))
-                    sendtimhmsg("?") # respond with a simple question mark to indicate the message was not understood.
+            # get the line
+            loc:int = rxBuffer.find(terminator) # find the \r\n
+            ThisLine:bytes = rxBuffer[0:loc] # get the line, but without the \r\n terminator at the end
+            rxBuffer = rxBuffer[loc+2:] # remove the line AND the terminator after it. Yes, this does create a whole new bytearray altogether, not good for performance. But can't think of another way.
+
+            # handle according to what it is
+            # check first for a desired rates packet as that is the most common thing that will come accross anyway so no need to waste time checking other things first when in the important tight pid loop
+            if ThisLine[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet.
+                t1 = time.ticks_us()
+                if tools.unpack_desired_rates(ThisLine, desired_rates_data): # returns True if successfully, False if not
+                    t2 = time.ticks_us()
+                    print("Delta: " + str(t2 - t1) + " us")
+                    throttle_uint16 = desired_rates_data[0]
+                    pitch_int16 = desired_rates_data[1]
+                    roll_int16 = desired_rates_data[2]
+                    yaw_int16 = desired_rates_data[3]
+                    #print("desired rates captured: " + str(throttle_uint16) + ", " + str(pitch_int16) + ", " + str(roll_int16) + ", " + str(yaw_int16))
+            elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
+                sendtimhmsg("PONG") # respond with PONG, the expected response to confirm we are operating
+            elif ThisLine[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
+                sendtimhmsg("It is a settings packet.")
+                settings:dict = tools.unpack_settings_update(ThisLine) # this is quite bad performance wise. Making a new dict each time is memory intensive. However, leaving it for now because really this should happen infrequently... and while not in flight anyway, so its not a big deal.
+                if settings != None: # it would return None if the checksum did not validate correctly
+                    pitch_kp = settings["pitch_kp"]
+                    pitch_ki = settings["pitch_ki"]
+                    pitch_kd = settings["pitch_kd"]
+                    roll_kp = settings["roll_kp"]
+                    roll_ki = settings["roll_ki"]
+                    roll_kd = settings["roll_kd"]
+                    yaw_kp = settings["yaw_kp"]
+                    yaw_ki = settings["yaw_ki"]
+                    yaw_kd = settings["yaw_kd"]
+                    i_limit = settings["i_limit"]
+                    print("settings updated!")
+                    sendtimhmsg("SETUP") # "SETUP" short for "Settings Updated"
+                else:
+                    sendtimhmsg("SETUP FAIL") # short for "Settings Update Failed" to say it failed to indicate the settings were NOT written.
+            else: # unknown packet
+                print("Unknown data received: " + str(ThisLine))
+                sendtimhmsg("?") # respond with a simple question mark to indicate the message was not understood.
     except Exception as ex:
         throttle_uint16 = 0
         pitch_int16 = 0
