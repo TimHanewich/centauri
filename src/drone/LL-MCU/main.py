@@ -176,6 +176,7 @@ yaw_last_i:int = 0
 yaw_last_error:int = 0
 
 # declare objects we will reuse in the loop instead of remaking each time
+cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
 status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put status values into before sending to HL-MCU via UART. The status packet is 10 bytes worth of information, but making it 12 here with the \r\n at the end (13, 10) already appended so no need to append it manually later before sending!
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
@@ -187,9 +188,6 @@ rxBufferLen:int = 128
 rxBuffer:bytearray = bytearray(rxBufferLen) # a buffer of received messages from the HL-MCU
 write_idx:int = 0 # last write location into the rxBuffer
 terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (13, 10 in bytes)
-
-# calculate constant: cycle time, in microseconds (us)
-cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
 
 # timestamps for tracking other processes that need to be done on a schedule
 # originally was using asyncio for this but now resorting to timestamp-based
