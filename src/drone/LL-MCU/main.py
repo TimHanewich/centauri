@@ -233,7 +233,7 @@ while True:
                         pitch_int16 = desired_rates_data[1]
                         roll_int16 = desired_rates_data[2]
                         yaw_int16 = desired_rates_data[3]
-                        print("desired rates captured!")
+                        print("desired rates captured: " + str(throttle_uint16) + ", " + str(pitch_int16) + ", " + str(roll_int16) + ", " + str(yaw_int16))
                         sendtimhmsg("DRates set!")
                 elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
                     sendtimhmsg("PONG") # respond with PONG, the expected response to confirm we are operating
@@ -379,6 +379,6 @@ while True:
 
     # wait if there is excess time
     excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-    print("Excess us: " + str(excess_us))
+    #print("Excess us: " + str(excess_us))
     if excess_us > 0:
         time.sleep_us(excess_us)
