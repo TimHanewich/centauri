@@ -136,13 +136,13 @@ pitch_angle:int = 0    # the actual pitch angle, in degrees * 1000 (i.e. 14000 w
 roll_angle:int = 0     # the actual pitch angle, in degrees * 1000 (i.e. 14000 would be 14 degrees)
 
 # declare variables: flight control loop PID values
-pitch_kp:int = 0
+pitch_kp:int = 5
 pitch_ki:int = 0
 pitch_kd:int = 0
-roll_kp:int = 0
+roll_kp:int = 5
 roll_ki:int = 0
 roll_kd:int = 0
-yaw_kp:int = 0
+yaw_kp:int = 5
 yaw_ki:int = 0
 yaw_kd:int = 0
 i_limit:int = 0
@@ -249,11 +249,20 @@ while True:
             # check first for a desired rates packet as that is the most common thing that will come accross anyway so no need to waste time checking other things first when in the important tight pid loop
             if ThisLine[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet.
                 if tools.unpack_desired_rates(ThisLine, desired_rates_data): # returns True if successfully, False if not
+
+                    # set the input values based on what was placed in the desired_rates_data list
                     throttle_uint16 = desired_rates_data[0]
                     pitch_int16 = desired_rates_data[1]
                     roll_int16 = desired_rates_data[2]
                     yaw_int16 = desired_rates_data[3]
-                    #print("desired rates captured: " + str(throttle_uint16) + ", " + str(pitch_int16) + ", " + str(roll_int16) + ", " + str(yaw_int16))
+
+                    # FOR DIAGNOSTIC / TESTING, UNCOMMENT THIS
+                    # You can set hijack and desired values below to test PID values / motor throttles according to different conditions
+                    # throttle_uint16 = 32767
+                    # pitch_int16 = 0
+                    # roll_int16 = 0
+                    # yaw_int16 = 0
+
             elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
                 sendtimhmsg("PONG") # respond with PONG, the expected response to confirm we are operating
             elif ThisLine[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
@@ -313,6 +322,13 @@ while True:
     pitch_rate = pitch_rate - gyro_bias_x
     roll_rate = roll_rate - gyro_bias_y
     yaw_rate = yaw_rate - gyro_bias_z
+
+    # FOR DIAGNOSTICS / TESTING: 
+    # You can manually hijack the pitch, roll, and yaw rate below.
+    # uncomment these and set a value to observe the PID values / motor throttles adjust.
+    # pitch_rate = 0
+    # roll_rate = 0
+    # yaw_rate = 0
 
     # Capture raw IMU data: accelerometer from MPU-6050
     i2c.readfrom_mem_into(0x68, 0x3B, accel_data) # read 6 bytes, two for each axis for accelerometer data, directly into the "accel_data" bytearray
@@ -394,7 +410,7 @@ while True:
     m2_throttle = min(max(m2_throttle, 1000000), 2000000)
     m3_throttle = min(max(m3_throttle, 1000000), 2000000)
     m4_throttle = min(max(m4_throttle, 1000000), 2000000)
-    #print("M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
+    print("M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
 
     # adjust throttles on PWMs
     M1.duty_ns(m1_throttle)
