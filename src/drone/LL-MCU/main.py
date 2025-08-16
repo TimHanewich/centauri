@@ -258,10 +258,10 @@ while True:
 
                     # FOR DIAGNOSTIC / TESTING, UNCOMMENT THIS
                     # You can set hijack and desired values below to test PID values / motor throttles according to different conditions
-                    # throttle_uint16 = 32767
-                    # pitch_int16 = 0
-                    # roll_int16 = 0
-                    # yaw_int16 = 0
+                    throttle_uint16 = 32767
+                    pitch_int16 = 0
+                    roll_int16 = 0
+                    yaw_int16 = 0
 
             elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
                 sendtimhmsg("PONG") # respond with PONG, the expected response to confirm we are operating
@@ -376,6 +376,7 @@ while True:
     error_pitch_rate:int = desired_pitch_rate - pitch_rate
     error_roll_rate:int = desired_roll_rate - roll_rate
     error_yaw_rate:int = desired_yaw_rate - yaw_rate
+    #print("ErrPitch: " + str(error_pitch_rate) + ", ErrRoll: " + str(error_roll_rate) + ", ErrYaw: " + str(error_yaw_rate))
 
     # Pitch PID calculation
     pitch_p:int = error_pitch_rate * pitch_kp
@@ -399,6 +400,7 @@ while True:
     yaw_pid = yaw_p + yaw_i + yaw_d
 
     # calculate throttle values for each motor using those PID influences
+    #print("Pitch PID: " + str(pitch_pid) + ", Roll PID: " + str(roll_pid) + ", Yaw Pid: " + str(yaw_pid))
     m1_throttle = desired_throttle + pitch_pid + roll_pid - yaw_pid
     m2_throttle = desired_throttle + pitch_pid - roll_pid + yaw_pid
     m3_throttle = desired_throttle - pitch_pid + roll_pid + yaw_pid
@@ -410,7 +412,7 @@ while True:
     m2_throttle = min(max(m2_throttle, 1000000), 2000000)
     m3_throttle = min(max(m3_throttle, 1000000), 2000000)
     m4_throttle = min(max(m4_throttle, 1000000), 2000000)
-    print("M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
+    print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
 
     # adjust throttles on PWMs
     M1.duty_ns(m1_throttle)
