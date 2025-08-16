@@ -135,7 +135,7 @@ def pack_special_packet(msg:str) -> bytes:
 
 ### TO BE SENT TO LL-MCU
 
-def pack_settings_update(pitch_kp:float, pitch_ki:float, pitch_kd:float, roll_kp:float, roll_ki:float, roll_kd:float, yaw_kp:float, yaw_ki:float, yaw_kd:float, i_limit:float) -> bytes:
+def pack_settings_update(pitch_kp:int, pitch_ki:int, pitch_kd:int, roll_kp:int, roll_ki:int, roll_kd:int, yaw_kp:int, yaw_ki:int, yaw_kd:int, i_limit:int) -> bytes:
     """Packs settings for LL-MCU into bytes, ready to be delivered to LL-MCU via UART."""
 
     ToReturn:bytearray = bytearray()
@@ -144,22 +144,22 @@ def pack_settings_update(pitch_kp:float, pitch_ki:float, pitch_kd:float, roll_kp
     ToReturn.append(0b00000000) # 0 in the Bit 0 position (farthest to right) as packet identifier
 
     # Pitch values
-    ToReturn.extend(struct.pack("f", pitch_kp))
-    ToReturn.extend(struct.pack("f", pitch_ki))
-    ToReturn.extend(struct.pack("f", pitch_kd))
+    ToReturn.extend(pitch_kp.to_bytes(2, "little"))
+    ToReturn.extend(pitch_ki.to_bytes(2, "little"))
+    ToReturn.extend(pitch_kd.to_bytes(2, "little"))
 
     # Roll values
-    ToReturn.extend(struct.pack("f", roll_kp))
-    ToReturn.extend(struct.pack("f", roll_ki))
-    ToReturn.extend(struct.pack("f", roll_kd))
+    ToReturn.extend(roll_kp.to_bytes(2, "little"))
+    ToReturn.extend(roll_ki.to_bytes(2, "little"))
+    ToReturn.extend(roll_kd.to_bytes(2, "little"))
 
     # Yaw values
-    ToReturn.extend(struct.pack("f", yaw_kp))
-    ToReturn.extend(struct.pack("f", yaw_ki))
-    ToReturn.extend(struct.pack("f", yaw_kd))
+    ToReturn.extend(yaw_kp.to_bytes(2, "little"))
+    ToReturn.extend(yaw_ki.to_bytes(2, "little"))
+    ToReturn.extend(yaw_kd.to_bytes(2, "little"))
 
     # i limit
-    ToReturn.extend(struct.pack("f", i_limit))
+    ToReturn.extend(i_limit.to_bytes(2, "little"))
 
     # XOR-chain based checksum:
     checksum:int = 0x00 # start with 0
