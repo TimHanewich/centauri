@@ -412,7 +412,8 @@ while True:
     m2_throttle = min(max(m2_throttle, 1000000), 2000000)
     m3_throttle = min(max(m3_throttle, 1000000), 2000000)
     m4_throttle = min(max(m4_throttle, 1000000), 2000000)
-    print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
+    #print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
+    #print("M1 throttle: " + str(m1_throttle))
 
     # adjust throttles on PWMs
     M1.duty_ns(m1_throttle)
