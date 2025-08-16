@@ -315,13 +315,13 @@ while True:
     if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
     if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
     if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-    pitch_rate = gyro_x * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
-    roll_rate = gyro_y * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
+    roll_rate = gyro_x * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
+    pitch_rate = gyro_y * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
     yaw_rate = gyro_z * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
 
     # subtract out (account for) gyro bias that was calculated during calibration phase
-    pitch_rate = pitch_rate - gyro_bias_x
-    roll_rate = roll_rate - gyro_bias_y
+    pitch_rate = pitch_rate - gyro_bias_y
+    roll_rate = roll_rate - gyro_bias_x
     yaw_rate = yaw_rate - gyro_bias_z
 
     # FOR DIAGNOSTICS / TESTING: 
@@ -402,10 +402,10 @@ while True:
 
     # calculate throttle values for each motor using those PID influences
     #print("Pitch PID: " + str(pitch_pid) + ", Roll PID: " + str(roll_pid) + ", Yaw Pid: " + str(yaw_pid))
-    m1_throttle = desired_throttle - pitch_pid - roll_pid + yaw_pid
-    m2_throttle = desired_throttle - pitch_pid + roll_pid - yaw_pid
-    m3_throttle = desired_throttle + pitch_pid - roll_pid - yaw_pid
-    m4_throttle = desired_throttle + pitch_pid + roll_pid + yaw_pid
+    m1_throttle = desired_throttle - pitch_pid + roll_pid + yaw_pid
+    m2_throttle = desired_throttle - pitch_pid - roll_pid - yaw_pid
+    m3_throttle = desired_throttle + pitch_pid + roll_pid - yaw_pid
+    m4_throttle = desired_throttle + pitch_pid - roll_pid + yaw_pid
 
     # min/max those duty times
     # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds)
@@ -418,9 +418,9 @@ while True:
 
     # print?
     if (time.ticks_ms() - LAST_PRINTED_MS) > 250:
-        print("Error Pitch: " + str(error_pitch_rate))
+        #print("Error Yaw: " + str(error_yaw_rate))
         #print("Pitch PID: " + str(pitch_pid) + ", Roll PID: " + str(roll_pid) + ", Yaw Pid: " + str(yaw_pid))
-        #print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
+        print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
         LAST_PRINTED_MS = time.ticks_ms()
 
     # adjust throttles on PWMs
