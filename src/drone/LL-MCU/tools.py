@@ -108,7 +108,3 @@ def pack_status(m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:i
     # pitch and roll angle
     into[8] = shift_int8_to_uint8(pitch_angle // 1000)
     into[9] = shift_int8_to_uint8(roll_angle // 1000)
-
-data = b'\x00{\x00\xc8\x01\x15\x03901\xd4="\xb3\x15\xb8"\x0f\'\x96\x00\xd5'
-d = unpack_settings_update(data)
-print(str(d))
