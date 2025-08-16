@@ -87,19 +87,19 @@ If the communication between the HL-MCU and LL-MCU begins with "TIMH", that mean
             - Bit 5: *reserved*
             - Bit 4: *reserved*
             - Bit 3: *reserved*
-            - Bit 2: *re served*
+            - Bit 2: *reserved*
             - Bit 1: *reserved*
             - Bit 0: `0` = packet identifier
-        - Pitch P Gain (4 bytes)
-        - Pitch I Gain (4 bytes)
-        - Pitch D Gain (4 bytes)
-        - Roll P Gain (4 bytes)
-        - Roll I Gain (4 bytes)
-        - Roll D Gain (4 bytes)
-        - Yaw P Gain (4 bytes)
-        - Yaw I Gain (4 bytes)
-        - Yaw D Gain (4 bytes)
-        - I Limit (4 bytes)
+        - Pitch P Gain (2 bytes, uint16)
+        - Pitch I Gain (2 bytes, uint16)
+        - Pitch D Gain (2 bytes, uint16)
+        - Roll P Gain (2 bytes, uint16)
+        - Roll I Gain (2 bytes, uint16)
+        - Roll D Gain (2 bytes, uint16)
+        - Yaw P Gain (2 bytes, uint16)
+        - Yaw I Gain (2 bytes, uint16)
+        - Yaw D Gain (2 bytes, uint16)
+        - I Limit (2 bytes, uint16)
         - XOR-chain based checksum (1 byte)
     - Desired Rates
         - Header byte (metadata)
