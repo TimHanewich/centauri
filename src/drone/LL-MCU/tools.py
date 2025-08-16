@@ -27,9 +27,9 @@ def shift_int8_to_uint8(val:int) -> int:
 def unpack_settings_update(data:bytes) -> dict:
 
     # validate checksum
-    checksum:int = data[41] # get checksum: should be the 42nd byte in, which would be index 41
+    checksum:int = data[21] # get checksum: should be the 22nd byte in (index of 21)
     selfchecksum:int = 0x00
-    for byte in data[0:41]: # first 41 bytes (not including checksum)
+    for byte in data[0:21]: 
         selfchecksum = selfchecksum ^ byte
     if selfchecksum != checksum: # if the checksum we calculated did not match the checksum in the data itself, must have been a transmission error. Return nothing, fail.
         return None
@@ -37,22 +37,22 @@ def unpack_settings_update(data:bytes) -> dict:
     # the first byte is a header byte, so ignore that. Assume the provided data was already validated to be a settings update packet.
     
     # unpack pitch values
-    pitch_kp:float = struct.unpack("f", data[1:5])[0]
-    pitch_ki:float = struct.unpack("f", data[5:9])[0]
-    pitch_kd:float = struct.unpack("f", data[9:13])[0]
+    pitch_kp:float = struct.unpack("<H", data[1:3])[0] # "<H" = little-endian unsigned short
+    pitch_ki:float = struct.unpack("<H", data[3:5])[0]
+    pitch_kd:float = struct.unpack("<H", data[5:7])[0]
 
     # unpack roll values
-    roll_kp:float = struct.unpack("f", data[13:17])[0]
-    roll_ki:float = struct.unpack("f", data[17:21])[0]
-    roll_kd:float = struct.unpack("f", data[21:25])[0]
+    roll_kp:float = struct.unpack("<H", data[7:9])[0]
+    roll_ki:float = struct.unpack("<H", data[9:11])[0]
+    roll_kd:float = struct.unpack("<H", data[11:13])[0]
 
     # unpack yaw values
-    yaw_kp:float = struct.unpack("f", data[25:29])[0]
-    yaw_ki:float = struct.unpack("f", data[29:33])[0]
-    yaw_kd:float = struct.unpack("f", data[33:37])[0]
+    yaw_kp:float = struct.unpack("<H", data[13:15])[0]
+    yaw_ki:float = struct.unpack("<H", data[15:17])[0]
+    yaw_kd:float = struct.unpack("<H", data[17:19])[0]
 
     # unpack i limit
-    i_limit:float = struct.unpack("f", data[37:41])[0]
+    i_limit:float = struct.unpack("<H", data[19:21])[0]
 
     # return
     return {"pitch_kp": pitch_kp, "pitch_ki": pitch_ki, "pitch_kd": pitch_kd, "roll_kp": roll_kp, "roll_ki": roll_ki, "roll_kd": roll_kd, "yaw_kp": yaw_kp, "yaw_ki": yaw_ki, "yaw_kd": yaw_kd, "i_limit": i_limit}
@@ -108,3 +108,7 @@ def pack_status(m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:i
     # pitch and roll angle
     into[8] = shift_int8_to_uint8(pitch_angle // 1000)
     into[9] = shift_int8_to_uint8(roll_angle // 1000)
+
+data = b'\x00{\x00\xc8\x01\x15\x03901\xd4="\xb3\x15\xb8"\x0f\'\x96\x00\xd5'
+d = unpack_settings_update(data)
+print(str(d))
