@@ -149,10 +149,6 @@ i_limit:int = 0
 
 # declare setting variable: alpha for complementary filter
 alpha:float = 98
-
-# overclock
-print("Overclocking...")
-#machine.freq(250000000)
    
 # motor GPIO pins
 gpio_motor1:int = 21 # front left, clockwise
@@ -430,6 +426,6 @@ while True:
 
     # wait if there is excess time
     excess_us:int = cycle_time_us - (time.ticks_us() - loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-    #print("Excess us: " + str(excess_us))
+    print("Excess us: " + str(excess_us))
     if excess_us > 0:
         time.sleep_us(excess_us)
