@@ -194,7 +194,6 @@ terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (
 led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was swapped, in ms ticks
 status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the HL-MCU, in ms ticks
 last_compfilt_ticks_us:int = 0 # the last time the complementary filter was used. This is used to know how much time has ELAPSED and thus calculate roughly how many degrees changed based on the degrees per second value from the gyros
-LAST_PRINTED_MS:int = 0
 
 # Infinite loop for all operations!
 print("Now entering infinite operating loop!")
@@ -415,13 +414,6 @@ while True:
     m4_throttle = min(max(m4_throttle, 1000000), 2000000)
     #print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
     #print("M1 throttle: " + str(m1_throttle))
-
-    # print?
-    if (time.ticks_ms() - LAST_PRINTED_MS) > 250:
-        #print("Error Yaw: " + str(error_yaw_rate))
-        #print("Pitch PID: " + str(pitch_pid) + ", Roll PID: " + str(roll_pid) + ", Yaw Pid: " + str(yaw_pid))
-        print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
-        LAST_PRINTED_MS = time.ticks_ms()
 
     # adjust throttles on PWMs
     M1.duty_ns(m1_throttle)
