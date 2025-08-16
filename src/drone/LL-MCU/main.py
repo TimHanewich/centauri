@@ -258,10 +258,10 @@ while True:
 
                     # FOR DIAGNOSTIC / TESTING, UNCOMMENT THIS
                     # You can set hijack and desired values below to test PID values / motor throttles according to different conditions
-                    throttle_uint16 = 32767
-                    pitch_int16 = 0
-                    roll_int16 = 0
-                    yaw_int16 = 0
+                    # throttle_uint16 = 32767
+                    # pitch_int16 = 0
+                    # roll_int16 = 0
+                    # yaw_int16 = 0
 
             elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
                 sendtimhmsg("PONG") # respond with PONG, the expected response to confirm we are operating
@@ -413,7 +413,6 @@ while True:
     m3_throttle = min(max(m3_throttle, 1000000), 2000000)
     m4_throttle = min(max(m4_throttle, 1000000), 2000000)
     #print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
-    #print("M1 throttle: " + str(m1_throttle))
 
     # adjust throttles on PWMs
     M1.duty_ns(m1_throttle)
