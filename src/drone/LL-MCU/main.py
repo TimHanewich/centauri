@@ -123,7 +123,7 @@ for i in range(3):
 sendtimhmsg("CalibGyro...")
 print("Calibrating gyro...")
 started_at_ticks_ms:int = time.ticks_ms()
-while (time.ticks_ms() - started_at_ticks_ms) < 3000: # 3 seconds
+while time.ticks_diff(time.ticks_ms(), started_at_ticks_ms) < 3000: # 3 seconds
     gyro_data:bytes = i2c.readfrom_mem(0x68, 0x43, 6) # read 6 bytes, 2 for each axis
     gyro_x = (gyro_data[0] << 8) | gyro_data[1]
     gyro_y = (gyro_data[2] << 8) | gyro_data[3]
@@ -219,12 +219,12 @@ try:
         loop_begin_us:int = time.ticks_us() # ticks, in microseconds (us)
 
         # is it time to flicker the onboard LED?
-        if (time.ticks_ms() - led_last_flickered_ticks_ms) >= 250: # every 250 ms (4 times per second)
+        if time.ticks_diff(time.ticks_ms(), led_last_flickered_ticks_ms) >= 250: # every 250 ms (4 times per second)
             led.toggle()
             led_last_flickered_ticks_ms = time.ticks_ms()
 
         # is it time to send status (telemetry) over UART to the HL-MCU?
-        if (time.ticks_ms() - status_last_sent_ticks_ms) >= 100: # every 100 ms (10 times per second)
+        if time.ticks_diff(time.ticks_ms(), status_last_sent_ticks_ms) >= 100: # every 100 ms (10 times per second)
             tools.pack_status(m1_throttle, m2_throttle, m3_throttle, m4_throttle, pitch_rate, roll_rate, yaw_rate, pitch_angle, roll_angle, status_packet) # pack status data into the preexisting and reusable "status_packet" bytearray (update the values in that bytearray)
             uart.write(status_packet) # send it to HL-MCU via UART. we do not have to append \r\n because that is already at the end of the bytearray.
             status_last_sent_ticks_ms = time.ticks_ms()
@@ -375,7 +375,7 @@ try:
 
         # calculate what the gyro's expected pitch and roll angle should be
         # you can take this as the gyro's "opinion" of what the pitch and roll angle should be, just on its data
-        elapsed_us:int = time.ticks_us() - last_compfilt_ticks_us # the amount of time, in microseconds (us), that has elapsed since we did this in the last loop
+        elapsed_us:int = time.ticks_diff(time.ticks_us(), last_compfilt_ticks_us) # the amount of time, in microseconds (us), that has elapsed since we did this in the last loop
         last_compfilt_ticks_us = time.ticks_us() # update the time
         expected_pitch_angle_gyro:int = pitch_angle + (pitch_rate * elapsed_us // 1000000)
         expected_roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_us // 1000000)
