@@ -140,6 +140,10 @@ def pack_special_packet(msg:str) -> bytes:
 def unpack_status(data:bytes) -> dict:
     """Unpack status packet received from LL-MCU."""
 
+    # ensure it is long enough. And if it isn't, return None
+    if len(data) < 10:
+        return None
+
     # we will skip the first byte, the header byte, for now, and assume this is indeed a status packet (that should be checked before this function is used)
 
     # throttles, as float
