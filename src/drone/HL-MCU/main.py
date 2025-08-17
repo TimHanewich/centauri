@@ -209,10 +209,10 @@ async def main() -> None:
 
                     # handle the line based on what it is
                     if ThisLine[0] == 0b00000000: # status packet
-                        llmcu_status:dict = tools.unpack_status(ThisLine) # there is really no need to unpack the full data and parse it, but doing this anyway as a way to validate it is good data
-                        if llmcu_status != None: # if it unpacked correctly
-                            print(str(llmcu_status))
-                            llmcu_status = ThisLine # update the llmcu_status variable which will later be sent
+                        llmcu_status_unpacked:dict = tools.unpack_status(ThisLine) # there is really no need to unpack the full data and parse it, but doing this anyway as a way to validate it is good data
+                        if llmcu_status_unpacked != None: # if it unpacked correctly
+                            print(str(llmcu_status_unpacked))
+                            llmcu_status = ThisLine # update the llmcu_status variable (only bytes) which will later be sent to remote controller via HC-12
                     else:
                         print("Unknown packet from LL-MCU: " + str(data))
             
@@ -225,7 +225,29 @@ async def main() -> None:
 
     async def radio_tx() -> None:
         """Focused on continuously sending status packets and such to the controller via the HC-12."""
-        pass
+        
+        # declare nonlocal variables
+        nonlocal llmcu_status
+
+        while True:
+
+            # is there control status available from the LL-MCU?
+            if llmcu_status != None:
+
+                # append \r\n at the end if needed
+                if not llmcu_status.endswith("\r\n".encode()):
+                    llmcu_status = llmcu_status + "\r\n".encode()
+
+                # send via HC-12
+                uart_hc12.write(llmcu_status)
+
+                # clear it out
+                llmcu_status = None
+
+            # wait
+            await asyncio.sleep(0.1) # 10 hz
+                
+
 
 
     # Create functions for threads
