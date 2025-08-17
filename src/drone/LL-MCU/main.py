@@ -1,3 +1,7 @@
+print("----- CENTAURI LOW-LEVEL MCU -----")
+print("gitub.com/TimHanewich/centauri")
+print()
+
 import machine
 import time
 import tools
