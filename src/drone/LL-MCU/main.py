@@ -208,6 +208,7 @@ yaw_last_error:int = 0
 led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was swapped, in ms ticks
 status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the HL-MCU, in ms ticks
 last_compfilt_ticks_us:int = 0 # the last time the complementary filter was used. This is used to know how much time has ELAPSED and thus calculate roughly how many degrees changed based on the degrees per second value from the gyros
+drates_last_received_ticks_ms:int = 0 # timestamp (in ms) of the last time a valid desired rates packet was received. This is used to check and shut down motors if it has been too long (failsafe)
 
 # Infinite loop for all operations!
 print("Now entering infinite operating loop!")
@@ -270,6 +271,9 @@ try:
                         pitch_int16 = desired_rates_data[1]
                         roll_int16 = desired_rates_data[2]
                         yaw_int16 = desired_rates_data[3]
+
+                        # update the last time we have received drates
+                        drates_last_received_ticks_ms = time.ticks_ms()
 
                         # FOR DIAGNOSTIC / TESTING, UNCOMMENT THIS
                         # You can set hijack and desired values below to test PID values / motor throttles according to different conditions
@@ -428,6 +432,17 @@ try:
         m3_throttle = min(max(m3_throttle, 1000000), 2000000)
         m4_throttle = min(max(m4_throttle, 1000000), 2000000)
         #print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
+
+        # Before setting motor throttle values:
+        # If it has been a long time since we received a valid desired rates packet,
+        # as a failsafe, turn all inputs (especially throttle) down to 0!!!!!
+        # this ensures if, for some reason, comms stop coming through, it won't get stuck in a high-throttle position
+        if time.ticks_diff(time.ticks_ms(), drates_last_received_ticks_ms) > 2000: # if we havne't received valid drate data in more than 2 seconds
+            # 1,000,000 nanoseconds = 1 ms, the minumum throttle for an ESC (0% throttle, so no rotation)s
+            m1_throttle = 1000000
+            m2_throttle = 1000000
+            m3_throttle = 1000000
+            m4_throttle = 1000000
 
         # adjust throttles on PWMs
         M1.duty_ns(m1_throttle)
