@@ -49,9 +49,11 @@ def sendtimhmsg(message:str) -> None:
 
 # establish failure pattern
 def FATAL_ERROR(error_msg:str = None) -> None:
+    print("FATAL ERROR ENCOUNTERED!")
     while True:
         if error_msg != None:
-            sendtimhmsg("FATAL ERROR: " + error_msg)
+            print("FATAL ERROR: " + error_msg)
+            sendtimhmsg("FATERR: " + error_msg) # "FATERR" short for "Fatal Error"
         led.toggle()
         time.sleep(1.0)
 
