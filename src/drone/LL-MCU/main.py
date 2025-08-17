@@ -20,9 +20,22 @@ def FATAL_ERROR() -> None:
 ##### SETTINGS #####
 ####################
 
-# declare setting variable: alpha for complementary filter
-alpha:float = 98
+target_hz:int = 250 # the number of times to run the PID loop, per second
+alpha:float = 98 # complementary filter alpha value for pitch/roll angle estimation. higher values favor gyroscope's opinion, lower favors accelerometer (noisy) 
 PID_SCALING_FACTOR:int = 1000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
+
+# Flight Control PID Gains
+# Set initial setting here, though they can be updated via settings update packet later
+pitch_kp:int = 5000
+pitch_ki:int = 0
+pitch_kd:int = 0
+roll_kp:int = 5000
+roll_ki:int = 0
+roll_kd:int = 0
+yaw_kp:int = 5000
+yaw_ki:int = 0
+yaw_kd:int = 0
+i_limit:int = 0
 
 ####################
 ####################
@@ -147,18 +160,6 @@ yaw_rate:int = 0       # the actual yaw rate, in degrees per second * 1000 (i.e.
 pitch_angle:int = 0    # the actual pitch angle, in degrees * 1000 (i.e. 14000 would be 14 degrees)
 roll_angle:int = 0     # the actual pitch angle, in degrees * 1000 (i.e. 14000 would be 14 degrees)
 
-# declare variables: flight control loop PID values
-pitch_kp:int = 5000
-pitch_ki:int = 0
-pitch_kd:int = 0
-roll_kp:int = 5000
-roll_ki:int = 0
-roll_kd:int = 0
-yaw_kp:int = 5000
-yaw_ki:int = 0
-yaw_kd:int = 0
-i_limit:int = 0
-
 # motor GPIO pins
 gpio_motor1:int = 21 # front left, clockwise
 gpio_motor2:int = 20 # front right, counter clockwise
@@ -171,17 +172,8 @@ M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=250, duty_u16=0)
 M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=250, duty_u16=0)
 M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=250, duty_u16=0)
 
-# declare PID state variables
-# declaring them here because their "previous state" (value from previous loop) must be referenced in each loop
-pitch_last_i:int = 0
-pitch_last_error:int = 0
-roll_last_i:int = 0
-roll_last_error:int = 0
-yaw_last_i:int = 0
-yaw_last_error:int = 0
-
 # declare objects we will reuse in the loop instead of remaking each time
-cycle_time_us:int = 1000000 // 250 # 250 Hz. Should come out to 4,000 microseconds. The full PID loop must happen every 4,000 microseconds (4 ms) to achieve the 250 Hz loop speed.
+cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, the full PID loop must happen within. 4,000 microseconds (4 ms) to achieve a 250 Hz loop speed for example.
 status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put status values into before sending to HL-MCU via UART. The status packet is 10 bytes worth of information, but making it 12 here with the \r\n at the end (13, 10) already appended so no need to append it manually later before sending!
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
@@ -193,6 +185,15 @@ rxBufferLen:int = 128
 rxBuffer:bytearray = bytearray(rxBufferLen) # a buffer of received messages from the HL-MCU
 write_idx:int = 0 # last write location into the rxBuffer
 terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (13, 10 in bytes)
+
+# declare PID state variables
+# declaring them here because their "previous state" (value from previous loop) must be referenced in each loop
+pitch_last_i:int = 0
+pitch_last_error:int = 0
+roll_last_i:int = 0
+roll_last_error:int = 0
+yaw_last_i:int = 0
+yaw_last_error:int = 0
 
 # timestamps for tracking other processes that need to be done on a schedule
 # originally was using asyncio for this but now resorting to timestamp-based
