@@ -135,6 +135,14 @@ async def main() -> None:
     altitude:float = 0.0 # altitude reading, in meters (inferred from pressure reading from BMP180)
     heading:float = 0.0 # magnetic heading
 
+    # declare a "container" variable that will contain new Control Status data received from the LL-MCU
+    # this will be updated by the llmcu_rx coroutine
+    # and later delivered, as is, to the drone via HC-12
+    # I ensured the packet identifier in the header byte is the same for both
+    # when it is None, that means there is no new information to pass along.
+    llmcu_status:bytes = None 
+    
+
     async def led_flicker() -> None:
         while True:
             led.toggle()
@@ -180,6 +188,9 @@ async def main() -> None:
     async def llmcu_rx() -> None:
         """Focused on continuously listening for received data from the LL MCU, usually a status packet."""
 
+        # declare nonlocal variables this coroutine will update
+        nonlocal llmcu_status
+
         # declare rxBuffer for data received from LL-MCU via UART
         rxBuffer:bytearray = bytearray()
 
@@ -198,13 +209,12 @@ async def main() -> None:
 
                     # handle the line based on what it is
                     if ThisLine[0] == 0b00000000: # status packet
-                        llmcu_status:dict = tools.unpack_status(ThisLine)
-                        if llmcu_status != None:
+                        llmcu_status:dict = tools.unpack_status(ThisLine) # there is really no need to unpack the full data and parse it, but doing this anyway as a way to validate it is good data
+                        if llmcu_status != None: # if it unpacked correctly
                             print(str(llmcu_status))
-                        else:
-                            print("STATUS FAIL! " + str(data))
+                            llmcu_status = ThisLine # update the llmcu_status variable which will later be sent
                     else:
-                        print("Unknown packet from LLMCU: " + str(data))
+                        print("Unknown packet from LL-MCU: " + str(data))
             
             # wait
             await asyncio.sleep(0.05) # 20 Hz... The LL MCU is supposed to provide at 10 Hz, so reading quicker here to ensure a backlog does not build up
