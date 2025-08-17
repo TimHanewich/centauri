@@ -73,6 +73,16 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
         - Yaw input % (2 bytes, int16)
 - HL-MCU --> Transceiver
     - Control Status
+        - Header byte:
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: `0` (packet identifier)
+            - Bit 0: `0` (packet identifier)
+        - *Data, as packed and received by the HL-MCU (read below)*
     - System Status
         - Header byte: 
             - Bit 7: *reserved*
@@ -82,7 +92,7 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
             - Bit 3: *reserved*
             - Bit 2: *reserved*
             - Bit 1: `0` (packet identifier)
-            - Bit 0: `0` (packet identifier)
+            - Bit 0: `1` (packet identifier)
         - Battery Voltage (1 byte): *0-255 spread over voltage range of 6.0 to 16.8, which would have resolution of 0.0422 volts*
         - TF-Luna Distance (2 bytes)
         - TF-Luna Strength (2 bytes)
