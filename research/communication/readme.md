@@ -74,6 +74,20 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
 - HL-MCU --> Transceiver
     - Control Status
     - System Status
+        - Header byte: 
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: `0` (packet identifier)
+            - Bit 0: `0` (packet identifier)
+        - Battery Voltage (1 byte): *0-255 spread over voltage range of 6.0 to 16.8, which would have resolution of 0.0422 volts*
+        - TF-Luna Distance (2 bytes)
+        - TF-Luna Strength (2 bytes)
+        - Altitude from BMP180 (2 bytes): *0-65535 spread over meters range of -500 to 122 (400 ft legal limit) which would have resolution of approx 0.95 cm*
+        - Heading from QMC5883L compass (1 byte): *0-255 spread over range of 0-360, with resolution of 1.4 degrees*
     - Special Packet (text) 
     
 ## Communication Between HL-MCU and LL-MCU
