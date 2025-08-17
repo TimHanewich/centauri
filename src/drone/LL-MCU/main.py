@@ -456,4 +456,4 @@ except Exception as ex: # unhandled error somewhere in the loop
     M4.duty_ns(1000000)
 
     # fail!
-    FATAL_ERROR("FATAL: " + str(ex))
+    FATAL_ERROR("IN-LOOP ERROR: " + str(ex))
