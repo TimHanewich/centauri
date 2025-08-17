@@ -147,13 +147,27 @@ gyro_bias_z:int = gzs // samples
 print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
 sendtimhmsg("GyroCalib OK")
 
+# motor GPIO pins
+gpio_motor1:int = 21 # front left, clockwise
+gpio_motor2:int = 20 # front right, counter clockwise
+gpio_motor3:int = 19 # rear left, counter clockwise
+gpio_motor4:int = 18 # rear right, clockwise
+
+# set up motor PWMs with frequency of 250 Hz and start at 0% throttle
+M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_u16=0)
+M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_u16=0)
+M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_u16=0)
+M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_u16=0)
+
 # declare variables: desired rate inputs
+# these will later be updated via incoming desired rate packets (over UART from HL-MCU)
 throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
 pitch_int16:int = 0            # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
 roll_int16:int = 0             # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
 yaw_int16:int = 0              # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
 
 # declare variables: status (actuals)
+# these will later be sent to the HL-MCU via UART as regular status updates
 m1_throttle:int = 0    # between 1,000,000 and 2,000,000 (nanoseconds)
 m2_throttle:int = 0    # between 1,000,000 and 2,000,000 (nanoseconds)
 m3_throttle:int = 0    # between 1,000,000 and 2,000,000 (nanoseconds)
@@ -164,19 +178,7 @@ yaw_rate:int = 0       # the actual yaw rate, in degrees per second * 1000 (i.e.
 pitch_angle:int = 0    # the actual pitch angle, in degrees * 1000 (i.e. 14000 would be 14 degrees)
 roll_angle:int = 0     # the actual pitch angle, in degrees * 1000 (i.e. 14000 would be 14 degrees)
 
-# motor GPIO pins
-gpio_motor1:int = 21 # front left, clockwise
-gpio_motor2:int = 20 # front right, counter clockwise
-gpio_motor3:int = 19 # rear left, counter clockwise
-gpio_motor4:int = 18 # rear right, clockwise
-
-# set up motor PWMs with frequency of 250 Hz and start at 0% throttle
-M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=250, duty_u16=0)
-M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=250, duty_u16=0)
-M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=250, duty_u16=0)
-M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=250, duty_u16=0)
-
-# declare objects we will reuse in the loop instead of remaking each time
+# declare objects we will reuse in the loop instead of remaking each time (for efficiency)
 cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, the full PID loop must happen within. 4,000 microseconds (4 ms) to achieve a 250 Hz loop speed for example.
 status_packet:bytearray = bytearray([0,0,0,0,0,0,0,0,0,0,13,10]) # used to put status values into before sending to HL-MCU via UART. The status packet is 10 bytes worth of information, but making it 12 here with the \r\n at the end (13, 10) already appended so no need to append it manually later before sending!
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
