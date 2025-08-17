@@ -99,6 +99,7 @@ async def main() -> None:
     qmc:QMC5883L = None
     try:
         qmc = QMC5883L(i2c)
+        qmc.calibrate(0, 0, 0, 0, 0, 0) # calibrate with basic values, later to be replaced
     except:
         hc12.send(tools.pack_special_packet("QMC5883L init fail") + "\r\n".encode())
         print("QMC5883L initialization fail.")
