@@ -3,6 +3,7 @@ The successor to my [Scout flight controller](https://github.com/TimHanewich/sco
 
 ## To Do:
 - Code:
+    - LL-MCU: if a massive, breaking error happens, continuously send that error over UART to the HL-MCU in the error pattern
     - LL-MCU: Failsafe to 0% throttle if no desired rate data for X seconds
     - LL-MCU: motors should always be at 0% if throttle is at 0% (PIDs can throw it over)
 
