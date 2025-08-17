@@ -456,7 +456,7 @@ try:
         #print("Excess us: " + str(excess_us))
         if excess_us > 0:
             if excess_us > 1000000:
-                input("Excess wait time more than 1 second! Enter to continue.")
+                input("Excess wait time more than 1 second! It was " + str(excess_us) + "Enter to continue.")
             time.sleep_us(excess_us)
 except Exception as ex: # unhandled error somewhere in the loop
 
