@@ -168,5 +168,12 @@ async def main() -> None:
     # - Check for new messages on HC-12 and handle them
     # - Send HC-12 messages (status packets)
 
+    # Get all threads going
+    print("Now triggering all coroutines...")
+    task_llmcu_rx = asyncio.create_task(llmcu_rx())
+    task_radio_rx = asyncio.create_task(radio_rx())
+    task_radio_tx = asyncio.create_task(radio_tx())
+    await asyncio.gather(task_llmcu_rx, task_radio_rx, task_radio_tx)
+
 # run main program via asyncio
 asyncio.run(main())
