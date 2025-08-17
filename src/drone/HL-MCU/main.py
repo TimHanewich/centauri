@@ -133,6 +133,11 @@ async def main() -> None:
     altitude:float = 0.0 # altitude reading, in meters (inferred from pressure reading from BMP180)
     heading:float = 0.0 # magnetic heading
 
+    async def led_flicker() -> None:
+        while True:
+            led.toggle()
+            await asyncio.sleep(0.25)
+
     async def llmcu_rx() -> None:
         """Focused on continuously listening for received data from the LL MCU, usually a status packet."""
 
@@ -184,6 +189,7 @@ async def main() -> None:
 
     # Get all threads going
     print("Now triggering all coroutines...")
+    task_led_flicker = asyncio.create_task(led_flicker())
     task_llmcu_rx = asyncio.create_task(llmcu_rx())
     task_radio_rx = asyncio.create_task(radio_rx())
     task_radio_tx = asyncio.create_task(radio_tx())
