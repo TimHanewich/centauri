@@ -438,11 +438,21 @@ try:
         # scenario 1: desired throttle is 0%. This is obvious. If throttle is 0%, no motors should move. But, the PID loop is still running so it will still be trying to compensate for rate errors, meaning a motor could go OVER 0% throttle.
         # scenario 2: it has been a long time since we received a valid desired rates packet. This could be due to an error or something with the controller not sending data or the HL-MCU not sending data... but if this happens, as a failsafe, turn off all motors to prevent them from being stuck on.
         if desired_throttle == 1000000 or time.ticks_diff(time.ticks_ms(), drates_last_received_ticks_ms) > 2000: # if we havne't received valid drate data in more than 2 seconds
+            
+            # shut off all motors
             # 1,000,000 nanoseconds = 1 ms, the minumum throttle for an ESC (0% throttle, so no rotation)
             m1_throttle = 1000000
             m2_throttle = 1000000
             m3_throttle = 1000000
             m4_throttle = 1000000
+
+            # reset cumulative PID values (I and D related)
+            pitch_last_i = 0
+            roll_last_i = 0
+            yaw_last_i = 0
+            pitch_last_error = 0
+            roll_last_error = 0
+            yaw_last_error = 0
 
         # adjust throttles on PWMs
         M1.duty_ns(m1_throttle)
