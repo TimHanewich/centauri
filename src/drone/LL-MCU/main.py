@@ -136,19 +136,20 @@ pitch_angle:int = 0    # the actual pitch angle, in degrees * 1000 (i.e. 14000 w
 roll_angle:int = 0     # the actual pitch angle, in degrees * 1000 (i.e. 14000 would be 14 degrees)
 
 # declare variables: flight control loop PID values
-pitch_kp:int = 5
+pitch_kp:int = 5000
 pitch_ki:int = 0
 pitch_kd:int = 0
-roll_kp:int = 5
+roll_kp:int = 5000
 roll_ki:int = 0
 roll_kd:int = 0
-yaw_kp:int = 5
+yaw_kp:int = 5000
 yaw_ki:int = 0
 yaw_kd:int = 0
 i_limit:int = 0
 
 # declare setting variable: alpha for complementary filter
 alpha:float = 98
+PID_SCALING_FACTOR:int = 1000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
    
 # motor GPIO pins
 gpio_motor1:int = 21 # front left, clockwise
@@ -375,24 +376,24 @@ while True:
     #print("ErrPitch: " + str(error_pitch_rate) + ", ErrRoll: " + str(error_roll_rate) + ", ErrYaw: " + str(error_yaw_rate))
 
     # Pitch PID calculation
-    pitch_p:int = error_pitch_rate * pitch_kp
-    pitch_i:int = pitch_last_i + (error_pitch_rate * pitch_ki * cycle_time_us)
+    pitch_p:int = (error_pitch_rate * pitch_kp) // PID_SCALING_FACTOR
+    pitch_i:int = pitch_last_i + ((error_pitch_rate * pitch_ki * cycle_time_us) // PID_SCALING_FACTOR)
     pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
-    pitch_d:int = pitch_kd * (error_pitch_rate - pitch_last_error) // cycle_time_us
+    pitch_d = (pitch_kd * (error_pitch_rate - pitch_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
     pitch_pid = pitch_p + pitch_i + pitch_d
 
     # Roll PID calculation
-    roll_p:int = error_roll_rate * roll_kp
-    roll_i:int = roll_last_i + (error_roll_rate * roll_ki * cycle_time_us)
+    roll_p:int = (error_roll_rate * roll_kp) // PID_SCALING_FACTOR
+    roll_i:int = roll_last_i + ((error_roll_rate * roll_ki * cycle_time_us) // PID_SCALING_FACTOR)
     roll_i = min(max(roll_i, -i_limit), i_limit) # constrain within I limit
-    roll_d:int = roll_kd * (error_roll_rate - roll_last_error) // cycle_time_us
+    roll_d = (roll_kd * (error_roll_rate - roll_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
     roll_pid = roll_p + roll_i + roll_d
 
     # Yaw PID calculation
-    yaw_p:int = error_yaw_rate * yaw_kp
-    yaw_i:int = yaw_last_i + (error_yaw_rate * yaw_ki * cycle_time_us)
+    yaw_p:int = (error_yaw_rate * yaw_kp) // PID_SCALING_FACTOR
+    yaw_i:int = yaw_last_i + ((error_yaw_rate * yaw_ki * cycle_time_us) // PID_SCALING_FACTOR)
     yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
-    yaw_d:int = yaw_kd * (error_yaw_rate - yaw_last_error) // cycle_time_us
+    yaw_d = (yaw_kd * (error_yaw_rate - yaw_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
     yaw_pid = yaw_p + yaw_i + yaw_d
 
     # calculate throttle values for each motor using those PID influences
