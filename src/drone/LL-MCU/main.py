@@ -16,6 +16,18 @@ def FATAL_ERROR() -> None:
         led.off()
         time.sleep(1.0)
 
+####################
+##### SETTINGS #####
+####################
+
+# declare setting variable: alpha for complementary filter
+alpha:float = 98
+PID_SCALING_FACTOR:int = 1000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
+
+####################
+####################
+####################
+
 # set up UART interface with HL MCU
 print("Establishing UART interface...")
 uart = machine.UART(0, tx=machine.Pin(12), rx=machine.Pin(13), baudrate=115200)
@@ -147,10 +159,6 @@ yaw_ki:int = 0
 yaw_kd:int = 0
 i_limit:int = 0
 
-# declare setting variable: alpha for complementary filter
-alpha:float = 98
-PID_SCALING_FACTOR:int = 1000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
-   
 # motor GPIO pins
 gpio_motor1:int = 21 # front left, clockwise
 gpio_motor2:int = 20 # front right, counter clockwise
