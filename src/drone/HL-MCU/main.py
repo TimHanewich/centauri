@@ -144,7 +144,11 @@ async def main() -> None:
                 if data[0] == 0b00000000: # status packet
                     if data.endswith("\r\n".encode()):
                         data = data[0:-2] # trim off \r\n
-                    print("Got status data: " + str(data))
+                    llmcu_status:dict = tools.unpack_status(data)
+                    if llmcu_status != None:
+                        print(str(llmcu_status))
+                    else:
+                        print("STATUS FAIL! " + str(data))
                 else:
                     print("Unknown packet from LLMCU: " + str(data))
             
