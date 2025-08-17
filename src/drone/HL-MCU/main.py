@@ -1,7 +1,19 @@
-print("Hello! I am the Centauri quadcopter's High-Level MCU.")
+print("----- CENTAURI HIGH-LEVEL MCU -----")
+print("gitub.com/TimHanewich/centauri")
+print()
+
+# all imports
+print("Importing libraries...")
+import machine
+import asyncio
+import tools
+from HC12 import HC12
+from TFLuna import TFLuna
+from QMC5883L import QMC5883L
+from bmp085 import BMP180
+
 
 # First thing is first: set up onboard LED, turn it on while loading
-import machine
 led = machine.Pin("LED", machine.Pin.OUT)
 led.on()
 
@@ -13,15 +25,6 @@ def FATAL_ERROR() -> None:
         time.sleep(1.0)
         led.off()
         time.sleep(1.0)
-
-# all imports
-print("Importing libraries...")
-import asyncio
-import tools
-from HC12 import HC12
-from TFLuna import TFLuna
-from QMC5883L import QMC5883L
-from bmp085 import BMP180
 
 async def main() -> None:
 
@@ -107,7 +110,7 @@ async def main() -> None:
     uart_llmcu.write("TIMHPING\r\n".encode()) # send ping
     LLMCU_Ponged:bool = False
     started = time.ticks_ms()
-    while (time.ticks_ms() - started) < 5000: # wait for a max of 5 seconds
+    while (time.ticks_ms() - started) < 10000: # wait for a max of 10 seconds
         if uart_llmcu.any() > 0:
             print("Data available! Reading line...")
             data = uart_llmcu.readline()
@@ -123,8 +126,7 @@ async def main() -> None:
         hc12.send(tools.pack_special_packet("LLMCU no pong") + "\r\n".encode())
         FATAL_ERROR()
 
-    # Declare all variables that will be tracked and reported on
-    llmcu_status_data:bytes = None # the status packet that arrived from the LL MCU
+    # Declare all settings variables that will be tracked and reported on
     battery_voltage:float = 0.0
     tfluna_distance:int = 0 # distance reading, in cm (0-800)
     tfluna_strength:int = 0 # strength reading
@@ -134,10 +136,6 @@ async def main() -> None:
     async def llmcu_rx() -> None:
         """Focused on continuously listening for received data from the LL MCU, usually a status packet."""
 
-        # declare nonlocal variables
-        nonlocal uart_llmcu
-        nonlocal llmcu_status_data
-
         while True:
             if uart_llmcu.any() > 0:
                 data:bytes = uart_llmcu.readline()
@@ -146,7 +144,7 @@ async def main() -> None:
                 if data[0] == 0b00000000: # status packet
                     if data.endswith("\r\n".encode()):
                         data = data[0:-2] # trim off \r\n
-                    llmcu_status_data = data
+                    print("Got status data: " + str(data))
                 else:
                     print("Unknown packet from LLMCU: " + str(data))
             
@@ -159,30 +157,7 @@ async def main() -> None:
 
     async def radio_tx() -> None:
         """Focused on continuously sending status packets and such to the controller via the HC-12."""
-
-        # declare nonlocal variables
-        nonlocal hc12 # what we will use to send info!
-        nonlocal llmcu_status_data
-        nonlocal battery_voltage
-        nonlocal tfluna_distance
-        nonlocal tfluna_strength
-        nonlocal altitude
-        nonlocal heading
-
-        # continuously send data
-        while True:
-            if llmcu_status_data != None: # if new data is available from the LL MCU
-                
-                # prepare and send
-                ToAppend:bytes = tools.pack_status_packet_part2(battery_voltage, tfluna_distance, tfluna_strength, altitude, heading)
-                ToSend:bytes = llmcu_status_data + ToAppend + "\r\n".encode()
-                hc12.send(ToSend) # send it!
-
-                # clear out old data from LL MCU. We will only send again once we have new data
-                llmcu_status_data = None
-
-            # wait
-            await asyncio.sleep(0.1) # 10 Hz
+        pass
 
 
     # Create functions for threads
