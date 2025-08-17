@@ -121,8 +121,8 @@ async def main() -> None:
         time.sleep(0.1)
 
     # if the LL MCU did not pong back, fail
-    require_llmcu:bool = True
-    if require_llmcu and LLMCU_Ponged == False:
+    # LLMCU_Ponged = True # uncomment this to bypass LLMCU needing to be on and communicated with (for testing purposes)
+    if LLMCU_Ponged == False:
         print("LLMCU did not pong back. Failing.")
         hc12.send(tools.pack_special_packet("LLMCU no pong") + "\r\n".encode())
         FATAL_ERROR()
