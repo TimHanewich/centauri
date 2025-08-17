@@ -326,7 +326,7 @@ try:
         i2c.readfrom_mem_into(0x68, 0x43, gyro_data) # read 6 bytes, 2 for each axis, into the "gyro_data" bytearray (update values in that bytearray to have to avoid creating a new bytes object)
         t2:int = time.ticks_ms()
         if (t2 - t1) > 1000:
-            input("Reading of IMU gyro data took more than 1 second!")
+            input("Reading of IMU gyro data took more than 1 second! Enter to continue.")
         gyro_x = (gyro_data[0] << 8) | gyro_data[1]
         gyro_y = (gyro_data[2] << 8) | gyro_data[3]
         gyro_z = (gyro_data[4] << 8) | gyro_data[5]
@@ -354,7 +354,7 @@ try:
         i2c.readfrom_mem_into(0x68, 0x3B, accel_data) # read 6 bytes, two for each axis for accelerometer data, directly into the "accel_data" bytearray
         t2:int = time.ticks_ms()
         if (t2 - t1) > 1000:
-            input("Reading of IMU accel data took more than 1 second!")
+            input("Reading of IMU accel data took more than 1 second! Enter to continue.")
         accel_x = (accel_data[0] << 8) | accel_data[1]
         accel_y = (accel_data[2] << 8) | accel_data[3]
         accel_z = (accel_data[4] << 8) | accel_data[5]
@@ -456,7 +456,7 @@ try:
         #print("Excess us: " + str(excess_us))
         if excess_us > 0:
             if excess_us > 1000000:
-                input("Excess wait time more than 1 second!")
+                input("Excess wait time more than 1 second! Enter to continue.")
             time.sleep_us(excess_us)
 except Exception as ex: # unhandled error somewhere in the loop
 
