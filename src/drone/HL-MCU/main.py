@@ -228,10 +228,11 @@ async def main() -> None:
     # Get all threads going
     print("Now triggering all coroutines...")
     task_led_flicker = asyncio.create_task(led_flicker())
+    task_sensor_reading = asyncio.create_task(sensor_reading())
     task_llmcu_rx = asyncio.create_task(llmcu_rx())
     task_radio_rx = asyncio.create_task(radio_rx())
     task_radio_tx = asyncio.create_task(radio_tx())
-    await asyncio.gather(task_llmcu_rx, task_radio_rx, task_radio_tx)
+    await asyncio.gather(task_led_flicker, task_sensor_reading, task_llmcu_rx, task_radio_rx, task_radio_tx)
 
 # run main program via asyncio
 asyncio.run(main())
