@@ -136,21 +136,31 @@ async def main() -> None:
     async def llmcu_rx() -> None:
         """Focused on continuously listening for received data from the LL MCU, usually a status packet."""
 
+        # declare rxBuffer for data received from LL-MCU via UART
+        rxBuffer:bytearray = bytearray()
+
         while True:
             if uart_llmcu.any() > 0:
-                data:bytes = uart_llmcu.readline()
 
-                # handle it based on what it is
-                if data[0] == 0b00000000: # status packet
-                    if data.endswith("\r\n".encode()):
-                        data = data[0:-2] # trim off \r\n
-                    llmcu_status:dict = tools.unpack_status(data)
-                    if llmcu_status != None:
-                        print(str(llmcu_status))
+                # collect all available bytes
+                rxBuffer.extend(uart_llmcu.read())
+
+                while "\r\n".encode() in rxBuffer:
+
+                    # get the line
+                    loc:int = rxBuffer.find("\r\n".encode())
+                    ThisLine:bytes = rxBuffer[0:loc+2] # include the \r\n at the end
+                    rxBuffer = rxBuffer[loc+2:] # remove the line from the buffer
+
+                    # handle the line based on what it is
+                    if ThisLine[0] == 0b00000000: # status packet
+                        llmcu_status:dict = tools.unpack_status(ThisLine)
+                        if llmcu_status != None:
+                            print(str(llmcu_status))
+                        else:
+                            print("STATUS FAIL! " + str(data))
                     else:
-                        print("STATUS FAIL! " + str(data))
-                else:
-                    print("Unknown packet from LLMCU: " + str(data))
+                        print("Unknown packet from LLMCU: " + str(data))
             
             # wait
             await asyncio.sleep(0.05) # 20 Hz... The LL MCU is supposed to provide at 10 Hz, so reading quicker here to ensure a backlog does not build up
