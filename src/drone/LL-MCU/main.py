@@ -48,9 +48,10 @@ def sendtimhmsg(message:str) -> None:
     uart.write(ToSend.encode())
 
 # establish failure pattern
-def FATAL_ERROR(error_msg:str) -> None:
+def FATAL_ERROR(error_msg:str = None) -> None:
     while True:
-        sendtimhmsg("FATAL ERROR: " + error_msg)
+        if error_msg != None:
+            sendtimhmsg("FATAL ERROR: " + error_msg)
         led.toggle()
         time.sleep(1.0)
 
@@ -63,7 +64,7 @@ print("Setting up I2C...")
 i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17))
 if 0x68 not in i2c.scan():
     print("MPU-6050 not connected via I2C!")
-    FATAL_ERROR()
+    FATAL_ERROR("MPU-6050 not connected!")
 else:
     print("MPU-6050 confirmed to be connected via I2C.")
 
@@ -75,7 +76,7 @@ if whoami == 0x68:
     sendtimhmsg("IMU OK")
 else:
     print("MPU-6050 WHOAMI Failed!")
-    FATAL_ERROR()
+    FATAL_ERROR("MPU6050 WHOAMI Fail")
 
 # Set up MPU-6050
 print("Waking up MPU-6050...")
@@ -93,17 +94,17 @@ if i2c.readfrom_mem(0x68, 0x1B, 1)[0] == 0x00:
     print("MPU-6050 Gyro full scale range confirmed to be set at 250 d/s")
 else:
     print("MPU-6050 Gyro full scale range set failed!")
-    FATAL_ERROR()
+    FATAL_ERROR("MPU6050 gyro range set failed.")
 if i2c.readfrom_mem(0x68, 0x1C, 1)[0] == 0x00:
     print("MPU-6050 accelerometer full scale range confirmed to be set at 2g")
 else:
     print("MPU-6050 accelerometer full scale range set failed!")
-    FATAL_ERROR()
+    FATAL_ERROR("MPU6050 accel range set failed!")
 if i2c.readfrom_mem(0x68, 0x1A, 1)[0] == 0x05:
     print("MPU-6050 low pass filter confirmed to be at 10 Hz")
 else:
     print("MPU-6050 low pass filter failed to set!")
-    FATAL_ERROR()
+    FATAL_ERROR("MPU6050 LPF set failed!")
 
 # Send message to confirm IMU is all set up
 sendtimhmsg("IMU SET")
