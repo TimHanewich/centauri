@@ -121,7 +121,8 @@ async def main() -> None:
         time.sleep(0.1)
 
     # if the LL MCU did not pong back, fail
-    if LLMCU_Ponged == False:
+    require_llmcu:bool = True
+    if require_llmcu and LLMCU_Ponged == False:
         print("LLMCU did not pong back. Failing.")
         hc12.send(tools.pack_special_packet("LLMCU no pong") + "\r\n".encode())
         FATAL_ERROR()
@@ -137,6 +138,43 @@ async def main() -> None:
         while True:
             led.toggle()
             await asyncio.sleep(0.25)
+        
+    async def sensor_reading() -> None:
+        """Continuously collects sensor values from HL-MCU connected sensors (which will later be sent to HL-MCU)"""
+
+        # declare nonlocal variables we will be updating
+        nonlocal battery_voltage
+        nonlocal tfluna_distance
+        nonlocal tfluna_strength
+        nonlocal altitude
+        nonlocal heading
+
+        # create ADC
+        vbat_adc = machine.ADC(machine.Pin(26))
+
+        while True:
+
+            # read battery voltage through ADC
+            vbat_u16:int = vbat_adc.read_u16()
+            vbat_percent:float = vbat_u16 / 65535 # as percentage
+            pin_voltage:float = 3.3 * vbat_percent # the actual voltage on the pin
+            battery_voltage:float = pin_voltage / 0.1803571 # this value based on the voltage divider being used (to "reverse" the voltage divider)
+
+            # read the TF Luna values
+            tfluna_distance = luna.distance
+            tfluna_strength = luna.strength
+
+            # read altitude from BMP180
+            altitude = bmp180.altitude
+
+            # read heading from QMC5883L
+            heading = qmc.heading
+
+            # print
+            print("vBat: " + str(battery_voltage) + ", TFLuna Dist: " + str(tfluna_distance) + ", TFLuna Strength: " + str(tfluna_strength) + ", altitude: " + str(altitude) + ", heading: " + str(heading))
+
+            # wait
+            await asyncio.sleep(0.05) # 20 Hz
 
     async def llmcu_rx() -> None:
         """Focused on continuously listening for received data from the LL MCU, usually a status packet."""
