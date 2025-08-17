@@ -12,14 +12,6 @@ print("Turning LED on...")
 led = machine.Pin("LED", machine.Pin.OUT)
 led.on()
 
-# establish failure pattern
-def FATAL_ERROR() -> None:
-    while True:
-        led.on()
-        time.sleep(1.0)
-        led.off()
-        time.sleep(1.0)
-
 ####################
 ##### SETTINGS #####
 ####################
@@ -54,6 +46,13 @@ def sendtimhmsg(message:str) -> None:
     """Send a private message (diagnostic-like) to the HL-MCU (not something intended to be sent to the remote controller)."""
     ToSend = "TIMH" + message + "\r\n"
     uart.write(ToSend.encode())
+
+# establish failure pattern
+def FATAL_ERROR(error_msg:str) -> None:
+    while True:
+        sendtimhmsg("FATAL ERROR: " + error_msg)
+        led.toggle()
+        time.sleep(1.0)
 
 # Send booting message over UART
 print("Sending BOOTING message over UART...")
