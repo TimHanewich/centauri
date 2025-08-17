@@ -171,8 +171,8 @@ async def main() -> None:
             # read heading from QMC5883L
             heading = qmc.heading
 
-            # print
-            print("vBat: " + str(battery_voltage) + ", TFLuna Dist: " + str(tfluna_distance) + ", TFLuna Strength: " + str(tfluna_strength) + ", altitude: " + str(altitude) + ", heading: " + str(heading))
+            # print (testing purposes, uncomment if you want)
+            #print("vBat: " + str(battery_voltage) + ", TFLuna Dist: " + str(tfluna_distance) + ", TFLuna Strength: " + str(tfluna_strength) + ", altitude: " + str(altitude) + ", heading: " + str(heading))
 
             # wait
             await asyncio.sleep(0.05) # 20 Hz
