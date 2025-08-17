@@ -3,8 +3,6 @@ The successor to my [Scout flight controller](https://github.com/TimHanewich/sco
 
 ## To Do:
 - Code:
-    - LL-MCU: Failsafe to 0% throttle if no desired rate data for X seconds
-    - LL-MCU: motors should always be at 0% if throttle is at 0% (PIDs can throw it over)
     - Add LL-MCU cycle time to status packet
 
 ## Notable Commits
