@@ -126,7 +126,7 @@ async def main() -> None:
         hc12.send(tools.pack_special_packet("LLMCU no pong") + "\r\n".encode())
         FATAL_ERROR()
 
-    # Declare all settings variables that will be tracked and reported on
+    # Declare all settings variables that will be tracked and continuously sent back to remote controller via HC-12 (radio communication)
     battery_voltage:float = 0.0
     tfluna_distance:int = 0 # distance reading, in cm (0-800)
     tfluna_strength:int = 0 # strength reading
