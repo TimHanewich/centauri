@@ -216,7 +216,7 @@ async def main() -> None:
                             print(str(llmcu_status_unpacked))
                             llmcu_status = ThisLine # update the llmcu_status variable (only bytes) which will later be sent to remote controller via HC-12
                     else:
-                        print("Unknown packet from LL-MCU: " + str(data))
+                        print("Unknown packet from LL-MCU: " + str(ThisLine))
             
             # wait
             await asyncio.sleep(0.05) # 20 Hz... The LL MCU is supposed to provide at 10 Hz, so reading quicker here to ensure a backlog does not build up
