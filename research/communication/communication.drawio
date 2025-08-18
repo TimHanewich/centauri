@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0" version="28.1.0">
   <diagram name="Page-1" id="Oxd-Gnnp0cI7EY-jCEC0">
-    <mxGraphModel dx="3794" dy="743" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="4014" dy="1974" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -16,7 +16,7 @@
             <mxPoint y="154.46999999999997" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="s8l9SCObQ_Q2c-ipgAVG-3" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=none;dashed=1;dashPattern=8 8;" parent="1" vertex="1">
+        <mxCell id="s8l9SCObQ_Q2c-ipgAVG-3" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#DDEEFF;dashed=1;dashPattern=8 8;opacity=50;" parent="1" vertex="1">
           <mxGeometry x="40" y="85" width="1010" height="995" as="geometry" />
         </mxCell>
         <mxCell id="s8l9SCObQ_Q2c-ipgAVG-1" value="HL MCU" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top;" parent="1" vertex="1">
@@ -28,7 +28,7 @@
         <mxCell id="s8l9SCObQ_Q2c-ipgAVG-4" value="Centauri Drone" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" parent="1" vertex="1">
           <mxGeometry x="452.5" y="50" width="185" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-1" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=none;dashed=1;dashPattern=8 8;" parent="1" vertex="1">
+        <mxCell id="9-CMpRLNuppDFcrcLKN0-1" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#DDEEFF;dashed=1;dashPattern=8 8;strokeColor=#6c8ebf;opacity=50;" parent="1" vertex="1">
           <mxGeometry x="-2080" y="85" width="1380" height="925" as="geometry" />
         </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-2" value="Centauri Remote Controller" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" parent="1" vertex="1">
@@ -190,14 +190,23 @@
         <mxCell id="1nN7b9fCO7w4V5sfwXuX-30" value="&lt;div&gt;PID Settings Update&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;Pitch P Gain&lt;/div&gt;&lt;div&gt;Pitch I Gain&lt;/div&gt;&lt;div&gt;Pitch D Gain&lt;/div&gt;&lt;div&gt;Roll P Gain&lt;/div&gt;&lt;div&gt;Roll I Gain&lt;/div&gt;&lt;div&gt;Roll D Gain&lt;/div&gt;&lt;div&gt;Yaw P Gain&lt;/div&gt;&lt;div&gt;Yaw I Gain&lt;/div&gt;&lt;div&gt;Yaw D Gain&lt;/div&gt;&lt;div&gt;PID I Limit&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="-530" y="260" width="230" height="190" as="geometry" />
         </mxCell>
-        <mxCell id="nyPtQHudZqdXI_7nlrX0-2" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+        <mxCell id="nyPtQHudZqdXI_7nlrX0-2" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="40" y="884.5" as="sourcePoint" />
             <mxPoint x="-680" y="884.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="nyPtQHudZqdXI_7nlrX0-1" value="&lt;u&gt;System Status&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;Battery level&lt;/div&gt;&lt;div&gt;TF Luna Distance&lt;/div&gt;&lt;div&gt;TF Luna Strength&lt;/div&gt;&lt;div&gt;Altitude (from BMP180)&lt;/div&gt;&lt;div&gt;Heading (from QMC5883L)&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" vertex="1" parent="1">
+        <mxCell id="nyPtQHudZqdXI_7nlrX0-1" value="&lt;u&gt;System Status&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;Battery level&lt;/div&gt;&lt;div&gt;TF Luna Distance&lt;/div&gt;&lt;div&gt;TF Luna Strength&lt;/div&gt;&lt;div&gt;Altitude (from BMP180)&lt;/div&gt;&lt;div&gt;Heading (from QMC5883L)&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="-521" y="830" width="192.5" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="hxOUQ-tuv7XgyCP0HNfm-2" value="Centauri: Quadcopter Flight Controller Communication Protocol" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=28;fontStyle=5" vertex="1" parent="1">
+          <mxGeometry x="-887.5" y="-130" width="980" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="hxOUQ-tuv7XgyCP0HNfm-3" value="github.com/TimHanewich/centauri" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="-569.25" y="-89" width="343.5" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hxOUQ-tuv7XgyCP0HNfm-4" value="© Tim Hanewich 2025" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="-569.25" y="-66" width="343.5" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
