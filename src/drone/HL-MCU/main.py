@@ -48,6 +48,13 @@ async def main() -> None:
         print("Unable to confirm HC-12 connection. Failing.")
         FATAL_ERROR()
 
+    # configure HC-12:
+    print("Setting HC-12 mode...")
+    hc12.mode = 3
+    print("Setting HC-12 channel...")
+    hc12.channel = 2
+    print("HC-12 settings complete!")
+
     # send out an HC-12 message to confirm we are online
     print("Sending online message...")
     hc12.send(tools.pack_special_packet("online") + "\r\n".encode())
