@@ -46,7 +46,14 @@ async def main() -> None:
 
     # try to establish comms with serial device
     print("Opening serial port...")
-    ser:serial.Serial = serial.Serial(port=ser_port, baudrate=9600, timeout=5)
+    ser:serial.Serial = None
+    try:
+        ser:serial.Serial = serial.Serial(port=ser_port, baudrate=9600, timeout=5)
+    except Exception as ex:
+        print("Error while trying to open port!")
+        print("Error message: " + str(ex))
+        print("Exiting script...")
+        exit()
     if ser.in_waiting > 0:
         print(str(len(ser.in_waiting)) + " bytes in recv buffer, clearing now.")
         ser.read(ser.in_waiting) # clear out buffer
