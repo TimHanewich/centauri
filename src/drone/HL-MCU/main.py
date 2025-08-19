@@ -248,7 +248,7 @@ async def main() -> None:
                     llmcu_status = llmcu_status + "\r\n".encode()
 
                 # send via HC-12
-                uart_hc12.write(llmcu_status)
+                hc12.send(llmcu_status)
 
                 # clear it out
                 llmcu_status = None
