@@ -79,6 +79,9 @@ def pack_system_status(battery:float, tfluna_distance:int, tfluna_strength:int, 
 
     ToReturn:bytearray = bytearray()
 
+    # header byte (metadata)
+    ToReturn.append(0b00000001) # 01 for bits 0 and 1 is the packet identifier for system status
+
     # battery voltage
     # Fully charged 4S = 16.8v
     # Full discharged 2S = 6.0v
