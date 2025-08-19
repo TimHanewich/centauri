@@ -47,7 +47,7 @@ while True:
             elif event.axis == 2: # right stick X axis (left/right)
                 yaw = event.value
             else:
-                #print("Axis '" + str(event.axis) + "': " + str(event.value))
+                print("Axis '" + str(event.axis) + "': " + str(event.value))
                 pass
         elif event.type == pygame.JOYBUTTONDOWN:
             if event.button == 0: # A
