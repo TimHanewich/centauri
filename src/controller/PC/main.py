@@ -167,14 +167,31 @@ async def main() -> None:
 
                 # prepare to print with display packet
                 dp:display.DisplayPack = display.DisplayPack()
+
+                # plug in basic telemetry info
+                dp.packets_sent = packets_sent
+                dp.packets_received = packets_received
+
+                # plug in control variables (what we will be sending to drone to control it)
                 dp.armed = armed
                 dp.mode = mode
                 dp.throttle = throttle
                 dp.pitch = pitch
                 dp.roll = roll
                 dp.yaw = yaw
-                dp.packets_sent = packets_sent
-                dp.packets_received = packets_received
+                
+                # plug in drone status variables
+                dp.drone_battery = vbat
+                dp.M1_throttle = m1_throttle
+                dp.M2_throttle = m2_throttle
+                dp.M3_throttle = m3_throttle
+                dp.M4_throttle = m4_throttle
+                dp.pitch_rate = pitch_rate
+                dp.roll_rate = roll_rate
+                dp.yaw_rate = yaw_rate
+                dp.pitch_angle = pitch_angle
+                dp.roll_angle = roll_angle
+
                 
                 # get table
                 tbl = display.construct(dp)
