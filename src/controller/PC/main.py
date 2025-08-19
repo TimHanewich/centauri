@@ -174,6 +174,7 @@ async def main() -> None:
                 dp.roll = roll
                 dp.yaw = yaw
                 dp.packets_sent = packets_sent
+                dp.packets_received = packets_received
                 
                 # get table
                 tbl = display.construct(dp)
