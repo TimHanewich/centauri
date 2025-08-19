@@ -7,6 +7,7 @@ import rich.console
 import rich.live
 import serial
 import tools
+import sys
 
 async def main() -> None:
 
@@ -115,6 +116,14 @@ async def main() -> None:
         nonlocal pitch
         nonlocal roll
         nonlocal yaw
+
+        # determine what the yaw axis ID is (right stick X, horizontal, axis)
+        # it is different based on what OS you are on I find
+        # On Windows, right stick X axis (horizontal) = 2
+        # On Linux, right stick X axis (horizontal) = 3
+        right_stick_x_axis_id:int = 2 # default to windows
+        if sys.platform.startswith("linux"): # if we are on linux
+            right_stick_x_axis_id = 3 # set to3
         
         # infinite loop of reading
         while True:
@@ -128,7 +137,7 @@ async def main() -> None:
                         roll = event.value
                     elif event.axis == 1: # left stick Y axis (up/down)
                         pitch = event.value # pushing the left stick forward will result in a NEGATIVE value. While this may seem incorrect at first, it is actually correct... pushing the left stick forward should prompt the quadcopter to pitch down (forward), hence it should be negative!
-                    elif event.axis == 2: # right stick X axis (left/right)
+                    elif event.axis == right_stick_x_axis_id: # right stick X axis (left/right)
                         yaw = event.value
                     else:
                         #print("Axis '" + str(event.axis) + "': " + str(event.value))
