@@ -39,14 +39,12 @@ async def main() -> None:
 
     # ask what serial peripheral path to use for communications
     print()
+    print("Attempt to open serial port will happen IMMEDIATELY upon you hitting enter")
     ser_port:str = input("Serial port of your transceiver (i.e. 'COM3' or '/dev/ACM0'): ")
     print("Will use serial '" + ser_port + "'")
     print()
 
     # try to establish comms with serial device
-    for i in range(0, 3):
-        print("Trying to establish comms with transceiver in " + str(3 - i) + "... ")
-        time.sleep(1.0)
     print("Opening serial port...")
     ser:serial.Serial = serial.Serial(port=ser_port, baudrate=9600, timeout=5)
     if ser.in_waiting > 0:
