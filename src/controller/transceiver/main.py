@@ -100,7 +100,7 @@ try:
                 buffer = buffer[loc+2:] # remove the line
 
                 # send the line to the PC (including the "\r\n"!)
-                hc12.send(ThisLine)
+                sys.stdout.buffer.write(ThisLine)
         
         # wait
         time.sleep(0.01)
