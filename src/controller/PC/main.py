@@ -104,7 +104,7 @@ async def main() -> None:
     # set up system info variables
     packets_sent:int = 0
     packets_received:int = 0
-    packets_last_received_ms_ago:int = 9999
+    packets_last_received:float = 0.0 # timestamp of last received, in seconds (time.time())
 
     # set up continous Xbox controller read function
     async def continuous_read_xbox() -> None:
@@ -180,6 +180,7 @@ async def main() -> None:
                 # plug in basic telemetry info
                 dp.packets_sent = packets_sent
                 dp.packets_received = packets_received
+                dp.packet_last_received_ago_ms = int((time.time() - packets_last_received) * 1000)
 
                 # plug in control variables (what we will be sending to drone to control it)
                 dp.armed = armed
