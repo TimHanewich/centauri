@@ -53,6 +53,8 @@ async def main() -> None:
     hc12.mode = 3
     print("Setting HC-12 channel...")
     hc12.channel = 2
+    print("Setting HC-12 power...")
+    hc12.power = 8
     print("HC-12 settings complete!")
 
     # send out an HC-12 message to confirm we are online
@@ -249,6 +251,7 @@ async def main() -> None:
 
                 # send via HC-12
                 hc12.send(llmcu_status)
+                print("Just sent: " + str(llmcu_status))
 
                 # clear it out
                 llmcu_status = None
