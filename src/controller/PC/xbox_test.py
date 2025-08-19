@@ -63,7 +63,7 @@ while True:
                 pass
     
     # print
-    print("Yaw: " + str(yaw))
+    print("Armed: " + str(armed) + ", mode: " + str(mode) + ", throttle: " + str(throttle) + ", pitch: " + str(pitch) + ", roll: " + str(roll) + ", yaw: " + str(yaw)) 
 
     # wait
     time.sleep(0.01)
