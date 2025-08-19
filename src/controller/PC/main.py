@@ -190,7 +190,7 @@ async def main() -> None:
             ToSend:bytes = tools.pack_control_packet(armed, mode, throttle, pitch, roll, yaw)
             
             # send it
-            ser.write(bytes(ToSend))
+            #ser.write(bytes(ToSend))
             packets_sent = packets_sent + 1
 
             # wait
