@@ -68,10 +68,10 @@ async def main() -> None:
         exit()
     response:bytes = ser.read(ser.in_waiting)
     print("Response of " + str(len(response)) + " bytes received from transceiver.")
-    if response == "TRANPONG\r\n".encode(): # the expected response
+    if "TRANPONG\r\n".encode() in response: # the expected response
         print("Transceiver ping successful! It is operating normally.")
     else:
-        print("Transceiver responded abnormally. Are you sure it is working correctly? Response: " + str(response))
+        print("Transceiver did not respond with TRANSPONG, confirming it is alive. Are you sure it is working correctly? Response we received from it: " + str(response))
         ser.close()
         exit()
 
