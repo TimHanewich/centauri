@@ -27,7 +27,7 @@ class HC12:
 
         # set up
         self._uart.init(baudrate=9600, timeout=200, timeout_char=10) # re-init with required param values
-        self._uart.read() # clear RX buffer
+        self._uart.read(self._uart.any()) # clear RX buffer
 
     def _flush_rx(self) -> int:
         """Read all bytes on the UART RX buffer and bring them into an internal buffer. Returns the number of new bytes that were read and captured."""
