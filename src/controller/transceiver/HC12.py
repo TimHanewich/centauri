@@ -31,8 +31,9 @@ class HC12:
 
     def _flush_rx(self) -> int:
         """Read all bytes on the UART RX buffer and bring them into an internal buffer. Returns the number of new bytes that were read and captured."""
-        if self._uart.any() > 0: # if there is data to receive
-            new_data:bytes = self._uart.read()
+        bytes_available:int = self._uart.any()
+        if bytes_available > 0: # if there is data to receive
+            new_data:bytes = self._uart.read(bytes_available)
             self._rx_buffer = self._rx_buffer + new_data
             return len(new_data)
         else:
