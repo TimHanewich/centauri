@@ -220,7 +220,7 @@ async def main() -> None:
                     if ThisLine[0] == 0b00000000: # status packet
                         llmcu_status_unpacked:dict = tools.unpack_status(ThisLine) # there is really no need to unpack the full data and parse it, but doing this anyway as a way to validate it is good data
                         if llmcu_status_unpacked != None: # if it unpacked correctly
-                            print(str(llmcu_status_unpacked))
+                            #print(str(llmcu_status_unpacked))
                             llmcu_status = ThisLine # update the llmcu_status variable (only bytes) which will later be sent to remote controller via HC-12
                     else:
                         print("Unknown packet from LL-MCU: " + str(ThisLine))
