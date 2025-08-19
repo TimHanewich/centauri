@@ -79,13 +79,26 @@ async def main() -> None:
 
     # Send a config packet to the drone to set settings
 
-    # set up control inputs
+    # set up control input variables we will send to the drone (and display in the console!)
     armed:bool = False
     mode:bool = False
     throttle:float = 0.0 # 0.0 to 1.0
     pitch:float = 0.0
     roll:float = 0.0
     yaw:float = 0.0
+
+    # set up status variables we will get from the drone (and display in the console!)
+    vbat:float = 0.0 # volts
+    pitch_angle:int = 0 # in degrees
+    roll_angle:int = 0 # in degrees
+    pitch_rate:int = 0 # in degrees per second
+    roll_rate:int = 0 # in degrees per second
+    yaw_rate:int = 0 # in degrees per second
+    m1_throttle:int = 0 # 0-100 (%)
+    m2_throttle:int = 0 # 0-100 (%)
+    m3_throttle:int = 0 # 0-100 (%)
+    m4_throttle:int = 0 # 0-100 (%)
+
 
     # set up system info variables
     packets_sent:int = 0
@@ -196,6 +209,31 @@ async def main() -> None:
             # wait
             await asyncio.sleep(0.02) # 50 Hz
 
+    # set up continuous radio rx (through tranceiver)
+    async def continuous_radio_rx() -> None:
+
+        # declare nonlocal variables we will be modifying
+        nonlocal vbat
+        nonlocal pitch_angle
+        nonlocal roll_angle
+        nonlocal pitch_rate
+        nonlocal roll_rate
+        nonlocal yaw_rate
+        nonlocal m1_throttle
+        nonlocal m2_throttle
+        nonlocal m3_throttle
+        nonlocal m4_throttle
+
+        # continuously monitor and receive new data from the serial port (from transceiver)
+        while True:
+            if ser.in_waiting > 0: # if we have data available
+                data:bytes = ser.read(ser.in_waiting) # read the available data
+                input("GOT THIS DATA: " + str(data))
+            
+            # sleep
+            await asyncio.sleep(0.05) # 20 Hz, faster than the 10 Hz the drone will send it at
+
+
     # we are all set and ready to go. Confirm.
     print()
     input("All set and ready to go! Enter to continue.")
@@ -204,7 +242,8 @@ async def main() -> None:
     task_read_xbox = asyncio.create_task(continuous_read_xbox())
     task_display = asyncio.create_task(continuous_display())
     task_radio_tx = asyncio.create_task(continuous_radio_tx())
-    await asyncio.gather(task_read_xbox, task_display, task_radio_tx) # infinitely wait for all to finish (which will never happen since they are infinitely running)
+    task_radio_rx = asyncio.create_task(continuous_radio_rx())
+    await asyncio.gather(task_read_xbox, task_display, task_radio_tx, task_radio_rx) # infinitely wait for all to finish (which will never happen since they are infinitely running)
 
 
 # run main program via asyncio
