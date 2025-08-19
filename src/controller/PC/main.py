@@ -245,6 +245,7 @@ async def main() -> None:
 
         # declare nonlocal variables we will be modifying
         nonlocal packets_received
+        nonlocal packets_last_received_at
         nonlocal vbat
         nonlocal pitch_angle
         nonlocal roll_angle
