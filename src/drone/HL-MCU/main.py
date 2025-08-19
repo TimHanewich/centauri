@@ -239,6 +239,10 @@ async def main() -> None:
 
         while True:
 
+            # send out system status data
+            ss:bytes = tools.pack_system_status(battery_voltage, tfluna_distance, tfluna_strength, altitude, heading)
+            hc12.send(ss + "\r\n".encode())
+
             # is there control status available from the LL-MCU?
             if llmcu_status != None:
 
