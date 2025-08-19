@@ -104,7 +104,7 @@ async def main() -> None:
     # set up system info variables
     packets_sent:int = 0
     packets_received:int = 0
-    packets_last_received:float = 0.0 # timestamp of last received, in seconds (time.time())
+    packets_last_received_at:float = 0.0 # timestamp of last received, in seconds (time.time())
 
     # set up continous Xbox controller read function
     async def continuous_read_xbox() -> None:
@@ -180,7 +180,7 @@ async def main() -> None:
                 # plug in basic telemetry info
                 dp.packets_sent = packets_sent
                 dp.packets_received = packets_received
-                dp.packet_last_received_ago_ms = int((time.time() - packets_last_received) * 1000)
+                dp.packet_last_received_ago_ms = int((time.time() - packets_last_received_at) * 1000)
 
                 # plug in control variables (what we will be sending to drone to control it)
                 dp.armed = armed
@@ -274,7 +274,7 @@ async def main() -> None:
 
                 # increment packets received and mark the receiving timestamp
                 packets_received = packets_received + 1
-                packets_last_received = time.time()
+                packets_last_received_at = time.time()
 
                 # Handle the line based on what it is
                 if ThisLine[0] & 0b00000011 == 0b00000000: # if bit 0 and bit 1 of the first byte (packet header) are both 0's, it is a control status packet
