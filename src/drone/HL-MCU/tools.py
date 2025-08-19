@@ -1,5 +1,3 @@
-import struct
-
 ### GENERAL HELPER FUNCTIONS
 
 def shift_int16_to_uint16(val:int) -> int:
@@ -10,10 +8,6 @@ def shift_int16_to_uint16(val:int) -> int:
         return 0
     else:
         return val + 32768
-    
-def shift_uint8_to_int8(byte:int) -> int:
-    """Shifts a value that was stored as a uint8 (0-255) to a int8 (-128 to 127)."""
-    return byte - 128
 
 ##### TO BE SENT TO REMOTE CONTROLLER
 
@@ -133,44 +127,6 @@ def pack_special_packet(msg:str) -> bytes:
     ToReturn.extend(ToUse.encode("ascii"))
 
     return bytes(ToReturn)
-
-
-### UNPACKING DATA FROM LL-MCU
-
-def unpack_status(data:bytes) -> dict:
-    """Unpack status packet received from LL-MCU."""
-
-    # ensure it is long enough. And if it isn't, return None
-    if len(data) < 10:
-        return None
-
-    # we will skip the first byte, the header byte, for now, and assume this is indeed a status packet (that should be checked before this function is used)
-
-    # throttles, as float
-    # throttles are expressed as a single byte, from 0-255, with that range representing throttle range 0-100%
-    m1_throttle:float = data[1] / 255
-    m2_throttle:float = data[2] / 255
-    m3_throttle:float = data[3] / 255
-    m4_throttle:float = data[4] / 255
-
-    # pitch, roll, yaw rates
-    # they are stored as a uint8 that will be shifted to a int8
-    # and that int8 value can be interpreted literally... i.e. a value of -6 would mean -6 degrees per second
-    # (yes that loses some fidelity of decimal points)
-    pitch_rate:int = shift_uint8_to_int8(data[5])
-    roll_rate:int = shift_uint8_to_int8(data[6])
-    yaw_rate:int = shift_uint8_to_int8(data[7])
-
-    # pitch and roll angle
-    # they are stored as a uint8 that will be shifted to a int8
-    # and that int8 value can be interpreted literally... i.e. a value of -6 would mean -6 degrees
-    # (yes that loses some fidelity of decimal points)
-    pitch_angle:int = shift_uint8_to_int8(data[8])
-    roll_angle:int = shift_uint8_to_int8(data[9])
-
-    # return dict
-    return {"m1_throttle": m1_throttle, "m2_throttle": m2_throttle, "m3_throttle": m3_throttle, "m4_throttle": m4_throttle, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle}
-
 
 
 ### TO BE SENT TO LL-MCU
