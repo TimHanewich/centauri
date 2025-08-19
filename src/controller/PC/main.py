@@ -202,7 +202,7 @@ async def main() -> None:
             # pack into control packet
             ToSend:bytes = tools.pack_control_packet(armed, mode, throttle, pitch, roll, yaw)
             
-            # send it
+            # send it via HC-12 by sending it to the transceiver over the serial line
             #ser.write(bytes(ToSend))
             packets_sent = packets_sent + 1
 
@@ -224,11 +224,39 @@ async def main() -> None:
         nonlocal m3_throttle
         nonlocal m4_throttle
 
+        # declare rxBuffer of all data received from transceiver through the USB serial line
+        rxBuffer:bytearray = bytearray()
+
         # continuously monitor and receive new data from the serial port (from transceiver)
         while True:
+
+            # read data if any is available!
             if ser.in_waiting > 0: # if we have data available
                 data:bytes = ser.read(ser.in_waiting) # read the available data
-                input("GOT THIS DATA: " + str(data))
+                rxBuffer.extend(data)
+                
+            # handle data if we have any full lines in there
+            while "\r\n".encode() in rxBuffer:
+
+                # get the line
+                loc:int = rxBuffer.find("\r\n".encode())
+                ThisLine:bytes = rxBuffer[0:loc+2] # include the \r\n at the end (why we +2)
+                rxBuffer = rxBuffer[loc+2:] # remove the line
+
+                # Handle the line based on what it is
+                if ThisLine[0] & 0b00000011 == 0b00000000: # if bit 0 and bit 1 of the first byte (packet header) are both 0's, it is a control status packet
+                    ControlStatus:dict = tools.unpack_control_status(ThisLine)
+                    m1_throttle = ControlStatus["m1_throttle"]
+                    m2_throttle = ControlStatus["m2_throttle"]
+                    m3_throttle = ControlStatus["m3_throttle"]
+                    m4_throttle = ControlStatus["m4_throttle"]
+                    pitch_rate = ControlStatus["pitch_rate"]
+                    roll_rate = ControlStatus["roll_rate"]
+                    yaw_rate = ControlStatus["yaw_rate"]
+                    pitch_angle = ControlStatus["pitch_angle"]
+                    roll_angle = ControlStatus["roll_angle"]
+
+
             
             # sleep
             await asyncio.sleep(0.05) # 20 Hz, faster than the 10 Hz the drone will send it at

@@ -47,7 +47,7 @@ def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll
     # return it
     return bytes(ToReturn)
 
-def unpack_status(data:bytes) -> dict:
+def unpack_control_status(data:bytes) -> dict:
     """Unpack status packet received from LL-MCU."""
 
     # ensure it is long enough. And if it isn't, return None
