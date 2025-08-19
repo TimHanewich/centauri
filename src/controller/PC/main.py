@@ -268,15 +268,16 @@ async def main() -> None:
                 # Handle the line based on what it is
                 if ThisLine[0] & 0b00000011 == 0b00000000: # if bit 0 and bit 1 of the first byte (packet header) are both 0's, it is a control status packet
                     ControlStatus:dict = tools.unpack_control_status(ThisLine)
-                    m1_throttle = ControlStatus["m1_throttle"]
-                    m2_throttle = ControlStatus["m2_throttle"]
-                    m3_throttle = ControlStatus["m3_throttle"]
-                    m4_throttle = ControlStatus["m4_throttle"]
-                    pitch_rate = ControlStatus["pitch_rate"]
-                    roll_rate = ControlStatus["roll_rate"]
-                    yaw_rate = ControlStatus["yaw_rate"]
-                    pitch_angle = ControlStatus["pitch_angle"]
-                    roll_angle = ControlStatus["roll_angle"]
+                    if ControlStatus != None: # it would return None if the checksum was not correct (data transmission issue)
+                        m1_throttle = ControlStatus["m1_throttle"]
+                        m2_throttle = ControlStatus["m2_throttle"]
+                        m3_throttle = ControlStatus["m3_throttle"]
+                        m4_throttle = ControlStatus["m4_throttle"]
+                        pitch_rate = ControlStatus["pitch_rate"]
+                        roll_rate = ControlStatus["roll_rate"]
+                        yaw_rate = ControlStatus["yaw_rate"]
+                        pitch_angle = ControlStatus["pitch_angle"]
+                        roll_angle = ControlStatus["roll_angle"]
 
 
             
