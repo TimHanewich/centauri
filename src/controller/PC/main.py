@@ -213,6 +213,7 @@ async def main() -> None:
     async def continuous_radio_rx() -> None:
 
         # declare nonlocal variables we will be modifying
+        nonlocal packets_received
         nonlocal vbat
         nonlocal pitch_angle
         nonlocal roll_angle
@@ -242,6 +243,9 @@ async def main() -> None:
                 loc:int = rxBuffer.find("\r\n".encode())
                 ThisLine:bytes = rxBuffer[0:loc+2] # include the \r\n at the end (why we +2)
                 rxBuffer = rxBuffer[loc+2:] # remove the line
+
+                # increment packets received
+                packets_received = packets_received + 1
 
                 # Handle the line based on what it is
                 if ThisLine[0] & 0b00000011 == 0b00000000: # if bit 0 and bit 1 of the first byte (packet header) are both 0's, it is a control status packet
