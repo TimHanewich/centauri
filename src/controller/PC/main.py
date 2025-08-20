@@ -199,8 +199,14 @@ async def main() -> None:
                 dp.roll = roll
                 dp.yaw = yaw
                 
-                # plug in drone status variables
+                # plug in drone status variables: system status
                 dp.drone_battery = vbat
+                dp.tf_luna_distance = tf_luna_distance
+                dp.tf_luna_strength = tf_luna_strength
+                dp.altitude = altitude
+                dp.heading = heading
+
+                # plug in drone status variables: control status
                 dp.M1_throttle = m1_throttle
                 dp.M2_throttle = m2_throttle
                 dp.M3_throttle = m3_throttle
