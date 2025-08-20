@@ -111,7 +111,7 @@ def pack_system_status(battery:float, tfluna_distance:int, tfluna_strength:int, 
     # Heading
     # heading can be 0 to 360
     # however, since it isn't very sensitive, we will use a single byte here
-    valb:int = int(heading / (256 / 360))
+    valb:int = int(round(heading * (255 / 360), 0))
     valb = min(max(valb, 0), 255)
     ToReturn.append(valb)
 

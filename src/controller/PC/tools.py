@@ -2,6 +2,14 @@ def shift_uint8_to_int8(byte:int) -> int:
     """Shifts a value that was stored as a uint8 (0-255) to a int8 (-128 to 127)."""
     return byte - 128
 
+
+
+
+
+
+
+### PACKING DATA TO SEND TO DRONE (through transceiver)
+
 def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll:float, yaw:float) -> bytes:
     """Packs a control packet, including the '\r\n' at the end"""
 
@@ -47,6 +55,18 @@ def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll
     # return it
     return bytes(ToReturn)
 
+
+
+
+
+
+
+
+
+
+
+### UNPACKING DATA THAT COMES IN FROM DRONE (through transceiver)
+
 def unpack_control_status(data:bytes) -> dict:
     """Unpack status packet received from LL-MCU."""
 
@@ -81,3 +101,34 @@ def unpack_control_status(data:bytes) -> dict:
     # return dict
     return {"m1_throttle": m1_throttle, "m2_throttle": m2_throttle, "m3_throttle": m3_throttle, "m4_throttle": m4_throttle, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle}
 
+def unpack_system_status(data:bytes) -> dict:
+    """Unpack a system status packet that contains data such as drone battery level, TF Luna distance, and more."""
+
+    # we will ignore the first byte, the header byte, and just assume the data we have been provided is indeed a system status packet (no need to check here, assume it was done before calling this function)
+
+    # unpack battery voltage
+    rval:int = int.from_bytes(data[1:3])
+    aspor:float = rval / 65535
+    battery_voltage:float = 6.0 + ((16.8 - 6.0) * aspor)
+
+    # unpack TF Luna reading
+    tf_luna_distance:int = int.from_bytes(data[3:5])
+
+    # unpack TF Luna strength
+    tf_luna_strength:int = int.from_bytes(data[5:7])
+
+    # unpack altitude in meters
+    rval = int.from_bytes(data[7:9])
+    aspor = rval / 65535
+    altitude:float = (aspor * 9863.58) - 698.42
+
+    # heading
+    rval = data[9]
+    heading = int(rval * (360 / 255))
+
+    # return!
+    return {"battery_voltage": battery_voltage, "tf_luna_distance": tf_luna_distance, "tf_luna_strength": tf_luna_strength, "altitude": altitude, "heading": heading}
+
+data = b'\x01\xa1.\x01Y\x15\xb3N\xfcO'
+d = unpack_system_status(data)
+print(str(d))
