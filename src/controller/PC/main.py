@@ -88,8 +88,14 @@ async def main() -> None:
     roll:float = 0.0
     yaw:float = 0.0
 
-    # set up status variables we will get from the drone (and display in the console!)
+    # set up status variables we will get from the drone (and display in the console!): system status
     vbat:float = 0.0 # volts
+    tf_luna_distance:int = 0 # in cm
+    tf_luna_strength:int = 0
+    altitude:float # from BMP180, in meters
+    heading:int = 0 # in degrres
+
+    # set up status variables we will get from the drone (and display in the console!): control status
     pitch_angle:int = 0 # in degrees
     roll_angle:int = 0 # in degrees
     pitch_rate:int = 0 # in degrees per second
@@ -246,7 +252,11 @@ async def main() -> None:
         # declare nonlocal variables we will be modifying
         nonlocal packets_received
         nonlocal packets_last_received_at
-        nonlocal vbat
+        nonlocal vbat # drone's battery level
+        nonlocal tf_luna_distance
+        nonlocal tf_luna_strength
+        nonlocal altitude
+        nonlocal heading
         nonlocal pitch_angle
         nonlocal roll_angle
         nonlocal pitch_rate
@@ -293,6 +303,14 @@ async def main() -> None:
                         yaw_rate = ControlStatus["yaw_rate"]
                         pitch_angle = ControlStatus["pitch_angle"]
                         roll_angle = ControlStatus["roll_angle"]
+                elif ThisLine[0] & 0b00000010 == 0 and ThisLine[0] & 0b00000001 > 0: # bit 0 is occupied, bit 1 is not = it is a SYSTEM STATUS!
+                    SystemStatus:dict = tools.unpack_system_status(ThisLine)
+                    vbat = SystemStatus["battery_voltage"]
+                    tf_luna_distance = SystemStatus["tf_luna_distance"]
+                    tf_luna_strength = SystemStatus["tf_luna_strength"]
+                    altitude = SystemStatus["altitude"]
+                    heading = SystemStatus["heading"]
+
 
 
             
