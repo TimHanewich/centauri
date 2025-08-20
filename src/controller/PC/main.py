@@ -92,7 +92,7 @@ async def main() -> None:
     vbat:float = 0.0 # volts
     tf_luna_distance:int = 0 # in cm
     tf_luna_strength:int = 0
-    altitude:float # from BMP180, in meters
+    altitude:float = 0.0 # from BMP180, in meters
     heading:int = 0 # in degrres
 
     # set up status variables we will get from the drone (and display in the console!): control status
@@ -166,7 +166,6 @@ async def main() -> None:
         
     # set up continuous display function
     async def continuous_display() -> None:
-
 
         # display with live
         with rich.live.Live(refresh_per_second=60, screen=True) as l: # the refresh_per_second sets the upper limit for refresh rate
