@@ -128,7 +128,3 @@ def unpack_system_status(data:bytes) -> dict:
 
     # return!
     return {"battery_voltage": battery_voltage, "tf_luna_distance": tf_luna_distance, "tf_luna_strength": tf_luna_strength, "altitude": altitude, "heading": heading}
-
-data = b'\x01\xa1.\x01Y\x15\xb3N\xfcO'
-d = unpack_system_status(data)
-print(str(d))
