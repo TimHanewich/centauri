@@ -167,14 +167,6 @@ async def main() -> None:
     # set up continuous display function
     async def continuous_display() -> None:
 
-        # declare variables from main we will be using
-        nonlocal armed
-        nonlocal mode
-        nonlocal throttle
-        nonlocal pitch
-        nonlocal roll
-        nonlocal yaw
-        nonlocal packets_sent
 
         # display with live
         with rich.live.Live(refresh_per_second=60, screen=True) as l: # the refresh_per_second sets the upper limit for refresh rate
