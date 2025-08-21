@@ -73,7 +73,8 @@ def construct(dp:DisplayPack) -> rich.table.Table:
     txt_system = txt_system + "Packets Sent: " + str(dp.packets_sent)
     txt_system = txt_system + "\n" + "Packets Received: " + str(dp.packets_received)
     if dp.packet_last_received_ago_ms != None:
-        txt_system = txt_system + "\n" + "Packet Last Recv: " + str(dp.packet_last_received_ago_ms) + " ms"
+        last_recv_seconds:int = int(dp.packet_last_received_ago_ms / 1000) # int() rounds down, which I want here
+        txt_system = txt_system + "\n" + "Packet Last Recv: " + str(last_recv_seconds) + " s"
     else:
         txt_system = txt_system + "\n" + "Packet Last Recv: [red]never[/]"
     txt_system = "[grey70]" + txt_system + "[/]" # wrap the whole thing in a grey color
