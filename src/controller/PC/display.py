@@ -97,7 +97,7 @@ def construct(dp:DisplayPack) -> rich.table.Table:
 
     # construct what to display in telemety column (telemetry from quadcopter)
     txt_status:str = ""
-    txt_status = txt_status + "Battery: " + str(round(dp.drone_battery, 1)) + " volts"
+    txt_status = txt_status + "Battery: " + str(round(dp.drone_battery, 1)) + " v"
     txt_status = txt_status + "\n" + "LunaD: " + str(dp.tf_luna_distance) + " cm"
     txt_status = txt_status + "\n" + "LunaS: " + str(dp.tf_luna_strength)
     txt_status = txt_status + "\n" + "Altitude: " + str(round(dp.altitude, 1)) + " m"
