@@ -99,7 +99,7 @@ def construct(dp:DisplayPack) -> rich.table.Table:
     txt_status = txt_status + "Battery: " + str(round(dp.drone_battery, 1)) + " volts"
     txt_status = txt_status + "\n" + "LunaD: " + str(dp.tf_luna_distance) + " cm"
     txt_status = txt_status + "\n" + "LunaS: " + str(dp.tf_luna_strength)
-    txt_status = txt_status + "\n" + "Altitude: " + str(dp.altitude) + " m"
+    txt_status = txt_status + "\n" + "Altitude: " + str(round(dp.altitude, 1)) + " m"
     txt_status = txt_status + "\n" + "Heading: " + str(dp.heading) + " °"
     txt_status = txt_status + "\n" + "Pitch Angle: " + str(dp.pitch_angle) + " °"
     txt_status = txt_status + "\n" + "Roll Angle: " + str(dp.roll_angle) + " °"
