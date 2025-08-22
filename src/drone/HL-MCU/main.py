@@ -154,6 +154,7 @@ async def main() -> None:
     llmcu_status:bytes = None 
     
     # declare a special packet "container" variable for free text to be sent to remote controller via tx loop
+    # this can be populated anywhere by anything
     special_message:str = None
 
     async def led_flicker() -> None:
