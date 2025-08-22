@@ -1,6 +1,7 @@
 import os
 import shutil
 import rich.table
+import time
 
 # define console-clearing command
 def cls() -> None:
@@ -8,6 +9,12 @@ def cls() -> None:
         os.system("cls")
     else: # if on linux, just run clear
         os.system("clear")
+
+# define message structure
+class Message:
+    def __init__(self, time_seconds:float, msg:str):
+        self.time:float = time_seconds
+        self.message = msg
 
 # define display function
 class DisplayPack:
@@ -45,7 +52,7 @@ class DisplayPack:
         self.roll_angle:int = 0 # -90 to 90
 
         # messages being received from the drone
-        self.messages:list[str] = []
+        self.messages:list[Message] = []
 
 def construct(dp:DisplayPack) -> rich.table.Table:
     """Construct the telemetry table to dispaly"""
@@ -114,16 +121,26 @@ def construct(dp:DisplayPack) -> rich.table.Table:
 
     # construct what to display in messages column
     max_messages:int = 10 # maxiumum number of messages that can be displayed
-    messages_to_display:list[str] = [] # create empty list
+    messages_to_display:list[Message] = [] # create empty list
     messages_to_display.extend(dp.messages) # copy all
     while len(messages_to_display) > max_messages: # until it fits...
         messages_to_display.pop(0) # remove the first
     txt_messages:str = ""
     for msg in messages_to_display:
-        if len(msg) <= width_messages:
-            txt_messages = txt_messages + msg + "\n"
-        else: # the message exceeds the width of this column
-            txt_messages = txt_messages + msg[0:width_messages - 10] + "..." + "\n"
+
+        # figure out delay
+        SecondsAgo:int = int(time.time() - msg.time)
+
+        # determine message
+        ThisMsg:str = SecondsAgo + "s ago: " + msg.message
+
+        # trim if needed
+        if ThisMsg > width_messages:
+            ThisMsg[0:width_messages-3] + "..."
+
+        # append it
+        txt_messages = txt_messages + ThisMsg + "\n"
+        
     if len(txt_messages) > 0:
         txt_messages = txt_messages[0:len(txt_messages)-1] # trim off last newline
 
