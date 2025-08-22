@@ -64,7 +64,7 @@ def pack_special_packet(msg:str) -> bytes:
 
     # message
     ToUse:str = msg[0:50] # truncate to 50 characters
-    ToReturn.extend(ToUse.encode("ascii"))
+    ToReturn.extend(ToUse.encode())
 
     return bytes(ToReturn)
 
