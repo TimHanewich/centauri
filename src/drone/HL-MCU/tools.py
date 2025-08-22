@@ -60,7 +60,7 @@ def pack_special_packet(msg:str) -> bytes:
     ToReturn:bytearray = bytearray()
 
     # header byte
-    ToReturn.append(0b00000001) # bit 0 1 to declare as special packet
+    ToReturn.append(0b00000010) # bit 0 = 0, bit 1 = 1 to declare it as a special packet
 
     # message
     ToUse:str = msg[0:50] # truncate to 50 characters
