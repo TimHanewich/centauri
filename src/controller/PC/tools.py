@@ -141,7 +141,3 @@ def unpack_special_packet(data:bytes) -> str:
     
     trb:bytes = data[1:EndOn]
     return trb.decode()
-
-data = b'\x02Hello world!\r\n'
-s = unpack_special_packet(data)
-print(s)
