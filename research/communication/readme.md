@@ -98,7 +98,17 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
         - TF-Luna Strength (2 bytes)
         - Altitude from BMP180 (2 bytes): *0-65535 spread over meters range of -500 to 122 (400 ft legal limit) which would have resolution of approx 0.95 cm*
         - Heading from QMC5883L compass (1 byte): *0-255 spread over range of 0-360, with resolution of 1.4 degrees*
-    - Special Packet (text) 
+    - Special Packet (text)
+        - Header byte:
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: `1` (packet identifier)
+            - Bit 0: `0` (packet identifier)
+        - Text, encoded as bytes
     
 ## Communication Between HL-MCU and LL-MCU
 If the communication between the HL-MCU and LL-MCU begins with "TIMH", that means it is an "internal message", intended to only be shared between them. If it does not begin with that, it is merely intended to "pass through" to the remote controller.
