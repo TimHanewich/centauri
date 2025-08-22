@@ -153,6 +153,8 @@ async def main() -> None:
     # when it is None, that means there is no new information to pass along.
     llmcu_status:bytes = None 
     
+    # declare a special packet "container" variable for free text to be sent to remote controller via tx loop
+    special_message:str = None
 
     async def led_flicker() -> None:
         while True:
@@ -201,6 +203,7 @@ async def main() -> None:
 
         # declare nonlocal variables this coroutine will update
         nonlocal llmcu_status
+        nonlocal special_message
 
         # declare rxBuffer for data received from LL-MCU via UART
         rxBuffer:bytearray = bytearray()
@@ -221,6 +224,9 @@ async def main() -> None:
                     # handle the line based on what it is
                     if ThisLine[0] == 0b00000000: # status packet
                         llmcu_status = ThisLine # update the llmcu_status variable (only bytes) which will later be sent to remote controller via HC-12
+                    elif ThisLine.startswith("TIMH".encode()): # if it starts with TIMH, it is a special message from the LL-MCU (like free text)
+                        if ThisLine != "TIMH\r\n".encode(): # if it isn't JUST a header and newline (there is actual data in it)
+                            special_message = ThisLine[4:-2].decode() # selects everything between "TIMH" and "\r\n" and decodes it as a string
                     else:
                         print("Unknown packet from LL-MCU: " + str(ThisLine))
             
@@ -236,6 +242,7 @@ async def main() -> None:
         
         # declare nonlocal variables
         nonlocal llmcu_status
+        nonlocal special_message
 
         while True:
 
@@ -256,6 +263,11 @@ async def main() -> None:
 
                 # clear it out
                 llmcu_status = None
+
+            # is there special message data available to be sent out?
+            if special_message != None: 
+                sm:bytes = tools.pack_special_packet(special_message)
+                hc12.send(sm + "\r\n".encode())
 
             # wait
             await asyncio.sleep(0.1) # 10 hz
