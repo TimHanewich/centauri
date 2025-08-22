@@ -140,4 +140,5 @@ def unpack_special_packet(data:bytes) -> str:
         EndOn = EndOn - 2
     
     trb:bytes = data[1:EndOn]
+    ToReturn:str = trb.decode(errors="replace") # transmission errors will be replaced with "�"
     return trb.decode()
