@@ -12,8 +12,8 @@ def cls() -> None:
 
 # define message structure
 class Message:
-    def __init__(self, time_seconds:float, msg:str):
-        self.time:float = time_seconds
+    def __init__(self, msg:str, timestamp_seconds:float = time.time()):
+        self.time:float = timestamp_seconds
         self.message = msg
 
 # define display function
@@ -140,7 +140,7 @@ def construct(dp:DisplayPack) -> rich.table.Table:
 
         # append it
         txt_messages = txt_messages + ThisMsg + "\n"
-        
+
     if len(txt_messages) > 0:
         txt_messages = txt_messages[0:len(txt_messages)-1] # trim off last newline
 
