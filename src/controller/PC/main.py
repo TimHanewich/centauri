@@ -113,7 +113,7 @@ async def main() -> None:
     packets_last_received_at:float = None # timestamp of last received, in seconds (time.time()). Start with None to indicate we have NOT received one yet.
 
     # For Display: set up messages received from drone
-    drone_messages:list[str] = []
+    drone_messages:list[display.Message] = []
 
     # set up continous Xbox controller read function
     async def continuous_read_xbox() -> None:
@@ -314,7 +314,7 @@ async def main() -> None:
                     heading = SystemStatus["heading"]
                 elif ThisLine[0] & 0b00000010 > 0 and ThisLine[0] & 0b00000001 == 0: # bit 1 is occupied but bit 0 is not = it is a special packet (free text)
                     msg:str = tools.unpack_special_packet(ThisLine)
-                    drone_messages.append(msg)
+                    drone_messages.append(display.Message(msg, time.time()))
             
             # sleep
             await asyncio.sleep(0.05) # 20 Hz, faster than the 10 Hz the drone will send it at
