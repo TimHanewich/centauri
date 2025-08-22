@@ -132,11 +132,13 @@ def construct(dp:DisplayPack) -> rich.table.Table:
         SecondsAgo:int = int(time.time() - msg.time)
 
         # determine message
-        ThisMsg:str = SecondsAgo + "s ago: " + msg.message
+        ThisMsg:str = "[white]" + str(SecondsAgo) + "s ago:[/] " + msg.message
 
         # trim if needed
-        if ThisMsg > width_messages:
-            ThisMsg[0:width_messages-3] + "..."
+        MaxLength:int = width_messages - 7
+        if len(ThisMsg) > MaxLength:
+            NeedToCut:int = len(ThisMsg) - MaxLength
+            ThisMsg = ThisMsg[0:-NeedToCut] + "..."
 
         # append it
         txt_messages = txt_messages + ThisMsg + "\n"
