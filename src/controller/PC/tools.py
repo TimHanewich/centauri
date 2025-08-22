@@ -128,3 +128,20 @@ def unpack_system_status(data:bytes) -> dict:
 
     # return!
     return {"battery_voltage": battery_voltage, "tf_luna_distance": tf_luna_distance, "tf_luna_strength": tf_luna_strength, "altitude": altitude, "heading": heading}
+
+def unpack_special_packet(data:bytes) -> str:
+    """Unpacks a special packet, containing free text"""
+
+    # the first byte is a header, so we can ignore
+
+    # determine how far to go in
+    EndOn:int = len(data)
+    if data.endswith("\r\n".encode()):
+        EndOn = EndOn - 2
+    
+    trb:bytes = data[1:EndOn]
+    return trb.decode()
+
+data = b'\x02Hello world!\r\n'
+s = unpack_special_packet(data)
+print(s)
