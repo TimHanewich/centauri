@@ -1,6 +1,7 @@
 # This test is designed to validate the MPU-6050 can be read from quickly by the LL MCU
 # This is a direct follow up to EIO (Errno 5) I have been seeing at a high read rate
 # Error on August 25, 2025: https://i.imgur.com/Dg6Go0I.png
+# It sometimes fails and recovers right away, sometimes not: https://i.imgur.com/4fQlNw0.png
 
 import machine
 import time
@@ -17,41 +18,35 @@ accel_data:bytearray = bytearray(6)
 
 # go!
 last_print_ticks_ms:int = 0
-error_count:int = 0
-immediate_error_recoveries:int = 0 # the number of times the read was successfull RIGHT after the error happened
-just_encountered_error:bool = False
+delays_after_fails_ms:list[int] = [] # list of how long it took to get a good read right after getting a BAD read (EIO)
 print("Entering infinite read loop now!")
 while True:
 
     loop_begin_us:int = time.ticks_us()
 
-    # read gyro data
-    try:
-        i2c.readfrom_mem_into(0x68, 0x43, gyro_data)
-        if just_encountered_error:
-            immediate_error_recoveries = immediate_error_recoveries + 1
-        just_encountered_error = False
-    except:
-        error_count = error_count + 1
-        just_encountered_error = True
+    # try read
+    ReadGood:bool = False
+    ErrorEncountered:bool = True # if at least one EIO was encountered during this read attempt
+    ReadAttemptBegan_ticks_ms:int = time.ticks_ms()
+    while ReadGood == False:
+        try:
+            i2c.readfrom_mem_into(0x68, 0x43, gyro_data) # read gyro data
+            i2c.readfrom_mem_into(0x68, 0x3B, accel_data) # read accel data
+            ReadGood = True
 
-    # read accel data
-    try:   
-        i2c.readfrom_mem_into(0x68, 0x3B, accel_data)
-        if just_encountered_error:
-            immediate_error_recoveries = immediate_error_recoveries + 1
-        just_encountered_error = False
-    except:
-        error_count = error_count + 1
-        just_encountered_error = True
+            # if we already had an errro this loop, append it
+            if ErrorEncountered:
+                delays_after_fails_ms.append(time.ticks_diff(time.ticks_ms(), ReadAttemptBegan_ticks_ms))
+        except:
+            ReadGood = False
+            ErrorEncountered = True
 
     # print?
     if (time.ticks_ms() - last_print_ticks_ms) > 3000: # every 3 seconds
         print("----- " + str(time.ticks_ms()) + " ticks (ms) -----")
         print("Gyro: " + str(gyro_data))
         print("Accel: " + str(accel_data))
-        print("Errors: " + str(error_count))
-        print("Immediate error recoveries: " + str(immediate_error_recoveries))
+        print("Delays after errors: " + str(delays_after_fails_ms))
         print()
         last_print_ticks_ms = time.ticks_ms()
 
