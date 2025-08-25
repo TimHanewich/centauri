@@ -15,6 +15,7 @@ gyro_data:bytearray = bytearray(6)
 accel_data:bytearray = bytearray(6)
 
 # go!
+last_print_ticks_ms:int = 0
 print("Entering infinite read loop now!")
 while True:
 
@@ -25,6 +26,14 @@ while True:
 
     # read accel data
     i2c.readfrom_mem_into(0x68, 0x3B, accel_data)
+
+    # print?
+    if (time.ticks_ms() - last_print_ticks_ms) > 3000: # every 3 seconds
+        print("----- " + str(time.ticks_ms()) + " ticks (ms) -----")
+        print("Gyro: " + str(gyro_data))
+        print("Accel: " + str(accel_data))
+        print()
+        last_print_ticks_ms = time.ticks_ms()
 
     # wait
     excess_us:int = delay_us - time.ticks_diff(time.ticks_us(), loop_begin_us)
