@@ -18,6 +18,8 @@ accel_data:bytearray = bytearray(6)
 # go!
 last_print_ticks_ms:int = 0
 error_count:int = 0
+immediate_error_recoveries:int = 0 # the number of times the read was successfull RIGHT after the error happened
+just_encountered_error:bool = False
 print("Entering infinite read loop now!")
 while True:
 
@@ -26,14 +28,22 @@ while True:
     # read gyro data
     try:
         i2c.readfrom_mem_into(0x68, 0x43, gyro_data)
+        if just_encountered_error:
+            immediate_error_recoveries = immediate_error_recoveries + 1
+        just_encountered_error = False
     except:
         error_count = error_count + 1
+        just_encountered_error = True
 
     # read accel data
     try:   
         i2c.readfrom_mem_into(0x68, 0x3B, accel_data)
+        if just_encountered_error:
+            immediate_error_recoveries = immediate_error_recoveries + 1
+        just_encountered_error = False
     except:
         error_count = error_count + 1
+        just_encountered_error = True
 
     # print?
     if (time.ticks_ms() - last_print_ticks_ms) > 3000: # every 3 seconds
