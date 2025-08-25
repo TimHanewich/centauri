@@ -50,6 +50,8 @@ while True:
         print("----- " + str(time.ticks_ms()) + " ticks (ms) -----")
         print("Gyro: " + str(gyro_data))
         print("Accel: " + str(accel_data))
+        print("Errors: " + str(error_count))
+        print("Immediate error recoveries: " + str(immediate_error_recoveries))
         print()
         last_print_ticks_ms = time.ticks_ms()
 
