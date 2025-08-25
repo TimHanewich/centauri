@@ -26,7 +26,7 @@ while True:
 
     # try read
     ReadGood:bool = False
-    ErrorEncountered:bool = True # if at least one EIO was encountered during this read attempt
+    ErrorEncountered:bool = False # if at least one EIO was encountered during this read attempt
     ReadAttemptBegan_ticks_ms:int = time.ticks_ms()
     while ReadGood == False:
         try:
