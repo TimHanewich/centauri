@@ -1,5 +1,6 @@
 # This test is designed to validate the MPU-6050 can be read from quickly by the LL MCU
 # This is a direct follow up to EIO (Errno 5) I have been seeing at a high read rate
+# Error on August 25, 2025: https://i.imgur.com/Dg6Go0I.png
 
 import machine
 import time
