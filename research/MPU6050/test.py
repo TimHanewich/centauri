@@ -14,6 +14,8 @@ print("Cycle time (us): " + str(delay_us))
 gyro_data:bytearray = bytearray(6)
 accel_data:bytearray = bytearray(6)
 
+# go!
+print("Entering infinite read loop now!")
 while True:
 
     loop_begin_us:int = time.ticks_us()
@@ -26,6 +28,5 @@ while True:
 
     # wait
     excess_us:int = delay_us - time.ticks_diff(time.ticks_us(), loop_begin_us)
-    print("Excess us: " + str(excess_us))
     if excess_us > 0:
         time.sleep_us(excess_us)
