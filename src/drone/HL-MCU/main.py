@@ -292,7 +292,7 @@ async def main() -> None:
     task_llmcu_rx = asyncio.create_task(llmcu_rx())
     task_radio_rx = asyncio.create_task(radio_rx())
     task_radio_tx = asyncio.create_task(radio_tx())
-    hc12.send(tools.pack_special_packet("ready"))
+    hc12.send(tools.pack_special_packet("ready") + "\r\n".encode())
     await asyncio.gather(task_led_flicker, task_sensor_reading, task_llmcu_rx, task_radio_rx, task_radio_tx)
 
 # run main program via asyncio
