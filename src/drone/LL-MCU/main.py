@@ -359,18 +359,6 @@ try:
         pitch_rate = gyro_y * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
         yaw_rate = gyro_z * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
 
-        # subtract out (account for) gyro bias that was calculated during calibration phase
-        pitch_rate = pitch_rate - gyro_bias_y
-        roll_rate = roll_rate - gyro_bias_x
-        yaw_rate = yaw_rate - gyro_bias_z
-
-        # FOR DIAGNOSTICS / TESTING: 
-        # You can manually hijack the pitch, roll, and yaw rate below.
-        # uncomment these and set a value to observe the PID values / motor throttles adjust.
-        # pitch_rate = 0
-        # roll_rate = 0
-        # yaw_rate = 0
-
         # Process & Transform raw accelerometer data
         accel_x = (accel_data[0] << 8) | accel_data[1]
         accel_y = (accel_data[2] << 8) | accel_data[3]
@@ -382,6 +370,18 @@ try:
         accel_y = (accel_y * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
         accel_z = (accel_z * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
+        # subtract out (account for) gyro bias that was calculated during calibration phase
+        pitch_rate = pitch_rate - gyro_bias_y
+        roll_rate = roll_rate - gyro_bias_x
+        yaw_rate = yaw_rate - gyro_bias_z
+
+        # FOR DIAGNOSTICS / TESTING: 
+        # You can manually hijack the pitch, roll, and yaw rate below.
+        # uncomment these and set a value to observe the PID values / motor throttles adjust.
+        # pitch_rate = 0
+        # roll_rate = 0
+        # yaw_rate = 0
+        
         # use ONLY the accelerometer data to estimate pitch and roll
         # you can interpret this as the accelerometer's "opinion" of what pitch and roll angle is based on only its data
         # this will likely be inaccurate as the accelerometer is quite susceptible to vibrations
