@@ -504,4 +504,4 @@ except Exception as ex: # unhandled error somewhere in the loop
     M4.duty_ns(1000000)
 
     # fail!
-    FATAL_ERROR("IN-LOOP ERROR: " + str(ex))
+    FATAL_ERROR("UILE: " + str(ex)) # UILE = "Unhandled In-Loop Error"
