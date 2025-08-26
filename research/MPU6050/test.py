@@ -2,6 +2,7 @@
 # This is a direct follow up to EIO (Errno 5) I have been seeing at a high read rate
 # Error on August 25, 2025: https://i.imgur.com/Dg6Go0I.png
 # It sometimes fails and recovers right away, sometimes not: https://i.imgur.com/4fQlNw0.png
+# This is what it looks like after 24 hours-ish (most errors happen late in cycle, almost like the I2C gets more out of sync as time goes on): https://i.imgur.com/S1v8nEh.png. As you can see, it usually gets a good read within 1 or 2 milliseconds.
 
 import machine
 import time
