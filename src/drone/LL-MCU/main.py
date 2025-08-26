@@ -325,8 +325,30 @@ try:
             yaw_int16 = 0
             sendtimhmsg("CommsRx Err: " + str(ex))
 
-        # Capture raw IMU data: gyroscope from MPU-6050
-        i2c.readfrom_mem_into(0x68, 0x43, gyro_data) # read 6 bytes, 2 for each axis, into the "gyro_data" bytearray (update values in that bytearray to have to avoid creating a new bytes object)
+        # Capture RAW IMU data: both gyroscope and accelerometer
+        # Goal here is ONLY to capture the data, not to transform it
+        GoodRead:bool = False
+        imu_read_attemp_started_ticks_ms:int = time.ticks_ms()
+        while not GoodRead:
+            try:
+                i2c.readfrom_mem_into(0x68, 0x43, gyro_data) # read 6 bytes, 2 for each axis, into the "gyro_data" bytearray (update values in that bytearray to have to avoid creating a new bytes object)
+                i2c.readfrom_mem_into(0x68, 0x3B, accel_data) # read 6 bytes, two for each axis for accelerometer data, directly into the "accel_data" bytearray
+                GoodRead = True
+            except:
+                GoodRead = False # mark it as a bad read
+                if time.ticks_diff(time.ticks_ms(), imu_read_attemp_started_ticks_ms) > 1000: # if it has been over a full second and we STILL haven't been able to get an IMU reading...
+                    
+                    # turn off all motors!!!!!!!
+                    # 1,000,000 nanoseconds = 0% throttle
+                    M1.duty_ns(1000000)
+                    M2.duty_ns(1000000)
+                    M3.duty_ns(1000000)
+                    M4.duty_ns(1000000)
+
+                    # fatal fail!
+                    FATAL_ERROR("IMU Read Error: read failed")
+
+        # Process & Transform raw Gyroscope data
         gyro_x = (gyro_data[0] << 8) | gyro_data[1]
         gyro_y = (gyro_data[2] << 8) | gyro_data[3]
         gyro_z = (gyro_data[4] << 8) | gyro_data[5]
@@ -349,8 +371,7 @@ try:
         # roll_rate = 0
         # yaw_rate = 0
 
-        # Capture raw IMU data: accelerometer from MPU-6050
-        i2c.readfrom_mem_into(0x68, 0x3B, accel_data) # read 6 bytes, two for each axis for accelerometer data, directly into the "accel_data" bytearray
+        # Process & Transform raw accelerometer data
         accel_x = (accel_data[0] << 8) | accel_data[1]
         accel_y = (accel_data[2] << 8) | accel_data[3]
         accel_z = (accel_data[4] << 8) | accel_data[5]
