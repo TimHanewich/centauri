@@ -69,6 +69,60 @@ def pack_special_packet(msg:str) -> bytes:
     return bytes(ToReturn)
 
 
+
+
+##### TO HELP UNPACKING DATA RECEIVED FROM CONTROLLER
+
+def unpack_control_packet(data:bytes) -> dict:
+    """Unpacks control packet data, like throttle, pitch input, and armed, angle mode, etc. Will return None if unpacked unsuccessfully (i.e. checksum failed)."""    
+
+    # we will assume this packet is indeed a control packet
+    # in other words, we will not check that the packet identifier bits of the first byte are correct
+    # we will assume the code that uses this function has already verified that
+
+    # first, validate checksum
+    checksum:int = data[9] # should be last byte
+    selfchecksum:int = 0b00000000 # start at 0
+    for byte in data[0:9]:
+        selfchecksum = selfchecksum ^ byte
+    if selfchecksum != checksum: # if the checksum didn't validate, return None!
+        return None
+
+    # get armed (a single bit of the first byte)
+    armed:bool = False
+    if data[0] & 0b00000100 > 0: # if bit 2 is 1, that means it is armed!
+        armed = True
+
+    # get mode (a single bit of the first byte)
+    # False = rate mode
+    # True = angle mode
+    mode:bool = False # default to rate mode
+    if data[0] & 0b00001000 > 0: # if bit 3 is 1, that means it is in ANGLE mode. If not, it is in rate mode
+        mode = True
+
+    # get throttle
+    as_uint16:int = int.from_bytes(data[1:3], "big")
+    throttle:float = as_uint16 / 65535 # conver the throttle, stored as a uint16, into a percentage of total uint16 range
+
+    # get pitch
+    as_uint16 = int.from_bytes(data[3:5], "big")
+    aspor:float = as_uint16 / 65535 # as percent of overall uint16 range (0-65535)
+    pitch:float = (aspor * 2) - 1 # convert from 0.0-1.0 to -1.0 to 1.0
+
+    # get roll
+    as_uint16 = int.from_bytes(data[5:7], "big")
+    aspor:float = as_uint16 / 65535 # as percent of overall uint16 range (0-65535)
+    roll:float = (aspor * 2) - 1 # convert from 0.0-1.0 to -1.0 to 1.0
+
+    # get yaw
+    as_uint16 = int.from_bytes(data[7:9], "big")
+    aspor:float = as_uint16 / 65535 # as percent of overall uint16 range (0-65535)
+    yaw:float = (aspor * 2) - 1 # convert from 0.0-1.0 to -1.0 to 1.0
+
+    # return
+    return {"armed": armed, "mode": mode, "throttle": throttle, "pitch": pitch, "roll": roll, "yaw": yaw}
+
+
 ### TO BE SENT TO LL-MCU
 
 def pack_settings_update(pitch_kp:int, pitch_ki:int, pitch_kd:int, roll_kp:int, roll_ki:int, roll_kd:int, yaw_kp:int, yaw_ki:int, yaw_kd:int, i_limit:int) -> bytes:
@@ -125,3 +179,8 @@ def pack_desired_rates(throttle_uint16:int, pitch_int16:int, roll_int16:int, yaw
     ToReturn.append(checksum)
 
     return bytes(ToReturn)
+
+
+data = b'\x06\x7f\xff\x7f\xff\x7f\xff\x7f\xff\x06'
+d = unpack_control_packet(data)
+print(str(d))
