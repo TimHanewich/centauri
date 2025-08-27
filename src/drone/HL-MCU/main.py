@@ -263,9 +263,12 @@ async def main() -> None:
         while True:
 
             # new data available?
+            print("Checking...")
             NewData:bytes = hc12.receive()
             if NewData != None and len(NewData) > 0:
+                print("Received data via HC-12!")
                 rxBuffer.extend(NewData) # add it to the buffer
+                print("rxBuffer now: " + str(rxBuffer))
 
             # process if there is a line to process
             while "\r\n".encode() in rxBuffer:
@@ -277,6 +280,7 @@ async def main() -> None:
 
                 # handle it based on what it is
                 # check in order of what is most common and most time-sensitive
+                print("Line to process: '" + str(ThisLine) + "'")
                 if ThisLine[0] & 0b00000010 > 1 and ThisLine[0] & 0b00000001 == 0: # if bit 1 is 1 and bit 0 is 0, it is a control packet
                     
                     # handle control packet
@@ -287,6 +291,7 @@ async def main() -> None:
 
                     control:dict = tools.unpack_control_packet(ThisLine) # unpack the raw bytes to a dict full of data
                     if control != None: # it will be None if it failed (i.e. checksum didn't validate)
+                        print("Received control data: " + str(control))
                         control_armed = control["armed"]
                         control_mode = control["mode"]
                         control_throttle = control["throttle"]
@@ -302,7 +307,7 @@ async def main() -> None:
                     pass
                 else:
                     # handle unknown packet
-                    pass
+                    print("Unknown packet type: " + str(ThisLine))
 
             # wait
             await asyncio.sleep(0.025)
