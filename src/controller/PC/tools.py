@@ -47,7 +47,6 @@ def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll
     for byte in ToReturn: # for each byte added so far
         checksum = checksum ^ byte # XOR operation
     ToReturn.append(checksum)
-    print("Checksum: " + str(checksum))
 
     # return it
     return bytes(ToReturn)
@@ -139,3 +138,11 @@ def unpack_special_packet(data:bytes) -> str:
     trb:bytes = data[1:EndOn]
     ToReturn:str = trb.decode(errors="replace") # transmission errors will be replaced with "�"
     return ToReturn
+
+
+
+data = pack_control_packet(True, False, 0.5, 0.0, 0.0, 0.0)
+print(str(len(data)))
+print(str(data))
+for b in data:
+    print(b)
