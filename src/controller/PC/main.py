@@ -242,7 +242,7 @@ async def main() -> None:
             ToSend:bytes = tools.pack_control_packet(armed, mode, throttle, pitch, roll, yaw)
             
             # send it via HC-12 by sending it to the transceiver over the serial line
-            #ser.write(bytes(ToSend))
+            ser.write(ToSend + "\r\n".encode())
             packets_sent = packets_sent + 1
 
             # wait
