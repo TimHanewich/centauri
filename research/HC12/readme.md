@@ -15,3 +15,20 @@ A pretty good suggestion [from here on Stack Exchange](https://arduino.stackexch
 This brings up a new set of challenges, however:
 - Would not be able to AT command with either, so no configuration of either. Needs to be configured before being permanently wired into the system.
 - Unable to get a "pulse" to confirm the HC-12 is connected
+
+## Possible Solution: Massively Reduce SENDING of Data
+The issue I am most worried about is the HL-MCU (drone) *not* receiving control packet updates. This can be bad and possibly dangerous. 
+
+So, to mitigate the risk of a large number of packets *not* being received because the HC-12 onboard the drone was busy transmitting telemetry data back to the controller, just have it transmit telemetry data much less frequently. 
+
+My previous goal:
+- Remote controller sends control packets @ 30 Hz
+- Drone sends telemetry updates @ 10 Hz
+
+Maybe a better goal:
+- Remote controller sends control packets @ 30 Hz
+- Drone sends telemetry updates **@ 1 Hz**
+
+Only sending it at 1 Hz means for sure some of the incoming control data *will* be dropped, but only very few.
+
+Another good goal to prevent interuption of large packets is to vary the frequency of that telemetry coming in based on whether the drone is armed or not. When armed, telemetry should be coming off of it rather continuously, like 1 time per second. But when not armed, it could be reduced to once ever 3-5 seconds probably.
