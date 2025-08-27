@@ -179,8 +179,3 @@ def pack_desired_rates(throttle_uint16:int, pitch_int16:int, roll_int16:int, yaw
     ToReturn.append(checksum)
 
     return bytes(ToReturn)
-
-
-data = b'\x06\x7f\xff\x7f\xff\x7f\xff\x7f\xff\x06'
-d = unpack_control_packet(data)
-print(str(d))
