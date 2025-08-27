@@ -11,16 +11,16 @@ def shift_uint8_to_int8(byte:int) -> int:
 ### PACKING DATA TO SEND TO DRONE (through transceiver)
 
 def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll:float, yaw:float) -> bytes:
-    """Packs a control packet, including the '\r\n' at the end"""
+    """Packs a control packet to be sent to the drone. 'mode' = False if in rate mode, True if in angle mode."""
 
     ToReturn:bytearray = bytearray()
 
     # Add header byte (metadata byte)
     # bit 7, 6, 5, 4 are reserved (unused)
     header:int = 0b00000000 # start with 0
-    header = header | 0b00000001 # set up pack identifier to 1, a control packet
-    if armed: header = header | 0b00000100 # if armed, make the 3rd bit 1. Otherwise, if unarmed, leave it as 0
-    if mode: header = header | 0b00001000 # if in angle mode, set the 4th bit to 1. Othewise, if in rate mode, leave it as 0
+    header = header | 0b00000010 # set bit 1 to 1 (and leave bit 0 a 0), which identifies it as a control packet
+    if armed: header = header | 0b00000100 # if armed, make bit 2 = 1. Otherwise, if unarmed, leave it as 0
+    if mode: header = header | 0b00001000 # if in angle mode, make bit 3 = 1. Othewise, if in rate mode, leave it as 0
     ToReturn.append(header)
 
     # Add throttle bytes
@@ -48,9 +48,6 @@ def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll
         checksum = checksum ^ byte # XOR operation
     ToReturn.append(checksum)
     print("Checksum: " + str(checksum))
-
-    # append \r\n
-    ToReturn.extend("\r\n".encode())
 
     # return it
     return bytes(ToReturn)
