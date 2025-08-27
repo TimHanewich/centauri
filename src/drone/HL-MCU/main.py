@@ -236,7 +236,46 @@ async def main() -> None:
 
     async def radio_rx() -> None:
         """Focused on continuously receiving commands from the controller via the HC-12 (radio communications)"""
-        pass
+        
+        # declare nonlocal variables
+
+        # create rxBuffer we will continuously append to
+        rxBuffer:bytearray = bytearray()
+
+        # enter into infinite listen and handle loop
+        while True:
+
+            # new data available?
+            NewData:bytes = hc12.receive()
+            if NewData != None and len(NewData) > 0:
+                rxBuffer.extend(NewData) # add it to the buffer
+
+            # process if there is a line to process
+            while "\r\n".encode() in rxBuffer:
+
+                # get the line
+                loc:int = rxBuffer.find("\r\n".encode())
+                ThisLine:bytes = rxBuffer[0:loc+2] # include the \r\n at the end (why we add +2)
+                rxBuffer = rxBuffer[loc+2:] # remove the line we just grabbed
+
+                # handle it based on what it is
+                # check in order of what is most common and most time-sensitive
+                if ThisLine[0] & 0b00000010 > 1 and ThisLine[0] & 0b00000001 == 0: # if bit 1 is 1 and bit 0 is 0, it is a control packet
+                    # handle control packet
+                    pass
+                elif ThisLine[0] & 0b00000011 == 0: # if both bit 0 and bit 1 are 0's, it is a control settings update
+                    # handle control settings update
+                    pass
+                elif ThisLine[0] & 0b00000010 == 0 and ThisLine[0] & 0b00000001 > 0: # if bit 1 is 0 and bit 0 is 1, it is a PID settings update
+                    # handle PID settings update
+                    pass
+                else:
+                    # handle unknown packet
+                    pass
+
+            # wait
+            await asyncio.sleep(0.025)
+
 
     async def radio_tx() -> None:
         """Focused on continuously sending status packets and such to the controller via the HC-12."""
