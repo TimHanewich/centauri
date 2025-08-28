@@ -243,6 +243,7 @@ async def main() -> None:
 
     # set up continuous radio rx (through tranceiver)
     async def continuous_radio_rx() -> None:
+        """Handles all received data from the transceiver via the USB (the transceiver passes along data it receives via the HC-12)"""
 
         # declare nonlocal variables we will be modifying
         nonlocal packets_received
