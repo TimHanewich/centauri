@@ -308,6 +308,8 @@ async def main() -> None:
                 elif ThisLine[0] & 0b00000010 > 0 and ThisLine[0] & 0b00000001 == 0: # bit 1 is occupied but bit 0 is not = it is a special packet (free text)
                     msg:str = tools.unpack_special_packet(ThisLine)
                     drone_messages.append(display.Message(msg, time.time()))
+                else:
+                    drone_messages.append("NFD: Unknown received data.") # NDF short for "Not from drone"
             
             # sleep
             await asyncio.sleep(0.05) # 20 Hz, faster than the 10 Hz the drone will send it at
