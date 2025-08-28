@@ -347,7 +347,15 @@ async def main() -> None:
                 special_message = None # clear out special message
 
             # wait
-            await asyncio.sleep(0.1) # 10 hz
+            # BE CAREFUL increasing how frequently telemetry is sent!
+            # the HC-12 is a duplex transceiver, meaning it can only receive or send at one time
+            # if it is constantly busy sending data, it will NOT be receiving incoming data (it will go ignored)
+            # so, to mitigate the risk of important control data being missed, we use an infrequent transmit speed if armed (in flight mode) and frequent if just idling
+            if control_armed: # if we are armed (flying), we need to mitigate risk of radio data being missed, so transmit infrequently
+                await asyncio.sleep(3.0)
+            else:
+                await asyncio.sleep(0.25) # if we are not armed (on ground, idling), we can transmit telemetry more quickly
+
                 
 
 
