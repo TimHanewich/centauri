@@ -105,5 +105,15 @@ try:
         # wait
         time.sleep(0.01)
 except Exception as ex:
-    send_tran_msg("FATAL ERROR IN TRANSCEIVER: " + str(ex))
+
+    msg:str = "FATAL ERROR IN TRANSCEIVER: " + str(ex)
+
+    # send to PC
+    send_tran_msg(msg)
+
+    # save the error to a file
+    f = open("errors.txt", "a")
+    f.write("FATAL ERROR IN TRANSCEIVER: " + str(ex) + "\n\n")
+    f.close()
+
     ERROR_SEQ()
