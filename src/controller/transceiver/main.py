@@ -59,8 +59,9 @@ except Exception as ex:
     send_tran_msg("HC-12 transmit power set failed! Failing. Msg: " + str(ex))
     ERROR_SEQ()
 
-# declare buffer of receied bytes we will add to and pull from as data comes in
-buffer:bytes = bytes()
+# declare buffer of receied bytes
+rxBuffer_fromPC:bytearray = bytearray()       # buffer of all bytes received from PC
+rxBuffer_fromHC12:bytearray = bytearray()     # butfer for bytes received from quadcopter via HC-12
 
 # infinite respond loop
 led.on() # turn on LED light
@@ -71,33 +72,42 @@ try:
         if select.select([sys.stdin], [], [], 0)[0]: # if there is data to read. That expression returns a list of data available to read. In Python, if a list is empty, it returns False. If it has something in it, it returns True
             
             # collect bytes by new line 
-            data:bytes = sys.stdin.buffer.readline() # yes, it is acceptable to block here
+            data:bytes = sys.stdin.buffer.read() # read all available bytes (non-blocking)
+            if data != None and len(data) > 0:
+                rxBuffer_fromPC.extend(data)
 
-            # If the incoming message has "TRAN" prepended to it, that means the PC is intending to talk to us, the transceiver, directly!
-            # if it does NOT have "TRAN" preprended, the message it is giving it intends to be passed along to the drone via HC-12 as is
-            if data.startswith("TRAN".encode()):
-                data = data[4:] # strip the "TRAN" off (first four bytes)
-                data = data[0:-2] # take off the "\r\n" at the end (two bytes, 13 and 10)
-                if data == "PING".encode():
-                    send_tran_msg("PONG")
-                elif data == "STATUS?".encode(): # an inquiry of the HC-12's status
-                    send_tran_msg(str(hc12.status)) # hc12.status includes the mode, channel, and power, i.e. "{'mode': 3, 'channel': 1, 'power': 8}"
-                else: # it is an unknow message, so just return with a question mark so the PC knows we had no idea what it wanted
-                    send_tran_msg("?")
-            else: # it is intended to be directly delivered to the drone, so just pass it along via HC-12
-                #hc12.send(data) # send all the data. Including the \r\n at the end!
-                pass
+            # if we have any new lines worth working on (separator/terminator), handle those now
+            while "\r\n".encode() in rxBuffer_fromPC:
+
+                # get the line
+                loc:int = rxBuffer_fromHC12.find("\r\n".encode())
+                ThisLine:bytes = rxBuffer_fromHC12[0:loc+2] # include the \r\n at the end (why we +2)
+                rxBuffer_fromPC = rxBuffer_fromHC12[loc+2:] # remove the line
+
+                # now handle that line
+                if data.startswith("TRAN".encode()): # If the incoming message has "TRAN" prepended to it, that means the PC is intending to talk to us, the transceiver, directly!
+                    data = data[4:] # strip the "TRAN" off (first four bytes)
+                    data = data[0:-2] # take off the "\r\n" at the end (two bytes, 13 and 10)
+                    if data == "PING".encode():
+                        send_tran_msg("PONG")
+                    elif data == "STATUS?".encode(): # an inquiry of the HC-12's status
+                        send_tran_msg(str(hc12.status)) # hc12.status includes the mode, channel, and power, i.e. "{'mode': 3, 'channel': 1, 'power': 8}"
+                    else: # it is an unknow message, so just return with a question mark so the PC knows we had no idea what it wanted
+                        send_tran_msg("?")
+                else: # if it does NOT have "TRAN" preprended, the message it is giving it intends to be passed along to the drone via HC-12 as is
+                    #hc12.send(data) # send all the data. Including the \r\n at the end!
+                    pass
 
         # check if we have received data from the HC-12 (something from the drone!) that must be passed along to the PC
         newdata:bytes = hc12.receive() # receive new data. hc12.receive returns b'' (empty bytes) if there is nothing new to be had. Note: I know it can be tempting here just to append hc12.receive() to the buffer every time, and that is what I originally had. However, this is very performanced-prohibitive and results in memory being used up after only a few thousand cycles because each time this happens, a new bytes object has to be made.
         if len(newdata) > 0:
-            buffer = buffer + newdata # append any received bytes. May be more efficient to use bytearray here and "extend" what is being received
-            while "\r\n".encode() in buffer: # if we have at least one full line
+            rxBuffer_fromHC12.extend(newdata) # append any received bytes. May be more efficient to use bytearray here and "extend" what is being received
+            while "\r\n".encode() in rxBuffer_fromHC12: # if we have at least one full line
 
                 # get the line
-                loc:int = buffer.find("\r\n".encode())
-                ThisLine:bytes = buffer[0:loc+2] # include the \r\n at the end (why we +2)
-                buffer = buffer[loc+2:] # remove the line
+                loc:int = rxBuffer_fromHC12.find("\r\n".encode())
+                ThisLine:bytes = rxBuffer_fromHC12[0:loc+2] # include the \r\n at the end (why we +2)
+                rxBuffer_fromHC12 = rxBuffer_fromHC12[loc+2:] # remove the line
 
                 # send the line to the PC (including the "\r\n"!)
                 sys.stdout.buffer.write(ThisLine)
