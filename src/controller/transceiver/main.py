@@ -84,18 +84,16 @@ try:
                 ThisLine:bytes = rxBuffer_fromPC[0:loc+2] # include the \r\n at the end (why we +2)
                 rxBuffer_fromPC = rxBuffer_fromPC[loc+2:] # remove the line
 
-                # now handle that line
-                if data.startswith("TRAN".encode()): # If the incoming message has "TRAN" prepended to it, that means the PC is intending to talk to us, the transceiver, directly!
-                    data = data[4:] # strip the "TRAN" off (first four bytes)
-                    data = data[0:-2] # take off the "\r\n" at the end (two bytes, 13 and 10)
-                    if data == "PING".encode():
+                # Handle the line
+                if ThisLine.startswith("TRAN".encode()):
+                    if ThisLine == "TRANPING\r\n".encode():
                         send_tran_msg("PONG")
-                    elif data == "STATUS?".encode(): # an inquiry of the HC-12's status
+                    elif ThisLine == "TRANSTATUS?\r\n".encode():
                         send_tran_msg(str(hc12.status)) # hc12.status includes the mode, channel, and power, i.e. "{'mode': 3, 'channel': 1, 'power': 8}"
-                    else: # it is an unknow message, so just return with a question mark so the PC knows we had no idea what it wanted
+                    else: # unknown TRAN message
                         send_tran_msg("?")
-                else: # if it does NOT have "TRAN" preprended, the message it is giving it intends to be passed along to the drone via HC-12 as is
-                    #hc12.send(data) # send all the data. Including the \r\n at the end!
+                else: # it is not a TRAN message, so pass it along to the HC-12 to send it to the quadcopter
+                    #hc12.send(ThisLine) # send all the data. Including the \r\n at the end!
                     pass
 
         # check if we have received data from the HC-12 (something from the drone!) that must be passed along to the PC
