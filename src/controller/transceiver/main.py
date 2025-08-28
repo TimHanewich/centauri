@@ -73,7 +73,7 @@ try:
             print("There is data to read!")
             NewBytes:bytes = sys.stdin.buffer.read(1)
             print("Read this: " + str(NewBytes))
-            rxBuffer_fromHC12.extend(NewBytes) # read one byte and append it to the buffer
+            rxBuffer_fromPC.extend(NewBytes) # read one byte and append it to the buffer
 
         # if we have any new lines worth working on (separator/terminator), handle those now
         while "\r\n".encode() in rxBuffer_fromPC:
