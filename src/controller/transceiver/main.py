@@ -80,9 +80,9 @@ try:
             while "\r\n".encode() in rxBuffer_fromPC:
 
                 # get the line
-                loc:int = rxBuffer_fromHC12.find("\r\n".encode())
-                ThisLine:bytes = rxBuffer_fromHC12[0:loc+2] # include the \r\n at the end (why we +2)
-                rxBuffer_fromPC = rxBuffer_fromHC12[loc+2:] # remove the line
+                loc:int = rxBuffer_fromPC.find("\r\n".encode())
+                ThisLine:bytes = rxBuffer_fromPC[0:loc+2] # include the \r\n at the end (why we +2)
+                rxBuffer_fromPC = rxBuffer_fromPC[loc+2:] # remove the line
 
                 # now handle that line
                 if data.startswith("TRAN".encode()): # If the incoming message has "TRAN" prepended to it, that means the PC is intending to talk to us, the transceiver, directly!
