@@ -226,15 +226,8 @@ async def main() -> None:
     # set up continuous radio sending
     async def continuous_radio_tx() -> None:
 
-        # declare variables from main we will be using
-        nonlocal armed
-        nonlocal mode
-        nonlocal throttle
-        nonlocal pitch
-        nonlocal roll
-        nonlocal yaw
+        # declare variables from main we will be updating
         nonlocal packets_sent
-        nonlocal ser # serial port
 
         while True:
 
