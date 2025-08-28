@@ -73,7 +73,7 @@ try:
         if BytesAvailable > 0: # if there is data to read.
             
             # collect bytes by new line
-            print("Data available! Reading now...")
+            print(str(BytesAvailable) + " bytes available! Reading now...")
             data:bytes = sys.stdin.buffer.read(BytesAvailable) # read available bytes
             print(str(len(data)) + " retrieved.")
             if data != None and len(data) > 0:
