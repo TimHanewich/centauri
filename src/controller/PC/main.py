@@ -309,7 +309,7 @@ async def main() -> None:
                     msg:str = tools.unpack_special_packet(ThisLine)
                     drone_messages.append(display.Message(msg, time.time()))
                 else:
-                    drone_messages.append("NFD: Unknown received data.") # NDF short for "Not from drone"
+                    drone_messages.append(display.Message("NFD: Unknown received data.", time.time())) # NDF short for "Not from drone"
             
             # sleep
             await asyncio.sleep(0.05) # 20 Hz, faster than the 10 Hz the drone will send it at
