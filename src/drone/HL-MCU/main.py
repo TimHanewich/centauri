@@ -310,7 +310,7 @@ async def main() -> None:
                     print("Unknown packet type: " + str(ThisLine))
 
             # wait
-            await asyncio.sleep(0.025)
+            await asyncio.sleep(0.025) # 40 Hz max
 
 
     async def radio_tx() -> None:
