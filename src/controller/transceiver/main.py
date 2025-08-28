@@ -69,10 +69,13 @@ try:
     while True:
         
         # Check if we have received data from the PC that we may need to respond to or pass along to the drone (via HC-12)
-        if select.select([sys.stdin], [], [], 0)[0]: # if there is data to read. That expression returns a list of data available to read. In Python, if a list is empty, it returns False. If it has something in it, it returns True
+        BytesAvailable:int = len(select.select([sys.stdin], [], [], 0)[0]) # counts the number of bytes available to read. The select expression returns a list of data available to read.
+        if BytesAvailable > 0: # if there is data to read.
             
-            # collect bytes by new line 
-            data:bytes = sys.stdin.buffer.read() # read all available bytes (non-blocking)
+            # collect bytes by new line
+            print("Data available! Reading now...")
+            data:bytes = sys.stdin.buffer.read(BytesAvailable) # read available bytes
+            print(str(len(data)) + " retrieved.")
             if data != None and len(data) > 0:
                 rxBuffer_fromPC.extend(data)
 
