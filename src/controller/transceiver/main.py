@@ -113,7 +113,7 @@ except Exception as ex:
 
     # save the error to a file
     f = open("errors.txt", "a")
-    f.write("FATAL ERROR IN TRANSCEIVER: " + str(ex) + "\n\n")
+    f.write(msg + "\n\n")
     f.close()
 
     ERROR_SEQ()
