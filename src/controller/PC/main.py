@@ -246,7 +246,7 @@ async def main() -> None:
             packets_sent = packets_sent + 1
 
             # wait
-            await asyncio.sleep(0.02) # 50 Hz
+            await asyncio.sleep(0.05) # 20 Hz
 
     # set up continuous radio rx (through tranceiver)
     async def continuous_radio_rx() -> None:
