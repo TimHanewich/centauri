@@ -312,7 +312,6 @@ async def main() -> None:
             # wait
             await asyncio.sleep(0.025) # 40 Hz max
 
-
     async def radio_tx() -> None:
         """Focused on continuously sending status packets and such to the controller via the HC-12."""
         
