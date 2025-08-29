@@ -321,39 +321,39 @@ async def main() -> None:
 
         while True:
 
-            # send out system status data
-            ss:bytes = tools.pack_system_status(battery_voltage, tfluna_distance, tfluna_strength, altitude, heading)
-            hc12.send(ss + "\r\n".encode())
+            # only continuously send out data if we are NOT in flight mode
+            # once we are armed (in flight mode), the most important thing will be us LISTENING for incoming control packets
+            # the HC-12 is a half-duplex module, meaning it can only send or listen at one time.
+            # if data is arriving while it is sending out data, that arriving data will not be recieved by it
+            # so, to mitigate risk of incoming control data not being received (being ignored/missed!) while in flight mode (armed), we do NOT send out telemetry data while armed.
+            if not control_armed:
 
-            # is there control status available from the LL-MCU?
-            if llmcu_status != None:
+                # send out system status data
+                ss:bytes = tools.pack_system_status(battery_voltage, tfluna_distance, tfluna_strength, altitude, heading)
+                hc12.send(ss + "\r\n".encode())
 
-                # append \r\n at the end if needed
-                if not llmcu_status.endswith("\r\n".encode()):
-                    llmcu_status = llmcu_status + "\r\n".encode()
+                # is there control status available from the LL-MCU?
+                if llmcu_status != None:
 
-                # send via HC-12
-                hc12.send(llmcu_status)
-                #print("Just sent: " + str(llmcu_status))
+                    # append \r\n at the end if needed
+                    if not llmcu_status.endswith("\r\n".encode()):
+                        llmcu_status = llmcu_status + "\r\n".encode()
 
-                # clear it out
-                llmcu_status = None
+                    # send via HC-12
+                    hc12.send(llmcu_status)
+                    #print("Just sent: " + str(llmcu_status))
 
-            # is there special message data available to be sent out?
-            if special_message != None: 
-                sm:bytes = tools.pack_special_packet(special_message)
-                hc12.send(sm + "\r\n".encode())
-                special_message = None # clear out special message
+                    # clear it out
+                    llmcu_status = None
+
+                # is there special message data available to be sent out?
+                if special_message != None: 
+                    sm:bytes = tools.pack_special_packet(special_message)
+                    hc12.send(sm + "\r\n".encode())
+                    special_message = None # clear out special message
 
             # wait
-            # BE CAREFUL increasing how frequently telemetry is sent!
-            # the HC-12 is a duplex transceiver, meaning it can only receive or send at one time
-            # if it is constantly busy sending data, it will NOT be receiving incoming data (it will go ignored)
-            # so, to mitigate the risk of important control data being missed, we use an infrequent transmit speed if armed (in flight mode) and frequent if just idling
-            if control_armed: # if we are armed (flying), we need to mitigate risk of radio data being missed, so transmit infrequently
-                await asyncio.sleep(3.0) # only transmit once every 3 seconds
-            else:
-                await asyncio.sleep(0.25) # if we are not armed (on ground, idling), we can transmit telemetry more quickly
+            await asyncio.sleep(0.25) # 4 Hz
 
                 
 
