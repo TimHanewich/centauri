@@ -57,6 +57,10 @@ async def main() -> None:
     hc12.power = 8
     print("HC-12 settings complete!")
 
+    # wait a moment after HC-12 configuration to allow it to settle before proceeding to send messages
+    # (it takes a moment for it to flip out of AT mode)
+    time.sleep(0.5)
+
     # send out an HC-12 message to confirm we are online
     print("Sending online message...")
     hc12.send(tools.pack_special_packet("online") + "\r\n".encode())
