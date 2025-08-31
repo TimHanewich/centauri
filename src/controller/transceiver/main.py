@@ -24,6 +24,9 @@ def send_tran_msg(msg:str) -> None:
     ToSend:str = "TRAN" + msg + "\r\n" # "TRAN" means it is a message from the transceiver... not something we are passing along from the quadcopter
     uart_pc.write(ToSend.encode())
 
+# Send TRAN message to confirm online
+send_tran_msg("online")
+
 # set up HC-12
 set_pin:int = 22
 hc12 = HC12(uart_hc12, set_pin)
