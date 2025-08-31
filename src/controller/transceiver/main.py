@@ -16,7 +16,7 @@ def ERROR_SEQ() -> None:
 
 # Set up UART interfaces
 uart_hc12 = machine.UART(0, tx=machine.Pin(16), rx=machine.Pin(17), baudrate=9600) # the UART interface to the HC-12
-uart_pc = machine.UART(1, tx=machine.Pin(12), rx=machine.Pin(13), baudrate=115200) # the UART interface directly to the PC (through a CP2102 USB to UART adapter)
+uart_pc = machine.UART(1, tx=machine.Pin(8), rx=machine.Pin(9), baudrate=115200) # the UART interface directly to the PC (through a CP2102 USB to UART adapter)
 
 # define sending transceiver message to PC
 def send_tran_msg(msg:str) -> None:
