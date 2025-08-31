@@ -14,16 +14,19 @@ def ERROR_SEQ() -> None:
         led.off()
         time.sleep(1.0)
 
+# Set up UART interfaces
+uart_hc12 = machine.UART(0, tx=machine.Pin(16), rx=machine.Pin(17), baudrate=9600) # the UART interface to the HC-12
+uart_pc = machine.UART(1, tx=machine.Pin(12), rx=machine.Pin(13), baudrate=115200) # the UART interface directly to the PC (through a CP2102 USB to UART adapter)
+
 # define sending transceiver message to PC
 def send_tran_msg(msg:str) -> None:
     """Send a transceiver-level message to the PC via USB, flagged as such. Note, this is NOT for sending the normal payload from the drone to the PC. Instead, this is ONLY for sending transceiver-level communication to the PC; messages that originate from this transceiver itself, not the drone (not passing along a message from the drone)."""
     ToSend:str = "TRAN" + msg + "\r\n" # "TRAN" means it is a message from the transceiver... not something we are passing along from the quadcopter
-    sys.stdout.buffer.write(ToSend.encode())
+    uart_pc.write(ToSend.encode())
 
 # set up HC-12
-uart = machine.UART(0, rx=machine.Pin(17), tx=machine.Pin(16), baudrate=9600)
 set_pin:int = 22
-hc12 = HC12(uart, set_pin)
+hc12 = HC12(uart_hc12, set_pin)
 
 # pulse HC-12
 pulsed:bool = False
@@ -68,9 +71,10 @@ led.on() # turn on LED light
 try:
     while True:
 
-        # continuously collect data, byte by byte while there is data still available
-        while select.select([sys.stdin], [], [], 0)[0]: # if there is data to read. That expression returns "[sys.stdin]" if there is data to read and "[]" if not. In Python, if a list is empty, it returns False. If it has something in it, it returns True
-            rxBuffer_fromPC.extend(sys.stdin.buffer.read(1)) # read one byte and append it to the buffer
+        # Collect data from PC
+        BytesAvailable:int = uart_pc.any()
+        if BytesAvailable > 0:
+            rxBuffer_fromPC.extend(uart_pc.read(BytesAvailable))
 
         # if we have any new lines worth working on (separator/terminator), handle those now
         while "\r\n".encode() in rxBuffer_fromPC:
@@ -104,7 +108,7 @@ try:
                 rxBuffer_fromHC12 = rxBuffer_fromHC12[loc+2:] # remove the line
 
                 # send the line to the PC (including the "\r\n"!)
-                sys.stdout.buffer.write(ThisLine)
+                uart_pc.write(ThisLine)
         
         # wait
         time.sleep(0.01)
