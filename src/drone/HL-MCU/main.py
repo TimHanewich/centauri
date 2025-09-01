@@ -249,6 +249,9 @@ async def main() -> None:
             # wait
             await asyncio.sleep(0.05) # 20 Hz... The LL MCU is supposed to provide at 10 Hz, so reading quicker here to ensure a backlog does not build up
 
+    async def llmcu_tx() -> None:
+        pass
+
     async def radio_rx() -> None:
         """Focused on continuously receiving commands from the controller via the HC-12 (radio communications)"""
         
