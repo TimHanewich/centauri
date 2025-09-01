@@ -164,9 +164,9 @@ M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_u16=
 # declare variables: desired rate inputs
 # these will later be updated via incoming desired rate packets (over UART from HL-MCU)
 throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
-pitch_int16:int = 0            # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
-roll_int16:int = 0             # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
-yaw_int16:int = 0              # from -32768 to 32767, representing -90.0 to 90.0 degrees/second
+pitch_int16:int = 0            # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+roll_int16:int = 0             # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+yaw_int16:int = 0              # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
 
 # declare variables: status (actuals)
 # these will later be sent to the HL-MCU via UART as regular status updates
@@ -403,9 +403,9 @@ try:
         # convert desired throttle, expressed as a uint16, into nanoseconds
         desired_throttle:int = 1000000 + (throttle_uint16 * 1000000) // 65535
 
-        # convert the desired pitch, roll, and yaw into degrees per second
-        # Multiply by 90,000 because each are expressed as an int16 for a range of -90 to +90
-        # but multiply it all by 1,000 (not 90) so we can do integer math
+        # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
+        # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
+        # but multiply it all by 1,000 (not just 90) so we can do integer math
         desired_pitch_rate:int = (pitch_int16 * 90000) // 32767
         desired_roll_rate:int = (roll_int16 * 90000) // 32767
         desired_yaw_rate:int = (yaw_int16 * 90000) // 32767
