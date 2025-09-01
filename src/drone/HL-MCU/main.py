@@ -153,13 +153,6 @@ async def main() -> None:
     # and then will be READ via the corourtine that then takes this data and passes it along to the LL-MCU via UART
     settings_data:bytes = None
 
-    # Declare all settings variables that will be tracked and continuously sent back to remote controller via HC-12 (radio communication): SYSTEM STATUS
-    battery_voltage:float = 0.0
-    tfluna_distance:int = 0 # distance reading, in cm (0-800)
-    tfluna_strength:int = 0 # strength reading
-    altitude:float = 0.0 # altitude reading, in meters (inferred from pressure reading from BMP180)
-    heading:float = 0.0 # magnetic heading
-
     # declare a "container" variable that will contain new Control Status data received from the LL-MCU
     # this will be updated by the llmcu_rx coroutine
     # and later delivered, as is, to the drone via HC-12
@@ -170,6 +163,13 @@ async def main() -> None:
     # declare a special packet "container" variable for free text to be sent to remote controller via tx loop
     # this can be populated anywhere by anything
     special_message:str = None
+
+    # Declare all settings variables that will be tracked and continuously sent back to remote controller via HC-12 (radio communication): SYSTEM STATUS
+    battery_voltage:float = 0.0
+    tfluna_distance:int = 0 # distance reading, in cm (0-800)
+    tfluna_strength:int = 0 # strength reading
+    altitude:float = 0.0 # altitude reading, in meters (inferred from pressure reading from BMP180)
+    heading:float = 0.0 # magnetic heading
 
     async def led_flicker() -> None:
         while True:
