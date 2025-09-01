@@ -5,6 +5,8 @@ import asyncio
 import rich.table
 import rich.console
 import rich.live
+from rich.console import Console
+from rich.prompt import Prompt
 import serial
 import tools
 import sys
@@ -76,9 +78,25 @@ async def main() -> None:
         ser.close()
         exit()
 
+    # declare default settings
+    idle_throttle:float = 0.10   # X% throttle is idle
+    max_throttle:float = 0.25    # X% throttle is the max
+
+    # print settings
+    print()
+    Console.print("[underline]Settings[/]")
+    Console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/]")
+    Console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/]")
+    print()
+    
+    # Confirm settings
+    confirmed:str = Prompt.ask("Do these settings look good?", choices=["Yes","No"], show_choices=True)
+    if not confirmed:
+        print("Please update the code file.")
+        exit()
+
     # Send a ping to the drone now to confirm it is on and operating
 
-    # Send a config packet to the drone to set settings
 
     # set up control input variables we will track, display in console, and then interpret and transform before sending to drone in control packet
     armed:bool = False       # armed is being tracked here not as a variable we will directly pass on to the quadcopter, but rather a variable we will use to know if we should be transmitting at least the minimum throttle (when armed) or 0% throttle
