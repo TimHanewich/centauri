@@ -26,7 +26,7 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
             - Bit 4: *reserved*
             - Bit 3: *reserved*
             - Bit 2: *reserved*
-            - Bit 1: `0` (packet identifier)
+            - Bit 1: *reserved*
             - Bit 0: `1` (packet identifier)
         - Pitch P Gain (4 bytes)
         - Pitch I Gain (4 bytes)
@@ -45,7 +45,9 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
             - Bit 6: *reserved*
             - Bit 5: *reserved*
             - Bit 4: *reserved*
-            - Bit 1: `1` (packet identifier)
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: *reserved*
             - Bit 0: `0` (packet identifier)
         - Throttle input % (2 bytes, uint16)
         - Pitch input % (2 bytes, int16)
