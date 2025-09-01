@@ -55,6 +55,11 @@
 ## Blender Design Dumps
 - [August 10, 2025 - complete design](https://github.com/TimHanewich/centauri/releases/download/1/design.zip)
 
+## Transceiver Platform
+I designed and 3D-printed a small platform a Raspberry Pi Pico and HC-12 can be mounted to in one platform, used for the transceiver. Download it [here](https://github.com/TimHanewich/centauri/releases/download/2/transceiver_platform.stl).
+
+![transceiver platform](https://i.imgur.com/zod1oGl.png)
+
 ## Misc Notes
 - If a UART multiplexer is needed, the CD4053 may be a good option. Check out a video on it [here](https://youtu.be/Up68IgKUZy4?si=PsPbn5xtIKbIRIJK).
 
