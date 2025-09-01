@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0" version="28.1.0">
   <diagram name="Page-1" id="Oxd-Gnnp0cI7EY-jCEC0">
-    <mxGraphModel dx="3859" dy="1882" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3439" dy="1631" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -8,12 +8,6 @@
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="40" y="702" as="sourcePoint" />
             <mxPoint x="-680" y="702" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-14" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="-700" y="154.46999999999997" as="sourcePoint" />
-            <mxPoint y="154.46999999999997" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="s8l9SCObQ_Q2c-ipgAVG-3" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#DDEEFF;dashed=1;dashPattern=8 8;opacity=50;" parent="1" vertex="1">
@@ -43,16 +37,13 @@
         <mxCell id="9-CMpRLNuppDFcrcLKN0-4" value="Control Packet&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Control Mode (rate/angle)&lt;/div&gt;&lt;div&gt;Armed/Unarmed&lt;/div&gt;&lt;div&gt;Throttle, as %&lt;/div&gt;&lt;div&gt;Pitch, as %&lt;/div&gt;&lt;div&gt;Roll, as %&lt;/div&gt;&lt;div&gt;Yaw, as %&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="-540" y="490" width="230" height="127" as="geometry" />
         </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-7" value="&lt;u&gt;Settings&lt;/u&gt;&lt;div&gt;Idle Throttle&lt;/div&gt;&lt;div&gt;Max Throttle&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
-          <mxGeometry x="140" y="180" width="220" height="70" as="geometry" />
-        </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-12" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="400" y="455.40999999999997" as="sourcePoint" />
             <mxPoint x="690" y="455.40999999999997" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-8" value="&lt;u&gt;Settings&lt;/u&gt;&lt;div&gt;Target Cycle Hz&lt;/div&gt;&lt;div&gt;PID Pitch P&lt;/div&gt;&lt;div&gt;PID Pitch I&lt;/div&gt;&lt;div&gt;PID Pitch D&lt;/div&gt;&lt;div&gt;PID Roll P&lt;/div&gt;&lt;div&gt;PID Roll I&lt;/div&gt;&lt;div&gt;PID Roll D&lt;/div&gt;&lt;div&gt;PID Yaw P&lt;/div&gt;&lt;div&gt;PID Yaw I&lt;/div&gt;&lt;div&gt;PID Yaw D&lt;/div&gt;&lt;div&gt;I Limit&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
+        <mxCell id="9-CMpRLNuppDFcrcLKN0-8" value="&lt;u&gt;Settings&lt;/u&gt;&lt;div&gt;PID Pitch P&lt;/div&gt;&lt;div&gt;PID Pitch I&lt;/div&gt;&lt;div&gt;PID Pitch D&lt;/div&gt;&lt;div&gt;PID Roll P&lt;/div&gt;&lt;div&gt;PID Roll I&lt;/div&gt;&lt;div&gt;PID Roll D&lt;/div&gt;&lt;div&gt;PID Yaw P&lt;/div&gt;&lt;div&gt;PID Yaw I&lt;/div&gt;&lt;div&gt;PID Yaw D&lt;/div&gt;&lt;div&gt;I Limit&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
           <mxGeometry x="740" y="180" width="220" height="190" as="geometry" />
         </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-10" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
@@ -64,16 +55,10 @@
         <mxCell id="9-CMpRLNuppDFcrcLKN0-9" value="&lt;u&gt;Settings Update&lt;/u&gt;&lt;div&gt;&lt;u&gt;&lt;br&gt;&lt;/u&gt;&lt;div&gt;Pitch PID Gains&lt;/div&gt;&lt;div&gt;Roll PID Gains&lt;/div&gt;&lt;div&gt;Yaw PID Gains&lt;/div&gt;&lt;div&gt;I Limit&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=middle;" parent="1" vertex="1">
           <mxGeometry x="470" y="276" width="192.5" height="105" as="geometry" />
         </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-6" value="&lt;u&gt;Desired Rates&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Throttle&lt;/div&gt;&lt;div&gt;Desired Pitch Rate&lt;/div&gt;&lt;div&gt;Desired Roll Rate&lt;/div&gt;&lt;div&gt;Desired Yaw Rate&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
+        <mxCell id="9-CMpRLNuppDFcrcLKN0-6" value="&lt;u&gt;Control&lt;/u&gt;&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Throttle&lt;/div&gt;&lt;div&gt;Pitch&lt;/div&gt;&lt;div&gt;Roll&lt;/div&gt;&lt;div&gt;Yaw&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="470" y="406" width="192.5" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-13" value="Control Settings Update&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;Idle Throttle&lt;/div&gt;&lt;div&gt;Max Throttle&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="-530" y="118" width="230" height="75" as="geometry" />
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-15" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;u&gt;Control&lt;/u&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Capture control packet via HC-12&lt;/li&gt;&lt;li&gt;Scale throttle input within idle-max range&lt;/li&gt;&lt;li&gt;Convert P, R, Y inputs (%&#39;s) as desired rates&lt;/li&gt;&lt;li&gt;Pass those desired rates on to LL MCU&lt;/li&gt;&lt;/ul&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;align=left;" parent="1" vertex="1">
-          <mxGeometry x="120" y="330" width="260" height="110" as="geometry" />
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-17" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;u&gt;Control&lt;/u&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Read desired rate data from HL MCU&lt;/li&gt;&lt;li&gt;Read actual rate data from IMU&lt;/li&gt;&lt;li&gt;Run PID loop to determine appropriate M1-4 throttles (thrust)&lt;/li&gt;&lt;li&gt;Apply M1-4 throttles&lt;/li&gt;&lt;/ul&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;align=left;" parent="1" vertex="1">
+        <mxCell id="9-CMpRLNuppDFcrcLKN0-17" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;u&gt;Control&lt;/u&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Read desired control input from HL-MCU&lt;/li&gt;&lt;li&gt;Read actual rate data from IMU&lt;/li&gt;&lt;li&gt;Run PID loop to determine appropriate M1-4 throttles (thrust)&lt;/li&gt;&lt;li&gt;Apply M1-4 throttles&lt;/li&gt;&lt;/ul&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;align=left;" parent="1" vertex="1">
           <mxGeometry x="720" y="380" width="260" height="120" as="geometry" />
         </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-20" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
@@ -90,9 +75,6 @@
         </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-23" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;u&gt;Status&lt;/u&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Periodically priovide status data to HL-MCU over UART&lt;/li&gt;&lt;/ul&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;align=left;" parent="1" vertex="1">
           <mxGeometry x="740" y="515" width="220" height="70" as="geometry" />
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-24" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;u&gt;Status&lt;/u&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Capture status data from LL MCU&lt;/li&gt;&lt;li&gt;Append HL-MCU managed status data:&lt;/li&gt;&lt;ul&gt;&lt;li&gt;Battery&lt;/li&gt;&lt;li&gt;TF Luna Distance&lt;/li&gt;&lt;li&gt;TF Luna Strength&lt;/li&gt;&lt;li&gt;BMP180- altitude&lt;/li&gt;&lt;li&gt;QMC5883L heading&lt;/li&gt;&lt;/ul&gt;&lt;li&gt;Send to controller via HC-12&lt;/li&gt;&lt;/ul&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;align=left;" parent="1" vertex="1">
-          <mxGeometry x="120" y="453" width="260" height="160" as="geometry" />
         </mxCell>
         <mxCell id="1nN7b9fCO7w4V5sfwXuX-2" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
