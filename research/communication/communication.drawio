@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0" version="28.1.0">
   <diagram name="Page-1" id="Oxd-Gnnp0cI7EY-jCEC0">
-    <mxGraphModel dx="3439" dy="1631" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="4105" dy="2029" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -34,8 +34,8 @@
             <mxPoint y="559" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-4" value="Control Packet&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Control Mode (rate/angle)&lt;/div&gt;&lt;div&gt;Armed/Unarmed&lt;/div&gt;&lt;div&gt;Throttle&lt;/div&gt;&lt;div&gt;Pitch&lt;/div&gt;&lt;div&gt;Roll&lt;/div&gt;&lt;div&gt;Yaw&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="-540" y="490" width="230" height="127" as="geometry" />
+        <mxCell id="9-CMpRLNuppDFcrcLKN0-4" value="Control Packet&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Throttle&lt;/div&gt;&lt;div&gt;Pitch&lt;/div&gt;&lt;div&gt;Roll&lt;/div&gt;&lt;div&gt;Yaw&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="-540" y="504" width="230" height="100" as="geometry" />
         </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-12" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
