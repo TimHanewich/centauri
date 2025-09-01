@@ -80,9 +80,9 @@ async def main() -> None:
 
     # Send a config packet to the drone to set settings
 
-    # set up control input variables we will send to the drone (and display in the console!)
-    armed:bool = False
-    mode:bool = False
+    # set up control input variables we will track, display in console, and then interpret and transform before sending to drone in control packet
+    armed:bool = False       # armed is being tracked here not as a variable we will directly pass on to the quadcopter, but rather a variable we will use to know if we should be transmitting at least the minimum throttle (when armed) or 0% throttle
+    mode:bool = False        # UNUSED for right now! Only rate mode works. Rate Mode = False, Angle Mode = True
     throttle:float = 0.0     # between 0.0 and 1.0
     pitch:float = 0.0        # between -1.0 and 1.0
     roll:float = 0.0         # between -1.0 and 1.0
@@ -185,7 +185,7 @@ async def main() -> None:
                 else:
                     dp.packet_last_received_ago_ms = None
 
-                # plug in control variables (what we will be sending to drone to control it)
+                # plug in control variables
                 dp.armed = armed
                 dp.mode = mode
                 dp.throttle = throttle
@@ -232,7 +232,7 @@ async def main() -> None:
         while True:
 
             # pack into control packet
-            ToSend:bytes = tools.pack_control_packet(armed, mode, throttle, pitch, roll, yaw)
+            ToSend:bytes = tools.pack_control_packet(throttle, pitch, roll, yaw)
             
             # send it via HC-12 by sending it to the transceiver over the serial line
             #ser.write(ToSend + "\r\n".encode())
