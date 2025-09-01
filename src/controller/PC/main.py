@@ -253,15 +253,18 @@ async def main() -> None:
             # it will be idle throttle + (throttle input * (max throttle - min throttle))
             # (scaled within idle throttle and max throttle range)
 
-            # pack into control packet
-            ToSend:bytes = tools.pack_control_packet(throttle, pitch, roll, yaw)
-            
-            # send it via HC-12 by sending it to the transceiver over the serial line
-            #ser.write(ToSend + "\r\n".encode())
-            packets_sent = packets_sent + 1
-
-            # wait
-            await asyncio.sleep(0.05) # 20 Hz
+            if armed:
+                throttle_to_send:float = idle_throttle + ((max_throttle - idle_throttle) * throttle) # scale within range, if armed
+                ToSend:bytes = tools.pack_control_packet(throttle_to_send, pitch, roll, yaw) # pack into bytes
+                ser.write(ToSend + "\r\n".encode()) # send it via HC-12 by sending it to the transceiver over the serial line
+                packets_sent = packets_sent + 1
+                await asyncio.sleep(0.05) # 20 Hz
+            else:
+                ToSend:bytes = tools.pack_control_packet(0.0, 0.0, 0.0, 0.0) # pack all 0 inputs
+                ser.write(ToSend + "\r\n".encode())
+                ser.write(ToSend + "\r\n".encode()) # send it via HC-12 by sending it to the transceiver over the serial line
+                packets_sent = packets_sent + 1
+                await asyncio.sleep(0.5) # 2 Hz
 
     # set up continuous radio rx (through tranceiver)
     async def continuous_radio_rx() -> None:
