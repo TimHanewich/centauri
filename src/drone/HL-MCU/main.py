@@ -250,7 +250,24 @@ async def main() -> None:
             await asyncio.sleep(0.05) # 20 Hz... The LL MCU is supposed to provide at 10 Hz, so reading quicker here to ensure a backlog does not build up
 
     async def llmcu_tx() -> None:
-        pass
+        """Focuses on continuously relaying data to the LL-MCU: settings updates and desired rates."""
+
+        # declare any nonlocal variables needed
+
+        # continously loop!
+        while True:
+
+            # at this point:
+            # control_throttle = between 0.0 and 1.0
+            # control_pitch = between -1.0 and 1.0
+            # control_roll = between -1.0 and 1.0
+            # control_yaw = between -1.0 and 1.0
+            # so we will convert these each into two bytes that can represent each full range.
+
+            
+            
+            pass
+
 
     async def radio_rx() -> None:
         """Focused on continuously receiving commands from the controller via the HC-12 (radio communications)"""
