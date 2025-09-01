@@ -231,6 +231,10 @@ async def main() -> None:
 
         while True:
 
+            # if we are armed, calculate what the scaled throttle will be
+            # it will be idle throttle + (throttle input * (max throttle - min throttle))
+            # (scaled within idle throttle and max throttle range)
+
             # pack into control packet
             ToSend:bytes = tools.pack_control_packet(throttle, pitch, roll, yaw)
             
