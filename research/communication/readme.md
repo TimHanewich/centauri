@@ -104,7 +104,7 @@ If the communication between the HL-MCU and LL-MCU begins with "TIMH", that mean
             - Bit 5: *reserved*
             - Bit 4: *reserved*
             - Bit 3: *reserved*
-            - Bit 2: *re served*
+            - Bit 2: *reserved*
             - Bit 1: *reserved*
             - Bit 0: `0` = packet identifier
         - Throttle (2 bytes, uint16)
