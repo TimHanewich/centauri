@@ -143,16 +143,10 @@ async def main() -> None:
         hc12.send(tools.pack_special_packet("LLMCU no pong") + "\r\n".encode())
         FATAL_ERROR()
 
-    # Declare control variables
-    # these will be SET via the coroutine that listens to incoming data from the HC-12
-    # and then will be READ via the corourtine that then takes this data (converted to desired rates), and passed along to the LL-MCU via UART
-    # we store them as simple floats. The coroutine that sends it to the LL-MCU will perform the conversion to desired values (as uint16's) just before sending
-    control_armed:bool = False
-    control_mode:bool = False        # False = Rate (default), True = Angle
-    control_throttle:float = 0.0     # between 0.0 and 1.0
-    control_pitch:float = 0.0        # between -1.0 and 1.0
-    control_roll:float = 0.0         # between -1.0 and 1.0
-    control_yaw:float = 0.0          # between -1.0 and 1.0
+    # Declare control data variable
+    # this will be SET via the coroutine that listens to incoming data from the HC-12
+    # and then will be READ via the corourtine that then takes this data and passes it along to the LL-MCU via UART
+    control_data:bytes = None # if we have received control data, store it here temporarily as it will later be passed along to the LL-MCU
 
     # Declare all settings variables that will be tracked and continuously sent back to remote controller via HC-12 (radio communication): SYSTEM STATUS
     battery_voltage:float = 0.0
@@ -273,12 +267,7 @@ async def main() -> None:
         """Focused on continuously receiving commands from the controller via the HC-12 (radio communications)"""
         
         # declare nonlocal variables
-        nonlocal control_armed
-        nonlocal control_mode
-        nonlocal control_throttle
-        nonlocal control_pitch
-        nonlocal control_roll
-        nonlocal control_yaw
+        nonlocal control_data
 
         # create rxBuffer we will continuously append to
         rxBuffer:bytearray = bytearray()
@@ -305,28 +294,9 @@ async def main() -> None:
                 # handle it based on what it is
                 # check in order of what is most common and most time-sensitive
                 print("Line to process: '" + str(ThisLine) + "'")
-                if ThisLine[0] & 0b00000010 > 1 and ThisLine[0] & 0b00000001 == 0: # if bit 1 is 1 and bit 0 is 0, it is a control packet
-                    
-                    # handle control packet
-                    # Regarding the control packet, the HL-MCU is responsible for:
-                    # 1. unpack the control packet (raw input range data)
-                    # 2. convert that to "desired rates" values
-                    # 3. pass along those desired rated to the LL-MCU
-
-                    control:dict = tools.unpack_control_packet(ThisLine) # unpack the raw bytes to a dict full of data
-                    if control != None: # it will be None if it failed (i.e. checksum didn't validate)
-                        print("Received control data: " + str(control))
-                        control_armed = control["armed"]
-                        control_mode = control["mode"]
-                        control_throttle = control["throttle"]
-                        control_pitch = control["pitch"]
-                        control_roll = control["roll"]
-                        control_yaw = control["yaw"]
-                    
-                elif ThisLine[0] & 0b00000011 == 0: # if both bit 0 and bit 1 are 0's, it is a control settings update
-                    # handle control settings update
-                    pass
-                elif ThisLine[0] & 0b00000010 == 0 and ThisLine[0] & 0b00000001 > 0: # if bit 1 is 0 and bit 0 is 1, it is a PID settings update
+                if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is control data
+                    control_data = ThisLine # store it so it can later be passed on to the LL-MCU
+                elif ThisLine[0] & 0b00000001 == 1: # if bit 0 is 1, it is a settings update (PID settings)
                     # handle PID settings update
                     pass
                 else:
