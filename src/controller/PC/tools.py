@@ -28,17 +28,17 @@ def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add pitch bytes
-    aspop:float = (pitch + 1) / 2 # as percent of range
+    aspop:float = (pitch + 1) / 2 # as percent of the range -1.0 to 1.0
     asint16:int = min(max(int(aspop * 65535), 0), 65535)
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add roll bytes
-    aspop:float = (roll + 1) / 2 # as percent of range
+    aspop:float = (roll + 1) / 2 # as percent of the range -1.0 to 1.0
     asint16:int = min(max(int(aspop * 65535), 0), 65535)
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add yaw bytes
-    aspop:float = (yaw + 1) / 2 # as percent of range
+    aspop:float = (yaw + 1) / 2 # as percent of the range -1.0 to 1.0
     asint16:int = min(max(int(aspop * 65535), 0), 65535)
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
