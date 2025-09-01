@@ -60,6 +60,8 @@ I designed and 3D-printed a small platform a Raspberry Pi Pico and HC-12 can be 
 
 ![transceiver platform](https://i.imgur.com/zod1oGl.png)
 
+I am using a [CP2102 USB to UART adapter module](https://a.co/d/4rJMLjy) to facilitate direct serial communication between my PC and the Pico.
+
 ## Misc Notes
 - If a UART multiplexer is needed, the CD4053 may be a good option. Check out a video on it [here](https://youtu.be/Up68IgKUZy4?si=PsPbn5xtIKbIRIJK).
 
