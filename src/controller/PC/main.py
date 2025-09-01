@@ -248,11 +248,6 @@ async def main() -> None:
         nonlocal packets_sent
 
         while True:
-
-            # if we are armed, calculate what the scaled throttle will be
-            # it will be idle throttle + (throttle input * (max throttle - min throttle))
-            # (scaled within idle throttle and max throttle range)
-
             if armed:
                 throttle_to_send:float = idle_throttle + ((max_throttle - idle_throttle) * throttle) # scale within range, if armed
                 ToSend:bytes = tools.pack_control_packet(throttle_to_send, pitch, roll, yaw) # pack into bytes
