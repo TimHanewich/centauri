@@ -29,18 +29,18 @@ def pack_control_packet(armed:bool, mode:bool, throttle:float, pitch:float, roll
 
     # add pitch bytes
     aspop:float = (pitch + 1) / 2 # as percent of the range -1.0 to 1.0
-    asint16:int = min(max(int(aspop * 65535), 0), 65535)
-    ToReturn.extend(asint16.to_bytes(2, "big"))
+    asint16:int = min(max(int(aspop * 65535), 0), 65535) # convert the range from a number between 0 and 65535 (uint16)
+    ToReturn.extend(asint16.to_bytes(2, "big")) # pack as 2-bytes using big endian
 
     # add roll bytes
     aspop:float = (roll + 1) / 2 # as percent of the range -1.0 to 1.0
-    asint16:int = min(max(int(aspop * 65535), 0), 65535)
-    ToReturn.extend(asint16.to_bytes(2, "big"))
+    asint16:int = min(max(int(aspop * 65535), 0), 65535) # convert the range from a number between 0 and 65535 (uint16)
+    ToReturn.extend(asint16.to_bytes(2, "big")) # pack as 2-bytes using big endian
 
     # add yaw bytes
     aspop:float = (yaw + 1) / 2 # as percent of the range -1.0 to 1.0
-    asint16:int = min(max(int(aspop * 65535), 0), 65535)
-    ToReturn.extend(asint16.to_bytes(2, "big"))
+    asint16:int = min(max(int(aspop * 65535), 0), 65535) # convert the range from a number between 0 and 65535 (uint16)
+    ToReturn.extend(asint16.to_bytes(2, "big")) # pack as 2-bytes using big endian
 
     # Add XOR-chain-based checksum
     checksum:int = 0x00 # start with 0
