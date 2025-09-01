@@ -18,6 +18,21 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
 
 ## Communication Between Transceiver and HL-MCU (via HC-12)
 - Transceiver --> HL-MCU
+    - Control Packet
+        - Metadata byte:
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: *reserved*
+            - Bit 0: `0` (packet identifier)
+        - Throttle input % (2 bytes, uint16)
+        - Pitch input % (2 bytes, int16)
+        - Roll input % (2 bytes, int16)
+        - Yaw input % (2 bytes, int16)
+        - XOR-chain based checksum
     - PID Settings Update
         - Metadata byte:
             - Bit 7: *reserved*
@@ -39,21 +54,6 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
         - Yaw D Gain (4 bytes)
         - I Limit (4 bytes)
         - XOR-chain based checksum (1 byte)
-    - Control Packet
-        - Metadata byte:
-            - Bit 7: *reserved*
-            - Bit 6: *reserved*
-            - Bit 5: *reserved*
-            - Bit 4: *reserved*
-            - Bit 3: *reserved*
-            - Bit 2: *reserved*
-            - Bit 1: *reserved*
-            - Bit 0: `0` (packet identifier)
-        - Throttle input % (2 bytes, uint16)
-        - Pitch input % (2 bytes, int16)
-        - Roll input % (2 bytes, int16)
-        - Yaw input % (2 bytes, int16)
-        - XOR-chain based checksum
 - HL-MCU --> Transceiver
     - Control Status
         - Header byte:
