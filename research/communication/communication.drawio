@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0" version="28.1.0">
   <diagram name="Page-1" id="Oxd-Gnnp0cI7EY-jCEC0">
-    <mxGraphModel dx="4014" dy="1974" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3859" dy="1882" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -67,8 +67,8 @@
         <mxCell id="9-CMpRLNuppDFcrcLKN0-6" value="&lt;u&gt;Desired Rates&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Throttle&lt;/div&gt;&lt;div&gt;Desired Pitch Rate&lt;/div&gt;&lt;div&gt;Desired Roll Rate&lt;/div&gt;&lt;div&gt;Desired Yaw Rate&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="470" y="406" width="192.5" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-13" value="Control Settings Update&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;Idle Throttle&lt;/div&gt;&lt;div&gt;Max Throttle&lt;/div&gt;&lt;div&gt;Rate Mode: Max Pitch Rate&lt;/div&gt;&lt;div&gt;Rate Mode: Max Roll Rate&lt;/div&gt;&lt;div&gt;Rate Mode: Max Yaw Rate&lt;/div&gt;&lt;div&gt;Angle Mode: Max Pitch Angle&lt;/div&gt;&lt;div&gt;Angle Mode: Max Roll Angle&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="-530" y="85" width="230" height="145" as="geometry" />
+        <mxCell id="9-CMpRLNuppDFcrcLKN0-13" value="Control Settings Update&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;Idle Throttle&lt;/div&gt;&lt;div&gt;Max Throttle&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="-530" y="118" width="230" height="75" as="geometry" />
         </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-15" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;u&gt;Control&lt;/u&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Capture control packet via HC-12&lt;/li&gt;&lt;li&gt;Scale throttle input within idle-max range&lt;/li&gt;&lt;li&gt;Convert P, R, Y inputs (%&#39;s) as desired rates&lt;/li&gt;&lt;li&gt;Pass those desired rates on to LL MCU&lt;/li&gt;&lt;/ul&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;align=left;" parent="1" vertex="1">
           <mxGeometry x="120" y="330" width="260" height="110" as="geometry" />
@@ -199,13 +199,13 @@
         <mxCell id="nyPtQHudZqdXI_7nlrX0-1" value="&lt;u&gt;System Status&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;Battery level&lt;/div&gt;&lt;div&gt;TF Luna Distance&lt;/div&gt;&lt;div&gt;TF Luna Strength&lt;/div&gt;&lt;div&gt;Altitude (from BMP180)&lt;/div&gt;&lt;div&gt;Heading (from QMC5883L)&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="-521" y="830" width="192.5" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="hxOUQ-tuv7XgyCP0HNfm-2" value="Centauri: Quadcopter Flight Controller Communication Protocol" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=28;fontStyle=5" vertex="1" parent="1">
+        <mxCell id="hxOUQ-tuv7XgyCP0HNfm-2" value="Centauri: Quadcopter Flight Controller Communication Protocol" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=28;fontStyle=5" parent="1" vertex="1">
           <mxGeometry x="-887.5" y="-130" width="980" height="55" as="geometry" />
         </mxCell>
-        <mxCell id="hxOUQ-tuv7XgyCP0HNfm-3" value="github.com/TimHanewich/centauri" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" vertex="1" parent="1">
+        <mxCell id="hxOUQ-tuv7XgyCP0HNfm-3" value="github.com/TimHanewich/centauri" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="-569.25" y="-89" width="343.5" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="hxOUQ-tuv7XgyCP0HNfm-4" value="© Tim Hanewich 2025" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" vertex="1" parent="1">
+        <mxCell id="hxOUQ-tuv7XgyCP0HNfm-4" value="© Tim Hanewich 2025" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="-569.25" y="-66" width="343.5" height="30" as="geometry" />
         </mxCell>
       </root>
