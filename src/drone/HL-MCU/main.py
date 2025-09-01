@@ -143,10 +143,15 @@ async def main() -> None:
         hc12.send(tools.pack_special_packet("LLMCU no pong") + "\r\n".encode())
         FATAL_ERROR()
 
-    # Declare control data variable
+    # Declare "container" variable that will be used to temporarily hold control data we receive and will soon pass along to the LL-MCU
     # this will be SET via the coroutine that listens to incoming data from the HC-12
     # and then will be READ via the corourtine that then takes this data and passes it along to the LL-MCU via UART
     control_data:bytes = None # if we have received control data, store it here temporarily as it will later be passed along to the LL-MCU
+
+    # Declare "container" variable that will be used to temporarily house settings update data we received from the remote controller and will soon pass along to the LL-MCU
+    # this will be SET via the coroutine that listens to incoming data from the HC-12
+    # and then will be READ via the corourtine that then takes this data and passes it along to the LL-MCU via UART
+    settings_data:bytes = None
 
     # Declare all settings variables that will be tracked and continuously sent back to remote controller via HC-12 (radio communication): SYSTEM STATUS
     battery_voltage:float = 0.0
@@ -268,6 +273,7 @@ async def main() -> None:
         
         # declare nonlocal variables
         nonlocal control_data
+        nonlocal settings_data
 
         # create rxBuffer we will continuously append to
         rxBuffer:bytearray = bytearray()
@@ -297,8 +303,7 @@ async def main() -> None:
                 if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is control data
                     control_data = ThisLine # store it so it can later be passed on to the LL-MCU
                 elif ThisLine[0] & 0b00000001 == 1: # if bit 0 is 1, it is a settings update (PID settings)
-                    # handle PID settings update
-                    pass
+                    settings_data = ThisLine # store it so it can later be passed on to the LL-MCU
                 else:
                     # handle unknown packet
                     print("Unknown packet type: " + str(ThisLine))
