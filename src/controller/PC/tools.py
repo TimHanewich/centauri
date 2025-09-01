@@ -25,7 +25,7 @@ def pack_control_packet(throttle:float, pitch:float, roll:float, yaw:float) -> b
 
     # Add header byte (metadata byte)
     # bit 7, 6, 5, 4 are reserved (unused)
-    header:int = 0b00000000 # start with 0
+    header:int = 0b00000000 # start with 0. Bit 0 must be 0 to identify as a control packet, which it already is!s
     ToReturn.append(header)
 
     # Add throttle bytes
