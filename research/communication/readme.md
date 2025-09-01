@@ -97,6 +97,21 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
 If the communication between the HL-MCU and LL-MCU begins with "TIMH", that means it is an "internal message", intended to only be shared between them. If it does not begin with that, it is merely intended to "pass through" to the remote controller.
 - HL-MCU --> LL-MCU:
     - PING (request for confirmation of life): `TIMHPING\r\n`
+    - Control Packet
+        - Header byte (metadata)
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *re served*
+            - Bit 1: *reserved*
+            - Bit 0: `0` = packet identifier
+        - Throttle (2 bytes, uint16)
+        - Desired Pitch Rate (2 bytes, int16)
+        - Desired Roll Rate (2 bytes, int16)
+        - Desired Yaw Rate (2 bytes, int16)
+        - XOR-chain based checksum (1 byte)
     - Settings Update
         - Header byte (metadata)
             - Bit 7: *reserved*
@@ -106,7 +121,7 @@ If the communication between the HL-MCU and LL-MCU begins with "TIMH", that mean
             - Bit 3: *reserved*
             - Bit 2: *reserved*
             - Bit 1: *reserved*
-            - Bit 0: `0` = packet identifier
+            - Bit 0: `1` = packet identifier
         - Pitch P Gain (2 bytes, uint16)
         - Pitch I Gain (2 bytes, uint16)
         - Pitch D Gain (2 bytes, uint16)
@@ -117,21 +132,6 @@ If the communication between the HL-MCU and LL-MCU begins with "TIMH", that mean
         - Yaw I Gain (2 bytes, uint16)
         - Yaw D Gain (2 bytes, uint16)
         - I Limit (2 bytes, uint16)
-        - XOR-chain based checksum (1 byte)
-    - Desired Rates
-        - Header byte (metadata)
-            - Bit 7: *reserved*
-            - Bit 6: *reserved*
-            - Bit 5: *reserved*
-            - Bit 4: *reserved*
-            - Bit 3: *reserved*
-            - Bit 2: *re served*
-            - Bit 1: *reserved*
-            - Bit 0: `1` = packet identifier
-        - Throttle (2 bytes, uint16)
-        - Desired Pitch Rate (2 bytes, int16)
-        - Desired Roll Rate (2 bytes, int16)
-        - Desired Yaw Rate (2 bytes, int16)
         - XOR-chain based checksum (1 byte)
 - LL-MCU --> HL-MCU:
     - PONG (confirmation of life): `TIMHPING\r\n`
