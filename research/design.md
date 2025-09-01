@@ -52,7 +52,7 @@
 
 ![example](https://blog.quadmeup.com/assets/2017/12/3d-printed-racing-drone--1024x590.jpg)
 
-## Blender Design Dumps
+## Quadcopter Frame: Blender Design Dumps
 - [August 10, 2025 - complete design](https://github.com/TimHanewich/centauri/releases/download/1/design.zip)
 
 ## Transceiver Platform
