@@ -96,8 +96,7 @@ try:
                 else: # unknown TRAN message
                     send_tran_msg("?")
             else: # it is not a TRAN message, so pass it along to the HC-12 to send it to the quadcopter
-                #hc12.send(ThisLine) # send all the data. Including the \r\n at the end!
-                pass
+                hc12.send(ThisLine) # send all the data. Including the \r\n at the end!
 
         # check if we have received data from the HC-12 (something from the drone!) that must be passed along to the PC
         newdata:bytes = hc12.receive() # receive new data. hc12.receive returns b'' (empty bytes) if there is nothing new to be had. Note: I know it can be tempting here just to append hc12.receive() to the buffer every time, and that is what I originally had. However, this is very performanced-prohibitive and results in memory being used up after only a few thousand cycles because each time this happens, a new bytes object has to be made.
