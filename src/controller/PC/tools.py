@@ -11,7 +11,15 @@ def shift_uint8_to_int8(byte:int) -> int:
 ### PACKING DATA TO SEND TO DRONE (through transceiver)
 
 def pack_control_packet(throttle:float, pitch:float, roll:float, yaw:float) -> bytes:
-    """Packs a control packet to be sent to the drone. 'mode' = False if in rate mode, True if in angle mode."""
+    """
+    Packs a control packet to be sent to the drone.
+    
+    Expects:
+    throttle between 0.0 and 1.0
+    pitch between -1.0 and 1.0
+    roll between -1.0 and 1.0
+    yaw between -1.0 and 1.0
+    """
 
     ToReturn:bytearray = bytearray()
 
