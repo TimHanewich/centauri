@@ -28,8 +28,8 @@ If the communication between the PC and Transceiver begins with "TIMH", that mea
             - Bit 2: *reserved*
             - Bit 1: `0` (packet identifier)
             - Bit 0: `0` (packet identifier)
-        - Idle Throttle: 2 bytes
-        - Max Throttle: 2 bytes
+        - Idle Throttle: 1 byte (*interpretted literally, i.e. 14 would be 14%, 18 would be 18%, etc.*)
+        - Max Throttle: 1 byte (*interpretted literally, i.e. 14 would be 14%, 18 would be 18%, etc.*)
         - XOR-chain based checksum
     - PID Settings Update
         - Metadata byte:
