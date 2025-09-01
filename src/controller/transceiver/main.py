@@ -1,6 +1,4 @@
-import sys
 import time
-import select
 import machine
 from HC12 import HC12
 
