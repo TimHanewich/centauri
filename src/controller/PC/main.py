@@ -97,6 +97,7 @@ async def main() -> None:
 
     # Send a ping to the drone now to confirm it is on and operating
 
+    # Send a settings update (PID settings)
 
     # set up control input variables we will track, display in console, and then interpret and transform before sending to drone in control packet
     armed:bool = False       # armed is being tracked here not as a variable we will directly pass on to the quadcopter, but rather a variable we will use to know if we should be transmitting at least the minimum throttle (when armed) or 0% throttle
