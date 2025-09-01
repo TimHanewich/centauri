@@ -83,10 +83,10 @@ async def main() -> None:
     # set up control input variables we will send to the drone (and display in the console!)
     armed:bool = False
     mode:bool = False
-    throttle:float = 0.0 # 0.0 to 1.0
-    pitch:float = 0.0
-    roll:float = 0.0
-    yaw:float = 0.0
+    throttle:float = 0.0     # between 0.0 and 1.0
+    pitch:float = 0.0        # between -1.0 and 1.0
+    roll:float = 0.0         # between -1.0 and 1.0
+    yaw:float = 0.0          # between -1.0 and 1.0
 
     # set up status variables we will get from the drone (and display in the console!): system status
     vbat:float = 0.0 # volts
