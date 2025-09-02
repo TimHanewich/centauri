@@ -92,7 +92,7 @@ async def main() -> None:
     # Confirm settings
     confirmed:str = Prompt.ask("Do these settings look good?", choices=["Yes","No"], show_choices=True)
     if not confirmed:
-        print("Please update the code file.")
+        print("Please update the code file to update the default settings.")
         exit()
 
     # Send a ping to the drone now to confirm it is on and operating
