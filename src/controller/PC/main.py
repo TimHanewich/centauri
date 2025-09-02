@@ -96,6 +96,40 @@ async def main() -> None:
         exit()
 
     # Send a ping to the drone now to confirm it is on and operating
+    print("Now attempting contact with drone...")
+    started_at:float = time.time()
+    wait_for_seconds:float = 10.0
+    drone_ponged:bool = False
+    ping_attempts:int = 0
+    PongBuffer:bytearray = bytearray()
+    while (time.time() - started_at) < wait_for_seconds and drone_ponged == False:
+
+        # send a ping
+        print("Sending ping attempt # " + str(ping_attempts + 1) + "...")
+        ser.write("TIMHPING\r\n".encode()) # intended to be deliverd to the drone, passing THROUGH the transceiver
+        ping_attempts = ping_attempts + 1
+
+        # wait for a response
+        time.sleep(0.5)
+
+        # receive if there are any
+        BytesAvailable:int = ser.in_waiting
+        if BytesAvailable > 0:
+            PongBuffer.extend(ser.read(BytesAvailable))
+            print(str(BytesAvailable) + " bytes received.")
+        else:
+            print("No bytes received.")
+
+        # check
+        if "TIMHPING\r\n".encode() in PongBuffer:
+            drone_ponged = True
+            print("PONG received!")
+            break
+        else:
+            print("PONG not received yet...")
+    if drone_ponged == False:
+        print("Drone never ponged back!")
+        return
 
     # Send a settings update (PID settings)
 
