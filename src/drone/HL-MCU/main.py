@@ -294,6 +294,8 @@ async def main() -> None:
                     control_data = ThisLine # store it so it can later be passed on to the LL-MCU
                 elif ThisLine[0] & 0b00000001 == 1: # if bit 0 is 1, it is a settings update (PID settings)
                     settings_data = ThisLine # store it so it can later be passed on to the LL-MCU
+                elif ThisLine == "TIMHPING\r\n".encode(): # if it is a ping
+                    hc12.send("TIMHPONG\r\n".encode()) # immediately reply with a pong
                 else:
                     # handle unknown packet
                     print("Unknown packet type: " + str(ThisLine))
