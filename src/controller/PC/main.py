@@ -110,7 +110,7 @@ async def main() -> None:
         ping_attempts = ping_attempts + 1
 
         # wait for a response
-        time.sleep(0.5)
+        time.sleep(1.0)
 
         # receive if there are any
         BytesAvailable:int = ser.in_waiting
