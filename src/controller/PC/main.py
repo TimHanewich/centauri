@@ -64,7 +64,7 @@ async def main() -> None:
     print("Sending ping message...")
     ser.write(PING_MSG.encode())
     print("Waiting for response...")
-    time.sleep(0.25)
+    time.sleep(1.0)
     if ser.in_waiting == 0:
         print("Transceiver did not respond to ping. Are you sure it is connected and working properly?")
         ser.close()
