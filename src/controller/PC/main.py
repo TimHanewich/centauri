@@ -43,7 +43,7 @@ async def main() -> None:
     # ask what serial peripheral path to use for communications
     print()
     print("Attempt to open serial port will happen IMMEDIATELY upon you hitting enter")
-    ser_port:str = input("Serial port of your transceiver (i.e. 'COM3' or '/dev/ttyACM0'): ")
+    ser_port:str = input("Serial port of your transceiver (i.e. 'COM3' or '/dev/ttyUSB0' or '/dev/ttyACM0'): ")
     print("Will use serial '" + ser_port + "'")
     print()
 
