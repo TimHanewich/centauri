@@ -23,6 +23,7 @@ async def main() -> None:
     # say hello
     print()
     console.print("[bold][blue]Hello and welcome to the Centauri control system.[/bold][/blue]")
+    console.print("[italic]github.com/TimHanewich/centauri[/italic]")
     print()
 
     # Initialize pygame and joystick module
