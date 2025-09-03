@@ -73,6 +73,19 @@ def pack_special_packet(msg:str) -> bytes:
 
 ##### TO HELP UNPACKING DATA RECEIVED FROM CONTROLLER
 
+def peek_throttle(control_packet:bytes) -> int:
+    """Extracts just the throttle value, as a uint16, from a control packet."""
+
+    # the header byte is the first, byte 0
+    # the throttle will be byte at index 1 and 2
+    # the throttle will be encoded as a uint16 using big endian format
+
+    # if the control packet is not long enough, return False to indicate it failed
+    if len(control_packet) < 3:
+        return False
+    
+    ToReturn:int = int.from_bytes(control_packet[1:3], "big") # will be between 0 and 65,535 (uint16 range)
+    return ToReturn
 
 
 ### TO BE SENT TO LL-MCU
