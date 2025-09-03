@@ -1,0 +1,75 @@
+# Centauri Communication Protocol
+Two HC-12 radio transceiver modules will be used to facilitate bidirectional remote communications between the remote controller and the drone.
+
+**PC --> Transceiver --> Drone**
+
+## Communication Between Controller and Drone
+- "Special" packet
+    - Plain text
+    - Prepended by "TIMH"
+    - Can be used for PING/PONG, messages, etc.
+- Controller --> Drone
+    - Control Packet
+        - Metadata byte:
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: *reserved*
+            - Bit 0: `0` (packet identifier)
+        - Throttle input % (2 bytes, uint16)
+        - Pitch input % (2 bytes, int16)
+        - Roll input % (2 bytes, int16)
+        - Yaw input % (2 bytes, int16)
+        - XOR-chain based checksum
+    - Settings Update Packet
+        - Metadata byte:
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: *reserved*
+            - Bit 0: `1` (packet identifier)
+        - Pitch P Gain (4 bytes)
+        - Pitch I Gain (4 bytes)
+        - Pitch D Gain (4 bytes)
+        - Roll P Gain (4 bytes)
+        - Roll I Gain (4 bytes)
+        - Roll D Gain (4 bytes)
+        - Yaw P Gain (4 bytes)
+        - Yaw I Gain (4 bytes)
+        - Yaw D Gain (4 bytes)
+        - I Limit (4 bytes)
+        - XOR-chain based checksum (1 byte)
+- Drone --> Controller
+    - Telemetry Packet
+        - Metadata byte:
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: *reserved*
+            - Bit 0: `0` (packet identifier)
+        - Battery Voltage (1 byte): *0-255 spread over voltage range of 6.0 to 16.8, which would have resolution of 0.0422 volts*
+        - Actual Pitch Rate: 1 signed byte, interpretted literally
+        - Actual Roll Rate: 1 signed byte, interpretted literally
+        - Actual Yaw Rate: 1 signed byte, interpretted literally
+        - Estimated Pitch Angle: 1 signed byte, interpretted literally
+        - Estimated Roll Angle: 1 signed byte, interpretted literally
+    - Special Packet (text)
+        - Metadata byte:
+            - Bit 7: *reserved*
+            - Bit 6: *reserved*
+            - Bit 5: *reserved*
+            - Bit 4: *reserved*
+            - Bit 3: *reserved*
+            - Bit 2: *reserved*
+            - Bit 1: *reserved*
+            - Bit 0: `1` (packet identifier)
+        - Free text, encoded as UTF-8 (up to 50 characters)
