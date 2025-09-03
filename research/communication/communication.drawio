@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0" version="28.1.2">
   <diagram name="Page-1" id="Oxd-Gnnp0cI7EY-jCEC0">
-    <mxGraphModel dx="5660" dy="2848" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="3794" dy="1843" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -39,12 +39,12 @@
         </mxCell>
         <mxCell id="1nN7b9fCO7w4V5sfwXuX-2" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="40" y="235" as="sourcePoint" />
-            <mxPoint x="-680" y="235" as="targetPoint" />
+            <mxPoint x="40" y="790" as="sourcePoint" />
+            <mxPoint x="-680" y="790" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="1nN7b9fCO7w4V5sfwXuX-1" value="&lt;u&gt;Special Packet&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Text (limited to X chars)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="-455" y="195" width="192.5" height="60" as="geometry" />
+        <mxCell id="1nN7b9fCO7w4V5sfwXuX-1" value="&lt;u&gt;Special Packet&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Text (limited to X chars)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="-455" y="750" width="192.5" height="60" as="geometry" />
         </mxCell>
         <mxCell id="1nN7b9fCO7w4V5sfwXuX-11" value="Transceiver" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="-1090" y="157" width="340" height="786.5" as="geometry" />
