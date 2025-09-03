@@ -301,8 +301,10 @@ async def main() -> None:
                     if throttle != None: # it will return None if failed for whatever reason
                         if throttle > 0: # if throttle is > 0, it is armed!
                             armed = True
+                            print("Armed set to True!")
                         else: # if throttle is at absolute 0, it is unarmed... throttle will never be at 0 with it armed because when armed it will always be at least a minumum idle throttle
                             armed = False
+                            print("Armed set to False.")
                 elif ThisLine[0] & 0b00000001 == 1: # if bit 0 is 1, it is a settings update (PID settings)
                     settings_data = ThisLine # store it so it can later be passed on to the LL-MCU
                 else:
