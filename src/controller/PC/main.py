@@ -97,8 +97,8 @@ async def main() -> None:
     print()
     
     # Confirm settings
-    confirmed:str = Prompt.ask("Do these settings look good?", choices=["Yes","No"], show_choices=True)
-    if not confirmed:
+    confirmed:str = Prompt.ask("Do these settings look good?", choices=["y","n"], show_choices=True)
+    if confirmed == "n":
         print("Please update the code file to update the default settings.")
         exit()
 
