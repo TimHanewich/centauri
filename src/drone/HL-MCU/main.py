@@ -288,16 +288,15 @@ async def main() -> None:
                 rxBuffer = rxBuffer[loc+2:] # remove the line we just grabbed
 
                 # handle it based on what it is
-                # check in order of what is most common and most time-sensitive
                 print("Line to process: '" + str(ThisLine) + "'")
-                if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is control data
-                    control_data = ThisLine # store it so it can later be passed on to the LL-MCU
-                elif ThisLine[0] & 0b00000001 == 1: # if bit 0 is 1, it is a settings update (PID settings)
-                    settings_data = ThisLine # store it so it can later be passed on to the LL-MCU
-                elif ThisLine == "TIMHPING\r\n".encode(): # if it is a ping
+                if ThisLine == "TIMHPING\r\n".encode(): # if it is a ping
                     print("Sending pong!")
                     hc12.send("TIMHPONG\r\n".encode()) # immediately reply with a pong
                     print("Pong sent!")
+                elif ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is control data
+                    control_data = ThisLine # store it so it can later be passed on to the LL-MCU
+                elif ThisLine[0] & 0b00000001 == 1: # if bit 0 is 1, it is a settings update (PID settings)
+                    settings_data = ThisLine # store it so it can later be passed on to the LL-MCU
                 else:
                     # handle unknown packet
                     print("Unknown packet type: " + str(ThisLine))
