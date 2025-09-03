@@ -21,10 +21,12 @@ async def main() -> None:
     console = Console()
 
     # say hello
-    print("Hello and welcome to the Centauri control system.")
-
+    print()
+    console.print("[bold][blue]Hello and welcome to the Centauri control system.[/bold][/blue]")
+    print()
 
     # Initialize pygame and joystick module
+    console.print("[u]Controller Setup[/u]")
     print("Initializing pygame for controller reads...")
     pygame.init()
     pygame.joystick.init()
@@ -49,6 +51,7 @@ async def main() -> None:
 
     # ask what serial peripheral path to use for communications
     print()
+    console.print("[u]Transceiver Setup[/u]")
     print("Attempt to open serial port will happen IMMEDIATELY upon you hitting enter")
     ser_port:str = input("Serial port of your transceiver (i.e. 'COM3' or '/dev/ttyUSB0' or '/dev/ttyACM0'): ")
     print("Will use serial '" + ser_port + "'")
@@ -103,6 +106,8 @@ async def main() -> None:
         exit()
 
     # Send a ping to the drone now to confirm it is on and operating
+    print()
+    console.print("[u]Drone Contact[/u]")
     print("Now attempting contact with drone...")
     started_at:float = time.time()
     wait_for_seconds:float = 10.0
