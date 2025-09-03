@@ -1,3 +1,7 @@
+# hide the "Welcome to the Pygame community..." message when we import pygame
+import os
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
+
 import pygame
 import time
 import display
