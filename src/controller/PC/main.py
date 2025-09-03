@@ -84,9 +84,9 @@ async def main() -> None:
 
     # print settings
     print()
-    Console.print("[underline]Settings[/]")
-    Console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/]")
-    Console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/]")
+    Console.print("[u]Settings[/u]")
+    Console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
+    Console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
     print()
     
     # Confirm settings
