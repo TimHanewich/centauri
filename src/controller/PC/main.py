@@ -134,7 +134,7 @@ async def main() -> None:
             print("No bytes received.")
 
         # check
-        if "TIMHPING\r\n".encode() in PongBuffer:
+        if "TIMHPONG\r\n".encode() in PongBuffer:
             drone_ponged = True
             print("PONG received!")
             break
