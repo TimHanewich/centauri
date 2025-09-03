@@ -136,7 +136,7 @@ async def main() -> None:
             print("PONG not received yet...")
     if drone_ponged == False:
         print("Drone never ponged back!")
-        return
+        exit()
 
     # Send a settings update (PID settings)
 
