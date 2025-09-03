@@ -319,36 +319,40 @@ async def main() -> None:
             # once we are armed (in flight mode), the most important thing will be us LISTENING for incoming control packets
             # the HC-12 is a half-duplex module, meaning it can only send or listen at one time.
             # if data is arriving while it is sending out data, that arriving data will not be recieved by it
-            # so, to mitigate risk of incoming control data not being received (being ignored/missed!) while in flight mode (armed, throttle > 0%), we do NOT send out telemetry data while armed.
+            # so, to mitigate risk of incoming control data not being received (being ignored/missed!) while in flight mode (armed, throttle > 0%), we will send out telemetry very sparingly
 
-            if armed == False:
 
-                # send out system status data
-                ss:bytes = tools.pack_system_status(battery_voltage, tfluna_distance, tfluna_strength, altitude, heading)
-                hc12.send(ss + "\r\n".encode())
 
-                # is there control status available from the LL-MCU?
-                if llmcu_status != None:
 
-                    # append \r\n at the end if needed
-                    if not llmcu_status.endswith("\r\n".encode()):
-                        llmcu_status = llmcu_status + "\r\n".encode()
+            # send out system status data
+            ss:bytes = tools.pack_system_status(battery_voltage, tfluna_distance, tfluna_strength, altitude, heading)
+            hc12.send(ss + "\r\n".encode())
 
-                    # send via HC-12
-                    hc12.send(llmcu_status)
-                    #print("Just sent: " + str(llmcu_status))
+            # is there control status available from the LL-MCU?
+            if llmcu_status != None:
 
-                    # clear it out
-                    llmcu_status = None
+                # append \r\n at the end if needed
+                if not llmcu_status.endswith("\r\n".encode()):
+                    llmcu_status = llmcu_status + "\r\n".encode()
 
-                # is there special message data available to be sent out?
-                if special_message != None: 
-                    sm:bytes = tools.pack_special_packet(special_message)
-                    hc12.send(sm + "\r\n".encode())
-                    special_message = None # clear out special message
+                # send via HC-12
+                hc12.send(llmcu_status)
+                #print("Just sent: " + str(llmcu_status))
+
+                # clear it out
+                llmcu_status = None
+
+            # is there special message data available to be sent out?
+            if special_message != None: 
+                sm:bytes = tools.pack_special_packet(special_message)
+                hc12.send(sm + "\r\n".encode())
+                special_message = None # clear out special message
 
             # wait
-            await asyncio.sleep(0.25) # 4 Hz
+            if armed:
+                await asyncio.sleep(2.0) # if we are armed, transmit once every 2 seconds
+            else:
+                await asyncio.sleep(0.25) # if we are unarmed (resting), transmit 4 times per second
 
                 
 
