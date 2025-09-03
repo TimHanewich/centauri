@@ -80,9 +80,9 @@ def peek_throttle(control_packet:bytes) -> int:
     # the throttle will be byte at index 1 and 2
     # the throttle will be encoded as a uint16 using big endian format
 
-    # if the control packet is not long enough, return False to indicate it failed
+    # if the control packet is not long enough, return None to indicate it failed
     if len(control_packet) < 3:
-        return False
+        return None
     
     ToReturn:int = int.from_bytes(control_packet[1:3], "big") # will be between 0 and 65,535 (uint16 range)
     return ToReturn

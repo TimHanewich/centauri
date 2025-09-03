@@ -147,6 +147,7 @@ async def main() -> None:
     # this will be SET via the coroutine that listens to incoming data from the HC-12
     # and then will be READ via the corourtine that then takes this data and passes it along to the LL-MCU via UART
     control_data:bytes = None # if we have received control data, store it here temporarily as it will later be passed along to the LL-MCU
+    armed:bool = False  # this is directly interpretted from the control data we recieve. Even though the control_data variable is a vessel that we will later send to the LL-MCU, we do still need to "tap into it" and interpret the throttle value in it so we can determine if we are armed or not; whether we are armed or not dictates if or how frequently telemetry data is sent back to the controller via HC-12
 
     # Declare "container" variable that will be used to temporarily house settings update data we received from the remote controller and will soon pass along to the LL-MCU
     # this will be SET via the coroutine that listens to incoming data from the HC-12
@@ -263,6 +264,7 @@ async def main() -> None:
         
         # declare nonlocal variables
         nonlocal control_data
+        nonlocal armed
         nonlocal settings_data
 
         # create rxBuffer we will continuously append to
@@ -295,6 +297,12 @@ async def main() -> None:
                     print("Pong sent!")
                 elif ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is control data
                     control_data = ThisLine # store it so it can later be passed on to the LL-MCU
+                    throttle:int = tools.peek_throttle(control_data) # peek at the throttle value in it (uint16, between 0 and 65535)
+                    if throttle != None: # it will return None if failed for whatever reason
+                        if throttle > 0: # if throttle is > 0, it is armed!
+                            armed = True
+                        else: # if throttle is at absolute 0, it is unarmed... throttle will never be at 0 with it armed because when armed it will always be at least a minumum idle throttle
+                            armed = False
                 elif ThisLine[0] & 0b00000001 == 1: # if bit 0 is 1, it is a settings update (PID settings)
                     settings_data = ThisLine # store it so it can later be passed on to the LL-MCU
                 else:
@@ -313,36 +321,37 @@ async def main() -> None:
 
         while True:
 
-            # only continuously send out data if we are NOT in flight mode
+            # We have to be VERY careful how often we transmit (send) telemetry data via the HC-12
             # once we are armed (in flight mode), the most important thing will be us LISTENING for incoming control packets
             # the HC-12 is a half-duplex module, meaning it can only send or listen at one time.
             # if data is arriving while it is sending out data, that arriving data will not be recieved by it
-            # so, to mitigate risk of incoming control data not being received (being ignored/missed!) while in flight mode (armed), we do NOT send out telemetry data while armed.
-            # if not control_armed:
+            # so, to mitigate risk of incoming control data not being received (being ignored/missed!) while in flight mode (armed, throttle > 0%), we do NOT send out telemetry data while armed.
 
-            # send out system status data
-            ss:bytes = tools.pack_system_status(battery_voltage, tfluna_distance, tfluna_strength, altitude, heading)
-            hc12.send(ss + "\r\n".encode())
+            if armed == False:
 
-            # is there control status available from the LL-MCU?
-            if llmcu_status != None:
+                # send out system status data
+                ss:bytes = tools.pack_system_status(battery_voltage, tfluna_distance, tfluna_strength, altitude, heading)
+                hc12.send(ss + "\r\n".encode())
 
-                # append \r\n at the end if needed
-                if not llmcu_status.endswith("\r\n".encode()):
-                    llmcu_status = llmcu_status + "\r\n".encode()
+                # is there control status available from the LL-MCU?
+                if llmcu_status != None:
 
-                # send via HC-12
-                hc12.send(llmcu_status)
-                #print("Just sent: " + str(llmcu_status))
+                    # append \r\n at the end if needed
+                    if not llmcu_status.endswith("\r\n".encode()):
+                        llmcu_status = llmcu_status + "\r\n".encode()
 
-                # clear it out
-                llmcu_status = None
+                    # send via HC-12
+                    hc12.send(llmcu_status)
+                    #print("Just sent: " + str(llmcu_status))
 
-            # is there special message data available to be sent out?
-            if special_message != None: 
-                sm:bytes = tools.pack_special_packet(special_message)
-                hc12.send(sm + "\r\n".encode())
-                special_message = None # clear out special message
+                    # clear it out
+                    llmcu_status = None
+
+                # is there special message data available to be sent out?
+                if special_message != None: 
+                    sm:bytes = tools.pack_special_packet(special_message)
+                    hc12.send(sm + "\r\n".encode())
+                    special_message = None # clear out special message
 
             # wait
             await asyncio.sleep(0.25) # 4 Hz
