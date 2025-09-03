@@ -1,26 +1,23 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36 Edg/139.0.0.0" version="28.1.2">
   <diagram name="Page-1" id="Oxd-Gnnp0cI7EY-jCEC0">
-    <mxGraphModel dx="3587" dy="1719" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="5660" dy="2848" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="9-CMpRLNuppDFcrcLKN0-22" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="40" y="702" as="sourcePoint" />
-            <mxPoint x="-680" y="702" as="targetPoint" />
+            <mxPoint x="40" y="667" as="sourcePoint" />
+            <mxPoint x="-680" y="667" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="s8l9SCObQ_Q2c-ipgAVG-3" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#DDEEFF;dashed=1;dashPattern=8 8;opacity=50;" parent="1" vertex="1">
-          <mxGeometry x="40" y="85" width="1010" height="995" as="geometry" />
+          <mxGeometry x="40" y="85" width="410" height="945" as="geometry" />
         </mxCell>
-        <mxCell id="s8l9SCObQ_Q2c-ipgAVG-1" value="HL MCU" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="100" y="130" width="300" height="610" as="geometry" />
-        </mxCell>
-        <mxCell id="s8l9SCObQ_Q2c-ipgAVG-2" value="LL MCU" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="700" y="130" width="300" height="610" as="geometry" />
+        <mxCell id="s8l9SCObQ_Q2c-ipgAVG-2" value="Raspberry Pi Pico" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="92.5" y="110" width="300" height="610" as="geometry" />
         </mxCell>
         <mxCell id="s8l9SCObQ_Q2c-ipgAVG-4" value="Centauri Drone" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" parent="1" vertex="1">
-          <mxGeometry x="452.5" y="50" width="185" height="30" as="geometry" />
+          <mxGeometry x="150" y="50" width="185" height="30" as="geometry" />
         </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-1" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=4;fillColor=#DDEEFF;dashed=1;dashPattern=8 8;strokeColor=#6c8ebf;opacity=50;" parent="1" vertex="1">
           <mxGeometry x="-2080" y="85" width="1380" height="925" as="geometry" />
@@ -30,78 +27,24 @@
         </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-3" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="-700" y="559" as="sourcePoint" />
-            <mxPoint y="559" as="targetPoint" />
+            <mxPoint x="-700" y="337" as="sourcePoint" />
+            <mxPoint y="337" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="9-CMpRLNuppDFcrcLKN0-4" value="Control Packet&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Throttle&lt;/div&gt;&lt;div&gt;Pitch&lt;/div&gt;&lt;div&gt;Roll&lt;/div&gt;&lt;div&gt;Yaw&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="-540" y="504" width="230" height="100" as="geometry" />
+          <mxGeometry x="-482" y="282" width="230" height="100" as="geometry" />
         </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-12" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="400" y="455.40999999999997" as="sourcePoint" />
-            <mxPoint x="690" y="455.40999999999997" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-8" value="&lt;u&gt;Settings&lt;/u&gt;&lt;div&gt;PID Pitch P&lt;/div&gt;&lt;div&gt;PID Pitch I&lt;/div&gt;&lt;div&gt;PID Pitch D&lt;/div&gt;&lt;div&gt;PID Roll P&lt;/div&gt;&lt;div&gt;PID Roll I&lt;/div&gt;&lt;div&gt;PID Roll D&lt;/div&gt;&lt;div&gt;PID Yaw P&lt;/div&gt;&lt;div&gt;PID Yaw I&lt;/div&gt;&lt;div&gt;PID Yaw D&lt;/div&gt;&lt;div&gt;I Limit&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" parent="1" vertex="1">
-          <mxGeometry x="740" y="180" width="220" height="190" as="geometry" />
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-10" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="400" y="336" as="sourcePoint" />
-            <mxPoint x="690" y="336" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-9" value="&lt;u&gt;Settings Update&lt;/u&gt;&lt;div&gt;&lt;u&gt;&lt;br&gt;&lt;/u&gt;&lt;div&gt;Pitch PID Gains&lt;/div&gt;&lt;div&gt;Roll PID Gains&lt;/div&gt;&lt;div&gt;Yaw PID Gains&lt;/div&gt;&lt;div&gt;I Limit&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=middle;" parent="1" vertex="1">
-          <mxGeometry x="470" y="276" width="192.5" height="105" as="geometry" />
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-6" value="&lt;u&gt;Control&lt;/u&gt;&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Throttle&lt;/div&gt;&lt;div&gt;Pitch&lt;/div&gt;&lt;div&gt;Roll&lt;/div&gt;&lt;div&gt;Yaw&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="470" y="406" width="192.5" height="100" as="geometry" />
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-17" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;u&gt;Control&lt;/u&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Read desired control input from HL-MCU&lt;/li&gt;&lt;li&gt;Read actual rate data from IMU&lt;/li&gt;&lt;li&gt;Run PID loop to determine appropriate M1-4 throttles (thrust)&lt;/li&gt;&lt;li&gt;Apply M1-4 throttles&lt;/li&gt;&lt;/ul&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;align=left;" parent="1" vertex="1">
-          <mxGeometry x="720" y="380" width="260" height="120" as="geometry" />
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-20" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="700" y="612.5699999999999" as="sourcePoint" />
-            <mxPoint x="410" y="612.5699999999999" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-18" value="&lt;u&gt;Status&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;M1 Throttle&lt;/div&gt;&lt;div&gt;M2 Throttle&lt;/div&gt;&lt;div&gt;M3 Throttle&lt;/div&gt;&lt;div&gt;M4 Throttle&lt;/div&gt;&lt;div&gt;Actual Pitch Rate&lt;/div&gt;&lt;div&gt;Actual Roll Rate&lt;/div&gt;&lt;div&gt;Actual Yaw Rate&lt;/div&gt;&lt;div&gt;Est. Pitch angle&lt;/div&gt;&lt;div&gt;Est. Roll Angle&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="470" y="533" width="192.5" height="170" as="geometry" />
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-21" value="&lt;u&gt;Control Status&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;M1 Throttle&lt;/div&gt;&lt;div&gt;M2 Throttle&lt;/div&gt;&lt;div&gt;M3 Throttle&lt;/div&gt;&lt;div&gt;M4 Throttle&lt;/div&gt;&lt;div&gt;Actual Pitch Rate&lt;/div&gt;&lt;div&gt;Actual Roll Rate&lt;/div&gt;&lt;div&gt;Actual Yaw Rate&lt;/div&gt;&lt;div&gt;Est. Pitch angle&lt;/div&gt;&lt;div&gt;Est. Roll Angle&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="-521" y="649" width="192.5" height="171" as="geometry" />
-        </mxCell>
-        <mxCell id="9-CMpRLNuppDFcrcLKN0-23" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;u&gt;Status&lt;/u&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;Periodically priovide status data to HL-MCU over UART&lt;/li&gt;&lt;/ul&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#000000;align=left;" parent="1" vertex="1">
-          <mxGeometry x="740" y="515" width="220" height="70" as="geometry" />
+        <mxCell id="9-CMpRLNuppDFcrcLKN0-21" value="&lt;div&gt;&lt;u&gt;Telemetry Packet&lt;/u&gt;&lt;/div&gt;&lt;div&gt;Battery Level&lt;/div&gt;&lt;div&gt;Actual Pitch Rate&lt;/div&gt;&lt;div&gt;Actual Roll Rate&lt;/div&gt;&lt;div&gt;Actual Yaw Rate&lt;/div&gt;&lt;div&gt;Est. Pitch angle&lt;/div&gt;&lt;div&gt;Est. Roll Angle&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="-463" y="614" width="192.5" height="121" as="geometry" />
         </mxCell>
         <mxCell id="1nN7b9fCO7w4V5sfwXuX-2" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="40" y="988" as="sourcePoint" />
-            <mxPoint x="-680" y="988" as="targetPoint" />
+            <mxPoint x="40" y="235" as="sourcePoint" />
+            <mxPoint x="-680" y="235" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="1nN7b9fCO7w4V5sfwXuX-1" value="&lt;u&gt;Special Packet&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Text (limited to X chars)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="-522" y="948" width="192.5" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="1nN7b9fCO7w4V5sfwXuX-7" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="400" y="154.58" as="sourcePoint" />
-            <mxPoint x="690" y="154.58" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="1nN7b9fCO7w4V5sfwXuX-5" value="PING" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="490" y="140" width="140" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="1nN7b9fCO7w4V5sfwXuX-9" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="700" y="194.57999999999998" as="sourcePoint" />
-            <mxPoint x="410" y="194.57999999999998" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="1nN7b9fCO7w4V5sfwXuX-6" value="PONG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
-          <mxGeometry x="490" y="180" width="140" height="30" as="geometry" />
+        <mxCell id="1nN7b9fCO7w4V5sfwXuX-1" value="&lt;u&gt;Special Packet&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Text (limited to X chars)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;verticalAlign=top;" parent="1" vertex="1">
+          <mxGeometry x="-455" y="195" width="192.5" height="60" as="geometry" />
         </mxCell>
         <mxCell id="1nN7b9fCO7w4V5sfwXuX-11" value="Transceiver" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top;" parent="1" vertex="1">
           <mxGeometry x="-1090" y="157" width="340" height="786.5" as="geometry" />
@@ -165,21 +108,12 @@
         </mxCell>
         <mxCell id="1nN7b9fCO7w4V5sfwXuX-31" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="-700" y="350" as="sourcePoint" />
-            <mxPoint y="350" as="targetPoint" />
+            <mxPoint x="-700" y="495" as="sourcePoint" />
+            <mxPoint y="495" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="1nN7b9fCO7w4V5sfwXuX-30" value="&lt;div&gt;Settings Update&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;Pitch P Gain&lt;/div&gt;&lt;div&gt;Pitch I Gain&lt;/div&gt;&lt;div&gt;Pitch D Gain&lt;/div&gt;&lt;div&gt;Roll P Gain&lt;/div&gt;&lt;div&gt;Roll I Gain&lt;/div&gt;&lt;div&gt;Roll D Gain&lt;/div&gt;&lt;div&gt;Yaw P Gain&lt;/div&gt;&lt;div&gt;Yaw I Gain&lt;/div&gt;&lt;div&gt;Yaw D Gain&lt;/div&gt;&lt;div&gt;PID I Limit&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="-530" y="260" width="230" height="190" as="geometry" />
-        </mxCell>
-        <mxCell id="nyPtQHudZqdXI_7nlrX0-2" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="40" y="884.5" as="sourcePoint" />
-            <mxPoint x="-680" y="884.5" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="nyPtQHudZqdXI_7nlrX0-1" value="&lt;u&gt;System Status&lt;/u&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;Battery level&lt;/div&gt;&lt;div&gt;TF Luna Distance&lt;/div&gt;&lt;div&gt;TF Luna Strength&lt;/div&gt;&lt;div&gt;Altitude (from BMP180)&lt;/div&gt;&lt;div&gt;Heading (from QMC5883L)&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;verticalAlign=top;" parent="1" vertex="1">
-          <mxGeometry x="-521" y="830" width="192.5" height="110" as="geometry" />
+          <mxGeometry x="-472" y="405" width="230" height="190" as="geometry" />
         </mxCell>
         <mxCell id="hxOUQ-tuv7XgyCP0HNfm-2" value="Centauri: Quadcopter Flight Controller Communication Protocol" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=28;fontStyle=5" parent="1" vertex="1">
           <mxGeometry x="-887.5" y="-130" width="980" height="55" as="geometry" />
@@ -190,22 +124,22 @@
         <mxCell id="hxOUQ-tuv7XgyCP0HNfm-4" value="© Tim Hanewich 2025" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="-569.25" y="-66" width="343.5" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="UkAOlF5Lu69NK4UGbiny-1" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+        <mxCell id="UkAOlF5Lu69NK4UGbiny-1" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="-700" y="130.00000000000003" as="sourcePoint" />
             <mxPoint y="130.00000000000003" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UkAOlF5Lu69NK4UGbiny-2" value="PING" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+        <mxCell id="UkAOlF5Lu69NK4UGbiny-2" value="PING" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
           <mxGeometry x="-425" y="114" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="UkAOlF5Lu69NK4UGbiny-5" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+        <mxCell id="UkAOlF5Lu69NK4UGbiny-5" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="40" y="170" as="sourcePoint" />
             <mxPoint x="-680" y="170" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="UkAOlF5Lu69NK4UGbiny-6" value="PONG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+        <mxCell id="UkAOlF5Lu69NK4UGbiny-6" value="PONG" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
           <mxGeometry x="-425" y="154" width="140" height="30" as="geometry" />
         </mxCell>
       </root>
