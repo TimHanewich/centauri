@@ -13,6 +13,9 @@ import sys
 
 async def main() -> None:
 
+    # create a console instance from the Rich library so we can print with fancy font and stuff
+    console = Console()
+
     # say hello
     print("Hello and welcome to the Centauri control system.")
 
@@ -84,9 +87,9 @@ async def main() -> None:
 
     # print settings
     print()
-    Console.print("[u]Settings[/u]")
-    Console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
-    Console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
+    console.print("[u]Settings[/u]")
+    console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
+    console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
     print()
     
     # Confirm settings
