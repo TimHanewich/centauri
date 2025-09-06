@@ -2,6 +2,7 @@ print("----- CENTAURI FLIGHT CONTROLLER -----")
 print("gitub.com/TimHanewich/centauri")
 print()
 
+print("Importing libraries...")
 import machine
 import time
 import math
@@ -46,27 +47,37 @@ def FATAL_ERROR(error_msg:str = None) -> None:
         time.sleep(1.0)
 
 # set up UART interface for radio communications via HC-12
+print("Setting up HC-12 via UART...")
 hc12_set = machine.Pin(7, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
 uart_hc12 = machine.UART(1, tx=machine.Pin(8), rx=machine.Pin(9), baudrate=9600)
 uart_hc12.read(uart_hc12.any()) # clear out any RX buffer that may exist
 
 # pulse HC-12
-hc12_set.high() # pull it high to go into AT mode
+hc12_set.low() # pull it LOW to enter AT command mode
 time.sleep(0.2) # wait a moment for AT mode to be entered
 hc12_pulsed:bool = False
 hc12_pulse_attempts:int = 0
 hc12_pulse_rx_buffer:bytearray = bytearray()
 while hc12_pulsed == False and hc12_pulse_attempts < 3:
+    print("Sending pulse attempt # " + str(hc12_pulse_attempts + 1) + "...")
     uart_hc12.write("AT\r\n".encode()) # send AT command
+    hc12_pulse_attempts = hc12_pulse_attempts + 1
     time.sleep(0.2) # wait a moment for it to be responded to
+
+    # if there is data
     if uart_hc12.any():
         hc12_pulse_rx_buffer.extend(uart_hc12.read(uart_hc12.any())) # append
         if "OK\r\n".encode() in hc12_pulse_rx_buffer:
             hc12_pulsed = True
+            print("Pulse received!")
             break
         else:
-            hc12_pulse_attempts = hc12_pulse_attempts + 1
-            time.sleep(1.0)
+            print("Data received back from HC-12 but it wasn't an OK (pulse)")
+    else:
+        print("No data received from HC-12.")
+
+    # wait
+    time.sleep(1.0)
 
 # handle results of HC-12 pulse attempt
 if hc12_pulsed:
