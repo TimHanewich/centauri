@@ -45,6 +45,36 @@ def FATAL_ERROR(error_msg:str = None) -> None:
         led.toggle()
         time.sleep(1.0)
 
+# set up UART interface for radio communications via HC-12
+hc12_set = machine.Pin(7, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
+uart_hc12 = machine.UART(1, tx=machine.Pin(8), rx=machine.Pin(9), baudrate=9600)
+uart_hc12.read(uart_hc12.any()) # clear out any RX buffer that may exist
+
+# pulse HC-12
+hc12_set.high() # pull it high to go into AT mode
+time.sleep(0.2) # wait a moment for AT mode to be entered
+hc12_pulsed:bool = False
+hc12_pulse_attempts:int = 0
+hc12_pulse_rx_buffer:bytearray = bytearray()
+while hc12_pulsed == False and hc12_pulse_attempts < 3:
+    uart_hc12.write("AT\r\n".encode()) # send AT command
+    time.sleep(0.2) # wait a moment for it to be responded to
+    if uart_hc12.any():
+        hc12_pulse_rx_buffer.extend(uart_hc12.read(uart_hc12.any())) # append
+        if "OK\r\n".encode() in hc12_pulse_rx_buffer:
+            hc12_pulsed = True
+            break
+        else:
+            hc12_pulse_attempts = hc12_pulse_attempts + 1
+            time.sleep(1.0)
+
+# handle results of HC-12 pulse attempt
+if hc12_pulsed:
+    print("HC-12 pulsed! It is connected and working properly.")
+else:
+    print("HC-12 did not pulse back! Ensure it is connected, in baudrate 9600 mode, and working properly.")
+    FATAL_ERROR()
+
 # Confirm MPU-6050 is connected via I2C
 print("Setting up I2C...")
 i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17))
