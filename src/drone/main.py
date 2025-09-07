@@ -46,6 +46,10 @@ def FATAL_ERROR(error_msg:str = None) -> None:
         led.toggle()
         time.sleep(1.0)
 
+# Print header: HC-12 setup
+print()
+print("HC-12 SETUP")
+
 # set up UART interface for radio communications via HC-12
 print("Setting up HC-12 via UART...")
 hc12_set = machine.Pin(7, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
@@ -119,6 +123,10 @@ else:
     print("Unsuccessful in setting HC-12 power level to 8.")
     FATAL_ERROR()
 
+## Print header: MPU-6050 setup
+print()
+print("MPU-6050 SETUP")
+
 # Confirm MPU-6050 is connected via I2C
 print("Setting up I2C...")
 i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17))
@@ -168,6 +176,10 @@ else:
 
 # Send message to confirm IMU is all set up
 #sendtimhmsg("IMU SET")
+
+## print header: Gyro calibration
+print()
+print("GYRO CALIBRATION")
 
 # measure gyro to estimate bias
 gxs:int = 0
