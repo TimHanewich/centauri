@@ -344,13 +344,13 @@ try:
 
                 # handle according to what it is
                 # check first for control input data as that is the the most important and time-sensitive thing anyway
-                if ThisLine[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet.
+                if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
                     # unpack control input data!
                     pass
                 elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
                     # PONG back
                     pass
-                elif ThisLine[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
+                elif ThisLine[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
                     # unpack and update settings
                     pass
                 else: # unknown packet
