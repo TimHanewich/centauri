@@ -123,6 +123,20 @@ else:
     print("Unsuccessful in setting HC-12 power level to 8.")
     FATAL_ERROR()
 
+# now that the HC-12 is set up and configured, close out of AT mode by setting the SET pin back to HIGH
+print("Returning HC-12 SET pin to HIGH (exiting AT mode)...")
+hc12_set.high()
+
+# define special message packet function for sending special packets (prepend with "TIMH")
+print("Defining special message function...")
+def send_special(msg:str) -> None:
+    ToSend:str = "TIMH" + msg + "\r\n"
+    uart_hc12.write(ToSend.encode())
+
+# send online notification
+print("Sending 'HC12 OK' message...")
+send_special("HC12 OK")
+
 ## Print header: MPU-6050 setup
 print()
 print("MPU-6050 SETUP")
