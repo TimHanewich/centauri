@@ -295,6 +295,10 @@ try:
             status_last_sent_ticks_ms = time.ticks_ms()
 
         # check for received data (input data) from the HC-12
+        # the data that we receive from the HC-12 could be:
+        # 1 - control data
+        # 2 - Settings update data (PID settings)
+        # 3 - PING
         try:  
 
             # This uses a rather complicated "conveyer belt" approach
@@ -489,7 +493,7 @@ try:
         # MOTOR SHUTDOWN CONDITIONS (safety)
         # there are two conditions that would mean, no matter what happened above, ALL FOUR motors should be shut down (0% throttle)
         # scenario 1: desired throttle is 0%. This is obvious. If throttle is 0%, no motors should move. But, the PID loop is still running so it will still be trying to compensate for rate errors, meaning a motor could go OVER 0% throttle.
-        # scenario 2: it has been a long time since we received a valid desired rates packet. This could be due to an error or something with the controller not sending data or the HL-MCU not sending data... but if this happens, as a failsafe, turn off all motors to prevent them from being stuck on.
+        # scenario 2: it has been a long time since we received a valid control data packet. This could be due to an error or something with the controller not sending data or the HL-MCU not sending data... but if this happens, as a failsafe, turn off all motors to prevent them from being stuck on.
         if desired_throttle == 1000000 or time.ticks_diff(time.ticks_ms(), control_input_last_received_ticks_ms) > 2000: # if we havne't received valid control input data in more than 2 seconds
             
             # shut off all motors
