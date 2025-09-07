@@ -86,6 +86,39 @@ else:
     print("HC-12 did not pulse back! Ensure it is connected, in baudrate 9600 mode, and working properly.")
     FATAL_ERROR()
 
+# Configure HC-12 while still in AT mode: mode = FU3
+print("Setting HC-12 mode to FU3...")
+uart_hc12.write("AT+FU3\r\n") # go into mode FU3 (normal mode)
+time.sleep(0.2) # wait a moment
+response:bytes = uart_hc12.read(uart_hc12.any())
+if "OK+FU3\r\n".encode() in response:
+    print("HC-12 in FU3 mode successful!")
+else:
+    print("HC-12 not confirmed to be in HC-12 mode!")
+    FATAL_ERROR()
+
+# Configure HC-12 while still in AT mode: channel = 2
+print("Setting HC-12 channel to 2...")
+uart_hc12.write("AT+C002\r\n".encode())
+time.sleep(0.2) # wait a moment
+response:bytes = uart_hc12.read(uart_hc12.any())
+if "OK+C002\r\n".encode() in response:
+    print("HC-12 set to channel 2!")
+else:
+    print("HC-12 not confirmed to be in channel 2.")
+    FATAL_ERROR()
+
+# Configure HC-12 while still in AT mode: power
+print("Setting HC-12 power to maximum level of 8...")
+uart_hc12.write("AT+P8\r\n".encode())
+time.sleep(0.2) # wait a moment
+response:bytes = uart_hc12.read(uart_hc12.any())
+if "OK+P8\r\n".encode() in response:
+    print("HC-12 power set to level 8 (20 dBM)")
+else:
+    print("Unsuccessful in setting HC-12 power level to 8.")
+    FATAL_ERROR()
+
 # Confirm MPU-6050 is connected via I2C
 print("Setting up I2C...")
 i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17))
