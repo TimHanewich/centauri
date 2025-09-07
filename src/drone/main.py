@@ -6,6 +6,7 @@ print("Importing libraries...")
 import machine
 import time
 import math
+import tools
 
 # First thing is first: set up onboard LED, turn it on while loading
 print("Turning LED on...")
@@ -257,6 +258,7 @@ roll_angle:int = 0   # signed byte (shifted), interpretted literally in degrees
 cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, the full PID loop must happen within. 4,000 microseconds (4 ms) to achieve a 250 Hz loop speed for example.
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
+control_input:list[int] = [0,0,0,0] # array that we will unpack control input into (throttle input, pitch input, roll input, yaw input) - throttle as uint16, the rest as int16
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
 
 # declare variables: desired rate inputs
@@ -345,8 +347,13 @@ try:
                 # handle according to what it is
                 # check first for control input data as that is the the most important and time-sensitive thing anyway
                 if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
-                    # unpack control input data!
-                    pass
+                    unpack_successful:bool = tools.unpack_control_packet(ThisLine, control_input)
+                    if unpack_successful:
+                        throttle_uint16 = control_input[0]
+                        pitch_int16 = control_input[1]
+                        roll_int16 = control_input[2]
+                        yaw_int16 = control_input[3]
+                        control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
                 elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
                     # PONG back
                     pass
