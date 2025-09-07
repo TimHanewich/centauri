@@ -245,6 +245,13 @@ gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading d
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
 
+# declare variables: desired rate inputs
+# these will later be updated via incoming desired rate packets (over UART from HL-MCU)
+throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
+pitch_int16:int = 0            # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+roll_int16:int = 0             # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+yaw_int16:int = 0              # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+
 # declare uart conveyer read objects
 rxBufferLen:int = 128
 rxBuffer:bytearray = bytearray(rxBufferLen) # a buffer of received messages from the HL-MCU
