@@ -1,5 +1,15 @@
 def unpack_control_packet(data:bytes, into:list[int]) -> bool:
-    """Unpack desired rates packet into throttle, desired pitch rate, desired roll rate, and desired yaw rate, into a preexisting list. Returns True if the unpack was successful, False if it did nto unpack because of the checksum failing to verify."""
+    """
+    Unpack desired rates packet into throttle input, pitch input, roll input, and yaw input, into a preexisting list. 
+
+    The list it unpacks into must be 4 items long.
+    Item 0 = throttle input, between 0 and 65535
+    Item 1 = pitch input, between -32768 and 32767
+    Item 2 = roll input, between -32768 and 32767
+    Item 3 = yaw input, between -32768 and 32767
+    
+    Returns True if the unpack was successful, False if it did nto unpack because of the checksum failing to verify.
+    """
 
     # first, validate checksum
     selfchecksum:int = 0x00
