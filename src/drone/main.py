@@ -230,3 +230,39 @@ M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_u16=
 M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_u16=0)
 M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_u16=0)
 M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_u16=0)
+
+# Set up telemetry variables that will be used to store and then send status to remote controller
+vbat:float = 0.0     # battery voltage, expressed as a single byte (0-255), spread over a voltage range of 6.0 to 16.8 volts, or 0.0422 volts per value
+pitch_rate:int = 0   # signed byte (shifted), interpretted literally in degrees per second
+roll_rate:int = 0    # signed byte (shifted), interpretted literally in degrees per second
+yaw_rate:int = 0     # signed byte (shifted), interpretted literally in degrees per second
+pitch_angle:int = 0  # signed bytea (shifted), interpretted literally in degrees
+roll_angle:int = 0   # signed byte (shifted), interpretted literally in degrees
+
+# declare objects we will reuse in the loop instead of remaking each time (for efficiency)
+cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, the full PID loop must happen within. 4,000 microseconds (4 ms) to achieve a 250 Hz loop speed for example.
+gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
+accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
+TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
+
+# declare uart conveyer read objects
+rxBufferLen:int = 128
+rxBuffer:bytearray = bytearray(rxBufferLen) # a buffer of received messages from the HL-MCU
+write_idx:int = 0 # last write location into the rxBuffer
+terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (13, 10 in bytes)
+
+# declare PID state variables
+# declaring them here because their "previous state" (value from previous loop) must be referenced in each loop
+pitch_last_i:int = 0
+pitch_last_error:int = 0
+roll_last_i:int = 0
+roll_last_error:int = 0
+yaw_last_i:int = 0
+yaw_last_error:int = 0
+
+# timestamps for tracking other processes that need to be done on a schedule
+# originally was using asyncio for this but now resorting to timestamp-based
+led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was swapped, in ms ticks
+status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the remote controller via HC-12
+last_compfilt_ticks_us:int = 0 # the last time the complementary filter was used. This is used to know how much time has ELAPSED and thus calculate roughly how many degrees changed based on the degrees per second value from the gyros
+control_input_last_received_ticks_ms:int = 0 # timestamp (in ms) of the last time a valid control packet was received. This is used to check and shut down motors if it has been too long (failsafe)
