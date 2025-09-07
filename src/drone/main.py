@@ -266,3 +266,268 @@ led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was s
 status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the remote controller via HC-12
 last_compfilt_ticks_us:int = 0 # the last time the complementary filter was used. This is used to know how much time has ELAPSED and thus calculate roughly how many degrees changed based on the degrees per second value from the gyros
 control_input_last_received_ticks_ms:int = 0 # timestamp (in ms) of the last time a valid control packet was received. This is used to check and shut down motors if it has been too long (failsafe)
+
+# Infinite loop for all operations!
+print("Now entering infinite operating loop!")
+#sendtimhmsg("READY")
+try:
+    while True:
+
+        # mark loop start time
+        loop_begin_us:int = time.ticks_us() # ticks, in microseconds (us)
+
+        # is it time to flicker the onboard LED?
+        if time.ticks_diff(time.ticks_ms(), led_last_flickered_ticks_ms) >= 250: # every 250 ms (4 times per second)
+            led.toggle()
+            led_last_flickered_ticks_ms = time.ticks_ms()
+
+        # is it time to send status (telemetry) over to the remote controller via the HC-12?
+        if time.ticks_diff(time.ticks_ms(), status_last_sent_ticks_ms) >= 1000: # every 1000 ms (1 time per second)
+            # send the data!
+            pass
+            status_last_sent_ticks_ms = time.ticks_ms()
+
+        # check for received data (input data) from the HC-12
+        try:  
+
+            # This uses a rather complicated "conveyer belt" approach
+            # I know it is complex, but we do this to avoid constantly uart.read() which creates a new bytes. Slow and memory leak.
+            # So we want to uart.readinto() which requires an rxBuffer, which requires all of this:
+
+            # Step 1: Read Data
+            BytesAvailable:int = uart_hc12.any()
+            if BytesAvailable > 0:
+                available_space:int = rxBufferLen - write_idx # calculate how many bytes we have remaining in the buffer
+                if available_space > 0:
+                    target_write_window = memoryview(rxBuffer)[write_idx:write_idx + BytesAvailable] # create a memoryview pointer target to the area of the rxBuffer we want to write to with these new bytes
+                    bytes_read:int = uart_hc12.readinto(target_write_window, BytesAvailable) # read directly into that target window, but specify the number of bytes. Specifying exactly how many bytes to read into drastically improves performance. From like 3,000 microseconds to like 70 (unless the window you want to read into fits the bytes available, which we do here, but adding number of bytes just to be sure)
+                    write_idx = write_idx + bytes_read # increment the write location forward
+                else:
+                    write_idx = 0 # if there is no space, reset the write location for next time around 
+
+            # Step 2: Process Lines
+            search_from:int = 0
+            while True:
+
+                # find terminator
+                loc = rxBuffer.find(terminator, search_from, write_idx) # search for a terminator somewhere in the new data
+                if loc == -1:
+                    break
+                
+                # Get line
+                ThisLine = memoryview(rxBuffer)[search_from:write_idx]
+
+                # handle according to what it is
+                # check first for control input data as that is the the most important and time-sensitive thing anyway
+                if ThisLine[0] & 0b00000001 != 0: # if the last bit IS occupied, it is a desired rates packet.
+                    # unpack control input data!
+                    pass
+                elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
+                    # PONG back
+                    pass
+                elif ThisLine[0] & 0b00000001 == 0: # if the last bit is NOT occupied, it is a settings update
+                    # unpack and update settings
+                    pass
+                else: # unknown packet
+                    print("Unknown data received: " + str(ThisLine))
+                    #sendtimhmsg("?") # respond with a simple question mark to indicate the message was not understood.
+
+                # increment search start location... there is possibly another \r\n in there (and thus a new line to process)
+                search_from = loc + 2 # +2 to jump after \r\n
+
+            # Step 3: move the conveyer belt
+            # the conveyer belt will only be moved if not every byte was processed and thus we are done with
+            if search_from > 0: # if search_from was moved, that means at least one line was extracted and processed.
+                unprocessed_byte_count:int = write_idx - search_from # how many bytes are on the conveyer and still unprocessed
+                if unprocessed_byte_count > 0:
+                    rxBuffer[0:unprocessed_byte_count] = rxBuffer[search_from:write_idx]
+                write_idx = unprocessed_byte_count
+
+        except Exception as ex:
+            throttle_uint16 = 0
+            pitch_int16 = 0
+            roll_int16 = 0
+            yaw_int16 = 0
+            #sendtimhmsg("CommsRx Err: " + str(ex))
+
+        # Capture RAW IMU data: both gyroscope and accelerometer
+        # Goal here is ONLY to capture the data, not to transform it
+        GoodRead:bool = False
+        imu_read_attemp_started_ticks_ms:int = time.ticks_ms()
+        while not GoodRead:
+            try:
+                i2c.readfrom_mem_into(0x68, 0x43, gyro_data) # read 6 bytes, 2 for each axis, into the "gyro_data" bytearray (update values in that bytearray to have to avoid creating a new bytes object)
+                i2c.readfrom_mem_into(0x68, 0x3B, accel_data) # read 6 bytes, two for each axis for accelerometer data, directly into the "accel_data" bytearray
+                GoodRead = True
+            except:
+                GoodRead = False # mark it as a bad read
+                if time.ticks_diff(time.ticks_ms(), imu_read_attemp_started_ticks_ms) > 1000: # if it has been over a full second and we STILL haven't been able to get an IMU reading...
+                    
+                    # turn off all motors!!!!!!!
+                    # 1,000,000 nanoseconds = 0% throttle
+                    M1.duty_ns(1000000)
+                    M2.duty_ns(1000000)
+                    M3.duty_ns(1000000)
+                    M4.duty_ns(1000000)
+
+                    # fatal fail!
+                    FATAL_ERROR("IMU Read Error: read failed")
+
+        # Process & Transform raw Gyroscope data
+        gyro_x = (gyro_data[0] << 8) | gyro_data[1]
+        gyro_y = (gyro_data[2] << 8) | gyro_data[3]
+        gyro_z = (gyro_data[4] << 8) | gyro_data[5]
+        if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+        if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+        if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+        roll_rate = gyro_x * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
+        pitch_rate = gyro_y * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
+        yaw_rate = gyro_z * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
+
+        # Process & Transform raw accelerometer data
+        accel_x = (accel_data[0] << 8) | accel_data[1]
+        accel_y = (accel_data[2] << 8) | accel_data[3]
+        accel_z = (accel_data[4] << 8) | accel_data[5]
+        if accel_x >= 32658: accel_x = ((65535 - accel_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+        if accel_y >= 32658: accel_y = ((65535 - accel_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+        if accel_z >= 32658: accel_z = ((65535 - accel_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+        accel_x = (accel_x * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
+        accel_y = (accel_y * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
+        accel_z = (accel_z * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
+
+        # subtract out (account for) gyro bias that was calculated during calibration phase
+        pitch_rate = pitch_rate - gyro_bias_y
+        roll_rate = roll_rate - gyro_bias_x
+        yaw_rate = yaw_rate - gyro_bias_z
+
+        # FOR DIAGNOSTICS / TESTING: 
+        # You can manually hijack the pitch, roll, and yaw rate below.
+        # uncomment these and set a value to observe the PID values / motor throttles adjust.
+        # pitch_rate = 0
+        # roll_rate = 0
+        # yaw_rate = 0
+        
+        # use ONLY the accelerometer data to estimate pitch and roll
+        # you can interpret this as the accelerometer's "opinion" of what pitch and roll angle is based on only its data
+        # this will likely be inaccurate as the accelerometer is quite susceptible to vibrations
+        # we will later "fuse" this with gyro input in the complementary filter
+        # note: the pitch and roll calculated here will be in degrees * 1000. For example, a reading of 22435 can be interpreted as 22.435 degrees (we do this for integer math purposes)
+        expected_pitch_angle_accel:int = int(math.atan2(accel_x, math.sqrt(accel_y**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the pitch angle is
+        expected_roll_angle_accel:int = int(math.atan2(accel_y, math.sqrt(accel_x**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the roll angle is
+
+        # calculate what the gyro's expected pitch and roll angle should be
+        # you can take this as the gyro's "opinion" of what the pitch and roll angle should be, just on its data
+        elapsed_us:int = time.ticks_diff(time.ticks_us(), last_compfilt_ticks_us) # the amount of time, in microseconds (us), that has elapsed since we did this in the last loop
+        last_compfilt_ticks_us = time.ticks_us() # update the time
+        expected_pitch_angle_gyro:int = pitch_angle + (pitch_rate * elapsed_us // 1000000)
+        expected_roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_us // 1000000)
+
+        # Now use a complementary filter to determine angle (fuse gyro + accelerometer data)
+        pitch_angle = ((expected_pitch_angle_gyro * alpha) + (expected_pitch_angle_accel * (100 - alpha))) // 100
+        roll_angle = ((expected_roll_angle_gyro * alpha) + (expected_roll_angle_accel * (100 - alpha))) // 100
+
+        # convert desired throttle, expressed as a uint16, into nanoseconds
+        desired_throttle:int = 1000000 + (throttle_uint16 * 1000000) // 65535
+
+        # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
+        # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
+        # but multiply it all by 1,000 (not just 90) so we can do integer math
+        desired_pitch_rate:int = (pitch_int16 * 90000) // 32767
+        desired_roll_rate:int = (roll_int16 * 90000) // 32767
+        desired_yaw_rate:int = (yaw_int16 * 90000) // 32767
+
+        # now compare those ACTUAL rates with the DESIRED rates (calculate error)
+        # error = desired - actual
+        error_pitch_rate:int = desired_pitch_rate - pitch_rate
+        error_roll_rate:int = desired_roll_rate - roll_rate
+        error_yaw_rate:int = desired_yaw_rate - yaw_rate
+        #print("ErrPitch: " + str(error_pitch_rate) + ", ErrRoll: " + str(error_roll_rate) + ", ErrYaw: " + str(error_yaw_rate))
+
+        # Pitch PID calculation
+        pitch_p:int = (error_pitch_rate * pitch_kp) // PID_SCALING_FACTOR
+        pitch_i:int = pitch_last_i + ((error_pitch_rate * pitch_ki * cycle_time_us) // PID_SCALING_FACTOR)
+        pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
+        pitch_d = (pitch_kd * (error_pitch_rate - pitch_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
+        pitch_pid = pitch_p + pitch_i + pitch_d
+
+        # Roll PID calculation
+        roll_p:int = (error_roll_rate * roll_kp) // PID_SCALING_FACTOR
+        roll_i:int = roll_last_i + ((error_roll_rate * roll_ki * cycle_time_us) // PID_SCALING_FACTOR)
+        roll_i = min(max(roll_i, -i_limit), i_limit) # constrain within I limit
+        roll_d = (roll_kd * (error_roll_rate - roll_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
+        roll_pid = roll_p + roll_i + roll_d
+
+        # Yaw PID calculation
+        yaw_p:int = (error_yaw_rate * yaw_kp) // PID_SCALING_FACTOR
+        yaw_i:int = yaw_last_i + ((error_yaw_rate * yaw_ki * cycle_time_us) // PID_SCALING_FACTOR)
+        yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
+        yaw_d = (yaw_kd * (error_yaw_rate - yaw_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
+        yaw_pid = yaw_p + yaw_i + yaw_d
+
+        # calculate throttle values for each motor using those PID influences
+        #print("Pitch PID: " + str(pitch_pid) + ", Roll PID: " + str(roll_pid) + ", Yaw Pid: " + str(yaw_pid))
+        m1_throttle = desired_throttle - pitch_pid + roll_pid + yaw_pid
+        m2_throttle = desired_throttle - pitch_pid - roll_pid - yaw_pid
+        m3_throttle = desired_throttle + pitch_pid + roll_pid - yaw_pid
+        m4_throttle = desired_throttle + pitch_pid - roll_pid + yaw_pid
+
+        # min/max those duty times
+        # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds)
+        m1_throttle = min(max(m1_throttle, 1000000), 2000000)
+        m2_throttle = min(max(m2_throttle, 1000000), 2000000)
+        m3_throttle = min(max(m3_throttle, 1000000), 2000000)
+        m4_throttle = min(max(m4_throttle, 1000000), 2000000)
+        #print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
+
+        # MOTOR SHUTDOWN CONDITIONS (safety)
+        # there are two conditions that would mean, no matter what happened above, ALL FOUR motors should be shut down (0% throttle)
+        # scenario 1: desired throttle is 0%. This is obvious. If throttle is 0%, no motors should move. But, the PID loop is still running so it will still be trying to compensate for rate errors, meaning a motor could go OVER 0% throttle.
+        # scenario 2: it has been a long time since we received a valid desired rates packet. This could be due to an error or something with the controller not sending data or the HL-MCU not sending data... but if this happens, as a failsafe, turn off all motors to prevent them from being stuck on.
+        if desired_throttle == 1000000 or time.ticks_diff(time.ticks_ms(), control_input_last_received_ticks_ms) > 2000: # if we havne't received valid control input data in more than 2 seconds
+            
+            # shut off all motors
+            # 1,000,000 nanoseconds = 1 ms, the minumum throttle for an ESC (0% throttle, so no rotation)
+            m1_throttle = 1000000
+            m2_throttle = 1000000
+            m3_throttle = 1000000
+            m4_throttle = 1000000
+
+            # reset cumulative PID values (I and D related)
+            pitch_last_i = 0
+            roll_last_i = 0
+            yaw_last_i = 0
+            pitch_last_error = 0
+            roll_last_error = 0
+            yaw_last_error = 0
+
+        # adjust throttles on PWMs
+        M1.duty_ns(m1_throttle)
+        M2.duty_ns(m2_throttle)
+        M3.duty_ns(m3_throttle)
+        M4.duty_ns(m4_throttle)
+
+        # save state values for next loop
+        pitch_last_error = error_pitch_rate
+        roll_last_error = error_roll_rate
+        yaw_last_error = error_yaw_rate
+        pitch_last_i = pitch_i
+        roll_last_i = roll_i
+        yaw_last_i = yaw_i
+
+        # wait if there is excess time 
+        excess_us:int = cycle_time_us - time.ticks_diff(time.ticks_us(), loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
+        #print("Excess us: " + str(excess_us))
+        if excess_us > 0:
+            time.sleep_us(excess_us)
+            
+except Exception as ex: # unhandled error somewhere in the loop
+
+    # turn off all motors!!!!!!!
+    # 1,000,000 nanoseconds = 0% throttle
+    M1.duty_ns(1000000)
+    M2.duty_ns(1000000)
+    M3.duty_ns(1000000)
+    M4.duty_ns(1000000)
+
+    # fail!
+    FATAL_ERROR("UILE: " + str(ex)) # UILE = "Unhandled In-Loop Error"
