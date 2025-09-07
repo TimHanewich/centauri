@@ -19,7 +19,7 @@ def unpack_control_packet(data:bytes, into:list[int]) -> bool:
         return False
     
     # unpack throttle, an unsigned short (uint16)
-    into[0] = data[2] << 8 | data[1]
+    into[0] = data[1] << 8 | data[2]
 
     # unpack pitch, roll, yaw: all signed shorts (int16)
     # we subtract 32,768 out of each one to shift it BACK to a int16 from a uint16
