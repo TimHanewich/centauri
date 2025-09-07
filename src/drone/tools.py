@@ -23,7 +23,7 @@ def unpack_control_packet(data:bytes, into:list[int]) -> bool:
 
     # unpack pitch, roll, yaw: all signed shorts (int16)
     # we subtract 32,768 out of each one to shift it BACK to a int16 from a uint16
-    # if you look at the desired rates pack function the HL-MCU has, it is shifting the int16 values into uint16 values before packing to keep it simple.
+    # if you look at the packing function, it is shifting the int16 values into uint16 values before packing to keep it simple.
     # So we are undoing it here by shifting it back, so negatives can be preserved!
     into[1] = (data[3] << 8 | data[4]) - 32768
     into[2] = (data[5] << 8 | data[6]) - 32768
