@@ -155,7 +155,7 @@ print("Reading MPU-6050 WHOAMI register...")
 whoami:int = i2c.readfrom_mem(0x68, 0x75, 1)[0]
 if whoami == 0x68:
     print("MPU-6050 WHOAMI passed!")
-    #sendtimhmsg("IMU OK")
+    send_special("IMU OK")
 else:
     print("MPU-6050 WHOAMI Failed!")
     FATAL_ERROR("MPU6050 WHOAMI Fail")
@@ -189,7 +189,7 @@ else:
     FATAL_ERROR("MPU6050 LPF set failed!")
 
 # Send message to confirm IMU is all set up
-#sendtimhmsg("IMU SET")
+send_special("IMU SET")
 
 ## print header: Gyro calibration
 print()
@@ -204,7 +204,7 @@ for i in range(3):
     print("Beginning gyro calibration in " + str(3 - i) + "... ")
     #endtimhmsg("GyroCal in " + str(3 - i))
     time.sleep(1.0)
-#sendtimhmsg("CalibGyro...")
+send_special("Gyro Cal...")
 print("Calibrating gyro...")
 started_at_ticks_ms:int = time.ticks_ms()
 while time.ticks_diff(time.ticks_ms(), started_at_ticks_ms) < 3000: # 3 seconds
@@ -231,7 +231,7 @@ gyro_bias_x:int = gxs // samples
 gyro_bias_y:int = gys // samples
 gyro_bias_z:int = gzs // samples
 print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
-#sendtimhmsg("GyroCalib OK")
+send_special("Calib Gyro OK")
 
 # motor GPIO pins
 gpio_motor1:int = 21 # front left, clockwise
@@ -290,7 +290,7 @@ control_input_last_received_ticks_ms:int = 0 # timestamp (in ms) of the last tim
 
 # Infinite loop for all operations!
 print("Now entering infinite operating loop!")
-#sendtimhmsg("READY")
+send_special("READY")
 try:
     while True:
 
@@ -355,7 +355,7 @@ try:
                     pass
                 else: # unknown packet
                     print("Unknown data received: " + str(ThisLine))
-                    #sendtimhmsg("?") # respond with a simple question mark to indicate the message was not understood.
+                    send_special("?") # respond with a simple question mark to indicate the message was not understood.
 
                 # increment search start location... there is possibly another \r\n in there (and thus a new line to process)
                 search_from = loc + 2 # +2 to jump after \r\n
@@ -373,7 +373,7 @@ try:
             pitch_int16 = 0
             roll_int16 = 0
             yaw_int16 = 0
-            #sendtimhmsg("CommsRx Err: " + str(ex))
+            send_special("CommsRx Err: " + str(ex))
 
         # Capture RAW IMU data: both gyroscope and accelerometer
         # Goal here is ONLY to capture the data, not to transform it
