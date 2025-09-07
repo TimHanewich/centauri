@@ -29,22 +29,22 @@ def pack_control_packet(throttle:float, pitch:float, roll:float, yaw:float) -> b
     ToReturn.append(header)
 
     # Add throttle bytes
-    asint16:int = min(max(int(throttle * 65535), 0), 65535) # express as number between 0 and 65535
+    asint16 = min(max(int(round(throttle * 65535, 0)), 0), 65535) # express as number between 0 and 65535
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add pitch bytes
     aspop:float = (pitch + 1) / 2 # as percent of the range -1.0 to 1.0
-    asint16:int = min(max(int(aspop * 65535), 0), 65535) # convert the range from a number between 0 and 65535 (uint16)
+    asint16:int = min(max(int(round(aspop * 65535, 0)), 0), 65535) # convert the range from a number between 0 and 65535 (uint16)
     ToReturn.extend(asint16.to_bytes(2, "big")) # pack as 2-bytes using big endian
 
     # add roll bytes
     aspop:float = (roll + 1) / 2 # as percent of the range -1.0 to 1.0
-    asint16:int = min(max(int(aspop * 65535), 0), 65535) # convert the range from a number between 0 and 65535 (uint16)
+    asint16:int = min(max(int(round(aspop * 65535, 0)), 0), 65535) # convert the range from a number between 0 and 65535 (uint16)
     ToReturn.extend(asint16.to_bytes(2, "big")) # pack as 2-bytes using big endian
 
     # add yaw bytes
     aspop:float = (yaw + 1) / 2 # as percent of the range -1.0 to 1.0
-    asint16:int = min(max(int(aspop * 65535), 0), 65535) # convert the range from a number between 0 and 65535 (uint16)
+    asint16:int = min(max(int(round(aspop * 65535, 0)), 0), 65535) # convert the range from a number between 0 and 65535 (uint16)
     ToReturn.extend(asint16.to_bytes(2, "big")) # pack as 2-bytes using big endian
 
     # Add XOR-chain-based checksum
