@@ -163,7 +163,3 @@ def unpack_telemetry(data:bytes) -> dict:
     # return
     ToReturn:dict = {"vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle}
     return ToReturn
-
-data = bytearray(b'\x00\x00\x8e}\x80\x84\x85')
-d = unpack_telemetry(data)
-print(str(d))

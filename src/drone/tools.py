@@ -67,8 +67,3 @@ def pack_telemetry(vbat:float, pitch_rate:int, roll_rate:int, yaw_rate:int, pitc
     into[4] = yaw_rate + 128
     into[5] = pitch_angle + 128
     into[6] = roll_angle + 128
-
-
-data = bytearray(7)
-pack_telemetry(0.0, 14, -3, 0, 4, 5, data)
-print(str(data))
