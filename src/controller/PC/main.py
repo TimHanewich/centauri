@@ -248,12 +248,10 @@ async def main() -> None:
                 dp.throttle = throttle
                 dp.pitch = pitch
                 dp.roll = roll
-                dp.yaw = yaw
-                
-                # plug in drone status variables: system status
-                dp.drone_battery = vbat
+                dp.yaw = yaw                
 
                 # plug in drone status variables: control status
+                dp.drone_battery = vbat
                 dp.pitch_rate = pitch_rate
                 dp.roll_rate = roll_rate
                 dp.yaw_rate = yaw_rate
