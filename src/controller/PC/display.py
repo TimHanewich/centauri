@@ -33,18 +33,8 @@ class DisplayPack:
         self.roll:float = 0.0
         self.yaw:float = 0.0
 
-        # telemetry being received from the drone: system status:
-        self.drone_battery:float = 0.0 # battery voltage
-        self.tf_luna_distance:int = 0 # distance, in CM
-        self.tf_luna_strength:int = 0
-        self.altitude:float = 0.0 # altitude as detected by BMP180
-        self.heading:int = 0 # heading as detected by QMC5883L
-
         # telemetry being received from drone: control status
-        self.M1_throttle:float = 0.0 # 0.0 to 1.0
-        self.M2_throttle:float = 0.0
-        self.M3_throttle:float = 0.0
-        self.M4_throttle:float = 0.0
+        self.drone_battery:float = 0.0 # battery voltage
         self.pitch_rate:float = 0.0
         self.roll_rate:float = 0.0
         self.yaw_rate:float = 0.0
@@ -105,19 +95,11 @@ def construct(dp:DisplayPack) -> rich.table.Table:
     # construct what to display in telemety column (telemetry from quadcopter)
     txt_status:str = ""
     txt_status = txt_status + "Battery: " + str(round(dp.drone_battery, 1)) + " v"
-    txt_status = txt_status + "\n" + "LunaD: " + str(dp.tf_luna_distance) + " cm"
-    txt_status = txt_status + "\n" + "LunaS: " + str(dp.tf_luna_strength)
-    txt_status = txt_status + "\n" + "Altitude: " + str(round(dp.altitude, 1)) + " m"
-    txt_status = txt_status + "\n" + "Heading: " + str(dp.heading) + " °"
     txt_status = txt_status + "\n" + "Pitch Angle: " + str(dp.pitch_angle) + " °"
     txt_status = txt_status + "\n" + "Roll Angle: " + str(dp.roll_angle) + " °"
     txt_status = txt_status + "\n" + "Pitch Rate: " + str(dp.pitch_rate) + " °/s"
     txt_status = txt_status + "\n" + "Roll Rate: " + str(dp.roll_rate) + " °/s"
     txt_status = txt_status + "\n" + "Yaw Rate: " + str(dp.yaw_rate) + " °/s"
-    txt_status = txt_status + "\n" + "M1: " + str(int(dp.M1_throttle * 100)) + "%"
-    txt_status = txt_status + "\n" + "M2: " + str(int(dp.M2_throttle * 100)) + "%"
-    txt_status = txt_status + "\n" + "M3: " + str(int(dp.M3_throttle * 100)) + "%"
-    txt_status = txt_status + "\n" + "M4: " + str(int(dp.M4_throttle * 100)) + "%"
 
     # construct what to display in messages column
     max_messages:int = 10 # maxiumum number of messages that can be displayed
