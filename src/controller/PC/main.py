@@ -331,10 +331,6 @@ async def main() -> None:
                 if ThisLine[0] & 0b00000011 == 0b00000000: # if bit 0 and bit 1 of the first byte (packet header) are both 0's, it is a control status packet
                     ControlStatus:dict = tools.unpack_control_status(ThisLine)
                     if ControlStatus != None: # it would return None if the checksum was not correct (data transmission issue)
-                        m1_throttle = ControlStatus["m1_throttle"]
-                        m2_throttle = ControlStatus["m2_throttle"]
-                        m3_throttle = ControlStatus["m3_throttle"]
-                        m4_throttle = ControlStatus["m4_throttle"]
                         pitch_rate = ControlStatus["pitch_rate"]
                         roll_rate = ControlStatus["roll_rate"]
                         yaw_rate = ControlStatus["yaw_rate"]
@@ -343,10 +339,6 @@ async def main() -> None:
                 elif ThisLine[0] & 0b00000010 == 0 and ThisLine[0] & 0b00000001 > 0: # bit 0 is occupied, bit 1 is not = it is a SYSTEM STATUS!
                     SystemStatus:dict = tools.unpack_system_status(ThisLine)
                     vbat = SystemStatus["battery_voltage"]
-                    tf_luna_distance = SystemStatus["tf_luna_distance"]
-                    tf_luna_strength = SystemStatus["tf_luna_strength"]
-                    altitude = SystemStatus["altitude"]
-                    heading = SystemStatus["heading"]
                 elif ThisLine[0] & 0b00000010 > 0 and ThisLine[0] & 0b00000001 == 0: # bit 1 is occupied but bit 0 is not = it is a special packet (free text)
                     msg:str = tools.unpack_special_packet(ThisLine)
                     drone_messages.append(display.Message(msg, time.time()))
