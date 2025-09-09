@@ -345,8 +345,10 @@ try:
                 ThisLine = memoryview(rxBuffer)[search_from:write_idx]
 
                 # handle according to what it is
-                # check first for control input data as that is the the most important and time-sensitive thing anyway
-                if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
+                # we must check if it is a TIMHPING first because the "T" byte has a 0 in bit 0, so it would think it is a control packet if we checked for that first!
+                if ThisLine == TIMHPING: # PING: simple check of life
+                    uart_hc12.write("TIMHPONG\r\n".encode()) # PONG back
+                elif ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
                     unpack_successful:bool = tools.unpack_control_packet(ThisLine, control_input)
                     if unpack_successful:
                         input_throttle_uint16 = control_input[0]
@@ -354,8 +356,6 @@ try:
                         input_roll_int16 = control_input[2]
                         input_yaw_int16 = control_input[3]
                         control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
-                elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
-                    uart_hc12.write("TIMHPONG\r\n".encode()) # PONG back
                 elif ThisLine[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
                     # unpack and update settings
                     pass
