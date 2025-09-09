@@ -56,6 +56,7 @@ def pack_telemetry(vbat:float, pitch_rate:int, roll_rate:int, yaw_rate:int, pitc
 
     # rates
     # we add 128 to "shift" from a signed byte to an unsigned byte for the sake of storage
+    # that means, when unpacking this (the PC unpacks it), 128 will be subtracted out to get the signed value
     into[2] = pitch_rate + 128
     into[3] = roll_rate + 128
     into[4] = yaw_rate + 128
