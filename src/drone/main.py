@@ -355,8 +355,7 @@ try:
                         input_yaw_int16 = control_input[3]
                         control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
                 elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
-                    # PONG back
-                    pass
+                    uart_hc12.write("TIMHPONG\r\n".encode()) # PONG back
                 elif ThisLine[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
                     # unpack and update settings
                     pass
