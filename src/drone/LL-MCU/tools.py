@@ -83,7 +83,16 @@ def unpack_desired_rates(data:bytes, into:list[int]) -> bool:
 
 
 
+
+
+
+
+
+
+
+
 ##### PACKING DATA TO BE SENT TO HL-MCU #####
+
 def pack_status(m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, into:bytearray) -> None:
     """Packs status values in a preexisting bytearray, updating the first 10 bytes."""
 
