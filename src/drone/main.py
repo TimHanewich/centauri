@@ -259,6 +259,7 @@ cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, 
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
 control_input:list[int] = [0,0,0,0] # array that we will unpack control input into (throttle input, pitch input, roll input, yaw input) - throttle as uint16, the rest as int16
+telemetry_packet:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.). We set it up with 9 bytes: 1 for the header, 6 for the data, two for the \r\n terminator (so we don't have to keep appending \r\n at the end and causing more overhead in the loop)
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
 
 # declare variables: desired rate inputs
@@ -306,9 +307,11 @@ try:
 
         # is it time to send status (telemetry) over to the remote controller via the HC-12?
         if time.ticks_diff(time.ticks_ms(), status_last_sent_ticks_ms) >= 1000: # every 1000 ms (1 time per second)
-            # send the data!
-            pass
-            status_last_sent_ticks_ms = time.ticks_ms()
+            # we divide by 1000 (integer division) to reduce back to a single unit (each is stored 1000x the actual to allow for integer math instead of floating point math)
+            tools.pack_telemetry(vbat, pitch_rate // 1000, roll_rate // 1000, yaw_rate // 1000, pitch_angle // 1000, roll_angle // 1000, telemetry_packet)
+            print("Sending telemetry...")
+            uart_hc12.write(telemetry_packet) # no need to append \r\n to it because the bytearray packet already has it at the end!
+            status_last_sent_ticks_ms = time.ticks_ms() # update last sent time
 
         # check for received data (input data) from the HC-12
         # the data that we receive from the HC-12 could be:
