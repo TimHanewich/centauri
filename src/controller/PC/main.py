@@ -156,10 +156,6 @@ async def main() -> None:
 
     # set up status variables we will get from the drone (and display in the console!): system status
     vbat:float = 0.0 # volts
-    tf_luna_distance:int = 0 # in cm
-    tf_luna_strength:int = 0
-    altitude:float = 0.0 # from BMP180, in meters
-    heading:int = 0 # in degrres
 
     # set up status variables we will get from the drone (and display in the console!): control status
     pitch_angle:int = 0 # in degrees
@@ -167,11 +163,6 @@ async def main() -> None:
     pitch_rate:int = 0 # in degrees per second
     roll_rate:int = 0 # in degrees per second
     yaw_rate:int = 0 # in degrees per second
-    m1_throttle:int = 0 # 0-100 (%)
-    m2_throttle:int = 0 # 0-100 (%)
-    m3_throttle:int = 0 # 0-100 (%)
-    m4_throttle:int = 0 # 0-100 (%)
-
 
     # set up system info variables
     packets_sent:int = 0
@@ -261,16 +252,8 @@ async def main() -> None:
                 
                 # plug in drone status variables: system status
                 dp.drone_battery = vbat
-                dp.tf_luna_distance = tf_luna_distance
-                dp.tf_luna_strength = tf_luna_strength
-                dp.altitude = altitude
-                dp.heading = heading
 
                 # plug in drone status variables: control status
-                dp.M1_throttle = m1_throttle
-                dp.M2_throttle = m2_throttle
-                dp.M3_throttle = m3_throttle
-                dp.M4_throttle = m4_throttle
                 dp.pitch_rate = pitch_rate
                 dp.roll_rate = roll_rate
                 dp.yaw_rate = yaw_rate
@@ -317,19 +300,11 @@ async def main() -> None:
         nonlocal packets_received
         nonlocal packets_last_received_at
         nonlocal vbat # drone's battery level
-        nonlocal tf_luna_distance
-        nonlocal tf_luna_strength
-        nonlocal altitude
-        nonlocal heading
         nonlocal pitch_angle
         nonlocal roll_angle
         nonlocal pitch_rate
         nonlocal roll_rate
         nonlocal yaw_rate
-        nonlocal m1_throttle
-        nonlocal m2_throttle
-        nonlocal m3_throttle
-        nonlocal m4_throttle
 
         # declare rxBuffer of all data received from transceiver through the USB serial line
         rxBuffer:bytearray = bytearray()
