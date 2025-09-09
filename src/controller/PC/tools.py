@@ -143,3 +143,27 @@ def unpack_special_packet(data:bytes) -> str:
     trb:bytes = data[1:EndOn]
     ToReturn:str = trb.decode(errors="replace") # transmission errors will be replaced with "�"
     return ToReturn
+
+def unpack_telemetry(data:bytes) -> dict:
+    """Unpacks telemetry packet coming from the drone"""
+
+    # the first byte is a header (metadata) byte
+
+    # battery voltage
+    vbat:float = 6.0 + ((16.8 - 6.0) * (data[1] / 255))
+
+    # others
+    # we subtract 128 here to "shift back" to a signed byte from an unsigned byte (128 is added before packing it)
+    pitch_rate:int = data[2] - 128
+    roll_rate:int = data[3] - 128
+    yaw_rate:int = data[4] - 128
+    pitch_angle:int = data[5] - 128
+    roll_angle:int = data[6] - 128
+
+    # return
+    ToReturn:dict = {"vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle}
+    return ToReturn
+
+data = bytearray(b'\x00\x00\x8e}\x80\x84\x85')
+d = unpack_telemetry(data)
+print(str(d))
