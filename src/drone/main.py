@@ -263,10 +263,10 @@ TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison s
 
 # declare variables: desired rate inputs
 # these will later be updated via incoming desired rate packets (over UART from HL-MCU)
-throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
-pitch_int16:int = 0            # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
-roll_int16:int = 0             # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
-yaw_int16:int = 0              # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+input_throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
+input_pitch_int16:int = 0            # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+input_roll_int16:int = 0             # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+input_yaw_int16:int = 0              # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
 
 # declare uart conveyer read objects
 rxBufferLen:int = 128
@@ -349,10 +349,10 @@ try:
                 if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
                     unpack_successful:bool = tools.unpack_control_packet(ThisLine, control_input)
                     if unpack_successful:
-                        throttle_uint16 = control_input[0]
-                        pitch_int16 = control_input[1]
-                        roll_int16 = control_input[2]
-                        yaw_int16 = control_input[3]
+                        input_throttle_uint16 = control_input[0]
+                        input_pitch_int16 = control_input[1]
+                        input_roll_int16 = control_input[2]
+                        input_yaw_int16 = control_input[3]
                         control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
                 elif ThisLine == TIMHPING: # PING: simple check of life from the HL-MCU
                     # PONG back
@@ -376,10 +376,10 @@ try:
                 write_idx = unprocessed_byte_count
 
         except Exception as ex:
-            throttle_uint16 = 0
-            pitch_int16 = 0
-            roll_int16 = 0
-            yaw_int16 = 0
+            input_throttle_uint16 = 0
+            input_pitch_int16 = 0
+            input_roll_int16 = 0
+            input_yaw_int16 = 0
             send_special("CommsRx Err: " + str(ex))
 
         # Capture RAW IMU data: both gyroscope and accelerometer
@@ -459,14 +459,14 @@ try:
         roll_angle = ((expected_roll_angle_gyro * alpha) + (expected_roll_angle_accel * (100 - alpha))) // 100
 
         # convert desired throttle, expressed as a uint16, into nanoseconds
-        desired_throttle:int = 1000000 + (throttle_uint16 * 1000000) // 65535
+        desired_throttle:int = 1000000 + (input_throttle_uint16 * 1000000) // 65535
 
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
         # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
         # but multiply it all by 1,000 (not just 90) so we can do integer math
-        desired_pitch_rate:int = (pitch_int16 * 90000) // 32767
-        desired_roll_rate:int = (roll_int16 * 90000) // 32767
-        desired_yaw_rate:int = (yaw_int16 * 90000) // 32767
+        desired_pitch_rate:int = (input_pitch_int16 * 90000) // 32767
+        desired_roll_rate:int = (input_roll_int16 * 90000) // 32767
+        desired_yaw_rate:int = (input_yaw_int16 * 90000) // 32767
 
         # now compare those ACTUAL rates with the DESIRED rates (calculate error)
         # error = desired - actual
