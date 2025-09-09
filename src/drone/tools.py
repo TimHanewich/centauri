@@ -31,3 +31,35 @@ def unpack_control_packet(data:bytes, into:list[int]) -> bool:
 
     # return true to indicate the unpack was successful
     return True
+
+def pack_telemetry(vbat:float, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, into:bytearray) -> None:
+    """
+    Packs telemetry into an existing bytearray of length 7 bytes
+
+    Expects:
+    vbat between 6.0 and 16.8 (float)
+    pitch_rate between -128 and 127 (signed byte)
+    roll_rate between -128 and 127 (signed byte)
+    yaw_rate between -128 and 127 (signed byte)
+    pitch_angle between -128 and 127 (signed byte)
+    roll_angle between -128 and 127 (signed byte)
+    """
+
+    # header
+    into[0] = 0b00000000 # bit 0 is 0 indicates it is a telemetry packet
+
+    # battery voltage
+    # this is the integer division equivalent of converting it to a percent of the 6.0 to 16.8 range and then seeign what byte value that comes out to
+    vbat_asbyte:int = round((vbat - 6.0) * 255, 0) // ((16.8 - 6.0) * 100)
+    print("Vbat as byte: " + str(vbat_asbyte))
+    into[1] = vbat_asbyte
+
+    # rates
+    # we add 128 to "shift" from a signed byte to an unsigned byte for the sake of storage
+    into[2] = pitch_rate + 128
+    into[3] = roll_rate + 128
+    into[4] = yaw_rate + 128
+    into[5] = pitch_angle + 128
+    into[6] = roll_angle + 128
+
+
