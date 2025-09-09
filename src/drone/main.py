@@ -247,12 +247,12 @@ M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_u16=
 M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_u16=0)
 
 # Set up telemetry variables that will be used to store and then send status to remote controller
-vbat:float = 0.0     # battery voltage, expressed as a single byte (0-255), spread over a voltage range of 6.0 to 16.8 volts, or 0.0422 volts per value
-pitch_rate:int = 0   # signed byte (shifted), interpretted literally in degrees per second
-roll_rate:int = 0    # signed byte (shifted), interpretted literally in degrees per second
-yaw_rate:int = 0     # signed byte (shifted), interpretted literally in degrees per second
-pitch_angle:int = 0  # signed bytea (shifted), interpretted literally in degrees
-roll_angle:int = 0   # signed byte (shifted), interpretted literally in degrees
+vbat:float = 0.0     # battery voltage between 6.0 and 16.8 volts
+pitch_rate:int = 0   # pitch rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
+roll_rate:int = 0    # roll rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
+yaw_rate:int = 0     # yaw rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
+pitch_angle:int = 0  # pitch angle, multiplied by 1,000. So, for example, 3543 would be 3.543.
+roll_angle:int = 0   # roll angle, multiplied by 1,000. So, for example, 3543 would be 3.543.
 
 # declare objects we will reuse in the loop instead of remaking each time (for efficiency)
 cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, the full PID loop must happen within. 4,000 microseconds (4 ms) to achieve a 250 Hz loop speed for example.
