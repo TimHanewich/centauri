@@ -46,6 +46,9 @@ def pack_control_packet(throttle:float, pitch:float, roll:float, yaw:float) -> b
     # return it
     return bytes(ToReturn)
 
+def pack_settings_update() -> bytes:
+    """Pack settings update"""
+    pass
 
 
 ######### UNPACKING DATA FROM THE DRONE ########
