@@ -1,3 +1,5 @@
+##### UNPACKING DATA FROM THE CONTROLLER #####
+
 def unpack_control_packet(data:bytes, into:list[int]) -> bool:
     """
     Unpack desired rates packet into throttle input, pitch input, roll input, and yaw input, into a preexisting list. 
@@ -31,6 +33,16 @@ def unpack_control_packet(data:bytes, into:list[int]) -> bool:
 
     # return true to indicate the unpack was successful
     return True
+
+def unpack_settings_update(data:bytes) -> None:
+    """Unpack settings update"""
+    pass
+
+
+
+
+
+##### PACKING DATA TO BE SENT TO THE CONTROLLER #####
 
 def pack_telemetry(vbat:float, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, into:bytearray) -> None:
     """
@@ -67,3 +79,6 @@ def pack_telemetry(vbat:float, pitch_rate:int, roll_rate:int, yaw_rate:int, pitc
     into[4] = yaw_rate + 128
     into[5] = pitch_angle + 128
     into[6] = roll_angle + 128
+
+# don't need to write a function for packing special packet
+# because main.py already makes that ("send_special()")
