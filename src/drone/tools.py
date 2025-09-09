@@ -45,6 +45,10 @@ def pack_telemetry(vbat:float, pitch_rate:int, roll_rate:int, yaw_rate:int, pitc
     roll_angle between -128 and 127 (signed byte)
     """
 
+    # ensure the provided bytearray is big enough
+    if len(into) < 7:
+        raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing telemetry into. Must be at least 7 bytes.")
+
     # header
     into[0] = 0b00000000 # bit 0 is 0 indicates it is a telemetry packet
 
