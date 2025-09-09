@@ -54,8 +54,9 @@ def pack_telemetry(vbat:float, pitch_rate:int, roll_rate:int, yaw_rate:int, pitc
 
     # battery voltage
     # this is the integer division equivalent of converting it to a percent of the 6.0 to 16.8 range and then seeign what byte value that comes out to
-    vbat_asbyte:int = round((vbat - 6.0) * 255, 0) // ((16.8 - 6.0) * 100)
-    print("Vbat as byte: " + str(vbat_asbyte))
+    aspor:float = (vbat - 6.0) / (16.8 - 6.0) # percent of range
+    vbat_asbyte:int = int(round(aspor * 255, 0))
+    vbat_asbyte = min(max(vbat_asbyte, 0), 255)
     into[1] = vbat_asbyte
 
     # rates
@@ -68,3 +69,6 @@ def pack_telemetry(vbat:float, pitch_rate:int, roll_rate:int, yaw_rate:int, pitc
     into[6] = roll_angle + 128
 
 
+data = bytearray(7)
+pack_telemetry(0.0, 14, -3, 0, 4, 5, data)
+print(str(data))
