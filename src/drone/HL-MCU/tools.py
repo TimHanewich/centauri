@@ -1,14 +1,3 @@
-### GENERAL HELPER FUNCTIONS
-
-def shift_int16_to_uint16(val:int) -> int:
-    """Does a simple 'shift' of an int16 (-32768 to 32767) to a uint16 (0 to 65535) by just adding 32768, shifting it upwards. Can later be shifted back down. Simple."""
-    if val > 32767: # if exceeds bounds of upper limit of int16, return max of uint16
-        return 65535
-    elif val < -32768: # if lower than the lower limit of int16, return min value of uint16
-        return 0
-    else:
-        return val + 32768
-
 ##### TO BE SENT TO REMOTE CONTROLLER
 
 def pack_system_status(battery:float, tfluna_distance:int, tfluna_strength:int, altitude:float, heading:float) -> bytes:
