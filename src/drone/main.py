@@ -505,36 +505,37 @@ try:
         yaw_d = (yaw_kd * (error_yaw_rate - yaw_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
         yaw_pid = yaw_p + yaw_i + yaw_d
 
-        # convert desired throttle, expressed as a uint16, into nanoseconds
-        desired_throttle:int = 1000000 + (input_throttle_uint16 * 1000000) // 65535
+        # Calculate the mean pulse width the PWM signals will use
+        # each motor will then offset this a bit based on the PID values for each axis
+        # "pwm_pw" short for "Pulse Width Modulation Pulse Width"
+        mean_pwm_pw:int = 1000000 + (input_throttle_uint16 * 1000000) // 65535
 
         # calculate throttle values for each motor using those PID influences
         #print("Pitch PID: " + str(pitch_pid) + ", Roll PID: " + str(roll_pid) + ", Yaw Pid: " + str(yaw_pid))
-        m1_throttle = desired_throttle - pitch_pid + roll_pid + yaw_pid
-        m2_throttle = desired_throttle - pitch_pid - roll_pid - yaw_pid
-        m3_throttle = desired_throttle + pitch_pid + roll_pid - yaw_pid
-        m4_throttle = desired_throttle + pitch_pid - roll_pid + yaw_pid
+        m1_pwm_pw = mean_pwm_pw - pitch_pid + roll_pid + yaw_pid
+        m2_pwm_pw = mean_pwm_pw - pitch_pid - roll_pid - yaw_pid
+        m3_pwm_pw = mean_pwm_pw + pitch_pid + roll_pid - yaw_pid
+        m4_pwm_pw = mean_pwm_pw + pitch_pid - roll_pid + yaw_pid
 
         # min/max those duty times
         # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds)
-        m1_throttle = min(max(m1_throttle, 1000000), 2000000)
-        m2_throttle = min(max(m2_throttle, 1000000), 2000000)
-        m3_throttle = min(max(m3_throttle, 1000000), 2000000)
-        m4_throttle = min(max(m4_throttle, 1000000), 2000000)
-        #print(str(time.ticks_ms()) + ": M1: " + str(m1_throttle) + ", M2: " + str(m2_throttle) + ", M3: " + str(m3_throttle) + ", M4: " + str(m4_throttle))
-
+        m1_pwm_pw = min(max(m1_pwm_pw, 1000000), 2000000)
+        m2_pwm_pw = min(max(m2_pwm_pw, 1000000), 2000000)
+        m3_pwm_pw = min(max(m3_pwm_pw, 1000000), 2000000)
+        m4_pwm_pw = min(max(m4_pwm_pw, 1000000), 2000000)
+        
         # MOTOR SHUTDOWN CONDITIONS (safety)
         # there are two conditions that would mean, no matter what happened above, ALL FOUR motors should be shut down (0% throttle)
         # scenario 1: desired throttle is 0%. This is obvious. If throttle is 0%, no motors should move. But, the PID loop is still running so it will still be trying to compensate for rate errors, meaning a motor could go OVER 0% throttle.
         # scenario 2: it has been a long time since we received a valid control data packet. This could be due to an error or something with the controller not sending data or the HL-MCU not sending data... but if this happens, as a failsafe, turn off all motors to prevent them from being stuck on.
-        if desired_throttle == 1000000 or time.ticks_diff(time.ticks_ms(), control_input_last_received_ticks_ms) > 2000: # if we havne't received valid control input data in more than 2 seconds
+        if mean_pwm_pw == 1000000 or time.ticks_diff(time.ticks_ms(), control_input_last_received_ticks_ms) > 2000: # if we havne't received valid control input data in more than 2 seconds
             
             # shut off all motors
             # 1,000,000 nanoseconds = 1 ms, the minumum throttle for an ESC (0% throttle, so no rotation)
-            m1_throttle = 1000000
-            m2_throttle = 1000000
-            m3_throttle = 1000000
-            m4_throttle = 1000000
+            m1_pwm_pw = 1000000
+            m2_pwm_pw = 1000000
+            m3_pwm_pw = 1000000
+            m4_pwm_pw = 1000000
 
             # reset cumulative PID values (I and D related)
             pitch_last_i = 0
@@ -545,10 +546,10 @@ try:
             yaw_last_error = 0
 
         # adjust throttles on PWMs
-        M1.duty_ns(m1_throttle)
-        M2.duty_ns(m2_throttle)
-        M3.duty_ns(m3_throttle)
-        M4.duty_ns(m4_throttle)
+        M1.duty_ns(m1_pwm_pw)
+        M2.duty_ns(m2_pwm_pw)
+        M3.duty_ns(m3_pwm_pw)
+        M4.duty_ns(m4_pwm_pw)
 
         # save state values for next loop
         pitch_last_error = error_pitch_rate
