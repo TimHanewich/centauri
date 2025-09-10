@@ -328,9 +328,10 @@ try:
             BytesAvailable:int = uart_hc12.any()
             if BytesAvailable > 0:
                 available_space:int = rxBufferLen - write_idx # calculate how many bytes we have remaining in the buffer
+                BytesWeWillReadRightNow:int = min(BytesAvailable, available_space)
                 if available_space > 0:
-                    target_write_window = memoryview(rxBuffer)[write_idx:write_idx + BytesAvailable] # create a memoryview pointer target to the area of the rxBuffer we want to write to with these new bytes
-                    bytes_read:int = uart_hc12.readinto(target_write_window, BytesAvailable) # read directly into that target window, but specify the number of bytes. Specifying exactly how many bytes to read into drastically improves performance. From like 3,000 microseconds to like 70 (unless the window you want to read into fits the bytes available, which we do here, but adding number of bytes just to be sure)
+                    target_write_window = memoryview(rxBuffer)[write_idx:write_idx + BytesWeWillReadRightNow] # create a memoryview pointer target to the area of the rxBuffer we want to write to with these new bytes
+                    bytes_read:int = uart_hc12.readinto(target_write_window, BytesWeWillReadRightNow) # read directly into that target window, but specify the number of bytes. Specifying exactly how many bytes to read into drastically improves performance. From like 3,000 microseconds to like 70 (unless the window you want to read into fits the bytes available, which we do here, but adding number of bytes just to be sure)
                     write_idx = write_idx + bytes_read # increment the write location forward
                 else:
                     write_idx = 0 # if there is no space, reset the write location for next time around 
