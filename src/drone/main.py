@@ -131,8 +131,13 @@ hc12_set.high()
 # define special message packet function for sending special packets (prepend with "TIMH")
 print("Defining special message function...")
 def send_special(msg:str) -> None:
-    ToSend:str = "TIMH" + msg + "\r\n"
-    uart_hc12.write(ToSend.encode())
+    ToSend:bytearray = bytearray()
+    ToSend.append(0b00000001) # append header byte with bit 0 = 1 to identify it as a special packet
+    if len(msg) > 50:
+        msg = msg[0:50] # limit to 50 chars
+    ToSend.extend(msg.encode())
+    ToSend.extend("\r\n".encode()) # terminator
+    uart_hc12.write(ToSend)
 
 # send online notification
 print("Sending 'HC12 OK' message...")
