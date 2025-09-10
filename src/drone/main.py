@@ -512,10 +512,10 @@ try:
 
         # calculate throttle values for each motor using those PID influences
         #print("Pitch PID: " + str(pitch_pid) + ", Roll PID: " + str(roll_pid) + ", Yaw Pid: " + str(yaw_pid))
-        m1_pwm_pw = mean_pwm_pw - pitch_pid + roll_pid + yaw_pid
-        m2_pwm_pw = mean_pwm_pw - pitch_pid - roll_pid - yaw_pid
-        m3_pwm_pw = mean_pwm_pw + pitch_pid + roll_pid - yaw_pid
-        m4_pwm_pw = mean_pwm_pw + pitch_pid - roll_pid + yaw_pid
+        m1_pwm_pw = mean_pwm_pw + pitch_pid + roll_pid + yaw_pid
+        m2_pwm_pw = mean_pwm_pw + pitch_pid - roll_pid - yaw_pid
+        m3_pwm_pw = mean_pwm_pw - pitch_pid + roll_pid - yaw_pid
+        m4_pwm_pw = mean_pwm_pw - pitch_pid - roll_pid + yaw_pid
 
         # min/max those duty times
         # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds)
