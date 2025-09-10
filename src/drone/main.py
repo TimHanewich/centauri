@@ -307,8 +307,7 @@ try:
 
         # is it time to send status (telemetry) over to the remote controller via the HC-12?
         if time.ticks_diff(time.ticks_ms(), status_last_sent_ticks_ms) >= 1000: # every 1000 ms (1 time per second)
-            # we divide by 1000 (integer division) to reduce back to a single unit (each is stored 1000x the actual to allow for integer math instead of floating point math)
-            tools.pack_telemetry(vbat, pitch_rate // 1000, roll_rate // 1000, yaw_rate // 1000, pitch_angle // 1000, roll_angle // 1000, telemetry_packet)
+            tools.pack_telemetry(vbat, pitch_rate // 1000, roll_rate // 1000, yaw_rate // 1000, pitch_angle // 1000, roll_angle // 1000, telemetry_packet) # we divide by 1000 (integer division) to reduce back to a single unit (each is stored 1000x the actual to allow for integer math instead of floating point math)
             uart_hc12.write(telemetry_packet) # no need to append \r\n to it because the bytearray packet already has it at the end!
             status_last_sent_ticks_ms = time.ticks_ms() # update last sent time
 
