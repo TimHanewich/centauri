@@ -381,7 +381,6 @@ try:
                 write_idx = unprocessed_byte_count
 
         except Exception as ex:
-            raise ex
             input_throttle_uint16 = 0
             input_pitch_int16 = 0
             input_roll_int16 = 0
@@ -559,8 +558,6 @@ try:
             time.sleep_us(excess_us)
             
 except Exception as ex: # unhandled error somewhere in the loop
-
-    raise ex
 
     # turn off all motors!!!!!!!
     # 1,000,000 nanoseconds = 0% throttle
