@@ -327,24 +327,23 @@ async def main() -> None:
                 packets_received = packets_received + 1
                 packets_last_received_at = time.time()
 
-                # Handle the line based on what it is
-                if ThisLine[0] & 0b00000011 == 0b00000000: # if bit 0 and bit 1 of the first byte (packet header) are both 0's, it is a control status packet
-                    ControlStatus:dict = tools.unpack_control_status(ThisLine)
-                    if ControlStatus != None: # it would return None if the checksum was not correct (data transmission issue)
-                        pitch_rate = ControlStatus["pitch_rate"]
-                        roll_rate = ControlStatus["roll_rate"]
-                        yaw_rate = ControlStatus["yaw_rate"]
-                        pitch_angle = ControlStatus["pitch_angle"]
-                        roll_angle = ControlStatus["roll_angle"]
-                elif ThisLine[0] & 0b00000010 == 0 and ThisLine[0] & 0b00000001 > 0: # bit 0 is occupied, bit 1 is not = it is a SYSTEM STATUS!
-                    SystemStatus:dict = tools.unpack_system_status(ThisLine)
-                    vbat = SystemStatus["battery_voltage"]
-                elif ThisLine[0] & 0b00000010 > 0 and ThisLine[0] & 0b00000001 == 0: # bit 1 is occupied but bit 0 is not = it is a special packet (free text)
+                # Handle the lineb based on what it is
+                if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a telemetry packet
+                    TelemetryData:dict = tools.unpack_telemetry(ThisLine)
+                    if TelemetryData != None: # it returns None if there was an issue like it wasn't long enough
+                        vbat = TelemetryData["vbat"]
+                        pitch_rate = TelemetryData["pitch_rate"]
+                        roll_rate = TelemetryData["roll_rate"]
+                        yaw_rate = TelemetryData["yaw_rate"]
+                        pitch_angle = TelemetryData["pitch_angle"]
+                        roll_angle = TelemetryData["roll_angle"]
+                elif ThisLine[0] & 0b00000001 > 0: # if bit 0 is 1, it is a special packet (text)
                     msg:str = tools.unpack_special_packet(ThisLine)
                     drone_messages.append(display.Message(msg, time.time()))
                 else:
-                    drone_messages.append(display.Message("NFD: Unknown received data.", time.time())) # NDF short for "Not from drone"
-            
+                    # handle uknown packet type?
+                    pass
+                
             # sleep
             await asyncio.sleep(0.05) # 20 Hz, faster than the 10 Hz the drone will send it at
 

@@ -56,6 +56,10 @@ def pack_settings_update() -> bytes:
 def unpack_telemetry(data:bytes) -> dict:
     """Unpacks telemetry packet coming from the drone"""
 
+    # if it is not long enough, return None to indicate it didn't work
+    if len(data) < 7:
+        return None
+
     # the first byte is a header (metadata) byte
 
     # battery voltage
