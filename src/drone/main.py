@@ -127,6 +127,7 @@ else:
 # now that the HC-12 is set up and configured, close out of AT mode by setting the SET pin back to HIGH
 print("Returning HC-12 SET pin to HIGH (exiting AT mode)...")
 hc12_set.high()
+time.sleep(0.5) # wait a moment for the HC-12 to successfully get out of AT mode before proceeding with sending any messages
 
 # define special message packet function for sending special packets (prepend with "TIMH")
 print("Defining special message function...")
