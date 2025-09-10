@@ -523,7 +523,6 @@ try:
         m2_pwm_pw = min(max(m2_pwm_pw, 1000000), 2000000)
         m3_pwm_pw = min(max(m3_pwm_pw, 1000000), 2000000)
         m4_pwm_pw = min(max(m4_pwm_pw, 1000000), 2000000)
-        print("M1: " + str(m1_pwm_pw) + ", M2: " + str(m2_pwm_pw) + ", M3: " + str(m3_pwm_pw), "M4: " + str(m4_pwm_pw))
         
         # MOTOR SHUTDOWN CONDITIONS (safety)
         # there are two conditions that would mean, no matter what happened above, ALL FOUR motors should be shut down (0% throttle)
@@ -547,6 +546,7 @@ try:
             yaw_last_error = 0
 
         # adjust throttles on PWMs
+        print("M1: " + str(m1_pwm_pw) + ", M2: " + str(m2_pwm_pw) + ", M3: " + str(m3_pwm_pw), "M4: " + str(m4_pwm_pw))
         M1.duty_ns(m1_pwm_pw)
         M2.duty_ns(m2_pwm_pw)
         M3.duty_ns(m3_pwm_pw)
