@@ -292,6 +292,7 @@ last_compfilt_ticks_us:int = 0 # the last time the complementary filter was used
 control_input_last_received_ticks_ms:int = 0 # timestamp (in ms) of the last time a valid control packet was received. This is used to check and shut down motors if it has been too long (failsafe)
 
 # Infinite loop for all operations!
+print()
 print("Now entering infinite operating loop!")
 send_special("READY")
 try:
