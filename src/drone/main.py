@@ -470,9 +470,6 @@ try:
         pitch_angle = ((expected_pitch_angle_gyro * alpha) + (expected_pitch_angle_accel * (100 - alpha))) // 100
         roll_angle = ((expected_roll_angle_gyro * alpha) + (expected_roll_angle_accel * (100 - alpha))) // 100
 
-        # convert desired throttle, expressed as a uint16, into nanoseconds
-        desired_throttle:int = 1000000 + (input_throttle_uint16 * 1000000) // 65535
-
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
         # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
         # but multiply it all by 1,000 (not just 90) so we can do integer math
@@ -507,6 +504,9 @@ try:
         yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
         yaw_d = (yaw_kd * (error_yaw_rate - yaw_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
         yaw_pid = yaw_p + yaw_i + yaw_d
+
+        # convert desired throttle, expressed as a uint16, into nanoseconds
+        desired_throttle:int = 1000000 + (input_throttle_uint16 * 1000000) // 65535
 
         # calculate throttle values for each motor using those PID influences
         #print("Pitch PID: " + str(pitch_pid) + ", Roll PID: " + str(roll_pid) + ", Yaw Pid: " + str(yaw_pid))
