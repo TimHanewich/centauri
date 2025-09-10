@@ -10,8 +10,12 @@ def unpack_control_packet(data:bytes, into:list[int]) -> bool:
     Item 2 = roll input, between -32768 and 32767
     Item 3 = yaw input, between -32768 and 32767
     
-    Returns True if the unpack was successful, False if it did nto unpack because of the checksum failing to verify.
+    Returns True if the unpack was successful, False if it did not unpack because of the checksum failing to verify or the data was just not long enough.
     """
+
+    # return False right off the bat if the packet is not long enough
+    if len(data) < 10:
+        return False
 
     # first, validate checksum
     selfchecksum:int = 0x00
