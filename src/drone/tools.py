@@ -68,9 +68,8 @@ def unpack_settings_update(data:bytes) -> dict:
     # return
     return {"pitch_kp": pitch_kp, "pitch_ki": pitch_ki, "pitch_kd": pitch_kd, "roll_kp": roll_kp, "roll_ki": roll_ki, "roll_kd": roll_kd, "yaw_kp": yaw_kp, "yaw_ki": yaw_ki, "yaw_kd": yaw_kd, "i_limit": i_limit}
 
-data = b'\x01\x13\x88\x13\x88\x13\x88\x13\x88\x13\x88\x13\x88\x13\x88\x13\x88\x13\x88\x00\x96\x0c'
-settings:dict = unpack_settings_update(data)
-print(str(settings))
+
+
 
 
 
