@@ -370,8 +370,21 @@ try:
                         input_yaw_int16 = control_input[3]
                         control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
                 elif ThisLine[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
-                    # unpack and update settings
-                    pass
+                    settings:dict = tools.unpack_settings_update(ThisLine)
+                    if settings != None:
+                        pitch_kp = settings["pitch_kp"]
+                        pitch_ki = settings["pitch_ki"]
+                        pitch_kd = settings["pitch_kd"]
+                        roll_kp = settings["roll_kp"]
+                        roll_ki = settings["roll_ki"]
+                        roll_kd = settings["roll_kd"]
+                        yaw_kp = settings["yaw_kp"]
+                        yaw_ki = settings["yaw_ki"]
+                        yaw_kd = settings["yaw_kd"]
+                        i_limit = settings["i_limit"]
+                        print("Settings updated: " + str(settings))
+                    else:
+                        print("It was settings but it failed.")
                 else: # unknown packet
                     print("Unknown data received: " + str(ThisLine))
                     send_special("?") # respond with a simple question mark to indicate the message was not understood.
