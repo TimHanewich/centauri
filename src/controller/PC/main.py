@@ -167,6 +167,25 @@ async def main() -> None:
         exit()
 
     # Send a settings update (PID settings)
+    print()
+    console.print("[u]PID Update[/u]")
+    print("Packing PID updates...")
+    ToSend:bytes = tools.pack_settings_update(pitch_kp, pitch_ki, pitch_kd, roll_kp, roll_ki, roll_kd, yaw_kp, yaw_ki, yaw_kd, i_limit)
+    print("Sending PID updates...")
+    ser.write(ToSend + "\r\n".encode())
+    print("Settings packet sent!")
+    print("Waiting a moment for it to register.")
+    time.sleep(1.5)
+    print("Checking for settings update confirmation...")
+    if ser.in_waiting == 0:
+        print("No data at all received from drone. Was expecting settings update confirmation.")
+        exit()
+    recv:bytes = ser.read(ser.in_waiting) # read all available
+    if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
+        print("Settings update confirmation received from drone!")
+    else:
+        print("Drone sent back data but it wasn't a successful settings update. Received instead: " + str(recv))
+        exit()
 
     # set up control input variables we will track, display in console, and then interpret and transform before sending to drone in control packet
     armed:bool = False       # armed is being tracked here not as a variable we will directly pass on to the quadcopter, but rather a variable we will use to know if we should be transmitting at least the minimum throttle (when armed) or 0% throttle
