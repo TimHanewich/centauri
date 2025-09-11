@@ -46,9 +46,45 @@ def pack_control_packet(throttle:float, pitch:float, roll:float, yaw:float) -> b
     # return it
     return bytes(ToReturn)
 
-def pack_settings_update() -> bytes:
+def pack_settings_update(pitch_kp:int, pitch_ki:int, pitch_kd:int, roll_kp:int, roll_ki:int, roll_kd:int, yaw_kp:int, yaw_ki:int, yaw_kd:int, i_limit:int) -> bytes:
     """Pack settings update"""
-    pass
+
+    # if any of the inputs exceed a uint16, throw an error
+    if pitch_kp < 0 or pitch_ki < 0 or pitch_kd < 0 or roll_kp < 0 or roll_ki < 0 or roll_kd < 0 or yaw_kp < 0 or yaw_ki < 0 or yaw_kd < 0 or i_limit < 0:
+        raise Exception("Unable to pack PID settings! Ensure all input parameters are greater than 0.")
+    elif pitch_kp > 65535 or pitch_ki > 65535 or pitch_kd > 65535 or roll_kp > 65535 or roll_ki > 65535 or roll_kd > 65535 or yaw_kp > 65535 or yaw_ki > 65535 or yaw_kd > 65535 or i_limit > 65535:
+        raise Exception("Unable to pack PID settings! Ensure all input parameters are less than 65535.")
+    
+    ToReturn:bytearray = bytearray()
+
+    # header byte
+    # bit 0 being 1 indicates it is a settings update packet
+    ToReturn.append(0b00000001)
+
+    # pack each, one by one, as 2 bytes (uint16 between 0 and 65535)
+    ToReturn.extend(pitch_kp.to_bytes(2, "big"))
+    ToReturn.extend(pitch_ki.to_bytes(2, "big"))
+    ToReturn.extend(pitch_kd.to_bytes(2, "big"))
+    ToReturn.extend(roll_kp.to_bytes(2, "big"))
+    ToReturn.extend(roll_ki.to_bytes(2, "big"))
+    ToReturn.extend(roll_kd.to_bytes(2, "big"))
+    ToReturn.extend(yaw_kp.to_bytes(2, "big"))
+    ToReturn.extend(yaw_ki.to_bytes(2, "big"))
+    ToReturn.extend(yaw_kd.to_bytes(2, "big"))
+    ToReturn.extend(i_limit.to_bytes(2, "big"))
+
+    # Add XOR-chain-based checksum
+    checksum:int = 0x00 # start with 0
+    for byte in ToReturn: # for each byte added so far
+        checksum = checksum ^ byte # XOR operation
+    ToReturn.append(checksum)
+
+    # return
+    return bytes(ToReturn)
+
+data = pack_settings_update(5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 150)
+print(str(data))
+
 
 
 ######### UNPACKING DATA FROM THE DRONE ########
