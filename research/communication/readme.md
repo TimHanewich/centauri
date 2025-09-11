@@ -34,16 +34,16 @@ Two HC-12 radio transceiver modules will be used to facilitate bidirectional rem
             - Bit 2: *reserved*
             - Bit 1: *reserved*
             - Bit 0: `1` (packet identifier)
-        - Pitch P Gain (4 bytes)
-        - Pitch I Gain (4 bytes)
-        - Pitch D Gain (4 bytes)
-        - Roll P Gain (4 bytes)
-        - Roll I Gain (4 bytes)
-        - Roll D Gain (4 bytes)
-        - Yaw P Gain (4 bytes)
-        - Yaw I Gain (4 bytes)
-        - Yaw D Gain (4 bytes)
-        - I Limit (4 bytes)
+        - Pitch P Gain (uint16 from 0-65535, 2 bytes)
+        - Pitch I Gain (uint16 from 0-65535, 2 bytes)
+        - Pitch D Gain (uint16 from 0-65535, 2 bytes)
+        - Roll P Gain (uint16 from 0-65535, 2 bytes)
+        - Roll I Gain (uint16 from 0-65535, 2 bytes)
+        - Roll D Gain (uint16 from 0-65535, 2 bytes)
+        - Yaw P Gain (uint16 from 0-65535, 2 bytes)
+        - Yaw I Gain (uint16 from 0-65535, 2 bytes)
+        - Yaw D Gain (uint16 from 0-65535, 2 bytes)
+        - I Limit (uint16 from 0-65535, 2 bytes)
         - XOR-chain based checksum (1 byte)
 - Drone --> Controller
     - Telemetry Packet
