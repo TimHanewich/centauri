@@ -82,9 +82,6 @@ def pack_settings_update(pitch_kp:int, pitch_ki:int, pitch_kd:int, roll_kp:int, 
     # return
     return bytes(ToReturn)
 
-data = pack_settings_update(5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 150)
-print(str(data))
-
 
 
 ######### UNPACKING DATA FROM THE DRONE ########
