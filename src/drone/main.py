@@ -560,7 +560,7 @@ try:
             yaw_last_error = 0
 
         # adjust throttles on PWMs
-        print("M1: " + str(m1_pwm_pw) + ", M2: " + str(m2_pwm_pw) + ", M3: " + str(m3_pwm_pw), "M4: " + str(m4_pwm_pw))
+        #print("M1: " + str(m1_pwm_pw) + ", M2: " + str(m2_pwm_pw) + ", M3: " + str(m3_pwm_pw), "M4: " + str(m4_pwm_pw))
         M1.duty_ns(m1_pwm_pw)
         M2.duty_ns(m2_pwm_pw)
         M3.duty_ns(m3_pwm_pw)
