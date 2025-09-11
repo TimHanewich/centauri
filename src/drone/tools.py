@@ -38,9 +38,35 @@ def unpack_control_packet(data:bytes, into:list[int]) -> bool:
     # return true to indicate the unpack was successful
     return True
 
-def unpack_settings_update(data:bytes) -> None:
-    """Unpack settings update"""
-    pass
+def unpack_settings_update(data:bytes, into:list[int]) -> dict:
+    """Unpack settings update into a pre-existing list. Returns a dict with settings values if unpack was successful, None if unsuccessful."""
+
+    # Check if it is to short
+    if len(data) < 22:
+        return None
+    
+    # Check checksum
+    selfchecksum:int = 0x00 # start at 0
+    for i in range(21): # first 21 bytes (the 22nd byte is the checksum)
+        selfchecksum = selfchecksum ^ data[i] # XOR operation
+    if data[21] != selfchecksum: # if the 22nd byte (index location of 21), which is the checksum, is not equal to the checksum we just calculated, the checksum didn't validate. May be a transmission error.
+        return None
+
+    # Unpack all
+    # they should be encoded in BIG endian formats
+    pitch_kp:int = data[1] << 8 | data[2]
+    pitch_ki:int = data[3] << 8 | data[4]
+    pitch_kd:int = data[5] << 8 | data[6]
+    roll_kp:int = data[7] << 8 | data[8]
+    roll_ki:int = data[9] << 8 | data[10]
+    roll_kd:int = data[11] << 8 | data[12]
+    yaw_kp:int = data[13] << 8 | data[14]
+    yaw_ki:int = data[15] << 8 | data[16]
+    yaw_kd:int = data[17] << 8 | data[18]
+    i_limit:int = data[19] << 8 | data[20]
+
+    # return
+    return {"pitch_kp": pitch_kp, "pitch_ki": pitch_ki, "pitch_kd": pitch_kd, "roll_kp": roll_kp, "roll_ki": roll_ki, "roll_kd": roll_kd, "yaw_kp": yaw_kp, "yaw_ki": yaw_ki, "yaw_kd": yaw_kd, "i_limit": i_limit}
 
 
 
