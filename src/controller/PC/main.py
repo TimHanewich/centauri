@@ -92,12 +92,34 @@ async def main() -> None:
     # declare default settings
     idle_throttle:float = 0.10   # X% throttle is idle
     max_throttle:float = 0.25    # X% throttle is the max
+    pitch_kp:int = 5000
+    pitch_ki:int = 0
+    pitch_kd:int = 0
+    roll_kp:int = 5000
+    roll_ki:int = 0
+    roll_kd:int = 0
+    yaw_kp:int = 5000
+    yaw_ki:int = 0
+    yaw_kd:int = 0
+    i_limit:int = 0
 
     # print settings
     print()
-    console.print("[u]Settings[/u]")
+    console.print("[u]Throttle Settings[/u]")
     console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
     console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
+    print()
+    console.print("[u]PID Settings[/u]")
+    console.print("Pitch kP: [blue]" + str(pitch_kp) + "[/blue]")
+    console.print("Pitch kI: [blue]" + str(pitch_ki) + "[/blue]")
+    console.print("Pitch kD: [blue]" + str(pitch_kd) + "[/blue]")
+    console.print("Roll kP: [blue]" + str(roll_kp) + "[/blue]")
+    console.print("Roll kI: [blue]" + str(roll_ki) + "[/blue]")
+    console.print("Roll kD: [blue]" + str(roll_kd) + "[/blue]")
+    console.print("Yaw kP: [blue]" + str(yaw_kp) + "[/blue]")
+    console.print("Yaw kI: [blue]" + str(yaw_ki) + "[/blue]")
+    console.print("Yaw kD: [blue]" + str(yaw_kd) + "[/blue]")
+    console.print("I Limit: [blue]" + str(i_limit) + "[/blue]")
     print()
     
     # Confirm settings
