@@ -69,7 +69,7 @@ async def main() -> None:
         print("Exiting script...")
         exit()
     if ser.in_waiting > 0:
-        print(str(len(ser.in_waiting)) + " bytes in recv buffer, clearing now.")
+        print(str(ser.in_waiting) + " bytes in recv buffer, clearing now.")
         ser.read(ser.in_waiting) # clear out buffer
     PING_MSG:str = "TRAN" + "PING" + "\r\n"
     print("Sending ping message...")
