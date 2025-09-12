@@ -383,7 +383,6 @@ try:
                         yaw_kd = settings["yaw_kd"]
                         i_limit = settings["i_limit"]
                         send_special("SETUPOK") # send special packet "SETUPOK", short for "Settings Update OK".
-                        print("Settings updated: " + str(settings))
                     else:
                         print("It was settings but it failed.")
                 else: # unknown packet
