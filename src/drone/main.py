@@ -247,10 +247,10 @@ gpio_motor3:int = 19 # rear left, counter clockwise
 gpio_motor4:int = 18 # rear right, clockwise
 
 # set up motor PWMs with frequency of 250 Hz and start at 0% throttle
-M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_u16=0)
-M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_u16=0)
-M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_u16=0)
-M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_u16=0)
+M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=1000000)
+M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=1000000)
+M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_ns=1000000)
+M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1000000)
 
 # Set up telemetry variables that will be used to store and then send status to remote controller
 vbat:float = 0.0     # battery voltage between 6.0 and 16.8 volts
@@ -318,6 +318,11 @@ try:
         # attempting to send while receiving means good chance a packet will be missed
         if input_throttle_uint16 == 0:
             if time.ticks_diff(time.ticks_ms(), status_last_sent_ticks_ms) >= 1000: # every 1000 ms (1 time per second)
+
+                # first, get a battery reading
+
+                
+                # pack and send
                 tools.pack_telemetry(vbat, pitch_rate // 1000, roll_rate // 1000, yaw_rate // 1000, pitch_angle // 1000, roll_angle // 1000, telemetry_packet) # we divide by 1000 (integer division) to reduce back to a single unit (each is stored 1000x the actual to allow for integer math instead of floating point math)
                 uart_hc12.write(telemetry_packet) # no need to append \r\n to it because the bytearray packet already has it at the end!
                 status_last_sent_ticks_ms = time.ticks_ms() # update last sent time
