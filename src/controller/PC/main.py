@@ -239,31 +239,38 @@ async def main() -> None:
         while True:
 
             # handle changes in input state on the Xbox controller
-            for event in pygame.event.get():
-                if event.type == pygame.JOYAXISMOTION:
-                    if event.axis == 5: # right trigger
-                        throttle = (event.value + 1) / 2
-                    elif event.axis == 0: # left stick X axis (left/right)
-                        roll = event.value
-                    elif event.axis == 1: # left stick Y axis (up/down)
-                        pitch = event.value # pushing the left stick forward will result in a NEGATIVE value. While this may seem incorrect at first, it is actually correct... pushing the left stick forward should prompt the quadcopter to pitch down (forward), hence it should be negative!
-                    elif event.axis == right_stick_x_axis_id: # right stick X axis (left/right)
-                        yaw = event.value
-                    else:
-                        #print("Axis '" + str(event.axis) + "': " + str(event.value))
-                        pass
-                elif event.type == pygame.JOYBUTTONDOWN:
-                    if event.button == 0: # A
-                        armed = True
-                    elif event.button == 1: # B
-                        armed = False
-                    elif event.button == 4: # LB
-                        mode = False # rate mode
-                    elif event.button == 5: # RB
-                        mode = True # angle mode
-                    else:
-                        #print("Button pressed: " + str(event.button))
-                        pass
+            try:
+                for event in pygame.event.get():
+                    if event.type == pygame.JOYAXISMOTION:
+                        if event.axis == 5: # right trigger
+                            throttle = (event.value + 1) / 2
+                        elif event.axis == 0: # left stick X axis (left/right)
+                            roll = event.value
+                        elif event.axis == 1: # left stick Y axis (up/down)
+                            pitch = event.value # pushing the left stick forward will result in a NEGATIVE value. While this may seem incorrect at first, it is actually correct... pushing the left stick forward should prompt the quadcopter to pitch down (forward), hence it should be negative!
+                        elif event.axis == right_stick_x_axis_id: # right stick X axis (left/right)
+                            yaw = event.value
+                        else:
+                            #print("Axis '" + str(event.axis) + "': " + str(event.value))
+                            pass
+                    elif event.type == pygame.JOYBUTTONDOWN:
+                        if event.button == 0: # A
+                            armed = True
+                        elif event.button == 1: # B
+                            armed = False
+                        elif event.button == 4: # LB
+                            mode = False # rate mode
+                        elif event.button == 5: # RB
+                            mode = True # angle mode
+                        else:
+                            #print("Button pressed: " + str(event.button))
+                            pass
+            except: # if it fails for some reason (i.e. glitch or xbox controller unplugged?), unarm!
+                armed = False
+                throttle = 0.0
+                pitch = 0.0
+                roll = 0.0
+                yaw = 0.0
             
             # wait a moment
             await asyncio.sleep(0.05)
