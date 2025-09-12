@@ -128,6 +128,11 @@ async def main() -> None:
         print("Please update the code file to update the default settings.")
         exit()
 
+    # settings validation
+    if max_throttle <= idle_throttle: 
+        print("Max Throttle must be GREATER THAN idle throttle! Please correct this before continuing.")
+        exit()
+
     # Send a ping to the drone now to confirm it is on and operating
     print()
     console.print("[u]Drone Contact[/u]")
