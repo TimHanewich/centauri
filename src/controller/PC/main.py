@@ -370,7 +370,7 @@ async def main() -> None:
                 packets_received = packets_received + 1
                 packets_last_received_at = time.time()
 
-                # Handle the lineb based on what it is
+                # Handle the line based on what it is
                 if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a telemetry packet
                     TelemetryData:dict = tools.unpack_telemetry(ThisLine)
                     if TelemetryData != None: # it returns None if there was an issue like it wasn't long enough
