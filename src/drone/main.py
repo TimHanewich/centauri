@@ -93,7 +93,7 @@ else:
 
 # Configure HC-12 while still in AT mode: mode = FU3
 print("Setting HC-12 mode to FU3...")
-uart_hc12.write("AT+FU3\r\n") # go into mode FU3 (normal mode)
+uart_hc12.write("AT+FU3\r\n".encode()) # go into mode FU3 (normal mode)
 time.sleep(0.2) # wait a moment
 response:bytes = uart_hc12.read(uart_hc12.any())
 if "OK+FU3\r\n".encode() in response:
