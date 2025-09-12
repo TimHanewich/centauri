@@ -531,7 +531,7 @@ try:
         m4_pwm_pw = mean_pwm_pw - pitch_pid - roll_pid - yaw_pid
 
         # min/max those duty times
-        # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds)
+        # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds), which is the min and max throttle duty cycles
         m1_pwm_pw = min(max(m1_pwm_pw, 1000000), 2000000)
         m2_pwm_pw = min(max(m2_pwm_pw, 1000000), 2000000)
         m3_pwm_pw = min(max(m3_pwm_pw, 1000000), 2000000)
