@@ -6,8 +6,6 @@ import pygame
 import time
 import display
 import asyncio
-import rich.table
-import rich.console
 import rich.live
 from rich.console import Console
 from rich.prompt import Prompt
