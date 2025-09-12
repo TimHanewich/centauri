@@ -326,7 +326,6 @@ async def main() -> None:
                 await asyncio.sleep(0.05) # 20 Hz
             else:
                 ToSend:bytes = tools.pack_control_packet(0.0, 0.0, 0.0, 0.0) # pack all 0 inputs
-                ser.write(ToSend + "\r\n".encode())
                 ser.write(ToSend + "\r\n".encode()) # send it via HC-12 by sending it to the transceiver over the serial line
                 packets_sent = packets_sent + 1
                 await asyncio.sleep(0.5) # 2 Hz
