@@ -1,5 +1,5 @@
 print("----- CENTAURI FLIGHT CONTROLLER -----")
-print("gitub.com/TimHanewich/centauri")
+print("github.com/TimHanewich/centauri")
 print()
 
 print("Importing libraries...")
