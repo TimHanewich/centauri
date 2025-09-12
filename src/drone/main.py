@@ -485,7 +485,7 @@ try:
 
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
         # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
-        # but multiply it all by 1,000 (not just 90) so we can do integer math
+        # We are multplying by 90,000 instead of 90,000 here so we can keep it in units of 1,000 and do integer math instead of floating point math
         desired_pitch_rate:int = (input_pitch_int16 * 90000) // 32767
         desired_roll_rate:int = (input_roll_int16 * 90000) // 32767
         desired_yaw_rate:int = (input_yaw_int16 * 90000) // 32767
