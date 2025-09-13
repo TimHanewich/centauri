@@ -252,8 +252,11 @@ M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=1
 M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_ns=1000000)
 M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1000000)
 
+# set up ADC for reading the battery voltage
+vbat_adc = machine.ADC(machine.Pin(26))
+
 # Set up telemetry variables that will be used to store and then send status to remote controller
-vbat:float = 0.0     # battery voltage between 6.0 and 16.8 volts
+vbat:int = 0         # battery voltage between 6.0 and 16.8 volts, but expressed as an integer between 60 and 168 (pretend decimal point just before last digit. We do this so integer division can be used).
 pitch_rate:int = 0   # pitch rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
 roll_rate:int = 0    # roll rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
 yaw_rate:int = 0     # yaw rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
@@ -319,8 +322,26 @@ try:
         if input_throttle_uint16 == 0:
             if time.ticks_diff(time.ticks_ms(), status_last_sent_ticks_ms) >= 1000: # every 1000 ms (1 time per second)
 
-                # first, get a battery reading
+                # first, get a ADC reading
+                vbat_u16:int = vbat_adc.read_u16() # read the value on the ADC pin, as a uint16 (0-65535)
 
+                # convert the battery ADC reading to a voltage reading
+                # I know the function below looks weird! But let me explain it a bit.
+                # This is a condensed calculation of a several small calculations.
+                # The u16 reading from the ADC pin is basically 0-65535, with that value being mapped to a voltage 0-3.3v
+                # We want to calculate what voltage it corresponds to, and then scale that back to the est. voltage of the BATTERY PACK via the inverse of the voltage divider
+                # the voltage divider we use here is cutting the voltage down to 18.04% of the voltage, so we divide by 0.1804 (roughly) to get back to that voltage
+                # however, that whole calculation above would involve floating point math, which we are trying to avoid for performance purposes.
+                # So instead, we consolidate all multiplication and divison into a single line, like this. 
+                # BUT, instead of multiplying by 3.3 (would be floating point math), I am bumpping it up to 33 to avoid integer math
+                # so, that would mean the vbat calculated here is an integer, but is 10x more than it actually is
+                # so, for example, a vbat here of 65 means the battery voltage is 6.5 volts. Or a vbat of 122 is a battery voltage of 12.2 volts.
+                # And how did we get to the denominator, 11820? 
+                # We wanted to divide by 65535 to turn the ADC reading into a % anyway
+                # and then have to divide the whole thing again by 0.1804 to get back to a battery pack voltage
+                # combining them both together and rounding to an integer, that is the same as just dividing by 11820!
+                # note: we are not multiplying the denominator by 10 as well (like we did for the numerator) because we WANT the output result to be 10x higher, so that was it is like 65 and not 6.5.
+                vbat = (vbat_u16 * 33) // 11820
                 
                 # pack and send
                 tools.pack_telemetry(vbat, pitch_rate // 1000, roll_rate // 1000, yaw_rate // 1000, pitch_angle // 1000, roll_angle // 1000, telemetry_packet) # we divide by 1000 (integer division) to reduce back to a single unit (each is stored 1000x the actual to allow for integer math instead of floating point math)
