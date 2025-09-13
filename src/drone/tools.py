@@ -75,12 +75,12 @@ def unpack_settings_update(data:bytes) -> dict:
 
 ##### PACKING DATA TO BE SENT TO THE CONTROLLER #####
 
-def pack_telemetry(vbat:float, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, into:bytearray) -> None:
+def pack_telemetry(vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, into:bytearray) -> None:
     """
     Packs telemetry into an existing bytearray of length 7 bytes
 
     Expects:
-    vbat between 6.0 and 16.8 (float)
+    vbat between 60 and 168 (10x higher than 6.0 and 16.8 respectively, to avoid floating point math)
     pitch_rate between -128 and 127 (signed byte)
     roll_rate between -128 and 127 (signed byte)
     yaw_rate between -128 and 127 (signed byte)
@@ -96,9 +96,15 @@ def pack_telemetry(vbat:float, pitch_rate:int, roll_rate:int, yaw_rate:int, pitc
     into[0] = 0b00000000 # bit 0 is 0 indicates it is a telemetry packet
 
     # battery voltage
-    # this is the integer division equivalent of converting it to a percent of the 6.0 to 16.8 range and then seeign what byte value that comes out to
-    aspor:float = (vbat - 6.0) / (16.8 - 6.0) # percent of range
-    vbat_asbyte:int = int(round(aspor * 255, 0))
+    # first subtract 60 out of it (60 is the floor for a valid reading, 6.0 volts)
+    # Plan if we were using floating point math:
+    # 1. divide by the possible voltage range (16.8 - 6.0 = 10.8 volts) to get a % of total range
+    # 2. then multiply by 255 to turn that to a byte, between 0-255 to express the percentage
+    # Since we are using integer math, we combine both into one:
+    # 1. multiply first by 255
+    # 2. divide by the voltage range of 10.8, but expressed as 108 since we are using 10x units here (i.e. voltage of 6.5 is expressed as 65 in vbat)
+    vbat = vbat - 60
+    vbat_asbyte:int = (vbat * 255) // 108
     vbat_asbyte = min(max(vbat_asbyte, 0), 255)
     into[1] = vbat_asbyte
 
