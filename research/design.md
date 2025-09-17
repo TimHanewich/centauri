@@ -53,7 +53,8 @@
 ![example](https://blog.quadmeup.com/assets/2017/12/3d-printed-racing-drone--1024x590.jpg)
 
 ## Quadcopter Frame: Blender Design Dumps
-- [August 10, 2025 - complete design](https://github.com/TimHanewich/centauri/releases/download/1/design.zip)
+- [August 10, 2025 - original Centauri quadcopter design, with two MCUs](https://github.com/TimHanewich/centauri/releases/download/1/design.zip)
+- [September 17, 2025 - new Centauri quadcopter deisgn, with only one MCU (Pico) and sensors removed in favor of zip tie slots for holding down battery adapter](https://github.com/TimHanewich/centauri/releases/download/3/centauri-mono.zip)
 
 ## Transceiver Platform
 I designed and 3D-printed a small platform a Raspberry Pi Pico and HC-12 can be mounted to in one platform, used for the transceiver. Download it [here](https://github.com/TimHanewich/centauri/releases/download/2/transceiver_platform.stl).
