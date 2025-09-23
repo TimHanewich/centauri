@@ -90,13 +90,13 @@ async def main() -> None:
     # declare default settings
     idle_throttle:float = 0.10   # X% throttle is idle
     max_throttle:float = 0.25    # X% throttle is the max
-    pitch_kp:int = 5000
+    pitch_kp:int = 2000
     pitch_ki:int = 0
     pitch_kd:int = 0
-    roll_kp:int = 5000
+    roll_kp:int = 2000
     roll_ki:int = 0
     roll_kd:int = 0
-    yaw_kp:int = 5000
+    yaw_kp:int = 2000
     yaw_ki:int = 0
     yaw_kd:int = 0
     i_limit:int = 0
