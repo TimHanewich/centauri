@@ -8,6 +8,7 @@ The required Python packages are:
 1. pygame
 2. pyserial
 3. rich
+4. keyboard
 
 But you can run `pip install -r requirements.txt` as well to automatically download all documented dependencies from [requirements.txt](./src/controller/PC/requirements.txt).
 
