@@ -35,25 +35,20 @@ with rich.live.Live(refresh_per_second=60, screen=True) as l:
             l.update(tbl)
         elif keyboard.is_pressed("s"):
 
-            
-            
             l.stop() # stop live view
-
-            
 
             # wait until s is depressed
             cls()
             print("Stop pressing S to enter settings.")
             while keyboard.is_pressed("s"):
                 time.sleep(0.1)
-            cls()
-
-            flush_input()
+            cls()            
 
             print("----- SETTINGS -----")
             print("What do you want to do?")
             print("1 - Update PID settings.")
             print("2 - Do something else")
+            flush_input() # before using input(), flush the input buffer so the "s" that was pressed to get here is not collected
             WTD = input("What do you want to do? ")
             if WTD == "1":
                 kp = input("P gain: ")
