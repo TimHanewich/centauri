@@ -37,6 +37,10 @@ with rich.live.Live(refresh_per_second=60, screen=True) as l:
             else:
                 print("Huh?")
                 input("Enter to continue.")
+            
+            # restart
+            l.start()
+            
         else:
             txt = rich.text.Text("Press 'm' for main, 's' for settings.")
             centered = rich.align.Align.center(txt)
