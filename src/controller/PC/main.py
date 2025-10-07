@@ -18,6 +18,7 @@ async def main() -> None:
 
     # initialization settings (can be altered for testing)
     controller_required:bool = False
+    transceiver_required:bool = False
 
     # create a console instance from the Rich library so we can print with fancy font and stuff
     console = Console()
@@ -59,142 +60,149 @@ async def main() -> None:
     console.print("[u]Transceiver Setup[/u]")
     print("Attempt to open serial port will happen IMMEDIATELY upon you hitting enter")
     ser_port:str = input("Serial port of your transceiver (i.e. 'COM3' or '/dev/ttyUSB0' or '/dev/ttyACM0'): ")
-    print("Will use serial '" + ser_port + "'")
-    print()
 
-    # try to establish comms with serial device
-    print("Opening serial port...")
+    # set up serial and begin setup comms with drone
     ser:serial.Serial = None
-    try:
-        ser:serial.Serial = serial.Serial(port=ser_port, baudrate=115200, timeout=5)
-    except Exception as ex:
-        print("Error while trying to open port!")
-        print("Error message: " + str(ex))
-        print("Exiting script...")
-        exit()
-    if ser.in_waiting > 0:
-        print(str(ser.in_waiting) + " bytes in recv buffer, clearing now.")
-        ser.read(ser.in_waiting) # clear out buffer
-    PING_MSG:str = "TRAN" + "PING" + "\r\n"
-    print("Sending ping message...")
-    ser.write(PING_MSG.encode())
-    print("Waiting for response...")
-    time.sleep(1.0)
-    if ser.in_waiting == 0:
-        print("Transceiver did not respond to ping. Are you sure it is connected and working properly?")
-        ser.close()
-        exit()
-    response:bytes = ser.read(ser.in_waiting)
-    print("Response of " + str(len(response)) + " bytes received from transceiver.")
-    if "TRANPONG\r\n".encode() in response: # the expected response
-        print("Transceiver ping successful! It is operating normally.")
-    else:
-        print("Transceiver did not respond with TRANSPONG, confirming it is alive. Are you sure it is working correctly? Response we received from it: " + str(response))
-        ser.close()
-        exit()
+    if ser_port == "": # they left it blank
+        if transceiver_required:
+            print("You did not provide a valid serial port! Exiting...")
+            exit()
+    else: # they provided something
+        print("Will use serial '" + ser_port + "'")
+        print()
 
-    # declare default settings
-    idle_throttle:float = 0.10   # X% throttle is idle
-    max_throttle:float = 0.25    # X% throttle is the max
-    pitch_kp:int = 2000
-    pitch_ki:int = 0
-    pitch_kd:int = 0
-    roll_kp:int = 2000
-    roll_ki:int = 0
-    roll_kd:int = 0
-    yaw_kp:int = 2000
-    yaw_ki:int = 0
-    yaw_kd:int = 0
-    i_limit:int = 0
-
-    # print settings
-    print()
-    console.print("[u]Throttle Settings[/u]")
-    console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
-    console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
-    print()
-    console.print("[u]PID Settings[/u]")
-    console.print("Pitch kP: [blue]" + format(pitch_kp, ",") + "[/blue]")
-    console.print("Pitch kI: [blue]" + format(pitch_ki, ",") + "[/blue]")
-    console.print("Pitch kD: [blue]" + format(pitch_kd, ",") + "[/blue]")
-    console.print("Roll kP: [blue]" + format(roll_kp, ",") + "[/blue]")
-    console.print("Roll kI: [blue]" + format(roll_ki, ",") + "[/blue]")
-    console.print("Roll kD: [blue]" + format(roll_kd, ",") + "[/blue]")
-    console.print("Yaw kP: [blue]" + format(yaw_kp, ",") + "[/blue]")
-    console.print("Yaw kI: [blue]" + format(yaw_ki, ",") + "[/blue]")
-    console.print("Yaw kD: [blue]" + format(yaw_kd, ",") + "[/blue]")
-    console.print("I Limit: [blue]" + format(i_limit, ",") + "[/blue]")
-    print()
-    
-    # Confirm settings
-    confirmed:str = Prompt.ask("Do these settings look good?", choices=["y","n"], show_choices=True)
-    if confirmed == "n":
-        print("Please update the code file to update the default settings.")
-        exit()
-
-    # settings validation
-    if max_throttle <= idle_throttle: 
-        print("Max Throttle must be GREATER THAN idle throttle! Please correct this before continuing.")
-        exit()
-
-    # Send a ping to the drone now to confirm it is on and operating
-    print()
-    console.print("[u]Drone Contact[/u]")
-    print("Now attempting contact with drone...")
-    started_at:float = time.time()
-    wait_for_seconds:float = 10.0
-    drone_ponged:bool = False
-    ping_attempts:int = 0
-    PongBuffer:bytearray = bytearray()
-    while (time.time() - started_at) < wait_for_seconds and drone_ponged == False:
-
-        # send a ping
-        print("Sending ping attempt # " + str(ping_attempts + 1) + "...")
-        ser.write("TIMHPING\r\n".encode()) # intended to be deliverd to the drone, passing THROUGH the transceiver
-        ping_attempts = ping_attempts + 1
-
-        # wait for a response
+        # Open serial port
+        print("Opening serial port...")
+        try:
+            ser:serial.Serial = serial.Serial(port=ser_port, baudrate=115200, timeout=5)
+        except Exception as ex:
+            print("Error while trying to open port!")
+            print("Error message: " + str(ex))
+            print("Exiting script...")
+            exit()
+        if ser.in_waiting > 0:
+            print(str(ser.in_waiting) + " bytes in recv buffer, clearing now.")
+            ser.read(ser.in_waiting) # clear out buffer
+        PING_MSG:str = "TRAN" + "PING" + "\r\n"
+        print("Sending ping message...")
+        ser.write(PING_MSG.encode())
+        print("Waiting for response...")
         time.sleep(1.0)
-
-        # receive if there are any
-        BytesAvailable:int = ser.in_waiting
-        if BytesAvailable > 0:
-            PongBuffer.extend(ser.read(BytesAvailable))
-            print(str(BytesAvailable) + " bytes received.")
+        if ser.in_waiting == 0:
+            print("Transceiver did not respond to ping. Are you sure it is connected and working properly?")
+            ser.close()
+            exit()
+        response:bytes = ser.read(ser.in_waiting)
+        print("Response of " + str(len(response)) + " bytes received from transceiver.")
+        if "TRANPONG\r\n".encode() in response: # the expected response
+            print("Transceiver ping successful! It is operating normally.")
         else:
-            print("No bytes received.")
+            print("Transceiver did not respond with TRANSPONG, confirming it is alive. Are you sure it is working correctly? Response we received from it: " + str(response))
+            ser.close()
+            exit()
 
-        # check
-        if "TIMHPONG\r\n".encode() in PongBuffer:
-            drone_ponged = True
-            print("PONG received!")
-            break
+        # declare default settings
+        idle_throttle:float = 0.10   # X% throttle is idle
+        max_throttle:float = 0.25    # X% throttle is the max
+        pitch_kp:int = 2000
+        pitch_ki:int = 0
+        pitch_kd:int = 0
+        roll_kp:int = 2000
+        roll_ki:int = 0
+        roll_kd:int = 0
+        yaw_kp:int = 2000
+        yaw_ki:int = 0
+        yaw_kd:int = 0
+        i_limit:int = 0
+
+        # print settings
+        print()
+        console.print("[u]Throttle Settings[/u]")
+        console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
+        console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
+        print()
+        console.print("[u]PID Settings[/u]")
+        console.print("Pitch kP: [blue]" + format(pitch_kp, ",") + "[/blue]")
+        console.print("Pitch kI: [blue]" + format(pitch_ki, ",") + "[/blue]")
+        console.print("Pitch kD: [blue]" + format(pitch_kd, ",") + "[/blue]")
+        console.print("Roll kP: [blue]" + format(roll_kp, ",") + "[/blue]")
+        console.print("Roll kI: [blue]" + format(roll_ki, ",") + "[/blue]")
+        console.print("Roll kD: [blue]" + format(roll_kd, ",") + "[/blue]")
+        console.print("Yaw kP: [blue]" + format(yaw_kp, ",") + "[/blue]")
+        console.print("Yaw kI: [blue]" + format(yaw_ki, ",") + "[/blue]")
+        console.print("Yaw kD: [blue]" + format(yaw_kd, ",") + "[/blue]")
+        console.print("I Limit: [blue]" + format(i_limit, ",") + "[/blue]")
+        print()
+        
+        # Confirm settings
+        confirmed:str = Prompt.ask("Do these settings look good?", choices=["y","n"], show_choices=True)
+        if confirmed == "n":
+            print("Please update the code file to update the default settings.")
+            exit()
+
+        # settings validation
+        if max_throttle <= idle_throttle: 
+            print("Max Throttle must be GREATER THAN idle throttle! Please correct this before continuing.")
+            exit()
+
+        # Send a ping to the drone now to confirm it is on and operating
+        print()
+        console.print("[u]Drone Contact[/u]")
+        print("Now attempting contact with drone...")
+        started_at:float = time.time()
+        wait_for_seconds:float = 10.0
+        drone_ponged:bool = False
+        ping_attempts:int = 0
+        PongBuffer:bytearray = bytearray()
+        while (time.time() - started_at) < wait_for_seconds and drone_ponged == False:
+
+            # send a ping
+            print("Sending ping attempt # " + str(ping_attempts + 1) + "...")
+            ser.write("TIMHPING\r\n".encode()) # intended to be deliverd to the drone, passing THROUGH the transceiver
+            ping_attempts = ping_attempts + 1
+
+            # wait for a response
+            time.sleep(1.0)
+
+            # receive if there are any
+            BytesAvailable:int = ser.in_waiting
+            if BytesAvailable > 0:
+                PongBuffer.extend(ser.read(BytesAvailable))
+                print(str(BytesAvailable) + " bytes received.")
+            else:
+                print("No bytes received.")
+
+            # check
+            if "TIMHPONG\r\n".encode() in PongBuffer:
+                drone_ponged = True
+                print("PONG received!")
+                break
+            else:
+                print("PONG not received yet...")
+        if drone_ponged == False:
+            print("Drone never ponged back!")
+            exit()
+
+        # Send a settings update (PID settings)
+        print()
+        console.print("[u]PID Update[/u]")
+        print("Packing PID updates...")
+        ToSend:bytes = tools.pack_settings_update(pitch_kp, pitch_ki, pitch_kd, roll_kp, roll_ki, roll_kd, yaw_kp, yaw_ki, yaw_kd, i_limit)
+        print("Sending PID updates...")
+        ser.write(ToSend + "\r\n".encode())
+        print("Settings packet sent!")
+        print("Waiting a moment for it to register.")
+        time.sleep(1.5)
+        print("Checking for settings update confirmation...")
+        if ser.in_waiting == 0:
+            print("No data at all received from drone. Was expecting settings update confirmation.")
+            exit()
+        recv:bytes = ser.read(ser.in_waiting) # read all available
+        if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
+            print("Settings update confirmation received from drone!")
         else:
-            print("PONG not received yet...")
-    if drone_ponged == False:
-        print("Drone never ponged back!")
-        exit()
-
-    # Send a settings update (PID settings)
-    print()
-    console.print("[u]PID Update[/u]")
-    print("Packing PID updates...")
-    ToSend:bytes = tools.pack_settings_update(pitch_kp, pitch_ki, pitch_kd, roll_kp, roll_ki, roll_kd, yaw_kp, yaw_ki, yaw_kd, i_limit)
-    print("Sending PID updates...")
-    ser.write(ToSend + "\r\n".encode())
-    print("Settings packet sent!")
-    print("Waiting a moment for it to register.")
-    time.sleep(1.5)
-    print("Checking for settings update confirmation...")
-    if ser.in_waiting == 0:
-        print("No data at all received from drone. Was expecting settings update confirmation.")
-        exit()
-    recv:bytes = ser.read(ser.in_waiting) # read all available
-    if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
-        print("Settings update confirmation received from drone!")
-    else:
-        print("Drone sent back data but it wasn't a successful settings update. Received instead: " + str(recv))
-        exit()
+            print("Drone sent back data but it wasn't a successful settings update. Received instead: " + str(recv))
+            exit()
 
     # set up control input variables we will track, display in console, and then interpret and transform before sending to drone in control packet
     armed:bool = False       # armed is being tracked here not as a variable we will directly pass on to the quadcopter, but rather a variable we will use to know if we should be transmitting at least the minimum throttle (when armed) or 0% throttle
