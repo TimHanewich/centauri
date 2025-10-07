@@ -4,6 +4,17 @@ import rich.text
 import rich.align
 import keyboard
 import time
+import platform
+import sys
+
+def flush_input() -> None:
+    if platform.system() == "Windows":
+        import msvcrt
+        while msvcrt.kbhit():
+            msvcrt.getch()
+    else:
+        import termios
+        termios.tcflush(sys.stdin, termios.TCIFLUSH)
 
 with rich.live.Live(refresh_per_second=60, screen=True) as l:
     while True:
@@ -23,6 +34,8 @@ with rich.live.Live(refresh_per_second=60, screen=True) as l:
             while keyboard.is_pressed("s"):
                 time.sleep(0.1)
 
+            flush_input()
+
             print("1 - Update PID settings.")
             print("2 - Do something else")
             WTD = input("What do you want to do?")
@@ -40,7 +53,7 @@ with rich.live.Live(refresh_per_second=60, screen=True) as l:
             
             # restart
             l.start()
-            
+
         else:
             txt = rich.text.Text("Press 'm' for main, 's' for settings.")
             centered = rich.align.Align.center(txt)
