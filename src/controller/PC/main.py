@@ -16,6 +16,9 @@ import keyboard
 
 async def main() -> None:
 
+    # initialization settings (can be altered for testing)
+    controller_required:bool = False
+
     # create a console instance from the Rich library so we can print with fancy font and stuff
     console = Console()
 
@@ -34,7 +37,7 @@ async def main() -> None:
     # count how many controllers (joysticks) are connected
     num_joysticks = pygame.joystick.get_count()
     print("Number of connected controllers: " + str(num_joysticks))
-    if num_joysticks == 0:
+    if controller_required and num_joysticks == 0:
         print("No controllers connected! You must connect one before proceeding.")
         exit()
 
@@ -45,9 +48,11 @@ async def main() -> None:
         print("Joystick " + str(i) + ": " + tjs.get_name())
 
     # select the controller that will be used
-    controller = pygame.joystick.Joystick(0)
-    controller.init()
-    print("Controller #0, '" + controller.get_name() + "' will be used.")
+    controller = None
+    if num_joysticks > 0:
+        controller = pygame.joystick.Joystick(0)
+        controller.init()
+        print("Controller #0, '" + controller.get_name() + "' will be used.")
 
     # ask what serial peripheral path to use for communications
     print()
