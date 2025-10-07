@@ -12,6 +12,7 @@ from rich.prompt import Prompt
 import serial
 import tools
 import sys
+import keyboard
 
 async def main() -> None:
 
