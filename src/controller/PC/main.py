@@ -283,44 +283,78 @@ async def main() -> None:
         with rich.live.Live(refresh_per_second=60, screen=True) as l: # the refresh_per_second sets the upper limit for refresh rate
             while True:
 
-                # prepare to print with display packet
-                dp:display.DisplayPack = display.DisplayPack()
+                # is settings button depressed?
+                if keyboard.is_pressed("s"):
+                    
+                    l.stop()
+                    display.cls()
+                    print("Stop pressing S to enter settings.")
+                    while keyboard.is_pressed("s"):
+                        time.sleep(0.1)
+                    display.cls()
 
-                # plug in basic telemetry info
-                dp.packets_sent = packets_sent
-                dp.packets_received = packets_received
-                if packets_last_received_at != None:
-                    dp.packet_last_received_ago_ms = int((time.time() - packets_last_received_at) * 1000)
-                else:
-                    dp.packet_last_received_ago_ms = None
+                    print("----- SETTINGS -----")
+                    print("What do you want to do?")
+                    print("1 - Update PID settings.")
+                    print("2 - Do something else")
+                    display.flush_input() # before using input(), flush the input buffer so the "s" that was pressed to get here is not collected
+                    WTD = input("What do you want to do? ")
+                    if WTD == "1":
+                        kp = input("P gain: ")
+                        ki = input("I gain: ")
+                        kd = input("D gain: ")
+                        print("Got it! " + str(kp) + ", " + str(ki) + ", " + str(kd))
+                        input("Enter to continue.")
+                    elif WTD == "2":
+                        print("Ok doing something else.")
+                        input("Enter to return")
+                    else:
+                        print("Huh?")
+                        input("Enter to continue.")
 
-                # plug in control variables
-                dp.armed = armed
-                dp.mode = mode
-                dp.throttle = throttle
-                dp.pitch = pitch
-                dp.roll = roll
-                dp.yaw = yaw                
+                    # restart
+                    l.start()
 
-                # plug in drone telemetry variables
-                dp.drone_battery = vbat
-                dp.pitch_rate = pitch_rate
-                dp.roll_rate = roll_rate
-                dp.yaw_rate = yaw_rate
-                dp.pitch_angle = pitch_angle
-                dp.roll_angle = roll_angle
+                else: # display normally
 
-                # plug in drone messages
-                dp.messages = drone_messages
-                
-                # get table
-                tbl = display.construct(dp)
+                    # prepare to print with display packet
+                    dp:display.DisplayPack = display.DisplayPack()
 
-                # update live
-                l.update(tbl)
+                    # plug in basic telemetry info
+                    dp.packets_sent = packets_sent
+                    dp.packets_received = packets_received
+                    if packets_last_received_at != None:
+                        dp.packet_last_received_ago_ms = int((time.time() - packets_last_received_at) * 1000)
+                    else:
+                        dp.packet_last_received_ago_ms = None
 
-                # wait
-                await asyncio.sleep(0.01)
+                    # plug in control variables
+                    dp.armed = armed
+                    dp.mode = mode
+                    dp.throttle = throttle
+                    dp.pitch = pitch
+                    dp.roll = roll
+                    dp.yaw = yaw                
+
+                    # plug in drone telemetry variables
+                    dp.drone_battery = vbat
+                    dp.pitch_rate = pitch_rate
+                    dp.roll_rate = roll_rate
+                    dp.yaw_rate = yaw_rate
+                    dp.pitch_angle = pitch_angle
+                    dp.roll_angle = roll_angle
+
+                    # plug in drone messages
+                    dp.messages = drone_messages
+                    
+                    # get table
+                    tbl = display.construct(dp)
+
+                    # update live
+                    l.update(tbl)
+
+                    # wait
+                    await asyncio.sleep(0.01)
 
     # set up continuous radio sending
     async def continuous_radio_tx() -> None:
