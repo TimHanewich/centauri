@@ -2,6 +2,8 @@ import os
 import shutil
 import rich.table
 import time
+import platform
+import sys
 
 # define console-clearing command
 def cls() -> None:
@@ -9,6 +11,17 @@ def cls() -> None:
         os.system("cls")
     else: # if on linux, just run clear
         os.system("clear")
+
+# define input flushing command
+def flush_input() -> None:
+    """Flushes (clears) the pending keyboard input so it won't appear next time input() is used."""
+    if platform.system() == "Windows":
+        import msvcrt
+        while msvcrt.kbhit():
+            msvcrt.getch()
+    else:
+        import termios
+        termios.tcflush(sys.stdin, termios.TCIFLUSH)
 
 # define message structure
 class Message:
