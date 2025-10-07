@@ -38,7 +38,7 @@ with rich.live.Live(refresh_per_second=60, screen=True) as l:
 
             print("1 - Update PID settings.")
             print("2 - Do something else")
-            WTD = input("What do you want to do?")
+            WTD = input("What do you want to do? ")
             if WTD == "1":
                 kp = input("P gain: ")
                 ki = input("I gain: ")
