@@ -247,6 +247,20 @@ async def main() -> None:
     # set up continuous display function
     async def continuous_display() -> None:
 
+        # declare global variables
+        nonlocal idle_throttle
+        nonlocal max_throttle
+        nonlocal pitch_kp
+        nonlocal pitch_ki
+        nonlocal pitch_kd
+        nonlocal roll_kp
+        nonlocal roll_ki
+        nonlocal roll_kd
+        nonlocal yaw_kp
+        nonlocal yaw_ki
+        nonlocal yaw_kd
+        nonlocal i_limit
+
         # display with live
         with rich.live.Live(refresh_per_second=60, screen=True) as l: # the refresh_per_second sets the upper limit for refresh rate
             while True:
@@ -267,6 +281,7 @@ async def main() -> None:
                         console.print("[blue][underline]----- CURRENT SETTINGS -----[/blue][/underline]")
                         print()
                         console.print("[u]Throttle Settings[/u]")
+                        print(str(idle_throttle))
                         console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
                         console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
                         print()
