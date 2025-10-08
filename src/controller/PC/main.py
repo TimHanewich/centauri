@@ -182,8 +182,6 @@ async def main() -> None:
     # For Display: set up messages received from drone
     drone_messages:list[display.Message] = []
 
-
-
     # set up settings update function
     def update_drone_settings() -> None:
         """Collects new settings values and then transmits them to the drone."""
