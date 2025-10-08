@@ -300,37 +300,38 @@ async def main() -> None:
         with rich.live.Live(refresh_per_second=60, screen=True) as l: # the refresh_per_second sets the upper limit for refresh rate
             while True:
 
-                # is settings button depressed?
-                if keyboard.is_pressed("s"):
-                    
-                    l.stop()
-                    display.cls()
-                    print("Stop pressing S to enter settings.")
-                    while keyboard.is_pressed("s"):
-                        time.sleep(0.1)
-                    display.cls()
+                # menu modes
+                if armed == False: # only allow for entering into menus if NOT armed. If in flight mode, it isn't allowed for safety reasons.
+                    if keyboard.is_pressed("s"): # SETTINGS MODE
+                        
+                        l.stop()
+                        display.cls()
+                        print("Stop pressing S to enter settings.")
+                        while keyboard.is_pressed("s"):
+                            time.sleep(0.1)
+                        display.cls()
 
-                    print("----- SETTINGS -----")
-                    print("What do you want to do?")
-                    print("1 - Update PID settings.")
-                    print("2 - Do something else")
-                    display.flush_input() # before using input(), flush the input buffer so the "s" that was pressed to get here is not collected
-                    WTD = input("What do you want to do? ")
-                    if WTD == "1":
-                        kp = input("P gain: ")
-                        ki = input("I gain: ")
-                        kd = input("D gain: ")
-                        print("Got it! " + str(kp) + ", " + str(ki) + ", " + str(kd))
-                        input("Enter to continue.")
-                    elif WTD == "2":
-                        print("Ok doing something else.")
-                        input("Enter to return")
-                    else:
-                        print("Huh?")
-                        input("Enter to continue.")
+                        print("----- SETTINGS -----")
+                        print("What do you want to do?")
+                        print("1 - Update PID settings.")
+                        print("2 - Do something else")
+                        display.flush_input() # before using input(), flush the input buffer so the "s" that was pressed to get here is not collected
+                        WTD = input("What do you want to do? ")
+                        if WTD == "1":
+                            kp = input("P gain: ")
+                            ki = input("I gain: ")
+                            kd = input("D gain: ")
+                            print("Got it! " + str(kp) + ", " + str(ki) + ", " + str(kd))
+                            input("Enter to continue.")
+                        elif WTD == "2":
+                            print("Ok doing something else.")
+                            input("Enter to return")
+                        else:
+                            print("Huh?")
+                            input("Enter to continue.")
 
-                    # restart
-                    l.start()
+                        # restart
+                        l.start()
 
                 else: # display normally
 
