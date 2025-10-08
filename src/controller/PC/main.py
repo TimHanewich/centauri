@@ -382,13 +382,15 @@ async def main() -> None:
             if armed:
                 throttle_to_send:float = idle_throttle + ((max_throttle - idle_throttle) * throttle) # scale within range, if armed
                 ToSend:bytes = tools.pack_control_packet(throttle_to_send, pitch, roll, yaw) # pack into bytes
-                ser.write(ToSend + "\r\n".encode()) # send it via HC-12 by sending it to the transceiver over the serial line
-                packets_sent = packets_sent + 1
+                if ser != None:
+                    ser.write(ToSend + "\r\n".encode()) # send it via HC-12 by sending it to the transceiver over the serial line
+                    packets_sent = packets_sent + 1
                 await asyncio.sleep(0.05) # 20 Hz
             else:
                 ToSend:bytes = tools.pack_control_packet(0.0, 0.0, 0.0, 0.0) # pack all 0 inputs
-                ser.write(ToSend + "\r\n".encode()) # send it via HC-12 by sending it to the transceiver over the serial line
-                packets_sent = packets_sent + 1
+                if ser != None:
+                    ser.write(ToSend + "\r\n".encode()) # send it via HC-12 by sending it to the transceiver over the serial line
+                    packets_sent = packets_sent + 1
                 await asyncio.sleep(0.5) # 2 Hz
 
     # set up continuous radio rx (through tranceiver)
@@ -412,9 +414,10 @@ async def main() -> None:
         while True:
 
             # read data if any is available!
-            if ser.in_waiting > 0: # if we have data available
-                data:bytes = ser.read(ser.in_waiting) # read the available data
-                rxBuffer.extend(data)
+            if ser != None:
+                if ser.in_waiting > 0: # if we have data available
+                    data:bytes = ser.read(ser.in_waiting) # read the available data
+                    rxBuffer.extend(data)
                 
             # handle data if we have any full lines in there
             while "\r\n".encode() in rxBuffer:
