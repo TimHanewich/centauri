@@ -175,7 +175,6 @@ async def main() -> None:
     yaw_rate:int = 0 # in degrees per second
 
     # set up system info variables
-    booted:float = time.time() # mark the boot time, in seconds. This will later be used to show system uptime
     packets_sent:int = 0
     packets_received:int = 0
     packets_last_received_at:float = None # timestamp of last received, in seconds (time.time()). Start with None to indicate we have NOT received one yet.
@@ -523,6 +522,7 @@ async def main() -> None:
     input("All set and ready to go! Enter to continue.")
 
     # get all threads going
+    booted:float = time.time() # mark the boot time, in seconds. This will later be used to show system uptime
     task_read_xbox = asyncio.create_task(continuous_read_xbox())
     task_display = asyncio.create_task(continuous_display())
     task_radio_tx = asyncio.create_task(continuous_radio_tx())
