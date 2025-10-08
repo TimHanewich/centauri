@@ -268,24 +268,47 @@ async def main() -> None:
         if ser != None:
             print()
             print("Will now send out PID update!")
-            console.print("[u]PID Update[/u]")
-            print("Packing PID updates...")
-            ToSend:bytes = tools.pack_settings_update(pitch_kp, pitch_ki, pitch_kd, roll_kp, roll_ki, roll_kd, yaw_kp, yaw_ki, yaw_kd, i_limit)
-            print("Sending PID updates...")
-            ser.write(ToSend + "\r\n".encode())
-            print("Settings packet sent!")
-            print("Waiting a moment for it to register.")
-            time.sleep(1.5)
-            print("Checking for settings update confirmation...")
-            if ser.in_waiting == 0:
-                print("No data at all received from drone. Was expecting settings update confirmation.")
-                exit()
-            recv:bytes = ser.read(ser.in_waiting) # read all available
-            if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
-                print("Settings update confirmation received from drone!")
-            else:
-                print("Drone sent back data but it wasn't a successful settings update. Received instead: " + str(recv))
-                exit()
+
+            # try a certain number of times
+            confirmed:bool = False
+            attempts:int = 0
+            while confirmed == False and attempts < 5:
+
+                console.print("[u]PID Update Attempt # " + str(attempts+1) + "[/u]")
+
+                # pack it
+                print("Packing PID updates...")
+                ToSend:bytes = tools.pack_settings_update(pitch_kp, pitch_ki, pitch_kd, roll_kp, roll_ki, roll_kd, yaw_kp, yaw_ki, yaw_kd, i_limit)
+
+                # send it
+                print("Sending PID updates...")
+                ser.write(ToSend + "\r\n".encode())
+                attempts = attempts + 1
+
+                # wait
+                print("Settings packet sent!")
+                print("Waiting a moment for it to register.")
+                time.sleep(1.5)
+
+                # handle
+                print("Checking for settings update confirmation...")
+                if ser.in_waiting == 0:
+                    print("No data at all received from drone. Was expecting settings update confirmation.")
+                else: # There is some data available to read. Is it the confirmation?
+                    recv:bytes = ser.read(ser.in_waiting) # read all available
+                    if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
+                        print("Settings update confirmation received from drone!")
+                        confirmed = True
+                        input("Return to continue.")
+                    else:
+                        print("Drone sent back " + str(len(recv)) + " bytes but it wasn't a successful settings update.")
+
+            # if it just straight up did not work, say so
+            if confirmed == False: # it never confirmed, which means we went past the number of tries
+                print("After a number of attempts, the drone did NOT confirm the PID settings update.")
+                print("There is a good chance it did NOT update the settings values, so be careful!")
+                input("Return to continue.")
+            
         else:
             print("Transceiver not set up, so skipping sending it out!")
             input("Return to continue.")
