@@ -189,6 +189,20 @@ async def main() -> None:
     def update_drone_settings() -> None:
         """Collects new settings values and then transmits them to the drone."""
 
+        # declare global variables
+        nonlocal idle_throttle
+        nonlocal max_throttle
+        nonlocal pitch_kp
+        nonlocal pitch_ki
+        nonlocal pitch_kd
+        nonlocal roll_kp
+        nonlocal roll_ki
+        nonlocal roll_kd
+        nonlocal yaw_kp
+        nonlocal yaw_ki
+        nonlocal yaw_kd
+        nonlocal i_limit
+
         # ask if they want to update settings continuously until they are right
         while True:
 
@@ -344,20 +358,6 @@ async def main() -> None:
         
     # set up continuous display function
     async def continuous_display() -> None:
-
-        # declare global variables
-        nonlocal idle_throttle
-        nonlocal max_throttle
-        nonlocal pitch_kp
-        nonlocal pitch_ki
-        nonlocal pitch_kd
-        nonlocal roll_kp
-        nonlocal roll_ki
-        nonlocal roll_kd
-        nonlocal yaw_kp
-        nonlocal yaw_ki
-        nonlocal yaw_kd
-        nonlocal i_limit
 
         # display with live
         with rich.live.Live(refresh_per_second=60, screen=True) as l: # the refresh_per_second sets the upper limit for refresh rate
