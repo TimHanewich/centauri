@@ -293,9 +293,26 @@ async def main() -> None:
             print("Transceiver not set up, so skipping sending it out!")
             input("Return to continue.")
 
+    # ask if, before starting, they want to do a settings update
+    print()
+    print("Before flying, do you want to send a settings update to the drone?")
+    print("This is recommended for safety reasons.")
+    sendsettingsupdate:str = Prompt.ask("Send settings update now?", choices=["y", "n"], show_choices=True)
+    if sendsettingsupdate == "y":
+        print()
+        update_drone_settings()
+    else:
+        print("Skipping settings update.")
 
 
 
+
+
+
+
+    #############################
+    ##### CO-ROUTINES BELOW #####
+    #############################
 
     # set up continous Xbox controller read function
     async def continuous_read_xbox() -> None:
