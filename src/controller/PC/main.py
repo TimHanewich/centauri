@@ -67,6 +67,8 @@ async def main() -> None:
         if transceiver_required:
             print("You did not provide a valid serial port! Exiting...")
             exit()
+        else:
+            print("Skipping serial connection to transceiver as it is not required.")
     else: # they provided something
         print("Will use serial '" + ser_port + "'")
         print()
