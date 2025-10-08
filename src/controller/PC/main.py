@@ -329,9 +329,9 @@ async def main() -> None:
                                 roll_kp = tools.ask_integer("Roll kP")
                                 roll_ki = tools.ask_integer("Roll kI")
                                 roll_kd = tools.ask_integer("Roll kD")
-                                pitch_kp = tools.ask_integer("Yaw kP")
-                                pitch_ki = tools.ask_integer("Yaw kI")
-                                pitch_kd = tools.ask_integer("Yaw kD")
+                                yaw_kp = tools.ask_integer("Yaw kP")
+                                yaw_ki = tools.ask_integer("Yaw kI")
+                                yaw_kd = tools.ask_integer("Yaw kD")
                                 i_limit = tools.ask_integer("I Limit")
                                 print()
 
