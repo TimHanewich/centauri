@@ -123,3 +123,17 @@ def unpack_special_packet(data:bytes) -> str:
     trb:bytes = data[1:EndOn]
     ToReturn:str = trb.decode(errors="replace") # transmission errors will be replaced with "�"
     return ToReturn
+
+
+
+##### MISC TOOLS #####
+
+import rich.prompt
+
+def ask_integer(prompt:str) -> int:
+    while True:
+        ip:str = rich.prompt.Prompt.ask(prompt)
+        try:
+            return int(ip)
+        except:
+            print("Invalid input! Must be an integer.")
