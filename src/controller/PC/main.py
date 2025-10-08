@@ -55,21 +55,6 @@ async def main() -> None:
         controller.init()
         print("Controller #0, '" + controller.get_name() + "' will be used.")
 
-
-    # declare default settings
-    idle_throttle:float = 0.10   # X% throttle is idle
-    max_throttle:float = 0.25    # X% throttle is the max
-    pitch_kp:int = 2000
-    pitch_ki:int = 0
-    pitch_kd:int = 0
-    roll_kp:int = 2000
-    roll_ki:int = 0
-    roll_kd:int = 0
-    yaw_kp:int = 2000
-    yaw_ki:int = 0
-    yaw_kd:int = 0
-    i_limit:int = 0
-
     # ask what serial peripheral path to use for communications
     print()
     console.print("[u]Transceiver Setup[/u]")
@@ -156,8 +141,6 @@ async def main() -> None:
             print("Drone never ponged back!")
             exit()
 
-        
-
     # set up control input variables we will track, display in console, and then interpret and transform before sending to drone in control packet
     armed:bool = False       # armed is being tracked here not as a variable we will directly pass on to the quadcopter, but rather a variable we will use to know if we should be transmitting at least the minimum throttle (when armed) or 0% throttle
     mode:bool = False        # UNUSED for right now! Only rate mode works. Rate Mode = False, Angle Mode = True
@@ -165,6 +148,21 @@ async def main() -> None:
     pitch:float = 0.0        # between -1.0 and 1.0
     roll:float = 0.0         # between -1.0 and 1.0
     yaw:float = 0.0          # between -1.0 and 1.0
+
+    # Set up flight control variables, with defaults
+    # these are the settings that will live on the drone, thus we will have to transmit them later
+    idle_throttle:float = 0.10   # X% throttle is idle
+    max_throttle:float = 0.25    # X% throttle is the max
+    pitch_kp:int = 2000
+    pitch_ki:int = 0
+    pitch_kd:int = 0
+    roll_kp:int = 2000
+    roll_ki:int = 0
+    roll_kd:int = 0
+    yaw_kp:int = 2000
+    yaw_ki:int = 0
+    yaw_kd:int = 0
+    i_limit:int = 0
 
     # set up status variables we will get from the drone (and display in the console!): system status
     vbat:float = 0.0 # volts
