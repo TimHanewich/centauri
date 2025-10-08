@@ -263,7 +263,8 @@ async def main() -> None:
                             time.sleep(0.1)
                         display.cls()
 
-                        # print current
+                        # print current settings
+                        console.print("[blue][underline]----- CURRENT SETTINGS -----[/blue][/underline]")
                         print()
                         console.print("[u]Throttle Settings[/u]")
                         console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
@@ -282,37 +283,69 @@ async def main() -> None:
                         console.print("I Limit: [blue]" + format(i_limit, ",") + "[/blue]")
                         print()
 
-                        # Confirm settings
-                        confirmed:str = Prompt.ask("Do these settings look good?", choices=["y","n"], show_choices=True)
-                        if confirmed == "n":
-                            print("Please update the code file to update the default settings.")
-                            exit()
+                        # Want to change?
+                        print("What do you want to do?")
+                        console.print("[blue][bold]1[/blue][/bold] - Update these settings before sending to drone")
+                        console.print("[blue][bold]2[/blue][/bold] - Send these to the drone, as is")
+                        wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2", "3"], show_choices=True)
+                        if wanttodo == "1": # update
+                            
+                            print("Okay, let's collect the new values.")
 
-                        # settings validation
-                        if max_throttle <= idle_throttle: 
-                            print("Max Throttle must be GREATER THAN idle throttle! Please correct this before continuing.")
-                            exit()
+                            # collect idle and max until it is valid!
+                            while True:
+                                idle_throttle = tools.ask_float("Idle Throttle")
+                                max_throttle = tools.ask_float("Max Throttle")
+
+                                # settings validation
+                                if max_throttle <= idle_throttle: 
+                                    print("Max Throttle must be GREATER THAN idle throttle!")
+                                    print("Try again please.")
+                                else:
+                                    break
+
+                            # Collect new settings
+                            pitch_kp = tools.ask_integer("Pitch kP")
+                            pitch_ki = tools.ask_integer("Pitch kI")
+                            pitch_kd = tools.ask_integer("Pitch kD")
+                            roll_kp = tools.ask_integer("Roll kP")
+                            roll_ki = tools.ask_integer("Roll kI")
+                            roll_kd = tools.ask_integer("Roll kD")
+                            pitch_kp = tools.ask_integer("Yaw kP")
+                            pitch_ki = tools.ask_integer("Yaw kI")
+                            pitch_kd = tools.ask_integer("Yaw kD")
+                            i_limit = tools.ask_integer("I Limit: ")
+                        elif wanttodo == "2": # send to drone as is
+                            print("Using those settings values!")
+                        else:
+                            console.print("[red]Invalid choice.[/red]")
+
 
                         # Send a settings update (PID settings)
-                        print()
-                        console.print("[u]PID Update[/u]")
-                        print("Packing PID updates...")
-                        ToSend:bytes = tools.pack_settings_update(pitch_kp, pitch_ki, pitch_kd, roll_kp, roll_ki, roll_kd, yaw_kp, yaw_ki, yaw_kd, i_limit)
-                        print("Sending PID updates...")
-                        ser.write(ToSend + "\r\n".encode())
-                        print("Settings packet sent!")
-                        print("Waiting a moment for it to register.")
-                        time.sleep(1.5)
-                        print("Checking for settings update confirmation...")
-                        if ser.in_waiting == 0:
-                            print("No data at all received from drone. Was expecting settings update confirmation.")
-                            exit()
-                        recv:bytes = ser.read(ser.in_waiting) # read all available
-                        if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
-                            print("Settings update confirmation received from drone!")
+                        if ser != None:
+                            print()
+                            print("Will now send out PID update!")
+                            console.print("[u]PID Update[/u]")
+                            print("Packing PID updates...")
+                            ToSend:bytes = tools.pack_settings_update(pitch_kp, pitch_ki, pitch_kd, roll_kp, roll_ki, roll_kd, yaw_kp, yaw_ki, yaw_kd, i_limit)
+                            print("Sending PID updates...")
+                            ser.write(ToSend + "\r\n".encode())
+                            print("Settings packet sent!")
+                            print("Waiting a moment for it to register.")
+                            time.sleep(1.5)
+                            print("Checking for settings update confirmation...")
+                            if ser.in_waiting == 0:
+                                print("No data at all received from drone. Was expecting settings update confirmation.")
+                                exit()
+                            recv:bytes = ser.read(ser.in_waiting) # read all available
+                            if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
+                                print("Settings update confirmation received from drone!")
+                            else:
+                                print("Drone sent back data but it wasn't a successful settings update. Received instead: " + str(recv))
+                                exit()
                         else:
-                            print("Drone sent back data but it wasn't a successful settings update. Received instead: " + str(recv))
-                            exit()
+                            print("Transceiver not set up, so skipping sending it out!")
+                            input("Return to continue.")
 
                         # restart
                         l.start()
