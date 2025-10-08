@@ -251,7 +251,7 @@ async def main() -> None:
         with rich.live.Live(refresh_per_second=60, screen=True) as l: # the refresh_per_second sets the upper limit for refresh rate
             while True:
 
-                # menu modes
+                # check if we should engage menu modes
                 if armed == False: # only allow for entering into menus if NOT armed. If in flight mode, it isn't allowed for safety reasons.
                     if keyboard.is_pressed("s"): # SETTINGS MODE
                         
@@ -317,47 +317,45 @@ async def main() -> None:
                         # restart
                         l.start()
 
-                else: # display normally
+                # prepare to print with display packet
+                dp:display.DisplayPack = display.DisplayPack()
 
-                    # prepare to print with display packet
-                    dp:display.DisplayPack = display.DisplayPack()
+                # plug in basic telemetry info
+                dp.uptime_seconds = time.time() - booted    # uptime of the system, in seconds (current time minus the booted timestamp)
+                dp.packets_sent = packets_sent
+                dp.packets_received = packets_received
+                if packets_last_received_at != None:
+                    dp.packet_last_received_ago_ms = int((time.time() - packets_last_received_at) * 1000)
+                else:
+                    dp.packet_last_received_ago_ms = None
 
-                    # plug in basic telemetry info
-                    dp.uptime_seconds = time.time() - booted    # uptime of the system, in seconds (current time minus the booted timestamp)
-                    dp.packets_sent = packets_sent
-                    dp.packets_received = packets_received
-                    if packets_last_received_at != None:
-                        dp.packet_last_received_ago_ms = int((time.time() - packets_last_received_at) * 1000)
-                    else:
-                        dp.packet_last_received_ago_ms = None
+                # plug in control variables
+                dp.armed = armed
+                dp.mode = mode
+                dp.throttle = throttle
+                dp.pitch = pitch
+                dp.roll = roll
+                dp.yaw = yaw                
 
-                    # plug in control variables
-                    dp.armed = armed
-                    dp.mode = mode
-                    dp.throttle = throttle
-                    dp.pitch = pitch
-                    dp.roll = roll
-                    dp.yaw = yaw                
+                # plug in drone telemetry variables
+                dp.drone_battery = vbat
+                dp.pitch_rate = pitch_rate
+                dp.roll_rate = roll_rate
+                dp.yaw_rate = yaw_rate
+                dp.pitch_angle = pitch_angle
+                dp.roll_angle = roll_angle
 
-                    # plug in drone telemetry variables
-                    dp.drone_battery = vbat
-                    dp.pitch_rate = pitch_rate
-                    dp.roll_rate = roll_rate
-                    dp.yaw_rate = yaw_rate
-                    dp.pitch_angle = pitch_angle
-                    dp.roll_angle = roll_angle
+                # plug in drone messages
+                dp.messages = drone_messages
+                
+                # get table
+                tbl = display.construct(dp)
 
-                    # plug in drone messages
-                    dp.messages = drone_messages
-                    
-                    # get table
-                    tbl = display.construct(dp)
+                # update live
+                l.update(tbl)
 
-                    # update live
-                    l.update(tbl)
-
-                    # wait
-                    await asyncio.sleep(0.01)
+                # wait
+                await asyncio.sleep(0.01)
 
     # set up continuous radio sending
     async def continuous_radio_tx() -> None:
