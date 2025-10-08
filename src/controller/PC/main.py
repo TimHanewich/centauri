@@ -277,63 +277,69 @@ async def main() -> None:
                             time.sleep(0.1)
                         display.cls()
 
-                        # print current settings
-                        console.print("[blue][underline]----- CURRENT SETTINGS -----[/blue][/underline]")
-                        print()
-                        console.print("[u]Throttle Settings[/u]")
-                        print(str(idle_throttle))
-                        console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
-                        console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
-                        print()
-                        console.print("[u]PID Settings[/u]")
-                        console.print("Pitch kP: [blue]" + format(pitch_kp, ",") + "[/blue]")
-                        console.print("Pitch kI: [blue]" + format(pitch_ki, ",") + "[/blue]")
-                        console.print("Pitch kD: [blue]" + format(pitch_kd, ",") + "[/blue]")
-                        console.print("Roll kP: [blue]" + format(roll_kp, ",") + "[/blue]")
-                        console.print("Roll kI: [blue]" + format(roll_ki, ",") + "[/blue]")
-                        console.print("Roll kD: [blue]" + format(roll_kd, ",") + "[/blue]")
-                        console.print("Yaw kP: [blue]" + format(yaw_kp, ",") + "[/blue]")
-                        console.print("Yaw kI: [blue]" + format(yaw_ki, ",") + "[/blue]")
-                        console.print("Yaw kD: [blue]" + format(yaw_kd, ",") + "[/blue]")
-                        console.print("I Limit: [blue]" + format(i_limit, ",") + "[/blue]")
-                        print()
+                        # ask if they want to update settings continuously until they are right
+                        while True:
 
-                        # Want to change?
-                        print("What do you want to do?")
-                        console.print("[blue][bold]1[/blue][/bold] - Update these settings before sending to drone")
-                        console.print("[blue][bold]2[/blue][/bold] - Send these to the drone, as is")
-                        wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2", "3"], show_choices=True)
-                        if wanttodo == "1": # update
-                            
-                            print("Okay, let's collect the new values.")
+                            # print current settings
+                            console.print("[blue][underline]----- SETTINGS UPDATE TO SEND -----[/blue][/underline]")
+                            print()
+                            console.print("[u]Throttle Settings[/u]")
+                            console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
+                            console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
+                            print()
+                            console.print("[u]PID Settings[/u]")
+                            console.print("Pitch kP: [blue]" + format(pitch_kp, ",") + "[/blue]")
+                            console.print("Pitch kI: [blue]" + format(pitch_ki, ",") + "[/blue]")
+                            console.print("Pitch kD: [blue]" + format(pitch_kd, ",") + "[/blue]")
+                            console.print("Roll kP: [blue]" + format(roll_kp, ",") + "[/blue]")
+                            console.print("Roll kI: [blue]" + format(roll_ki, ",") + "[/blue]")
+                            console.print("Roll kD: [blue]" + format(roll_kd, ",") + "[/blue]")
+                            console.print("Yaw kP: [blue]" + format(yaw_kp, ",") + "[/blue]")
+                            console.print("Yaw kI: [blue]" + format(yaw_ki, ",") + "[/blue]")
+                            console.print("Yaw kD: [blue]" + format(yaw_kd, ",") + "[/blue]")
+                            console.print("I Limit: [blue]" + format(i_limit, ",") + "[/blue]")
+                            print()
 
-                            # collect idle and max until it is valid!
-                            while True:
-                                idle_throttle = tools.ask_float("Idle Throttle")
-                                max_throttle = tools.ask_float("Max Throttle")
+                            # Want to change?
+                            print("Do you want to change these?")
+                            console.print("[blue][bold]1[/blue][/bold] - Update these settings before sending to drone")
+                            console.print("[blue][bold]2[/blue][/bold] - Look good! Let's send them.")
+                            display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
+                            wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2"], show_choices=True)
+                            if wanttodo == "1": # update
+                                
+                                print("Okay, let's collect the new values.")
 
-                                # settings validation
-                                if max_throttle <= idle_throttle: 
-                                    print("Max Throttle must be GREATER THAN idle throttle!")
-                                    print("Try again please.")
-                                else:
-                                    break
+                                # collect idle and max until it is valid!
+                                while True:
+                                    idle_throttle = tools.ask_float("Idle Throttle")
+                                    max_throttle = tools.ask_float("Max Throttle")
 
-                            # Collect new settings
-                            pitch_kp = tools.ask_integer("Pitch kP")
-                            pitch_ki = tools.ask_integer("Pitch kI")
-                            pitch_kd = tools.ask_integer("Pitch kD")
-                            roll_kp = tools.ask_integer("Roll kP")
-                            roll_ki = tools.ask_integer("Roll kI")
-                            roll_kd = tools.ask_integer("Roll kD")
-                            pitch_kp = tools.ask_integer("Yaw kP")
-                            pitch_ki = tools.ask_integer("Yaw kI")
-                            pitch_kd = tools.ask_integer("Yaw kD")
-                            i_limit = tools.ask_integer("I Limit: ")
-                        elif wanttodo == "2": # send to drone as is
-                            print("Using those settings values!")
-                        else:
-                            console.print("[red]Invalid choice.[/red]")
+                                    # settings validation
+                                    if max_throttle <= idle_throttle: 
+                                        print("Max Throttle must be GREATER THAN idle throttle!")
+                                        print("Try again please.")
+                                    else:
+                                        break
+
+                                # Collect new settings
+                                pitch_kp = tools.ask_integer("Pitch kP")
+                                pitch_ki = tools.ask_integer("Pitch kI")
+                                pitch_kd = tools.ask_integer("Pitch kD")
+                                roll_kp = tools.ask_integer("Roll kP")
+                                roll_ki = tools.ask_integer("Roll kI")
+                                roll_kd = tools.ask_integer("Roll kD")
+                                pitch_kp = tools.ask_integer("Yaw kP")
+                                pitch_ki = tools.ask_integer("Yaw kI")
+                                pitch_kd = tools.ask_integer("Yaw kD")
+                                i_limit = tools.ask_integer("I Limit")
+                                print()
+
+                            elif wanttodo == "2": # send to drone as is
+                                print("Using those settings values!")
+                                break # break out of the infinite loop of asking if the settings look good
+                            else:
+                                console.print("[red]Invalid choice.[/red]")
 
 
                         # Send a settings update (PID settings)
