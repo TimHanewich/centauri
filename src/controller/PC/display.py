@@ -34,6 +34,7 @@ class DisplayPack:
     def __init__(self):
 
         # system info
+        self.uptime_seconds:float = 0.0
         self.packets_sent:int = 0
         self.packets_received:int = 0
         self.packet_last_received_ago_ms:int = 0
@@ -80,7 +81,8 @@ def construct(dp:DisplayPack) -> rich.table.Table:
 
     # construct what to display for system info
     txt_system:str = ""
-    txt_system = txt_system + "Packets Sent: " + str(dp.packets_sent)
+    txt_system = txt_system + "[gray]Uptime: " + str(int(round(dp.uptime_seconds, 0))) + " secs[/]"
+    txt_system = txt_system + "\nPackets Sent: " + str(dp.packets_sent)
     txt_system = txt_system + "\n" + "Packets Recv: " + str(dp.packets_received)
     if dp.packet_last_received_ago_ms != None:
         last_recv_seconds:int = int(dp.packet_last_received_ago_ms / 1000) # int() rounds down, which I want here

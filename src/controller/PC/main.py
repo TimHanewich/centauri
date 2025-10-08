@@ -226,6 +226,7 @@ async def main() -> None:
     yaw_rate:int = 0 # in degrees per second
 
     # set up system info variables
+    booted:float = time.time() # mark the boot time, in seconds. This will later be used to show system uptime
     packets_sent:int = 0
     packets_received:int = 0
     packets_last_received_at:float = None # timestamp of last received, in seconds (time.time()). Start with None to indicate we have NOT received one yet.
@@ -337,6 +338,7 @@ async def main() -> None:
                     dp:display.DisplayPack = display.DisplayPack()
 
                     # plug in basic telemetry info
+                    dp.uptime_seconds = time.time() - booted    # uptime of the system, in seconds (current time minus the booted timestamp)
                     dp.packets_sent = packets_sent
                     dp.packets_received = packets_received
                     if packets_last_received_at != None:
