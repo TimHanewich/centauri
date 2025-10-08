@@ -55,6 +55,21 @@ async def main() -> None:
         controller.init()
         print("Controller #0, '" + controller.get_name() + "' will be used.")
 
+
+    # declare default settings
+    idle_throttle:float = 0.10   # X% throttle is idle
+    max_throttle:float = 0.25    # X% throttle is the max
+    pitch_kp:int = 2000
+    pitch_ki:int = 0
+    pitch_kd:int = 0
+    roll_kp:int = 2000
+    roll_ki:int = 0
+    roll_kd:int = 0
+    yaw_kp:int = 2000
+    yaw_ki:int = 0
+    yaw_kd:int = 0
+    i_limit:int = 0
+
     # ask what serial peripheral path to use for communications
     print()
     console.print("[u]Transceiver Setup[/u]")
@@ -102,20 +117,6 @@ async def main() -> None:
             print("Transceiver did not respond with TRANSPONG, confirming it is alive. Are you sure it is working correctly? Response we received from it: " + str(response))
             ser.close()
             exit()
-
-        # declare default settings
-        idle_throttle:float = 0.10   # X% throttle is idle
-        max_throttle:float = 0.25    # X% throttle is the max
-        pitch_kp:int = 2000
-        pitch_ki:int = 0
-        pitch_kd:int = 0
-        roll_kp:int = 2000
-        roll_ki:int = 0
-        roll_kd:int = 0
-        yaw_kp:int = 2000
-        yaw_ki:int = 0
-        yaw_kd:int = 0
-        i_limit:int = 0
 
         # print settings
         print()
