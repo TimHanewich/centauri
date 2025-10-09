@@ -151,7 +151,7 @@ async def main() -> None:
 
     # Set up flight control variables, with defaults
     # these are the settings that will live on the drone, thus we will have to transmit them later
-    idle_throttle:float = 0.10   # X% throttle is idle
+    idle_throttle:float = 0.08   # X% throttle is idle
     max_throttle:float = 0.25    # X% throttle is the max
     pitch_kp:int = 2000
     pitch_ki:int = 0
