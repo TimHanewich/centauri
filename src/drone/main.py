@@ -2,22 +2,33 @@ print("----- CENTAURI FLIGHT CONTROLLER -----")
 print("github.com/TimHanewich/centauri")
 print()
 
-print("Importing libraries...")
 import machine
-import time
-import math
-import tools
 
 # First thing is first: set up onboard LED, turn it on while loading
 print("Turning LED on...")
 led = machine.Pin("LED", machine.Pin.OUT)
 led.on()
 
+# right away, set up motor PWMs with frequency of 250 Hz and start at 0% throttle
+gpio_motor1:int = 21 # front left, clockwise
+gpio_motor2:int = 20 # front right, counter clockwise
+gpio_motor3:int = 19 # rear left, counter clockwise
+gpio_motor4:int = 18 # rear right, clockwise
+target_hz:int = 250 # the number of times to run the PID loop, per second
+M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=1000000)
+M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=1000000)
+M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_ns=1000000)
+M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1000000)
+
+print("Importing other libraries...")
+import time
+import math
+import tools
+
 ####################
 ##### SETTINGS #####
 ####################
 
-target_hz:int = 250 # the number of times to run the PID loop, per second
 alpha:float = 98 # complementary filter alpha value for pitch/roll angle estimation. higher values favor gyroscope's opinion, lower favors accelerometer (noisy) 
 PID_SCALING_FACTOR:int = 1000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
 
@@ -240,17 +251,7 @@ gyro_bias_z:int = gzs // samples
 print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
 send_special("Calib Gyro OK")
 
-# motor GPIO pins
-gpio_motor1:int = 21 # front left, clockwise
-gpio_motor2:int = 20 # front right, counter clockwise
-gpio_motor3:int = 19 # rear left, counter clockwise
-gpio_motor4:int = 18 # rear right, clockwise
 
-# set up motor PWMs with frequency of 250 Hz and start at 0% throttle
-M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=1000000)
-M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=1000000)
-M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_ns=1000000)
-M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1000000)
 
 # set up ADC for reading the battery voltage
 vbat_adc = machine.ADC(machine.Pin(26))
