@@ -303,7 +303,7 @@ async def main() -> None:
 
                 # pack it
                 print("Packing PID updates...")
-                ToSend:bytes = tools.pack_settings_update(pitch_kp, pitch_ki, pitch_kd, roll_kp, roll_ki, roll_kd, yaw_kp, yaw_ki, yaw_kd, i_limit)
+                ToSend:bytes = tools.pack_settings_update(pitch_kp_eff, pitch_ki_eff, pitch_kd_eff, roll_kp_eff, roll_ki_eff, roll_kd_eff, yaw_kp_eff, yaw_ki_eff, yaw_kd_eff, i_limit)
 
                 # send it
                 print("Sending PID updates...")
