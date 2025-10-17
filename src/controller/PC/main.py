@@ -444,6 +444,22 @@ async def main() -> None:
 
                         # restart
                         l.start()
+                    
+                    elif keyboard.is_pressed("c"): # validate drone connection
+
+                        # Wait until C is depressed to enter settings
+                        l.stop() # stop the animation
+                        display.cls()
+                        print("Stop pressing C to begin drone connection")
+                        while keyboard.is_pressed("c"):
+                            time.sleep(0.1)
+                        display.cls()
+
+                        # validate connection
+                        validate_connection()
+
+                        # restart
+                        l.start()
 
                 # prepare to print with display packet
                 dp:display.DisplayPack = display.DisplayPack()
