@@ -17,6 +17,10 @@ import keyboard
 
 async def main() -> None:
 
+    #############################
+    ##### DECLARE VARIABLES #####
+    #############################
+
     # initialization settings (can be altered for testing)
     controller_required:bool = False
     transceiver_required:bool = False
@@ -62,6 +66,23 @@ async def main() -> None:
 
     # For Display: set up messages received from drone
     drone_messages:list[display.Message] = []
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #######################
+    ##### SETUP BELOW #####
+    #######################
+
 
 
     # create a console instance from the Rich library so we can print with fancy font and stuff
@@ -147,7 +168,17 @@ async def main() -> None:
             ser.close()
             exit()
 
-    
+
+
+
+
+
+
+
+    ###############################
+    ##### REUSABLE DEFS BELOW #####
+    ###############################
+
 
     # set up drone connection validation function
     def validate_connection() -> None:
@@ -352,16 +383,12 @@ async def main() -> None:
             print("Transceiver not set up, so skipping sending it out!")
             input("Return to continue.")
 
-    # ask if, before starting, they want to do a settings update
-    print()
-    print("Before flying, do you want to send a settings update to the drone?")
-    print("This is recommended for safety reasons.")
-    sendsettingsupdate:str = Prompt.ask("Send settings update now?", choices=["y", "n"], show_choices=True)
-    if sendsettingsupdate == "y":
-        print()
-        update_drone_settings()
-    else:
-        print("Skipping settings update.")
+
+
+
+
+
+
 
 
 
