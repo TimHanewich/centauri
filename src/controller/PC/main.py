@@ -180,9 +180,15 @@ async def main() -> None:
                 break
             else:
                 print("PONG not received yet...")
-        if drone_ponged == False:
+
+        # print the results
+        if drone_ponged:
+            print("Drone successfully ponged back! It is connected!")
+        else:
             print("Drone never ponged back!")
-            exit()
+
+        # wait for newline
+        input("Enter to continue...")
 
     # set up settings update function
     def update_drone_settings() -> None:
