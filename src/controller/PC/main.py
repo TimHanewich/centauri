@@ -456,7 +456,10 @@ async def main() -> None:
                         display.cls()
 
                         # validate connection
-                        validate_connection()
+                        if ser != None:
+                            validate_connection()
+                        else:
+                            print("Unable to validate connection with drone - transceiver not connected!")
 
                         # restart
                         l.start()
