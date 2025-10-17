@@ -150,7 +150,7 @@ def construct(dp:DisplayPack) -> rich.console.Group:
     table.add_row(txt_system, txt_controls, txt_status, txt_messages)
 
     # append text at the bottom
-    info:rich.text.Text = rich.text.Text("'s' to update settings\n'c' to connect to validate drone connection")
+    info:rich.text.Text = rich.text.Text("'s' to update settings\n'c' to validate drone connection")
     
     ToReturn:rich.console.Group = rich.console.Group(table, info)
     
