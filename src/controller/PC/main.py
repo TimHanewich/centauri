@@ -207,15 +207,15 @@ async def main() -> None:
         while True:
 
             # Calculate the EFFECTIVE PID values (using PID multiplier)
-            pitch_kp_eff:int = int(pitch_kp * pid_master_multiplier)
-            pitch_ki_eff:int = int(pitch_ki * pid_master_multiplier)
-            pitch_kd_eff:int = int(pitch_kd * pid_master_multiplier)
-            roll_kp_eff:int = int(roll_kp * pid_master_multiplier)
-            roll_ki_eff:int = int(roll_ki * pid_master_multiplier)
-            roll_kd_eff:int = int(roll_kd * pid_master_multiplier)
-            yaw_kp_eff:int = int(yaw_kp * pid_master_multiplier)
-            yaw_ki_eff:int = int(yaw_ki * pid_master_multiplier)
-            yaw_kd_eff:int = int(yaw_kd * pid_master_multiplier)
+            pitch_kp_eff:int = round(pitch_kp * pid_master_multiplier)
+            pitch_ki_eff:int = round(pitch_ki * pid_master_multiplier)
+            pitch_kd_eff:int = round(pitch_kd * pid_master_multiplier)
+            roll_kp_eff:int = round(roll_kp * pid_master_multiplier)
+            roll_ki_eff:int = round(roll_ki * pid_master_multiplier)
+            roll_kd_eff:int = round(roll_kd * pid_master_multiplier)
+            yaw_kp_eff:int = round(yaw_kp * pid_master_multiplier)
+            yaw_ki_eff:int = round(yaw_ki * pid_master_multiplier)
+            yaw_kd_eff:int = round(yaw_kd * pid_master_multiplier)
 
             # print current settings
             console.print("[blue][underline]----- SETTINGS UPDATE TO SEND -----[/blue][/underline]")
