@@ -83,8 +83,6 @@ async def main() -> None:
     ##### SETUP BELOW #####
     #######################
 
-
-
     # create a console instance from the Rich library so we can print with fancy font and stuff
     console = Console()
 
@@ -178,7 +176,6 @@ async def main() -> None:
     ###############################
     ##### REUSABLE DEFS BELOW #####
     ###############################
-
 
     # set up drone connection validation function
     def validate_connection() -> None:
