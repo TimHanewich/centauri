@@ -9,6 +9,7 @@ import asyncio
 import rich.live
 from rich.console import Console
 from rich.prompt import Prompt
+from rich.table import Table
 import serial
 import tools
 import sys
@@ -163,6 +164,7 @@ async def main() -> None:
     yaw_ki:int = 0
     yaw_kd:int = 0
     i_limit:int = 0
+    pid_master_multiplier:float = 1.00 # increases/decreases all PID parameters proportionally. This is great for keeping the same proportions but increasing/decreasing responsiveness
 
     # set up status variables we will get from the drone (and display in the console!): system status
     vbat:float = 0.0 # volts
@@ -199,9 +201,21 @@ async def main() -> None:
         nonlocal yaw_ki
         nonlocal yaw_kd
         nonlocal i_limit
+        nonlocal pid_master_multiplier
 
         # ask if they want to update settings continuously until they are right
         while True:
+
+            # Calculate the EFFECTIVE PID values (using PID multiplier)
+            pitch_kp_eff:int = int(pitch_kp * pid_master_multiplier)
+            pitch_ki_eff:int = int(pitch_ki * pid_master_multiplier)
+            pitch_kd_eff:int = int(pitch_kd * pid_master_multiplier)
+            roll_kp_eff:int = int(roll_kp * pid_master_multiplier)
+            roll_ki_eff:int = int(roll_ki * pid_master_multiplier)
+            roll_kd_eff:int = int(roll_kd * pid_master_multiplier)
+            yaw_kp_eff:int = int(yaw_kp * pid_master_multiplier)
+            yaw_ki_eff:int = int(yaw_ki * pid_master_multiplier)
+            yaw_kd_eff:int = int(yaw_kd * pid_master_multiplier)
 
             # print current settings
             console.print("[blue][underline]----- SETTINGS UPDATE TO SEND -----[/blue][/underline]")
@@ -211,22 +225,28 @@ async def main() -> None:
             console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
             print()
             console.print("[u]PID Settings[/u]")
-            console.print("Pitch kP: [blue]" + format(pitch_kp, ",") + "[/blue]")
-            console.print("Pitch kI: [blue]" + format(pitch_ki, ",") + "[/blue]")
-            console.print("Pitch kD: [blue]" + format(pitch_kd, ",") + "[/blue]")
-            console.print("Roll kP: [blue]" + format(roll_kp, ",") + "[/blue]")
-            console.print("Roll kI: [blue]" + format(roll_ki, ",") + "[/blue]")
-            console.print("Roll kD: [blue]" + format(roll_kd, ",") + "[/blue]")
-            console.print("Yaw kP: [blue]" + format(yaw_kp, ",") + "[/blue]")
-            console.print("Yaw kI: [blue]" + format(yaw_ki, ",") + "[/blue]")
-            console.print("Yaw kD: [blue]" + format(yaw_kd, ",") + "[/blue]")
+            console.print("PID Master Multiplier: " + str(round(pid_master_multiplier, 2)))
             console.print("I Limit: [blue]" + format(i_limit, ",") + "[/blue]")
+            pid_tbl:Table = Table()
+            pid_tbl.add_column("Axis")
+            pid_tbl.add_column("Raw Gain")
+            pid_tbl.add_column("Effective Gain")
+            pid_tbl.add_row("Pitch kP", format(pitch_kp, ","), format(pitch_kp_eff, ","))
+            pid_tbl.add_row("Pitch kI", format(pitch_ki, ","), format(pitch_ki_eff, ","))
+            pid_tbl.add_row("Pitch kD", format(pitch_kd, ","), format(pitch_kd_eff, ","))
+            pid_tbl.add_row("Roll kP", format(roll_kp, ","), format(roll_kp_eff, ","))
+            pid_tbl.add_row("Roll kI", format(roll_ki, ","), format(roll_ki_eff, ","))
+            pid_tbl.add_row("Roll kD", format(roll_kd, ","), format(roll_kd_eff, ","))
+            pid_tbl.add_row("Yaw kP", format(yaw_kp, ","), format(yaw_kp_eff, ","))
+            pid_tbl.add_row("Yaw kI", format(yaw_ki, ","), format(yaw_ki_eff, ","))
+            pid_tbl.add_row("yaw kD", format(yaw_kd, ","), format(yaw_kd_eff, ","))
             print()
 
             # Want to change?
             print("Do you want to change these?")
             console.print("[blue][bold]1[/blue][/bold] - Update these settings before sending to drone")
-            console.print("[blue][bold]2[/blue][/bold] - Look good! Let's send them.")
+            console.print("[blue][bold]2[/blue][/bold] - Adjust only PID Master Multiplier (make a proportional change)")
+            console.print("[blue][bold]3[/blue][/bold] - Look good! Let's send them.")
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
             wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2"], show_choices=True)
             if wanttodo == "1": # update
@@ -258,7 +278,10 @@ async def main() -> None:
                 i_limit = tools.ask_integer("I Limit")
                 print()
 
-            elif wanttodo == "2": # send to drone as is
+            elif wanttodo == "2": # update only PID Master Multiplier
+                npmm:float = tools.ask_float("New PID Master Multiplier to use")
+                pid_master_multiplier = npmm
+            elif wanttodo == "3": # send to drone as is
                 print("Using those settings values!")
                 break # break out of the infinite loop of asking if the settings look good
             else:
