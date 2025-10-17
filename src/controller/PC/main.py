@@ -245,7 +245,7 @@ async def main() -> None:
 
             # Want to change?
             print("Do you want to change these?")
-            console.print("[blue][bold]1[/blue][/bold] - Update these settings before sending to drone")
+            console.print("[blue][bold]1[/blue][/bold] - Update PID settings")
             console.print("[blue][bold]2[/blue][/bold] - Adjust only PID Master Multiplier (make a proportional change)")
             console.print("[blue][bold]3[/blue][/bold] - Look good! Let's send them.")
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
