@@ -140,9 +140,11 @@ def construct(dp:DisplayPack) -> rich.table.Table:
         # append it
         txt_messages = txt_messages + ThisMsg + "\n"
 
+    # trim messages
     if len(txt_messages) > 0:
         txt_messages = txt_messages[0:len(txt_messages)-1] # trim off last newline
 
-
+    # add all!
     table.add_row(txt_system, txt_controls, txt_status, txt_messages)
+    
     return table
