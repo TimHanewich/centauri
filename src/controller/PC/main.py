@@ -248,7 +248,7 @@ async def main() -> None:
             console.print("[blue][bold]2[/blue][/bold] - Adjust only PID Master Multiplier (make a proportional change)")
             console.print("[blue][bold]3[/blue][/bold] - Look good! Let's send them.")
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
-            wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2"], show_choices=True)
+            wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2", "3"], show_choices=True)
             if wanttodo == "1": # update
                 
                 print("Okay, let's collect the new values.")
