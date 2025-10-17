@@ -240,6 +240,7 @@ async def main() -> None:
             pid_tbl.add_row("Yaw kP", format(yaw_kp, ","), format(yaw_kp_eff, ","))
             pid_tbl.add_row("Yaw kI", format(yaw_ki, ","), format(yaw_ki_eff, ","))
             pid_tbl.add_row("yaw kD", format(yaw_kd, ","), format(yaw_kd_eff, ","))
+            console.print(pid_tbl)
             print()
 
             # Want to change?
