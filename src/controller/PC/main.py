@@ -218,6 +218,7 @@ async def main() -> None:
             yaw_kd_eff:int = round(yaw_kd * pid_master_multiplier)
 
             # print current settings
+            print()
             console.print("[blue][underline]----- SETTINGS UPDATE TO SEND -----[/blue][/underline]")
             print()
             console.print("[u]Throttle Settings[/u]")
