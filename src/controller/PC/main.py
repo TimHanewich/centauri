@@ -21,6 +21,49 @@ async def main() -> None:
     controller_required:bool = False
     transceiver_required:bool = False
 
+    # set up control input variables we will track, display in console, and then interpret and transform before sending to drone in control packet
+    armed:bool = False       # armed is being tracked here not as a variable we will directly pass on to the quadcopter, but rather a variable we will use to know if we should be transmitting at least the minimum throttle (when armed) or 0% throttle
+    mode:bool = False        # UNUSED for right now! Only rate mode works. Rate Mode = False, Angle Mode = True
+    throttle:float = 0.0     # between 0.0 and 1.0
+    pitch:float = 0.0        # between -1.0 and 1.0
+    roll:float = 0.0         # between -1.0 and 1.0
+    yaw:float = 0.0          # between -1.0 and 1.0
+
+    # Set up flight control variables, with defaults
+    # these are the settings that will live on the drone, thus we will have to transmit them later
+    idle_throttle:float = 0.08   # X% throttle is idle
+    max_throttle:float = 0.25    # X% throttle is the max
+    pitch_kp:int = 0
+    pitch_ki:int = 0
+    pitch_kd:int = 0
+    roll_kp:int = 0
+    roll_ki:int = 0
+    roll_kd:int = 0
+    yaw_kp:int = 0
+    yaw_ki:int = 0
+    yaw_kd:int = 0
+    i_limit:int = 0
+    pid_master_multiplier:float = 1.00 # increases/decreases all PID parameters proportionally. This is great for keeping the same proportions but increasing/decreasing responsiveness
+
+    # set up status variables we will get from the drone (and display in the console!): system status
+    vbat:float = 0.0 # volts
+
+    # set up status variables we will get from the drone (and display in the console!): control status
+    pitch_angle:int = 0 # in degrees
+    roll_angle:int = 0 # in degrees
+    pitch_rate:int = 0 # in degrees per second
+    roll_rate:int = 0 # in degrees per second
+    yaw_rate:int = 0 # in degrees per second
+
+    # set up system info variables
+    packets_sent:int = 0
+    packets_received:int = 0
+    packets_last_received_at:float = None # timestamp of last received, in seconds (time.time()). Start with None to indicate we have NOT received one yet.
+
+    # For Display: set up messages received from drone
+    drone_messages:list[display.Message] = []
+
+
     # create a console instance from the Rich library so we can print with fancy font and stuff
     console = Console()
 
@@ -104,47 +147,7 @@ async def main() -> None:
             ser.close()
             exit()
 
-    # set up control input variables we will track, display in console, and then interpret and transform before sending to drone in control packet
-    armed:bool = False       # armed is being tracked here not as a variable we will directly pass on to the quadcopter, but rather a variable we will use to know if we should be transmitting at least the minimum throttle (when armed) or 0% throttle
-    mode:bool = False        # UNUSED for right now! Only rate mode works. Rate Mode = False, Angle Mode = True
-    throttle:float = 0.0     # between 0.0 and 1.0
-    pitch:float = 0.0        # between -1.0 and 1.0
-    roll:float = 0.0         # between -1.0 and 1.0
-    yaw:float = 0.0          # between -1.0 and 1.0
-
-    # Set up flight control variables, with defaults
-    # these are the settings that will live on the drone, thus we will have to transmit them later
-    idle_throttle:float = 0.08   # X% throttle is idle
-    max_throttle:float = 0.25    # X% throttle is the max
-    pitch_kp:int = 0
-    pitch_ki:int = 0
-    pitch_kd:int = 0
-    roll_kp:int = 0
-    roll_ki:int = 0
-    roll_kd:int = 0
-    yaw_kp:int = 0
-    yaw_ki:int = 0
-    yaw_kd:int = 0
-    i_limit:int = 0
-    pid_master_multiplier:float = 1.00 # increases/decreases all PID parameters proportionally. This is great for keeping the same proportions but increasing/decreasing responsiveness
-
-    # set up status variables we will get from the drone (and display in the console!): system status
-    vbat:float = 0.0 # volts
-
-    # set up status variables we will get from the drone (and display in the console!): control status
-    pitch_angle:int = 0 # in degrees
-    roll_angle:int = 0 # in degrees
-    pitch_rate:int = 0 # in degrees per second
-    roll_rate:int = 0 # in degrees per second
-    yaw_rate:int = 0 # in degrees per second
-
-    # set up system info variables
-    packets_sent:int = 0
-    packets_received:int = 0
-    packets_last_received_at:float = None # timestamp of last received, in seconds (time.time()). Start with None to indicate we have NOT received one yet.
-
-    # For Display: set up messages received from drone
-    drone_messages:list[display.Message] = []
+    
 
     # set up drone connection validation function
     def validate_connection() -> None:
