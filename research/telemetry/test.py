@@ -27,7 +27,7 @@ def logtel(data:bytes) -> None:
 ToWrite:bytearray = bytearray(16)
 
 # test writing with some sample data
-for _ in range(20):
+for _ in range(300):
     
     # randomize values in it
     for i in range(telemetry_frame_size):
