@@ -476,11 +476,11 @@ async def main() -> None:
                 # plug in drone messages
                 dp.messages = drone_messages
                 
-                # get table
-                tbl = display.construct(dp)
+                # get to display
+                td = display.construct(dp)
 
                 # update live
-                l.update(tbl)
+                l.update(td)
 
                 # wait
                 await asyncio.sleep(0.01)

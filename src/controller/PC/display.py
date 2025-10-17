@@ -1,6 +1,8 @@
 import os
 import shutil
 import rich.table
+import rich.console
+import rich.text
 import time
 import platform
 import sys
@@ -58,7 +60,7 @@ class DisplayPack:
         # messages being received from the drone
         self.messages:list[Message] = []
 
-def construct(dp:DisplayPack) -> rich.table.Table:
+def construct(dp:DisplayPack) -> rich.console.Group:
     """Construct the telemetry table to dispaly"""
 
     # check size of console
@@ -144,7 +146,12 @@ def construct(dp:DisplayPack) -> rich.table.Table:
     if len(txt_messages) > 0:
         txt_messages = txt_messages[0:len(txt_messages)-1] # trim off last newline
 
-    # add all!
+    # add all to the table!
     table.add_row(txt_system, txt_controls, txt_status, txt_messages)
+
+    # append text at the bottom
+    info:rich.text.Text = rich.text.Text("'s' to update settings\n'c' to connect to validate drone connection")
     
-    return table
+    ToReturn:rich.console.Group = rich.console.Group(table, info)
+    
+    return ToReturn
