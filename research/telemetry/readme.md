@@ -1,6 +1,11 @@
 # Telemetry Logging
 Considering logging telemetry to the local storage on the Pico during flight - more telemetry and a higher frequency during flight. For it to be recovered afterwards.
 
+## Storage Estimate Calculator
+Click [here](https://github.com/TimHanewich/centauri/releases/download/4/storage.xlsx) to download an Excel spreadsheet for calculating how many minutes worth of space can be stored on microcontroller.
+
+![storage](https://i.imgur.com/MhDEiYa.png)
+
 ## Example Telemetry Logging Test:
 ```
 import time
