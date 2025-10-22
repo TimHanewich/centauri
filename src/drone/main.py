@@ -547,6 +547,14 @@ try:
         yaw_d = (yaw_kd * (error_yaw_rate - yaw_last_error)) // PID_SCALING_FACTOR
         yaw_pid = yaw_p + yaw_i + yaw_d
 
+        # save state values for next loop
+        pitch_last_error = error_pitch_rate
+        roll_last_error = error_roll_rate
+        yaw_last_error = error_yaw_rate
+        pitch_last_i = pitch_i
+        roll_last_i = roll_i
+        yaw_last_i = yaw_i
+
         # Calculate the mean pulse width the PWM signals will use
         # each motor will then offset this a bit based on the PID values for each axis
         # "pwm_pw" short for "Pulse Width Modulation Pulse Width"
@@ -605,14 +613,6 @@ try:
         M2.duty_ns(m2_pwm_pw)
         M3.duty_ns(m3_pwm_pw)
         M4.duty_ns(m4_pwm_pw)
-
-        # save state values for next loop
-        pitch_last_error = error_pitch_rate
-        roll_last_error = error_roll_rate
-        yaw_last_error = error_yaw_rate
-        pitch_last_i = pitch_i
-        roll_last_i = roll_i
-        yaw_last_i = yaw_i
 
         # wait if there is excess time 
         excess_us:int = cycle_time_us - time.ticks_diff(time.ticks_us(), loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
