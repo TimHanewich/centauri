@@ -527,23 +527,23 @@ try:
 
         # Pitch PID calculation
         pitch_p:int = (error_pitch_rate * pitch_kp) // PID_SCALING_FACTOR
-        pitch_i:int = pitch_last_i + ((error_pitch_rate * pitch_ki * cycle_time_us) // PID_SCALING_FACTOR)
+        pitch_i:int = pitch_last_i + ((error_pitch_rate * pitch_ki) // PID_SCALING_FACTOR)
         pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
-        pitch_d = (pitch_kd * (error_pitch_rate - pitch_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
+        pitch_d = (pitch_kd * (error_pitch_rate - pitch_last_error)) // PID_SCALING_FACTOR # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
         pitch_pid = pitch_p + pitch_i + pitch_d
 
         # Roll PID calculation
         roll_p:int = (error_roll_rate * roll_kp) // PID_SCALING_FACTOR
-        roll_i:int = roll_last_i + ((error_roll_rate * roll_ki * cycle_time_us) // PID_SCALING_FACTOR)
+        roll_i:int = roll_last_i + ((error_roll_rate * roll_ki) // PID_SCALING_FACTOR)
         roll_i = min(max(roll_i, -i_limit), i_limit) # constrain within I limit
-        roll_d = (roll_kd * (error_roll_rate - roll_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
+        roll_d = (roll_kd * (error_roll_rate - roll_last_error)) // PID_SCALING_FACTOR # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
         roll_pid = roll_p + roll_i + roll_d
 
         # Yaw PID calculation
         yaw_p:int = (error_yaw_rate * yaw_kp) // PID_SCALING_FACTOR
-        yaw_i:int = yaw_last_i + ((error_yaw_rate * yaw_ki * cycle_time_us) // PID_SCALING_FACTOR)
+        yaw_i:int = yaw_last_i + ((error_yaw_rate * yaw_ki) // PID_SCALING_FACTOR)
         yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
-        yaw_d = (yaw_kd * (error_yaw_rate - yaw_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
+        yaw_d = (yaw_kd * (error_yaw_rate - yaw_last_error)) // PID_SCALING_FACTOR # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
         yaw_pid = yaw_p + yaw_i + yaw_d
 
         # Calculate the mean pulse width the PWM signals will use
