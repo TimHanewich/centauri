@@ -10,6 +10,7 @@ led = machine.Pin("LED", machine.Pin.OUT)
 led.on()
 
 # right away, set up motor PWMs with frequency of 250 Hz and start at 0% throttle
+# why do this right away? Some ESCs have a timeout that will refuse to turn on if the PWM signal is not received within a certain number of seconds of powering on
 gpio_motor1:int = 21 # front left, clockwise
 gpio_motor2:int = 20 # front right, counter clockwise
 gpio_motor3:int = 19 # rear left, counter clockwise
