@@ -40,3 +40,6 @@ print("Total space:", total_space, "bytes")
 print("Used space:", used_space, "bytes")
 print("Free space:", free_space, "bytes")
 ```
+
+## Storing in RAM, writing after flight
+As described in [this Copilot chat](https://copilot.microsoft.com/shares/JzxN3dbfughS6k3pUbycm), the best thing to explore is probably saving all telemetry just to RAM during flight and THEN once flight is over, writing to storage. I should do the math with the available remaining RAM to see how much flight time (i.e. 60 seconds?) I can store in RAM alone. And if I exceed this or go beyond a pre-defined buffer length, just overwrite the old data. so it only keeps the last 60 seconds or whatever maybe.
