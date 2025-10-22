@@ -35,13 +35,13 @@ PID_SCALING_FACTOR:int = 1000 # PID scaling factor that will later be used to "d
 
 # Flight Control PID Gains
 # Set initial setting here, though they can be updated via settings update packet later
-pitch_kp:int = 5000
+pitch_kp:int = 0
 pitch_ki:int = 0
 pitch_kd:int = 0
-roll_kp:int = 5000
+roll_kp:int = 0
 roll_ki:int = 0
 roll_kd:int = 0
-yaw_kp:int = 5000
+yaw_kp:int = 0
 yaw_ki:int = 0
 yaw_kd:int = 0
 i_limit:int = 0
