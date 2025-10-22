@@ -2,12 +2,15 @@ pitch_kp = 437
 pitch_ki = 100
 pitch_kd = 100
 
+# I and D relevant terms for testing
+pitch_last_i = 9
+pitch_last_error = 2
+
 error_pitch_rate = 30
 PID_SCALING_FACTOR = 1000
-pitch_last_i = 0
 i_limit = 65000
 cycle_time_us = 4000
-pitch_last_error = 0
+
 
 # Pitch PID calculation
 pitch_p:int = (error_pitch_rate * pitch_kp) // PID_SCALING_FACTOR
