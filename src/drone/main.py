@@ -594,6 +594,9 @@ try:
             print("Roll PID: " + str(roll_pid) + ": " + str(roll_p) + ", " + str(roll_i) + ", " + str(roll_d))
             print("Yaw PID: " + str(yaw_pid) + ": " + str(yaw_p) + ", " + str(yaw_i) + ", " + str(yaw_d))
             print()
+            print("Pitch Last I: " + str(pitch_last_i))
+            print("Roll Last I: " + str(roll_last_i))
+            print()
             LAST_PRINT = time.ticks_ms()
 
         # adjust throttles on PWMs
