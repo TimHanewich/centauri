@@ -31,7 +31,7 @@ import tools
 ####################
 
 alpha:float = 98 # complementary filter alpha value for pitch/roll angle estimation. higher values favor gyroscope's opinion, lower favors accelerometer (noisy) 
-PID_SCALING_FACTOR:int = 1000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
+PID_SCALING_FACTOR:int = 10000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
 
 # Flight Control PID Gains
 # Set initial setting here to 0 for safety reasons, though they can be updated via settings update packet later
