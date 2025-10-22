@@ -301,6 +301,7 @@ led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was s
 status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the remote controller via HC-12
 last_compfilt_ticks_us:int = 0 # the last time the complementary filter was used. This is used to know how much time has ELAPSED and thus calculate roughly how many degrees changed based on the degrees per second value from the gyros
 control_input_last_received_ticks_ms:int = 0 # timestamp (in ms) of the last time a valid control packet was received. This is used to check and shut down motors if it has been too long (failsafe)
+LAST_PRINT:int = 0 # in ticks, ms
 
 # Infinite loop for all operations!
 print()
@@ -585,6 +586,13 @@ try:
             pitch_last_error = 0
             roll_last_error = 0
             yaw_last_error = 0
+
+        # time to print?
+        if time.ticks_diff(LAST_PRINT, time.ticks_ms()) > 250:
+            print("Pitch PID: " + str(pitch_pid) + ": " + str(pitch_p) + ", " + str(pitch_i) + ", " + str(pitch_d))
+            print("Roll PID: " + str(roll_pid) + ": " + str(roll_p) + ", " + str(roll_i) + ", " + str(roll_d))
+            print("Yaw PID: " + str(yaw_pid) + ": " + str(yaw_p) + ", " + str(yaw_i) + ", " + str(yaw_d))
+            LAST_PRINT = time.ticks_ms()
 
         # adjust throttles on PWMs
         #print("M1: " + str(m1_pwm_pw) + ", M2: " + str(m2_pwm_pw) + ", M3: " + str(m3_pwm_pw), "M4: " + str(m4_pwm_pw))
