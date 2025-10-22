@@ -7,8 +7,6 @@ Provided by [this Copilot chat](https://copilot.microsoft.com/shares/dZewrk4FBsU
 ## Steps to PID Tuning:
 Provided by [this chat](https://copilot.microsoft.com/shares/dZewrk4FBsUZGGAGu6Wxs), below:
 
-# Quadcopter PID Tuning from Scratch
-
 1. Safety First
 - **Test environment:** Open space, soft ground if possible.
 - **Throttle limit:** Use a low throttle cap or tether for first hover attempts.
@@ -75,3 +73,14 @@ Provided by [this chat](https://copilot.microsoft.com/shares/dZewrk4FBsUZGGAGu6W
 2. Add **I** until it holds attitude.  
 3. Add **D** to smooth and damp.  
 4. Iterate per axis.
+
+## Excellent Rigs for PID Tuning (Safely) from Scratch
+- https://www.youtube.com/shorts/4T9lB4C46Tk - SIMPLE BUT EFFECTIVE
+- https://www.youtube.com/watch?v=dMRDzicSvXk
+- https://www.youtube.com/shorts/NGpEHnExb2U
+- https://www.youtube.com/shorts/3mdGhCtTlcQ
+- https://www.youtube.com/shorts/VSAUrrOmbZw
+- https://www.youtube.com/shorts/5itLYbTa7eU
+- https://www.youtube.com/watch?v=M09hvlPbqek
+- https://www.youtube.com/watch?v=EkgV_cxCnU4
+- https://www.youtube.com/watch?v=aZnTlzgtG2Q
