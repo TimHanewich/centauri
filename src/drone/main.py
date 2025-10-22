@@ -34,7 +34,7 @@ alpha:float = 98 # complementary filter alpha value for pitch/roll angle estimat
 PID_SCALING_FACTOR:int = 1000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
 
 # Flight Control PID Gains
-# Set initial setting here, though they can be updated via settings update packet later
+# Set initial setting here to 0 for safety reasons, though they can be updated via settings update packet later
 pitch_kp:int = 0
 pitch_ki:int = 0
 pitch_kd:int = 0
