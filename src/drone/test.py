@@ -11,7 +11,7 @@ pitch_last_error = 0
 
 # Pitch PID calculation
 pitch_p:int = (error_pitch_rate * pitch_kp) // PID_SCALING_FACTOR
-pitch_i:int = pitch_last_i + ((error_pitch_rate * pitch_ki * cycle_time_us) // PID_SCALING_FACTOR)
+pitch_i:int = pitch_last_i + ((error_pitch_rate * pitch_ki) // PID_SCALING_FACTOR)
 pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
 pitch_d = (pitch_kd * (error_pitch_rate - pitch_last_error)) // (cycle_time_us * PID_SCALING_FACTOR) # would make more visual sense to divide the entire thing by the scaling factor, but for precision purposes, better to only integer divide ONCE by one big number than do it twice.
 pitch_pid = pitch_p + pitch_i + pitch_d
