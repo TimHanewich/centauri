@@ -588,10 +588,12 @@ try:
             yaw_last_error = 0
 
         # time to print?
-        if time.ticks_diff(LAST_PRINT, time.ticks_ms()) > 250:
+        if time.ticks_diff(time.ticks_ms(), LAST_PRINT) > 250:
+            print("----- AT " + str(time.ticks_ms()) + " -----")
             print("Pitch PID: " + str(pitch_pid) + ": " + str(pitch_p) + ", " + str(pitch_i) + ", " + str(pitch_d))
             print("Roll PID: " + str(roll_pid) + ": " + str(roll_p) + ", " + str(roll_i) + ", " + str(roll_d))
             print("Yaw PID: " + str(yaw_pid) + ": " + str(yaw_p) + ", " + str(yaw_i) + ", " + str(yaw_d))
+            print()
             LAST_PRINT = time.ticks_ms()
 
         # adjust throttles on PWMs
