@@ -225,7 +225,7 @@ async def main() -> None:
         input("Enter to continue...")
 
     # set up settings update function
-    def update_drone_settings() -> None:
+    def update_settings() -> None:
         """Collects new settings values and then transmits them to the drone."""
 
         # declare global variables
@@ -476,7 +476,7 @@ async def main() -> None:
                         display.cls()
 
                         # trigger collection and transmitting of settings data to drone
-                        update_drone_settings()
+                        update_settings()
 
                         # restart
                         l.start()
