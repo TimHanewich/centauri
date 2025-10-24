@@ -259,9 +259,9 @@ async def main() -> None:
 
             # print current settings
             print()
-            console.print("[blue][underline]----- SETTINGS UPDATE TO SEND -----[/blue][/underline]")
+            console.print("[blue][underline]----- CURRENT SETTINGS -----[/blue][/underline]")
             print()
-            console.print("[u]Throttle Settings[/u]")
+            console.print("[u]Controller Settings[/u]")
             console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
             console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
             print()
@@ -288,14 +288,16 @@ async def main() -> None:
 
             # Want to change?
             print("Do you want to change these?")
-            console.print("[blue][bold]1[/blue][/bold] - Update PID settings")
-            console.print("[blue][bold]2[/blue][/bold] - Adjust only PID Master Multiplier (make a proportional change)")
-            console.print("[blue][bold]3[/blue][/bold] - Look good! Let's send them.")
+            console.print("[blue][bold]1[/blue][/bold] - Update Controller Settings")
+            console.print("[blue][bold]2[/blue][/bold] - Update PID settings")
+            console.print("[blue][bold]3[/blue][/bold] - Adjust only PID Master Multiplier (make a proportional change)")
+            console.print("[blue][bold]4[/blue][/bold] - Send settings to drone!")
+            console.print("[blue][bold]5[/blue][/bold] - Do Nothing (go back)")
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
-            wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2", "3"], show_choices=True)
-            if wanttodo == "1": # update
-                
-                print("Okay, let's collect the new values.")
+            wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2", "3", "4", "5"], show_choices=True)
+            if wanttodo == "1": # update controller settings
+
+                print("Okay, let's update the controller settings.")
 
                 # collect idle and max until it is valid!
                 while True:
@@ -308,6 +310,10 @@ async def main() -> None:
                         print("Try again please.")
                     else:
                         break
+
+            if wanttodo == "2": # update PID settings
+                
+                print("Okay, let's collect the new PID values.")
 
                 # Collect new settings
                 pitch_kp = tools.ask_integer("Pitch kP")
@@ -322,12 +328,14 @@ async def main() -> None:
                 i_limit = tools.ask_integer("I Limit")
                 print()
 
-            elif wanttodo == "2": # update only PID Master Multiplier
+            elif wanttodo == "3": # update only PID Master Multiplier
                 npmm:float = tools.ask_float("New PID Master Multiplier to use")
                 pid_master_multiplier = npmm
-            elif wanttodo == "3": # send to drone as is
+            elif wanttodo == "4": # send to drone as is
                 print("Using those settings values!")
                 break # break out of the infinite loop of asking if the settings look good
+            elif wanttodo == "5": # cancel
+                break
             else:
                 console.print("[red]Invalid choice.[/red]")
 
