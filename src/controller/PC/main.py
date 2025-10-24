@@ -311,7 +311,7 @@ async def main() -> None:
                     else:
                         break
 
-            if wanttodo == "2": # update PID settings
+            elif wanttodo == "2": # update PID settings
                 
                 print("Okay, let's collect the new PID values.")
 
@@ -335,7 +335,7 @@ async def main() -> None:
                 print("Using those settings values!")
                 break # break out of the infinite loop of asking if the settings look good
             elif wanttodo == "5": # cancel
-                break
+                return # break out of this function and return to main screen by closing out of the function
             else:
                 console.print("[red]Invalid choice.[/red]")
 
