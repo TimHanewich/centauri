@@ -486,6 +486,11 @@ try:
         roll_rate = roll_rate - gyro_bias_x
         yaw_rate = yaw_rate - gyro_bias_z
 
+        # Because of how I have my IMU mounted, invert necessary axes
+        # I could in theory not need to do this if I mounted it flipped over, but preferring to leave it as is physically and just make the adjustment here!
+        pitch_rate = pitch_rate * -1
+        yaw_rate = yaw_rate * -1
+
         # FOR DIAGNOSTICS / TESTING: 
         # You can manually hijack the pitch, roll, and yaw rate below.
         # uncomment these and set a value to observe the PID values / motor throttles adjust.
