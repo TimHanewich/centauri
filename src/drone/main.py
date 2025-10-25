@@ -605,10 +605,13 @@ try:
         # print?
         if time.ticks_diff(time.ticks_ms(), LAST_PRINT) > 500:
             print("--- AT " + str(time.ticks_ms()) + " ---")
-            print("M1: " + str(m1_pwm_pw))
-            print("M2: " + str(m2_pwm_pw))
-            print("M3: " + str(m3_pwm_pw))
-            print("M4: " + str(m4_pwm_pw))
+            #print("M1: " + str(m1_pwm_pw))
+            #print("M2: " + str(m2_pwm_pw))
+            #print("M3: " + str(m3_pwm_pw))
+            #print("M4: " + str(m4_pwm_pw))
+            print("Pitch Rate: " + str(pitch_rate))
+            print("Roll Rate: " + str(roll_rate))
+            print("Yaw Rate: " + str(yaw_rate))
             print()
             LAST_PRINT = time.ticks_ms()
 
