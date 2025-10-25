@@ -9,7 +9,7 @@
     - All else set to 0 (isolte testing of roll axis)
     - I limit = 25,0000. May be safe to bring this higher, I feel it spoolign safely and slowly.
 
-## Tuning on Oct 25, 2025
+## PID Tuning on Oct 25, 2025
 - Tuning process for both pitch and roll axes together:
     - Increase P until fast oscilations.
         - Got up to 25,000 kP
@@ -30,3 +30,4 @@
 - Beginning to see the pitch axis behaves differently than the roll axis.
 - Pitch axis has long oscilations caused by I term. Probably because of weight along pitch axis.
 - So maybe I have to tune the pitch and roll axis separately?
+- I tried using Scout's PID proportions too - still slow wobble. Seems I is too severe.
