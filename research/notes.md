@@ -8,3 +8,24 @@
     - Roll kD: 0
     - All else set to 0 (isolte testing of roll axis)
     - I limit = 25,0000. May be safe to bring this higher, I feel it spoolign safely and slowly.
+
+## Tuning on Oct 25, 2025
+- Tuning process for both pitch and roll axes together:
+    - Increase P until fast oscilations.
+        - Got up to 25,000 kP
+        - Going down to 80% of that, **20,000**
+    - Increase I until slow wobble
+        - Wobbles clearly @ 1,000. Severely @ 2,000
+        - 500 seems to be tolerable. But maybe 750 is right.
+    - Increase D
+        - Maybe 500-1000 feels ok
+- What seems best at the end:
+    - Pitch kP: 20,000
+    - Pitch kI: 500
+    - Pitch kD: 500
+    - Roll kP: 20,000
+    - Roll kI: 1,000
+    - Roll kD: 5000
+- Beginning to see the pitch axis behaves differently than the roll axis.
+- Pitch axis has long oscilations caused by I term. Probably because of weight along pitch axis.
+- So maybe I have to tune the pitch and roll axis separately?
