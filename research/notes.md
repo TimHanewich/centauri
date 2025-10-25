@@ -25,7 +25,8 @@
     - Pitch kD: 500
     - Roll kP: 20,000
     - Roll kI: 1,000
-    - Roll kD: 5000
+    - Roll kD: 500
+- D seemed to help a bit with stability but I couldn't really feel it that much. Maybe could go higher.
 - Beginning to see the pitch axis behaves differently than the roll axis.
 - Pitch axis has long oscilations caused by I term. Probably because of weight along pitch axis.
 - So maybe I have to tune the pitch and roll axis separately?
