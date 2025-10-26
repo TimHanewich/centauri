@@ -46,3 +46,10 @@
         - kI: 700
         - kD: 500
     - Those above were found only through some testing. I'm sure can optimize from there. But I think these are enough for a first flight.
+- PID tuning yaw (again, still no I limit). 
+    - Optimal values seem:
+        - kP: 45,000
+        - kI: 750
+        - kD: 0
+    - kP seemed a bit better at 50,000. But backed down to be safe.
+    - kI seems very unsafe. 750 may be a bit high. Will have to see how it flies. May want to try like 400-500 if too much.
