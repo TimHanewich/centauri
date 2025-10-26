@@ -53,3 +53,28 @@
         - kD: 0
     - kP seemed a bit better at 50,000. But backed down to be safe.
     - kI seems very unsafe. 750 may be a bit high. Will have to see how it flies. May want to try like 400-500 if too much.
+
+## Tethered Test Flight on October 26, 2025
+- First started with:
+    - Pitch kP: 20,000
+    - Pitch kI: 700
+    - Pitch kD: 500
+    - Roll kP: 20,000
+    - Roll kI: 700
+    - Roll kD: 500
+    - Yaw kP: 45,000
+    - Yaw kI: 750
+    - Yaw kD: 0
+- Definitely WAY too much fast oscilation. Not flyable at all. Quite dangerous.
+- I tried the Scout proportions. Goes NUTS right away. I even tried 5% of them. Still goes nuts. Doesn't seem right.
+- What I landed with, at the end. Seeemed best but still oscilation issues (did not get to D term of I on the yaw yet):
+    - Pitch kP: 10,000
+    - Pitch kI: 300
+    - Pitch kD: 0
+    - Roll kP: 6,000
+    - Roll kI: 200
+    - Roll kD: 0
+    - Yaw kP: 35,000
+    - Yaw kI: 0
+    - Yaw kD: 0
+- With the above, it somewhat picks up and flies but then quickly goes crazy (oscilations)
