@@ -444,12 +444,12 @@ async def main() -> None:
                             throttle_percent:float = (event.value + 1) / 2   # gets it to between 0.0 and 1.0
                             throttle = nlt_throttle.transform(throttle_percent)
                         elif event.axis == 0: # left stick X axis (left/right)
-                            roll = nlt_roll.transform(roll)
+                            roll = nlt_roll.transform(event.value)
                         elif event.axis == 1: # left stick Y axis (up/down)
                             # pushing the left stick forward will result in a NEGATIVE value. While this may seem incorrect at first, it is actually correct... pushing the left stick forward should prompt the quadcopter to pitch down (forward), hence it should be negative!
                             pitch = nlt_pitch.transform(event.value)
                         elif event.axis == right_stick_x_axis_id: # right stick X axis (left/right)
-                            yaw = nlt_yaw.transform(yaw)
+                            yaw = nlt_yaw.transform(event.value)
                         else:
                             #print("Axis '" + str(event.axis) + "': " + str(event.value))
                             pass
