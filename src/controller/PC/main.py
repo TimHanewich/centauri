@@ -416,6 +416,15 @@ async def main() -> None:
         nonlocal roll
         nonlocal yaw
 
+        # Establish nonlinear transformers for each input axis
+        # These do two things:
+        # 1 - implements a deadzone
+        # 2 - dampens early inputs (smooth gradually increasing curve, not linear)
+        nlt_throttle:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.00)
+        nlt_pitch:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
+        nlt_roll:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
+        nlt_yaw:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.10) # my deadzone is higher than the others because I have a broken right stick on my controller that often rests at around 8% in either direction
+
         # determine what the yaw axis ID is (right stick X, horizontal, axis)
         # it is different based on what OS you are on I find
         # On Windows, right stick X axis (horizontal) = 2
@@ -432,13 +441,15 @@ async def main() -> None:
                 for event in pygame.event.get():
                     if event.type == pygame.JOYAXISMOTION:
                         if event.axis == 5: # right trigger
-                            throttle = (event.value + 1) / 2
+                            throttle_percent:float = (event.value + 1) / 2   # gets it to between 0.0 and 1.0
+                            throttle = nlt_throttle.transform(throttle_percent)
                         elif event.axis == 0: # left stick X axis (left/right)
-                            roll = event.value
+                            roll = nlt_roll.transform(roll)
                         elif event.axis == 1: # left stick Y axis (up/down)
-                            pitch = event.value # pushing the left stick forward will result in a NEGATIVE value. While this may seem incorrect at first, it is actually correct... pushing the left stick forward should prompt the quadcopter to pitch down (forward), hence it should be negative!
+                            # pushing the left stick forward will result in a NEGATIVE value. While this may seem incorrect at first, it is actually correct... pushing the left stick forward should prompt the quadcopter to pitch down (forward), hence it should be negative!
+                            pitch = nlt_pitch.transform(event.value)
                         elif event.axis == right_stick_x_axis_id: # right stick X axis (left/right)
-                            yaw = event.value
+                            yaw = nlt_yaw.transform(yaw)
                         else:
                             #print("Axis '" + str(event.axis) + "': " + str(event.value))
                             pass
