@@ -31,3 +31,11 @@
 - Pitch axis has long oscilations caused by I term. Probably because of weight along pitch axis.
 - So maybe I have to tune the pitch and roll axis separately?
 - I tried using Scout's PID proportions too - still slow wobble. Seems I is too severe.
+
+## PID Investigating on Oct 26, 2025
+- It is evident the I term clamp is way way way too low: https://i.imgur.com/1gZ4dpC.png
+- As seen in that test, the I term is being clamped right away.
+- And worse, the I term clamp is only 2 bytes, so the max I can send is 65,535. **That is not nearly enough, compared to the P term getting into the several hundred thousands!**
+- So what to do?
+    - Multiply the I term limit times something like 10. Just to lift it up. So it will still be sent as 2 bytes (0-65,535), but then will be multiplied by 10 or something bit to make it much larger. (higher headroom for the I limit)
+    - For testing purposes, remove I term limit? Not good for real world but could be helpful for testing.
