@@ -78,3 +78,26 @@
     - Yaw kI: 0
     - Yaw kD: 0
 - With the above, it somewhat picks up and flies but then quickly goes crazy (oscilations)
+
+## Success on October 26, 2025!!!!
+- **Optimal PID values** (these work!)
+    - Throttle values
+        - Idle: 20% (0.2) *While 8% is minimum for motor sping, I increased this because the 0.08 was just too weak. When I let off the drone sunk.*
+        - Max: 60% (0.6)
+    - PID Values
+        - Pitch kP: 4,371
+        - Pitch kI: 102
+        - Pitch kD: 64,286
+        - Roll kP: 4,371
+        - Roll kI: 102
+        - Roll kD: 64,286
+        - Yaw kP: 17,143
+        - Yaw kI: 137
+        - Yaw kD: 0
+- How did I arrive at these values?
+    - I noticed the Scout flight controller PID calculations considered the cycle time: https://i.imgur.com/JuwblGp.png
+    - However, the `cycle_time_seconds` was always 0.004 (it is 1/250 hz).
+    - SOOOO, really the I term and D term were massively lowered/raised based on that being thrown in
+    - So while I was using Scout's raw PID values, using those as a direct proportion to Centauri was not correct because Centauri does **NOT** have the time built in the same way.
+    - So, to adjust, I divided the **I Term** by 250 (same as multiplying by 0.004) and then multiplied the **D Term** by 250 (same as dividing by 0.004).
+    - Then, I applied those NEW ratios to a Centauri scale (0-65,535): https://i.imgur.com/ivi8bPp.png
