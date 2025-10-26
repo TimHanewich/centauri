@@ -39,3 +39,10 @@
 - So what to do?
     - Multiply the I term limit times something like 10. Just to lift it up. So it will still be sent as 2 bytes (0-65,535), but then will be multiplied by 10 or something bit to make it much larger. (higher headroom for the I limit)
     - For testing purposes, remove I term limit? Not good for real world but could be helpful for testing.
+- PID Tuning *after* removing the I Limit clamp:
+    - I term feels much better now! It doesn't have the long oscilations like I was seeing before. Feels much more like Scout did.
+    - Optimal values I find for **Pitch + Roll** axes:
+        - kP: 20,000
+        - kI: 700
+        - kD: 500
+    - Those above were found only through some testing. I'm sure can optimize from there. But I think these are enough for a first flight.
