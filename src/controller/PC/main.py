@@ -34,8 +34,8 @@ async def main() -> None:
     yaw:float = 0.0          # between -1.0 and 1.0
 
     # Set up flight control settings, with defaults
-    idle_throttle:float = 0.20   # X% throttle is idle
-    max_throttle:float = 0.60    # X% throttle is the max
+    idle_throttle:float = 0.08   # X% throttle is idle
+    max_throttle:float = 0.25    # X% throttle is the max
     pitch_kp:int = 0
     pitch_ki:int = 0
     pitch_kd:int = 0
