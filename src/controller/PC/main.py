@@ -287,14 +287,37 @@ async def main() -> None:
 
             # Want to change?
             print("Do you want to change these?")
-            console.print("[blue][bold]1[/blue][/bold] - Update Controller Settings")
-            console.print("[blue][bold]2[/blue][/bold] - Update PID settings")
-            console.print("[blue][bold]3[/blue][/bold] - Adjust only PID Master Multiplier (make a proportional change)")
-            console.print("[blue][bold]4[/blue][/bold] - Send settings to drone!")
-            console.print("[blue][bold]5[/blue][/bold] - Do Nothing (go back)")
+            console.print("[blue][bold]1[/blue][/bold] - Load Settings Profile")
+            console.print("[blue][bold]2[/blue][/bold] - Update Controller Settings")
+            console.print("[blue][bold]3[/blue][/bold] - Update PID settings")
+            console.print("[blue][bold]4[/blue][/bold] - Adjust only PID Master Multiplier (make a proportional change)")
+            console.print("[blue][bold]5[/blue][/bold] - Send settings to drone!")
+            console.print("[blue][bold]6[/blue][/bold] - Return")
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
             wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2", "3", "4", "5"], show_choices=True)
-            if wanttodo == "1": # update controller settings
+            if wanttodo == "1": # load settings profile
+                
+                # ideally, would want a prompt here to allow user to select from different settings profiles
+                # but maybe will add that later - for now, just load in default values
+
+                # Load controller setting values
+                idle_throttle = 0.20
+                max_throttle = 0.60
+
+                # Load PID setting values
+                pitch_kp = 4371
+                pitch_ki = 102
+                pitch_kd = 64286
+                roll_kp = 4371
+                roll_ki = 102
+                roll_kd = 64286
+                yaw_kp = 17143
+                yaw_ki = 137
+                yaw_kd = 0
+                i_limit = 350                    # 350,000 (expressed in units of 1,000)
+                pid_master_multiplier = 1.0      # reset to 100%
+
+            elif wanttodo == "2": # update controller settings
 
                 print("Okay, let's update the controller settings.")
 
@@ -310,7 +333,7 @@ async def main() -> None:
                     else:
                         break
 
-            elif wanttodo == "2": # update PID settings
+            elif wanttodo == "3": # update PID settings
                 
                 print("Okay, let's collect the new PID values.")
 
@@ -327,13 +350,13 @@ async def main() -> None:
                 i_limit = tools.ask_integer("I Limit (expressed in units of 1,000)")
                 print()
 
-            elif wanttodo == "3": # update only PID Master Multiplier
+            elif wanttodo == "4": # update only PID Master Multiplier
                 npmm:float = tools.ask_float("New PID Master Multiplier to use")
                 pid_master_multiplier = npmm
-            elif wanttodo == "4": # send to drone as is
+            elif wanttodo == "5": # send to drone as is
                 print("Using those settings values!")
                 break # break out of the infinite loop of asking if the settings look good
-            elif wanttodo == "5": # cancel
+            elif wanttodo == "6": # cancel
                 return # break out of this function and return to main screen by closing out of the function
             else:
                 console.print("[red]Invalid choice.[/red]")
