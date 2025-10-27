@@ -294,7 +294,7 @@ async def main() -> None:
             console.print("[blue][bold]5[/blue][/bold] - Send settings to drone!")
             console.print("[blue][bold]6[/blue][/bold] - Return")
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
-            wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2", "3", "4", "5"], show_choices=True)
+            wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2", "3", "4", "5", "6"], show_choices=True)
             if wanttodo == "1": # load settings profile
                 
                 # ideally, would want a prompt here to allow user to select from different settings profiles
