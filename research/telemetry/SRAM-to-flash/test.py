@@ -10,11 +10,13 @@ sample_data:bytes = b'12345'
 # simulate adding to it
 for _ in range(random.randint(5, 30)):
 
-    # add it
-    temp_telemetry_storage[temp_telemetry_storage_used:temp_telemetry_storage_used + 5] = sample_data
+    if (temp_telemetry_storage_len - temp_telemetry_storage_used) > 5: # if we have room for another
+        
+        # add it
+        temp_telemetry_storage[temp_telemetry_storage_used:temp_telemetry_storage_used + 5] = sample_data
 
-    # increment how many bytes are added
-    temp_telemetry_storage_used = temp_telemetry_storage_used + 5
+        # increment how many bytes are added
+        temp_telemetry_storage_used = temp_telemetry_storage_used + 5
     
 
 # now flush to flash storage (local storage)
