@@ -279,6 +279,7 @@ gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading d
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
 control_input:list[int] = [0,0,0,0] # array that we will unpack control input into (throttle input, pitch input, roll input, yaw input) - throttle as uint16, the rest as int16
 telemetry_packet_stream:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.). We set it up with 9 bytes: 1 for the header, 6 for the data, two for the \r\n terminator (so we don't have to keep appending \r\n at the end and causing more overhead in the loop)
+telemetry_packet_store:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with telemetry data intended to be stored to local flash storage
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
 
 # declare uart conveyer read objects
@@ -358,9 +359,21 @@ try:
             # note: we are not multiplying the denominator by 10 as well (like we did for the numerator) because we WANT the output result to be 10x higher, so that was it is like 65 and not 6.5.
             vbat = (vbat_u16 * 33) // 11820
 
+            # Prepare input values to packet as expected
+            packable_pitch_rate:int = pitch_rate // 1000
+            packale_roll_rate:int = roll_rate // 1000
+            packable_yaw_rate:int = yaw_rate // 1000
+            packable_pitch_angle:int = pitch_angle // 1000
+            packable_roll_angle:int = roll_angle // 1000
+            packable_input_throttle:int = (input_throttle_uint16 * 100) // 65535
+            packable_input_pitch:int = (input_pitch_int16 * 100) // 32767
+            packable_input_roll:int = (input_roll_int16 * 100) // 32767
+            packable_input_yaw:int = (input_yaw_int16 * 100) // 32767
+            
+
             # pack and send if time
             if TimeToStreamTelemetry:
-                tools.pack_telemetry(vbat, pitch_rate // 1000, roll_rate // 1000, yaw_rate // 1000, pitch_angle // 1000, roll_angle // 1000, telemetry_packet_stream) # we divide by 1000 (integer division) to reduce back to a single unit (each is stored 1000x the actual to allow for integer math instead of floating point math)
+                tools.pack_telemetry(time.ticks_ms(), vbat, , roll_rate // 1000, yaw_rate // 1000, pitch_angle // 1000, roll_angle // 1000, , , telemetry_packet_stream) # we divide by 1000 (integer division) to reduce back to a single unit (each is stored 1000x the actual to allow for integer math instead of floating point math)
                 uart_hc12.write(telemetry_packet_stream) # no need to append \r\n to it because the bytearray packet already has it at the end!
                 status_last_sent_ticks_ms = time.ticks_ms() # update last sent time
 
