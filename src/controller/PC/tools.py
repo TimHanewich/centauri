@@ -71,7 +71,13 @@ def pack_settings_update(pitch_kp:int, pitch_ki:int, pitch_kd:int, roll_kp:int, 
     ToReturn.extend(yaw_kp.to_bytes(2, "big"))
     ToReturn.extend(yaw_ki.to_bytes(2, "big"))
     ToReturn.extend(yaw_kd.to_bytes(2, "big"))
-    ToReturn.extend(i_limit.to_bytes(2, "big"))
+
+    # pack i_limit, but first reduce by 1,000x
+    # (it will later be re-inflated by 1,000x on the drone)
+    # We do this to allow values of way more than 65,535 (uint 16 max) to be transmitted, while still keeping only 2 bytes
+    # could do a full int with 4 bytes, but that level of precision for a simple i_limit clamp is not needed!
+    i_limit_to_transmit:int = i_limit // 1000
+    ToReturn.extend(i_limit_to_transmit.to_bytes(2, "big"))
 
     # Add XOR-chain-based checksum
     checksum:int = 0x00 # start with 0
