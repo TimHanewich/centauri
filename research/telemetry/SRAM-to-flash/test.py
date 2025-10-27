@@ -11,7 +11,7 @@ sample_data:bytes = b'12345'
 for _ in range(random.randint(5, 30)):
 
     if (temp_telemetry_storage_len - temp_telemetry_storage_used) > 5: # if we have room for another
-        
+
         # add it
         temp_telemetry_storage[temp_telemetry_storage_used:temp_telemetry_storage_used + 5] = sample_data
 
@@ -22,13 +22,11 @@ for _ in range(random.randint(5, 30)):
 # now flush to flash storage (local storage)
 log = open("./log", "ab")
 for i in range(temp_telemetry_storage_used):
-    log.write(bytes(temp_telemetry_storage[i]))
+    ToWrite = temp_telemetry_storage[i]
+    log.write(bytes([ToWrite]))
 log.close()
 
 # now entirely clear out bytearray (set to all 0s)
 for i in range(temp_telemetry_storage_len):
     temp_telemetry_storage[i] = 0
 temp_telemetry_storage_used = 0 # reset used counter
-
-print(temp_telemetry_storage)
-print(temp_telemetry_storage_used)
