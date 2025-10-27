@@ -22,8 +22,7 @@ for _ in range(random.randint(5, 30)):
 # now flush to flash storage (local storage)
 log = open("./log", "ab")
 for i in range(temp_telemetry_storage_used):
-    ToWrite = temp_telemetry_storage[i]
-    log.write(bytes([ToWrite]))
+    log.write(bytes([temp_telemetry_storage[i]]))
 log.close()
 
 # now entirely clear out bytearray (set to all 0s)
