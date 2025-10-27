@@ -1,9 +1,13 @@
-# Getting Started with Centauri
-- Getting Started (components needed, go read about quadcopter flight dyamics)
-- Drone Build: Print and Assemble
-- Drone Build: Flash the Code
-- Controller Build: Transceiver Assembly
-- Controller Build: Setup and Run
+# Building Centauri: Custom Python-based Quadcopter Flight Controller
+- Getting Started 
+    - What is Centauri
+    - Components needed
+    - Cost estimate
+    - go read about quadcopter flight dyamics
+- Print and Assemble the Drone
+- Flash the Code to the Drone's MCU
+- Transceiver Assembly
+- First boot: establish communications, spin the props!
 - PID Tuning and Tethered Testing
 - Take Flight!
 
