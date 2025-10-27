@@ -300,6 +300,7 @@ yaw_last_error:int = 0
 # originally was using asyncio for this but now resorting to timestamp-based
 led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was swapped, in ms ticks
 status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the remote controller via HC-12
+telemetry_last_recorded_ticks_ms:int = 0 # the ast time the telemetry was last recorded
 last_compfilt_ticks_us:int = 0 # the last time the complementary filter was used. This is used to know how much time has ELAPSED and thus calculate roughly how many degrees changed based on the degrees per second value from the gyros
 control_input_last_received_ticks_ms:int = 0 # timestamp (in ms) of the last time a valid control packet was received. This is used to check and shut down motors if it has been too long (failsafe)
 
@@ -322,34 +323,51 @@ try:
         # but ONLY send data if we are NOT armed. While throttle input > 0, we are armed and in flight mode, so more important to divert full HC-12 attention to receiving inputs
         # We do this because the HC-12 is half duplex, meaning it can only receive or send at one time
         # attempting to send while receiving means good chance a packet will be missed
-        if input_throttle_uint16 == 0:
+        
+        # Telemetry: Check if it is time to Stream/Record
+        TimeToStreamTelemetry:bool = False
+        TimeToRecordTelemetry:bool = False
+        if input_throttle_uint16 == 0: # if we are unarmed (throttle is 0%), we will consider streaming some telemetry periodically to the controller. It is important to only send data via HC-12 while unarmed because the HC-12 is half duplex, meaning it can't send and receive at the same time. Full focus should be put into receiving input commands while armed.
             if time.ticks_diff(time.ticks_ms(), status_last_sent_ticks_ms) >= 1000: # every 1000 ms (1 time per second)
+                TimeToStreamTelemetry = True  
+        else: # we are armed, flying. We will not stream telemetry (send), but we may record it to flash memory!
+            if time.ticks_diff(time.ticks_ms(), telemetry_last_recorded_ticks_ms) >= 250: # every 250 ms (4 times per second)
+                TimeToRecordTelemetry = True
 
-                # first, get a ADC reading
-                vbat_u16:int = vbat_adc.read_u16() # read the value on the ADC pin, as a uint16 (0-65535)
+        # if we need to stream/record telemetry, do it now
+        if TimeToStreamTelemetry or TimeToRecordTelemetry:
 
-                # convert the battery ADC reading to a voltage reading
-                # I know the function below looks weird! But let me explain it a bit.
-                # This is a condensed calculation of a several small calculations.
-                # The u16 reading from the ADC pin is basically 0-65535, with that value being mapped to a voltage 0-3.3v
-                # We want to calculate what voltage it corresponds to, and then scale that back to the est. voltage of the BATTERY PACK via the inverse of the voltage divider
-                # the voltage divider we use here is cutting the voltage down to 18.04% of the voltage, so we divide by 0.1804 (roughly) to get back to that voltage
-                # however, that whole calculation above would involve floating point math, which we are trying to avoid for performance purposes.
-                # So instead, we consolidate all multiplication and divison into a single line, like this. 
-                # BUT, instead of multiplying by 3.3 (would be floating point math), I am bumpping it up to 33 to avoid integer math
-                # so, that would mean the vbat calculated here is an integer, but is 10x more than it actually is
-                # so, for example, a vbat here of 65 means the battery voltage is 6.5 volts. Or a vbat of 122 is a battery voltage of 12.2 volts.
-                # And how did we get to the denominator, 11820? 
-                # We wanted to divide by 65535 to turn the ADC reading into a % anyway
-                # and then have to divide the whole thing again by 0.1804 to get back to a battery pack voltage
-                # combining them both together and rounding to an integer, that is the same as just dividing by 11820!
-                # note: we are not multiplying the denominator by 10 as well (like we did for the numerator) because we WANT the output result to be 10x higher, so that was it is like 65 and not 6.5.
-                vbat = (vbat_u16 * 33) // 11820
-                
-                # pack and send
+            # first, get a ADC reading
+            vbat_u16:int = vbat_adc.read_u16() # read the value on the ADC pin, as a uint16 (0-65535)
+
+            # convert the battery ADC reading to a voltage reading
+            # I know the function below looks weird! But let me explain it a bit.
+            # This is a condensed calculation of a several small calculations.
+            # The u16 reading from the ADC pin is basically 0-65535, with that value being mapped to a voltage 0-3.3v
+            # We want to calculate what voltage it corresponds to, and then scale that back to the est. voltage of the BATTERY PACK via the inverse of the voltage divider
+            # the voltage divider we use here is cutting the voltage down to 18.04% of the voltage, so we divide by 0.1804 (roughly) to get back to that voltage
+            # however, that whole calculation above would involve floating point math, which we are trying to avoid for performance purposes.
+            # So instead, we consolidate all multiplication and divison into a single line, like this. 
+            # BUT, instead of multiplying by 3.3 (would be floating point math), I am bumpping it up to 33 to avoid integer math
+            # so, that would mean the vbat calculated here is an integer, but is 10x more than it actually is
+            # so, for example, a vbat here of 65 means the battery voltage is 6.5 volts. Or a vbat of 122 is a battery voltage of 12.2 volts.
+            # And how did we get to the denominator, 11820? 
+            # We wanted to divide by 65535 to turn the ADC reading into a % anyway
+            # and then have to divide the whole thing again by 0.1804 to get back to a battery pack voltage
+            # combining them both together and rounding to an integer, that is the same as just dividing by 11820!
+            # note: we are not multiplying the denominator by 10 as well (like we did for the numerator) because we WANT the output result to be 10x higher, so that was it is like 65 and not 6.5.
+            vbat = (vbat_u16 * 33) // 11820
+
+            # pack and send if time
+            if TimeToStreamTelemetry:
                 tools.pack_telemetry(vbat, pitch_rate // 1000, roll_rate // 1000, yaw_rate // 1000, pitch_angle // 1000, roll_angle // 1000, telemetry_packet) # we divide by 1000 (integer division) to reduce back to a single unit (each is stored 1000x the actual to allow for integer math instead of floating point math)
                 uart_hc12.write(telemetry_packet) # no need to append \r\n to it because the bytearray packet already has it at the end!
                 status_last_sent_ticks_ms = time.ticks_ms() # update last sent time
+
+            # pack and record if time
+            if TimeToRecordTelemetry:
+                pass
+                telemetry_last_recorded_ticks_ms = time.ticks_ms() # update last time recorded
 
         # check for received data (input data) from the HC-12
         # the data that we receive from the HC-12 could be:
