@@ -1,5 +1,14 @@
-# Centauri: Multi-MCU Quadcopter Flight Controller
-The successor to my [Scout flight controller](https://github.com/TimHanewich/scout).
+# Centauri: Custom Quadcopter Fight Controller
+*Centauri* is a custom, MicroPython-based, quadcopter flight controller that is capable of efficiently running on a low-power microcontroller like the Raspberry Pi Pico.
+
+Centauri is the successor to my [Scout flight controller](https://github.com/TimHanewich/scout) and is a very big upgrade.
+
+## Design
+I developed Centauri from scratch from the ground up. This includes:
+- **The Centauri quadcopter design** - I designed and 3D-printed Centauri's body from scratch in Blender.
+- **The Centauri fight controller** - an efficient fight controller that runs onboard a quadcopter and maintains safe and level flight.
+- **The Centauri controller** - a PC-based program that reads input data from a wired Xbox controller and transmits control input back to the quadcopter.
+- **Bi-directional transceiver** - a simple platform used by the Centauri controller for bidirectional radio communications with the drone.
 
 ## Running on PC
 You can run [main.py](./src/controller/PC/main.py) on your PC after connecting 1) an Xbox controller and 2) a transceiver.
