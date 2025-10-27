@@ -1,0 +1,11 @@
+## Future Improvements to Make
+- Physical design
+    - Clean up wires
+    - Female plug for battery needs to be pulled in closer
+    - Fix orientation of holes on arm so wires face ESC directly
+    - "Slot" (holder) for ESCs on each arm
+    - A better way to secure the battery
+    - Option to use LiIon batteries instead (18650 or 21700)
+- Software
+    - Detailed telemetry recording to local storage
+    - Minimize ongoing telemetry screening?
