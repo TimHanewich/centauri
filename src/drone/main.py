@@ -254,6 +254,14 @@ send_special("Calib Gyro OK")
 
 
 
+
+# declare variables: desired rate inputs
+# these will later be updated via incoming desired rate packets (over UART from HL-MCU)
+input_throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
+input_pitch_int16:int = 0            # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+input_roll_int16:int = 0             # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+input_yaw_int16:int = 0              # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
+
 # set up ADC for reading the battery voltage
 vbat_adc = machine.ADC(machine.Pin(26))
 
@@ -272,13 +280,6 @@ accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer readi
 control_input:list[int] = [0,0,0,0] # array that we will unpack control input into (throttle input, pitch input, roll input, yaw input) - throttle as uint16, the rest as int16
 telemetry_packet:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.). We set it up with 9 bytes: 1 for the header, 6 for the data, two for the \r\n terminator (so we don't have to keep appending \r\n at the end and causing more overhead in the loop)
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
-
-# declare variables: desired rate inputs
-# these will later be updated via incoming desired rate packets (over UART from HL-MCU)
-input_throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
-input_pitch_int16:int = 0            # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
-input_roll_int16:int = 0             # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
-input_yaw_int16:int = 0              # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
 
 # declare uart conveyer read objects
 rxBufferLen:int = 128
