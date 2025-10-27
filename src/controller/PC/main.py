@@ -420,7 +420,6 @@ async def main() -> None:
         # These do two things:
         # 1 - implements a deadzone
         # 2 - dampens early inputs (smooth gradually increasing curve, not linear)
-        nlt_throttle:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.00)
         nlt_pitch:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
         nlt_roll:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
         nlt_yaw:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.10) # my deadzone is higher than the others because I have a broken right stick on my controller that often rests at around 8% in either direction
@@ -441,8 +440,7 @@ async def main() -> None:
                 for event in pygame.event.get():
                     if event.type == pygame.JOYAXISMOTION:
                         if event.axis == 5: # right trigger
-                            throttle_percent:float = (event.value + 1) / 2   # gets it to between 0.0 and 1.0
-                            throttle = nlt_throttle.transform(throttle_percent)
+                            throttle = (event.value + 1) / 2   # gets it to between 0.0 and 1.0
                         elif event.axis == 0: # left stick X axis (left/right)
                             roll = nlt_roll.transform(event.value)
                         elif event.axis == 1: # left stick Y axis (up/down)
