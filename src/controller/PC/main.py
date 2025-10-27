@@ -45,7 +45,7 @@ async def main() -> None:
     yaw_kp:int = 0
     yaw_ki:int = 0
     yaw_kd:int = 0
-    i_limit:int = 0              # we store and transmit as a unit16 here (0-65,535), but the drone will interpret this as units of 1,000, so 1000x of what we store here
+    i_limit:int = 0
     pid_master_multiplier:float = 1.00 # increases/decreases all PID parameters proportionally. This is great for keeping the same proportions but increasing/decreasing responsiveness
 
     # set up status variables we will get from the drone (and display in the console!): system status
@@ -314,7 +314,7 @@ async def main() -> None:
                 yaw_kp = 17143
                 yaw_ki = 137
                 yaw_kd = 0
-                i_limit = 350                    # 350,000 (expressed in units of 1,000)
+                i_limit = 350000
                 pid_master_multiplier = 1.0      # reset to 100%
 
             elif wanttodo == "2": # update controller settings
@@ -347,7 +347,7 @@ async def main() -> None:
                 yaw_kp = tools.ask_integer("Yaw kP")
                 yaw_ki = tools.ask_integer("Yaw kI")
                 yaw_kd = tools.ask_integer("Yaw kD")
-                i_limit = tools.ask_integer("I Limit (expressed in units of 1,000)")
+                i_limit = tools.ask_integer("I Limit")
                 print()
 
             elif wanttodo == "4": # update only PID Master Multiplier
