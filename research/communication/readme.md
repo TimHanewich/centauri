@@ -43,7 +43,7 @@ Two HC-12 radio transceiver modules will be used to facilitate bidirectional rem
         - Yaw P Gain (uint16 from 0-65535, 2 bytes)
         - Yaw I Gain (uint16 from 0-65535, 2 bytes)
         - Yaw D Gain (uint16 from 0-65535, 2 bytes)
-        - I Limit (uint16 from 0-65535, 2 bytes)
+        - I Limit (uint16 from 0-65535, 2 bytes) - expressed in units of 1,000. For example: a value of 350 would mean an I limit of 350,000. So the uint16 range of 0 to 65,535 is really an I limit range of 0 to 65,535,000
         - XOR-chain based checksum (1 byte)
 - Drone --> Controller
     - Telemetry Packet

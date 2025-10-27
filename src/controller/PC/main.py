@@ -325,7 +325,7 @@ async def main() -> None:
                 yaw_kp = tools.ask_integer("Yaw kP")
                 yaw_ki = tools.ask_integer("Yaw kI")
                 yaw_kd = tools.ask_integer("Yaw kD")
-                i_limit = tools.ask_integer("I Limit")
+                i_limit = tools.ask_integer("I Limit (expressed in units of 1,000)")
                 print()
 
             elif wanttodo == "3": # update only PID Master Multiplier
