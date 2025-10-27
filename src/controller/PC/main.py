@@ -33,8 +33,7 @@ async def main() -> None:
     roll:float = 0.0         # between -1.0 and 1.0
     yaw:float = 0.0          # between -1.0 and 1.0
 
-    # Set up flight control variables, with defaults
-    # these are the settings that will live on the drone, thus we will have to transmit them later
+    # Set up flight control settings, with defaults
     idle_throttle:float = 0.20   # X% throttle is idle
     max_throttle:float = 0.60    # X% throttle is the max
     pitch_kp:int = 0
@@ -46,7 +45,7 @@ async def main() -> None:
     yaw_kp:int = 0
     yaw_ki:int = 0
     yaw_kd:int = 0
-    i_limit:int = 0
+    i_limit:int = 0              # we store and transmit as a unit16 here (0-65,535), but the drone will interpret this as units of 1,000, so 1000x of what we store here
     pid_master_multiplier:float = 1.00 # increases/decreases all PID parameters proportionally. This is great for keeping the same proportions but increasing/decreasing responsiveness
 
     # set up status variables we will get from the drone (and display in the console!): system status
