@@ -65,6 +65,11 @@ def unpack_settings_update(data:bytes) -> dict:
     yaw_kd:int = data[17] << 8 | data[18]
     i_limit:int = data[19] << 8 | data[20]
 
+    # multiply i_limit by 1,000 because it is expressed in units of 1,000
+    # we do this to give it a higher upper end (an i_limit of 65,535 is not nearly enough)
+    # doing this gives it a total upper limit of 65,535,000
+    i_limit = i_limit * 1000
+
     # return
     return {"pitch_kp": pitch_kp, "pitch_ki": pitch_ki, "pitch_kd": pitch_kd, "roll_kp": roll_kp, "roll_ki": roll_ki, "roll_kd": roll_kd, "yaw_kp": yaw_kp, "yaw_ki": yaw_ki, "yaw_kd": yaw_kd, "i_limit": i_limit}
 
