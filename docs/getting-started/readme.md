@@ -22,3 +22,20 @@ The required Python packages are:
 4. keyboard
 
 But you can run `pip install -r requirements.txt` as well to automatically download all documented dependencies from [requirements.txt](./src/controller/PC/requirements.txt).
+
+Make sure to document:
+- Design decisions
+    - MPU-6050 is right in the middle
+    - Every motor equidistant
+    - Middle level for hardware
+    - M3 holes for using as leg pegs
+    - Mounting points for Lidar sensor on belly
+    - Straps on top for battery
+    - Gopro mount for mounting camera
+    - Raspbery pi pico on edge so can be flashed
+    - Room for a second pi for multi-MCU architectures (Centauri originally was multi MCU)
+- Communication protocol
+    - HC-12 is half duplex. Challenges.
+    - Each packet
+- Drone code
+    - 
