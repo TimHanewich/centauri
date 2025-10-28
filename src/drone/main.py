@@ -297,6 +297,11 @@ roll_last_error:int = 0
 yaw_last_i:int = 0
 yaw_last_error:int = 0
 
+# declare variables that serve for storing telemetry
+temp_telemetry_storage_len:int = 25000                                       # declare length of the temporary storage
+temp_telemetry_storage:bytearray = bytearray(temp_telemetry_storage_len)     # create the fixed-length bytearray
+temp_telemetry_storage_used:int = 0                                          # for tracking how many bytes of the temp storage have been used so far
+
 # timestamps for tracking other processes that need to be done on a schedule
 # originally was using asyncio for this but now resorting to timestamp-based
 led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was swapped, in ms ticks
@@ -638,8 +643,11 @@ try:
                 tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store, True)
                 
                 # add it to the temporary memory buffer we have going while in flight
-                pass
+                if (temp_telemetry_storage_len - temp_telemetry_storage_used) > len(telemetry_packet_store): # if we have enough room for another telemetry packet store
+                    temp_telemetry_storage[temp_telemetry_storage_used:temp_telemetry_storage_used + len(telemetry_packet_store)] = telemetry_packet_store # save the telemetry
+                    temp_telemetry_storage_used = temp_telemetry_storage_used + len(telemetry_packet_store) # increment how many bytes are now used
                 
+                # mark that we did it
                 telemetry_last_recorded_ticks_ms = time.ticks_ms() # update last time recorded
 
 
