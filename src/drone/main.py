@@ -650,7 +650,20 @@ try:
                 # mark that we did it
                 telemetry_last_recorded_ticks_ms = time.ticks_ms() # update last time recorded
 
+        # Do we have an opportunity to flush the telemetry? (we do if we are unarmed)
+        if input_throttle_uint16 == 0: # if we are unarmed
+            if temp_telemetry_storage_used > 0: # if we have some telemetry to write
 
+                # flush to flash storage
+                log = open("log" "ab")
+                for i in range(temp_telemetry_storage_used):
+                    log.write(bytes([temp_telemetry_storage[i]]))
+                log.close()
+
+                # clear out the temporary storage bytearray
+                for i in range(temp_telemetry_storage_len):
+                    temp_telemetry_storage[i] = 0
+                temp_telemetry_storage_used = 0 # reset used counter
 
         # wait if there is excess time 
         excess_us:int = cycle_time_us - time.ticks_diff(time.ticks_us(), loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
