@@ -503,7 +503,6 @@ try:
         error_pitch_rate:int = desired_pitch_rate - pitch_rate
         error_roll_rate:int = desired_roll_rate - roll_rate
         error_yaw_rate:int = desired_yaw_rate - yaw_rate
-        #print("ErrPitch: " + str(error_pitch_rate) + ", ErrRoll: " + str(error_roll_rate) + ", ErrYaw: " + str(error_yaw_rate))
 
         # Pitch PID calculation
         pitch_p:int = (error_pitch_rate * pitch_kp) // PID_SCALING_FACTOR
@@ -540,7 +539,6 @@ try:
         mean_pwm_pw:int = 1000000 + (input_throttle_uint16 * 1000000) // 65535
 
         # calculate throttle values for each motor using those PID influences
-        #print("Pitch PID: " + str(pitch_pid) + ", Roll PID: " + str(roll_pid) + ", Yaw Pid: " + str(yaw_pid))
         m1_pwm_pw = mean_pwm_pw + pitch_pid + roll_pid - yaw_pid
         m2_pwm_pw = mean_pwm_pw + pitch_pid - roll_pid + yaw_pid
         m3_pwm_pw = mean_pwm_pw - pitch_pid + roll_pid + yaw_pid
@@ -575,7 +573,6 @@ try:
             yaw_last_error = 0
 
         # adjust throttles on PWMs
-        #print("M1: " + str(m1_pwm_pw) + ", M2: " + str(m2_pwm_pw) + ", M3: " + str(m3_pwm_pw), "M4: " + str(m4_pwm_pw))
         M1.duty_ns(m1_pwm_pw)
         M2.duty_ns(m2_pwm_pw)
         M3.duty_ns(m3_pwm_pw)
@@ -667,7 +664,6 @@ try:
 
         # wait if there is excess time 
         excess_us:int = cycle_time_us - time.ticks_diff(time.ticks_us(), loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-        #print("Excess us: " + str(excess_us))
         if excess_us > 0:
             time.sleep_us(excess_us)
             
