@@ -265,7 +265,7 @@ input_yaw_int16:int = 0              # from -32768 to 32767, later interpreted t
 # set up ADC for reading the battery voltage
 vbat_adc = machine.ADC(machine.Pin(26))
 
-# Set up telemetry variables that will be used to store and then send status to remote controller
+# Set up telemetry variables
 vbat:int = 0         # battery voltage between 6.0 and 16.8 volts, but expressed as an integer between 60 and 168 (pretend decimal point just before last digit. We do this so integer division can be used).
 pitch_rate:int = 0   # pitch rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
 roll_rate:int = 0    # roll rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
