@@ -611,26 +611,36 @@ try:
             vbat = (vbat_u16 * 33) // 11820
 
             # Prepare input values to packet as expected
-            packable_pitch_rate:int = pitch_rate // 1000
-            packale_roll_rate:int = roll_rate // 1000
-            packable_yaw_rate:int = yaw_rate // 1000
-            packable_pitch_angle:int = pitch_angle // 1000
-            packable_roll_angle:int = roll_angle // 1000
-            packable_input_throttle:int = (input_throttle_uint16 * 100) // 65535
-            packable_input_pitch:int = (input_pitch_int16 * 100) // 32767
-            packable_input_roll:int = (input_roll_int16 * 100) // 32767
-            packable_input_yaw:int = (input_yaw_int16 * 100) // 32767
+            packable_pitch_rate:int = pitch_rate // 1000                              # express as whole number  
+            packable_roll_rate:int = roll_rate // 1000                                 # express as whole number
+            packable_yaw_rate:int = yaw_rate // 1000                                  # express as whole number
+            packable_pitch_angle:int = pitch_angle // 1000                            # express as whole number
+            packable_roll_angle:int = roll_angle // 1000                              # express as whole number
+            packable_input_throttle:int = (input_throttle_uint16 * 100) // 65535      # express between 0 and 100
+            packable_input_pitch:int = (input_pitch_int16 * 100) // 32767             # express between -100 and 100
+            packable_input_roll:int = (input_roll_int16 * 100) // 32767               # express between -100 and 100
+            packable_input_yaw:int = (input_yaw_int16 * 100) // 32767                 # express between -100 and 100
+            packable_m1_throttle:int = (m1_pwm_pw - 1000000) // 10000                 # express between 0 and 100
+            packable_m2_throttle:int = (m2_pwm_pw - 1000000) // 10000                 # express between 0 and 100
+            packable_m3_throttle:int = (m3_pwm_pw - 1000000) // 10000                 # express between 0 and 100
+            packable_m4_throttle:int = (m4_pwm_pw - 1000000) // 10000                 # express between 0 and 100
             
 
             # pack and send if time
             if TimeToStreamTelemetry:
-                tools.pack_telemetry(time.ticks_ms(), vbat, , roll_rate // 1000, yaw_rate // 1000, pitch_angle // 1000, roll_angle // 1000, , , telemetry_packet_stream) # we divide by 1000 (integer division) to reduce back to a single unit (each is stored 1000x the actual to allow for integer math instead of floating point math)
+                tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_stream, False)
                 uart_hc12.write(telemetry_packet_stream) # no need to append \r\n to it because the bytearray packet already has it at the end!
                 status_last_sent_ticks_ms = time.ticks_ms() # update last sent time
 
             # pack and record if time
             if TimeToRecordTelemetry:
+                
+                # pack it
+                tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store, True)
+                
+                # add it to the temporary memory buffer we have going while in flight
                 pass
+                
                 telemetry_last_recorded_ticks_ms = time.ticks_ms() # update last time recorded
 
 
