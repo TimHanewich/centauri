@@ -612,7 +612,7 @@ try:
 
             # Prepare input values to packet as expected
             packable_pitch_rate:int = pitch_rate // 1000                              # express as whole number  
-            packable_roll_rate:int = roll_rate // 1000                                 # express as whole number
+            packable_roll_rate:int = roll_rate // 1000                                # express as whole number
             packable_yaw_rate:int = yaw_rate // 1000                                  # express as whole number
             packable_pitch_angle:int = pitch_angle // 1000                            # express as whole number
             packable_roll_angle:int = roll_angle // 1000                              # express as whole number
@@ -624,7 +624,6 @@ try:
             packable_m2_throttle:int = (m2_pwm_pw - 1000000) // 10000                 # express between 0 and 100
             packable_m3_throttle:int = (m3_pwm_pw - 1000000) // 10000                 # express between 0 and 100
             packable_m4_throttle:int = (m4_pwm_pw - 1000000) // 10000                 # express between 0 and 100
-            
 
             # pack and send if time
             if TimeToStreamTelemetry:
