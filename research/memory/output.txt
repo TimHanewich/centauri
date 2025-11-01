@@ -37,406 +37,286 @@ Beginning gyro calibration in 3...
 Beginning gyro calibration in 2... 
 Beginning gyro calibration in 1... 
 Calibrating gyro...
-288 gyro samples collected.
-Gyro Bias: -409, 732, 24
+289 gyro samples collected.
+Gyro Bias: -405, 723, 18
 
 Now entering infinite operating loop!
 Mem used in rx: 448
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 320
-Mem used in telemetry check: 0
-Mem used in telemetry prep: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
+Mem used in rx: 48
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 32
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 16
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 32
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in telemetry prep: 0
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
 Mem used in rx: 16
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 32
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in telemetry prep: 0
-Mem used in telemtry record: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
+Mem used in rx: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
+Mem used in rx: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 48
-Mem used in imu read: 0
-Mem used in imu trans: 0
+Mem used in rx: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in telemetry prep: 0
-Mem used in telemtry record: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
+Mem used in rx: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
 Mem used in rx: 32
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 48
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in telemetry prep: 0
-Mem used in telemtry record: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 48
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in telemetry prep: 0
-Mem used in telemtry record: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 48
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in telemetry prep: 0
-Mem used in telemtry record: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 48
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in telemetry prep: 0
-Mem used in telemtry record: 0
-Mem used in rx: 64
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 32
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in telemetry prep: 0
+Mem used in rx: 0
+Mem used in trig: 128
 Mem used in rx: 32
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 32
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in telemetry prep: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 32
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
-Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
-Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 32
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
-Mem used in telemetry check: 0
 Mem used in rx: 0
-Mem used in imu read: 0
-Mem used in imu trans: 0
 Mem used in trig: 128
-Mem used in expected: 0
-Mem used in comp filter: 0
-Mem used in PIDs: 0
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 16
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 32
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Mem used in rx: 0
+Mem used in trig: 128
+Traceback (most recent call last):
+  File "<stdin>", line 585, in <module>
+KeyboardInterrupt: 
