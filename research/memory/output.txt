@@ -1,3 +1,4 @@
+>>> %Run -c $EDITOR_CONTENT
 ----- CENTAURI FLIGHT CONTROLLER -----
 github.com/TimHanewich/centauri
 
@@ -37,286 +38,718 @@ Beginning gyro calibration in 3...
 Beginning gyro calibration in 2... 
 Beginning gyro calibration in 1... 
 Calibrating gyro...
-289 gyro samples collected.
-Gyro Bias: -405, 723, 18
+288 gyro samples collected.
+Gyro Bias: -408, 723, 17
 
 Now entering infinite operating loop!
-Mem used in rx: 448
-Mem used in trig: 128
-Mem used in rx: 48
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 16
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 32
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
-Mem used in rx: 0
-Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 400
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 64
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 32
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 32
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 16
+Mem used in process lines: 16
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
+Mem used in trig: 128
+Mem used in read data: 0
+Mem used in process lines: 0
+Mem used in move belt: 0
 Traceback (most recent call last):
-  File "<stdin>", line 585, in <module>
+  File "<stdin>", line 428, in <module>
 KeyboardInterrupt: 
+>>> 
