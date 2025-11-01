@@ -568,7 +568,7 @@ try:
             if time.ticks_diff(time.ticks_ms(), telemetry_last_recorded_ticks_ms) >= 250: # every 250 ms (4 times per second)
                 TimeToRecordTelemetry = True
 
-        # if we need to stream/record telemetry, do it now
+        # if we need to stream/record telemetry, pack telemetry
         if TimeToStreamTelemetry or TimeToRecordTelemetry:
 
             # first, get a ADC reading
