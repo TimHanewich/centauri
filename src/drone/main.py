@@ -605,17 +605,26 @@ try:
             packable_m3_throttle:int = (m3_pwm_pw - 1000000) // 10000                 # express between 0 and 100
             packable_m4_throttle:int = (m4_pwm_pw - 1000000) // 10000                 # express between 0 and 100
 
+            # pack it
+            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_stream)
+
             # pack and send if time
             if TimeToStreamTelemetry:
-                tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_stream, False)
+
+                # we just packed all the data into the record buffer
+                # so pull out the telemetry we will send from there directly
+                telemetry_packet_stream[0] = 0b00000000 # header byte
+                telemetry_packet_stream[1] = telemetry_packet_store[3] # vbat
+                telemetry_packet_stream[2] = telemetry_packet_store[4] # pitch rate
+                telemetry_packet_stream[3] = telemetry_packet_store[5] # roll rate
+                telemetry_packet_stream[4] = telemetry_packet_store[6] # yaw rate
+
+                # send
                 uart_hc12.write(telemetry_packet_stream) # no need to append \r\n to it because the bytearray packet already has it at the end!
                 status_last_sent_ticks_ms = time.ticks_ms() # update last sent time
 
-            # pack and record if time
+            # record if time
             if TimeToRecordTelemetry:
-
-                # pack it - takes about 460 us
-                tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store, True)
 
                 # add it to the temporary memory buffer we have going while in flight
                 if (temp_telemetry_storage_len - temp_telemetry_storage_used) > len(telemetry_packet_store): # if we have enough room for another telemetry packet store. Takes about 85 us
