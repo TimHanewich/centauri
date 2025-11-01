@@ -93,8 +93,6 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     pitch_rate between -128 and 127 (signed byte)
     roll_rate between -128 and 127 (signed byte)
     yaw_rate between -128 and 127 (signed byte)
-    pitch_angle between -128 and 127 (signed byte)
-    roll_angle between -128 and 127 (signed byte)
     input_throtle between 0 and 100
     input_pitch between -100 and 100
     input_roll between -100 and 100
@@ -141,8 +139,6 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     pitch_rate_unsigned = pitch_rate + 128
     roll_rate_unsigned = roll_rate + 128
     yaw_rate_unsigned = yaw_rate + 128
-    pitch_angle_unsigned = pitch_angle + 128
-    roll_angle_unsigned = roll_angle + 128
 
     # input values
     # no need to do input throtte - it is good as is! (between 0 and 100)
@@ -166,10 +162,6 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
         into[2] = pitch_rate_unsigned
         into[3] = roll_rate_unsigned
         into[4] = yaw_rate_unsigned
-        
-        # angles
-        into[5] = pitch_angle_unsigned
-        into[6] = roll_angle_unsigned
 
     else: # Pack a STORAGE packet
 
@@ -185,10 +177,6 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
         into[4] = pitch_rate_unsigned
         into[5] = roll_rate_unsigned
         into[6] = yaw_rate_unsigned
-
-        # angles
-        into[7] = pitch_angle_unsigned
-        into[8] = roll_angle_unsigned
 
         # inputs
         into[9] = input_throttle

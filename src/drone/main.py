@@ -31,7 +31,6 @@ import gc
 ##### SETTINGS #####
 ####################
 
-alpha:float = 98 # complementary filter alpha value for pitch/roll angle estimation. higher values favor gyroscope's opinion, lower favors accelerometer (noisy) 
 PID_SCALING_FACTOR:int = 10000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
 
 # Flight Control PID Gains
@@ -271,8 +270,6 @@ vbat:int = 0         # battery voltage between 6.0 and 16.8 volts, but expressed
 pitch_rate:int = 0   # pitch rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
 roll_rate:int = 0    # roll rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
 yaw_rate:int = 0     # yaw rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
-pitch_angle:int = 0  # pitch angle, multiplied by 1,000. So, for example, 3543 would be 3.543.
-roll_angle:int = 0   # roll angle, multiplied by 1,000. So, for example, 3543 would be 3.543.
 
 # declare objects we will reuse in the loop instead of remaking each time (for efficiency)
 cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, the full PID loop must happen within. 4,000 microseconds (4 ms) to achieve a 250 Hz loop speed for example.
@@ -473,26 +470,6 @@ try:
         # I could in theory not need to do this if I mounted it flipped over, but preferring to leave it as is physically and just make the adjustment here!
         pitch_rate = pitch_rate * -1    # this ensures as the drone pitches down towards the ground, that is a NEGATIVE pitch rate. And a tile up would be positive
         yaw_rate = yaw_rate * -1        # this ensures the drone rotating towards the right is a POSITIVE yaw rate, with a left turn being negative
-        
-        # use ONLY the accelerometer data to estimate pitch and roll
-        # you can interpret this as the accelerometer's "opinion" of what pitch and roll angle is based on only its data
-        # this will likely be inaccurate as the accelerometer is quite susceptible to vibrations
-        # we will later "fuse" this with gyro input in the complementary filter
-        # note: the pitch and roll calculated here will be in degrees * 1000. For example, a reading of 22435 can be interpreted as 22.435 degrees (we do this for integer math purposes)
-        # Performance Note: This uses 128 new bytes of memory each time. Need to find a way to limit that.
-        expected_pitch_angle_accel:int = int(math.atan2(accel_x, math.sqrt(accel_y*accel_y + accel_z*accel_z)) * 180000 / math.pi) # the accelerometers opinion of what the pitch angle is
-        expected_roll_angle_accel:int = int(math.atan2(accel_y, math.sqrt(accel_x*accel_x + accel_z*accel_z)) * 180000 / math.pi) # the accelerometers opinion of what the roll angle is
-
-        # calculate what the gyro's expected pitch and roll angle should be
-        # you can take this as the gyro's "opinion" of what the pitch and roll angle should be, just on its data
-        elapsed_us:int = time.ticks_diff(time.ticks_us(), last_compfilt_ticks_us) # the amount of time, in microseconds (us), that has elapsed since we did this in the last loop
-        last_compfilt_ticks_us = time.ticks_us() # update the time
-        expected_pitch_angle_gyro:int = pitch_angle + (pitch_rate * elapsed_us // 1000000)
-        expected_roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_us // 1000000)
-
-        # Now use a complementary filter to determine angle (fuse gyro + accelerometer data)
-        pitch_angle = ((expected_pitch_angle_gyro * alpha) + (expected_pitch_angle_accel * (100 - alpha))) // 100
-        roll_angle = ((expected_roll_angle_gyro * alpha) + (expected_roll_angle_accel * (100 - alpha))) // 100
 
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
         # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
@@ -619,8 +596,6 @@ try:
             packable_pitch_rate:int = pitch_rate // 1000                              # express as whole number  
             packable_roll_rate:int = roll_rate // 1000                                # express as whole number
             packable_yaw_rate:int = yaw_rate // 1000                                  # express as whole number
-            packable_pitch_angle:int = pitch_angle // 1000                            # express as whole number
-            packable_roll_angle:int = roll_angle // 1000                              # express as whole number
             packable_input_throttle:int = (input_throttle_uint16 * 100) // 65535      # express between 0 and 100
             packable_input_pitch:int = (input_pitch_int16 * 100) // 32767             # express between -100 and 100
             packable_input_roll:int = (input_roll_int16 * 100) // 32767               # express between -100 and 100
@@ -632,7 +607,7 @@ try:
 
             # pack and send if time
             if TimeToStreamTelemetry:
-                tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_stream, False)
+                tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_stream, False)
                 uart_hc12.write(telemetry_packet_stream) # no need to append \r\n to it because the bytearray packet already has it at the end!
                 status_last_sent_ticks_ms = time.ticks_ms() # update last sent time
 
@@ -640,7 +615,7 @@ try:
             if TimeToRecordTelemetry:
 
                 # pack it - takes about 460 us
-                tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store, True)
+                tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store, True)
 
                 # add it to the temporary memory buffer we have going while in flight
                 if (temp_telemetry_storage_len - temp_telemetry_storage_used) > len(telemetry_packet_store): # if we have enough room for another telemetry packet store. Takes about 85 us
