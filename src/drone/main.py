@@ -359,10 +359,7 @@ try:
                     break
                 
                 # Get line
-                mem1 = gc.mem_free()
                 ThisLine = rxBufferMV[search_from:write_idx]
-                mem2 = gc.mem_free()
-                print("Mem leak: " + str(mem1 - mem2))
 
                 # handle according to what it is
                 # we must check if it is a TIMHPING first because the "T" byte has a 0 in bit 0, so it would think it is a control packet if we checked for that first!
@@ -483,6 +480,7 @@ try:
         # this will likely be inaccurate as the accelerometer is quite susceptible to vibrations
         # we will later "fuse" this with gyro input in the complementary filter
         # note: the pitch and roll calculated here will be in degrees * 1000. For example, a reading of 22435 can be interpreted as 22.435 degrees (we do this for integer math purposes)
+        # Performance Note: This uses 128 new bytes of memory each time. Need to find a way to limit that.
         expected_pitch_angle_accel:int = int(math.atan2(accel_x, math.sqrt(accel_y**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the pitch angle is
         expected_roll_angle_accel:int = int(math.atan2(accel_y, math.sqrt(accel_x**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the roll angle is
 
