@@ -52,7 +52,7 @@ def pack_settings_update(pitch_kp:int, pitch_ki:int, pitch_kd:int, roll_kp:int, 
     # if any of the inputs exceed a uint16, throw an error
     if pitch_kp < 0 or pitch_ki < 0 or pitch_kd < 0 or roll_kp < 0 or roll_ki < 0 or roll_kd < 0 or yaw_kp < 0 or yaw_ki < 0 or yaw_kd < 0 or i_limit < 0:
         raise Exception("Unable to pack PID settings! Ensure all input parameters are greater than 0.")
-    elif pitch_kp > 65535 or pitch_ki > 65535 or pitch_kd > 65535 or roll_kp > 65535 or roll_ki > 65535 or roll_kd > 65535 or yaw_kp > 65535 or yaw_ki > 65535 or yaw_kd > 65535 or i_limit > 65535:
+    elif pitch_kp > 65535 or pitch_ki > 65535 or pitch_kd > 65535 or roll_kp > 65535 or roll_ki > 65535 or roll_kd > 65535 or yaw_kp > 65535 or yaw_ki > 65535 or yaw_kd > 65535:
         raise Exception("Unable to pack PID settings! Ensure all input parameters are less than 65535.")
     
     ToReturn:bytearray = bytearray()
@@ -77,6 +77,8 @@ def pack_settings_update(pitch_kp:int, pitch_ki:int, pitch_kd:int, roll_kp:int, 
     # We do this to allow values of way more than 65,535 (uint 16 max) to be transmitted, while still keeping only 2 bytes
     # could do a full int with 4 bytes, but that level of precision for a simple i_limit clamp is not needed!
     i_limit_to_transmit:int = i_limit // 1000
+    if i_limit_to_transmit > 65535 or i_limit_to_transmit < 0:
+        raise Exception("I Limit of " + str(i_limit) + " too large or small. Must be within 0 or 65,535 after dividing by 1000")
     ToReturn.extend(i_limit_to_transmit.to_bytes(2, "big"))
 
     # Add XOR-chain-based checksum
