@@ -652,7 +652,7 @@ try:
             if temp_telemetry_storage_used > 0: # if we have some telemetry to write
 
                 # flush to flash storage
-                log = open("log" "ab")
+                log = open("log", "ab")
                 for i in range(temp_telemetry_storage_used):
                     log.write(bytes([temp_telemetry_storage[i]]))
                 log.close()
