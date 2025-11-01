@@ -150,7 +150,7 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     into[2] = ticks_ms_byte3
 
     # vbat
-    into[3] = vbat
+    into[3] = vbat_asbyte
 
     # rates
     into[4] = pitch_rate_unsigned
