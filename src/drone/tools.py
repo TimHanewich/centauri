@@ -80,12 +80,9 @@ def unpack_settings_update(data:bytes) -> dict:
 
 ##### PACKING DATA TO BE SENT TO THE CONTROLLER #####
 
-def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, input_throttle:int, input_pitch:int, input_roll:int, input_yaw:int, m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, into:bytearray, mode:bool = False) -> None:
+def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, input_throttle:int, input_pitch:int, input_roll:int, input_yaw:int, m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, into:bytearray) -> None:
     """
     Packs telemetry into an existing bytearray.
-    Use 'mode' to switch between packing for STREAM or STORAGE
-    'mode' = False = STREAM (only 7 bytes of data that includes vbat, pitch rate, roll rate, yaw rate, pitch angle, roll angle
-    'mode' = True = STORAGE (17 bytes of data that includes all of that, plus the control inputs and motor throttles)
 
     Expects:
     ticks_ms between 0 and 16,777,215 (3 bytes)
@@ -104,14 +101,10 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     """
 
     # ensure the provided bytearray is big enough
-    if mode == False: # STREAM
-        if len(into) < 5:
-            raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing STREAM telemetry into. Must be at least 5 bytes.")
-    else:
-        if len(into) < 15:
-            raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing STORAGE telemetry into. Must be at least 15 bytes.")
+    if len(into) < 15:
+        raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing telemetry into. Must be at least 15 bytes.")
 
-    # calculate values
+    # First, prep values
 
     # ticks, ms
     # we do this manually by shifting the bits to the right (demoting them)
@@ -148,47 +141,33 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
 
     # Motor throttle values
     # no need to do anything with these - they are unsigned as is!
-    
-    # pack
-    if mode == False: # Pack a STREAM packet
 
-        # header
-        into[0] = 0b00000000 # bit 0 is 0 indicates it is a telemetry packet
-        
-        # vbat
-        into[1] = vbat_asbyte
+    # now, assign values to their positions
 
-        # rates
-        into[2] = pitch_rate_unsigned
-        into[3] = roll_rate_unsigned
-        into[4] = yaw_rate_unsigned
+    # ticks
+    into[0] = ticks_ms_byte1
+    into[1] = ticks_ms_byte2
+    into[2] = ticks_ms_byte3
 
-    else: # Pack a STORAGE packet
+    # vbat
+    into[3] = vbat
 
-        # ticks
-        into[0] = ticks_ms_byte1
-        into[1] = ticks_ms_byte2
-        into[2] = ticks_ms_byte3
+    # rates
+    into[4] = pitch_rate_unsigned
+    into[5] = roll_rate_unsigned
+    into[6] = yaw_rate_unsigned
 
-        # vbat
-        into[3] = vbat
+    # inputs
+    into[7] = input_throttle
+    into[8] = input_pitch_unsigned
+    into[9] = input_roll_unsigned
+    into[10] = input_yaw_unsigned
 
-        # rates
-        into[4] = pitch_rate_unsigned
-        into[5] = roll_rate_unsigned
-        into[6] = yaw_rate_unsigned
-
-        # inputs
-        into[9] = input_throttle
-        into[10] = input_pitch_unsigned
-        into[11] = input_roll_unsigned
-        into[12] = input_yaw_unsigned
-
-        # motor throttles
-        into[13] = m1_throttle
-        into[14] = m2_throttle
-        into[15] = m3_throttle
-        into[16] = m4_throttle
+    # motor throttles
+    into[11] = m1_throttle
+    into[12] = m2_throttle
+    into[13] = m3_throttle
+    into[14] = m4_throttle
 
     # no need to do \r\n at the end as we assume that is already set as the last two bytes of the into byte array
 
