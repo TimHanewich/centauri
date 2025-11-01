@@ -404,9 +404,6 @@ try:
                 if unprocessed_byte_count > 0:
                     rxBuffer[0:unprocessed_byte_count] = rxBuffer[search_from:write_idx]
                 write_idx = unprocessed_byte_count
-
-            
-
         except Exception as ex:
             input_throttle_uint16 = 0
             input_pitch_int16 = 0
