@@ -23,9 +23,7 @@ M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1
 
 print("Importing other libraries...")
 import time
-import math
 import tools
-import gc
 
 ####################
 ##### SETTINGS #####
