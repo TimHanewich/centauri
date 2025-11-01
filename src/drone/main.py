@@ -276,7 +276,7 @@ cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, 
 gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
 control_input:list[int] = [0,0,0,0] # array that we will unpack control input into (throttle input, pitch input, roll input, yaw input) - throttle as uint16, the rest as int16
-telemetry_packet_stream:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.). We set it up with 9 bytes: 1 for the header, 6 for the data, two for the \r\n terminator (so we don't have to keep appending \r\n at the end and causing more overhead in the loop)
+telemetry_packet_stream:bytearray = bytearray(7) # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.).
 telemetry_packet_store:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with telemetry data intended to be stored to local flash storage
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
 
@@ -611,13 +611,16 @@ try:
             # pack and send if time
             if TimeToStreamTelemetry:
 
+                # construct stream packet
                 # we just packed all the data into the record buffer
                 # so pull out the telemetry we will send from there directly
-                telemetry_packet_stream[0] = 0b00000000 # header byte
+                telemetry_packet_stream[0] = 0b00000000                # header byte. Bit 0 = 0 means it is a status packet.
                 telemetry_packet_stream[1] = telemetry_packet_store[3] # vbat
                 telemetry_packet_stream[2] = telemetry_packet_store[4] # pitch rate
                 telemetry_packet_stream[3] = telemetry_packet_store[5] # roll rate
                 telemetry_packet_stream[4] = telemetry_packet_store[6] # yaw rate
+                telemetry_packet_stream[5] = 13                        # \r
+                telemetry_packet_stream[6] = 10                        # \n
 
                 # send
                 uart_hc12.write(telemetry_packet_stream) # no need to append \r\n to it because the bytearray packet already has it at the end!
