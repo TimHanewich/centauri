@@ -606,7 +606,7 @@ try:
             packable_m4_throttle:int = (m4_pwm_pw - 1000000) // 10000                 # express between 0 and 100
 
             # pack it
-            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_stream)
+            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store)
 
             # pack and send if time
             if TimeToStreamTelemetry:
