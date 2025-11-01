@@ -108,8 +108,8 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
         if len(into) < 5:
             raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing STREAM telemetry into. Must be at least 5 bytes.")
     else:
-        if len(into) < 17:
-            raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing STORAGE telemetry into. Must be at least 17 bytes.")
+        if len(into) < 15:
+            raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing STORAGE telemetry into. Must be at least 15 bytes.")
 
     # calculate values
 
