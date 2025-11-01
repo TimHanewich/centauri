@@ -465,13 +465,6 @@ try:
         # I could in theory not need to do this if I mounted it flipped over, but preferring to leave it as is physically and just make the adjustment here!
         pitch_rate = pitch_rate * -1    # this ensures as the drone pitches down towards the ground, that is a NEGATIVE pitch rate. And a tile up would be positive
         yaw_rate = yaw_rate * -1        # this ensures the drone rotating towards the right is a POSITIVE yaw rate, with a left turn being negative
-
-        # FOR DIAGNOSTICS / TESTING: 
-        # You can manually hijack the pitch, roll, and yaw rate below.
-        # uncomment these and set a value to observe the PID values / motor throttles adjust.
-        # pitch_rate = 0
-        # roll_rate = 0
-        # yaw_rate = 0
         
         # use ONLY the accelerometer data to estimate pitch and roll
         # you can interpret this as the accelerometer's "opinion" of what pitch and roll angle is based on only its data
