@@ -646,7 +646,11 @@ try:
 
                 # add it to the temporary memory buffer we have going while in flight
                 if (temp_telemetry_storage_len - temp_telemetry_storage_used) > len(telemetry_packet_store): # if we have enough room for another telemetry packet store. Takes about 85 us
-                    temp_telemetry_storage_mv[temp_telemetry_storage_used:temp_telemetry_storage_used + len(telemetry_packet_store)] = telemetry_packet_store # save the telemetry. Takes about 1,870 us
+                    t1 = time.ticks_us()
+                    for i in range(len(telemetry_packet_store)): # manually copy telemetry packet via loop. Takes about 450 us to complete
+                        temp_telemetry_storage[temp_telemetry_storage_used + i] = telemetry_packet_store[i]
+                    t2 = time.ticks_us()
+                    print(str(t2 - t1))
                     temp_telemetry_storage_used = temp_telemetry_storage_used + len(telemetry_packet_store) # increment how many bytes are now used. Takes about 80 us
 
                 # mark that we did it
