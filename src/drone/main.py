@@ -340,15 +340,15 @@ try:
             # So we want to uart.readinto() which requires an rxBuffer, which requires all of this:
 
             # Step 1: Read Data
-            mem1 = gc.mem_free()
             BytesAvailable:int = uart_hc12.any()
-            mem2 = gc.mem_free()
-            print("Mem used in any: " + str(mem1 - mem2))
             if BytesAvailable > 0:
                 available_space:int = rxBufferLen - write_idx # calculate how many bytes we have remaining in the buffer
                 BytesWeWillReadRightNow:int = min(BytesAvailable, available_space)
                 if available_space > 0:
-                    bytes_read:int = uart_hc12.readinto(rxBufferMV[write_idx:], BytesWeWillReadRightNow) # read directly into that target window, but specify the number of bytes. Specifying exactly how many bytes to read into drastically improves performance. From like 3,000 microseconds to like 70 (unless the window you want to read into fits the bytes available, which we do here, but adding number of bytes just to be sure)
+                    mem1 = gc.mem_free()
+                    #bytes_read:int = uart_hc12.readinto(rxBufferMV[write_idx:], BytesWeWillReadRightNow) # read directly into that target window, but specify the number of bytes. Specifying exactly how many bytes to read into drastically improves performance. From like 3,000 microseconds to like 70 (unless the window you want to read into fits the bytes available, which we do here, but adding number of bytes just to be sure). This uses 16 bytes of memory.
+                    mem2 = gc.mem_free()
+                    print("Mem used: " + str(mem1 - mem2))
                     write_idx = write_idx + bytes_read # increment the write location forward
                 else:
                     write_idx = 0 # if there is no space, reset the write location for next time around 
