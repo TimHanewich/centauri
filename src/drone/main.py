@@ -666,6 +666,8 @@ try:
         excess_us:int = cycle_time_us - time.ticks_diff(time.ticks_us(), loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
         if excess_us > 0:
             time.sleep_us(excess_us)
+        else:
+            print(str(excess_us))
             
 except Exception as ex: # unhandled error somewhere in the loop
 
