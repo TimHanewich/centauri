@@ -342,6 +342,8 @@ try:
             # Step 1: Read Data
             mem1 = gc.mem_free()
             BytesAvailable:int = uart_hc12.any()
+            mem2 = gc.mem_free()
+            print("Mem used in any: " + str(mem1 - mem2))
             if BytesAvailable > 0:
                 available_space:int = rxBufferLen - write_idx # calculate how many bytes we have remaining in the buffer
                 BytesWeWillReadRightNow:int = min(BytesAvailable, available_space)
@@ -350,11 +352,9 @@ try:
                     write_idx = write_idx + bytes_read # increment the write location forward
                 else:
                     write_idx = 0 # if there is no space, reset the write location for next time around 
-            mem2 = gc.mem_free()
-            print("Mem used in read data: " + str(mem1 - mem2))
+            
 
             # Step 2: Process Lines
-            mem1 = gc.mem_free()
             search_from:int = 0
             while True:
 
@@ -400,19 +400,14 @@ try:
 
                 # increment search start location... there is possibly another \r\n in there (and thus a new line to process)
                 search_from = loc + 2 # +2 to jump after \r\n
-            mem2 = gc.mem_free()
-            print("Mem used in process lines: " + str(mem1 - mem2))
 
             # Step 3: move the conveyer belt
             # the conveyer belt will only be moved if not every byte was processed and thus we are done with
-            mem1 = gc.mem_free()
             if search_from > 0: # if search_from was moved, that means at least one line was extracted and processed.
                 unprocessed_byte_count:int = write_idx - search_from # how many bytes are on the conveyer and still unprocessed
                 if unprocessed_byte_count > 0:
                     rxBuffer[0:unprocessed_byte_count] = rxBuffer[search_from:write_idx]
                 write_idx = unprocessed_byte_count
-            mem2 = gc.mem_free()
-            print("Mem used in move belt: " + str(mem1 - mem2))
 
         except Exception as ex:
             input_throttle_uint16 = 0
@@ -482,11 +477,8 @@ try:
         # we will later "fuse" this with gyro input in the complementary filter
         # note: the pitch and roll calculated here will be in degrees * 1000. For example, a reading of 22435 can be interpreted as 22.435 degrees (we do this for integer math purposes)
         # Performance Note: This uses 128 new bytes of memory each time. Need to find a way to limit that.
-        mem1 = gc.mem_free()
         expected_pitch_angle_accel:int = int(math.atan2(accel_x, math.sqrt(accel_y**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the pitch angle is
         expected_roll_angle_accel:int = int(math.atan2(accel_y, math.sqrt(accel_x**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the roll angle is
-        mem2 = gc.mem_free()
-        print("Mem used in trig: " + str(mem1 - mem2))
 
         # calculate what the gyro's expected pitch and roll angle should be
         # you can take this as the gyro's "opinion" of what the pitch and roll angle should be, just on its data
