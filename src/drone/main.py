@@ -480,8 +480,8 @@ try:
         # we will later "fuse" this with gyro input in the complementary filter
         # note: the pitch and roll calculated here will be in degrees * 1000. For example, a reading of 22435 can be interpreted as 22.435 degrees (we do this for integer math purposes)
         # Performance Note: This uses 128 new bytes of memory each time. Need to find a way to limit that.
-        expected_pitch_angle_accel:int = int(math.atan2(accel_x, math.sqrt(accel_y**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the pitch angle is
-        expected_roll_angle_accel:int = int(math.atan2(accel_y, math.sqrt(accel_x**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the roll angle is
+        expected_pitch_angle_accel:int = int(math.atan2(accel_x, math.sqrt(accel_y*accel_y + accel_z*accel_z)) * 180000 / math.pi) # the accelerometers opinion of what the pitch angle is
+        expected_roll_angle_accel:int = int(math.atan2(accel_y, math.sqrt(accel_x*accel_x + accel_z*accel_z)) * 180000 / math.pi) # the accelerometers opinion of what the roll angle is
 
         # calculate what the gyro's expected pitch and roll angle should be
         # you can take this as the gyro's "opinion" of what the pitch and roll angle should be, just on its data
