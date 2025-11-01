@@ -597,14 +597,18 @@ try:
             # note: we are not multiplying the denominator by 10 as well (like we did for the numerator) because we WANT the output result to be 10x higher, so that was it is like 65 and not 6.5.
             vbat = (vbat_u16 * 33) // 11820
 
-            # Prepare input values to packet as expected
+            # Prepare input values to packet as expected: rates
             packable_pitch_rate:int = pitch_rate // 1000                              # express as whole number  
             packable_roll_rate:int = roll_rate // 1000                                # express as whole number
             packable_yaw_rate:int = yaw_rate // 1000                                  # express as whole number
-            packable_input_throttle:int = (input_throttle_uint16 * 100) // 65535      # express between 0 and 100
-            packable_input_pitch:int = (input_pitch_int16 * 100) // 32767             # express between -100 and 100
-            packable_input_roll:int = (input_roll_int16 * 100) // 32767               # express between -100 and 100
-            packable_input_yaw:int = (input_yaw_int16 * 100) // 32767                 # express between -100 and 100
+
+            # prepare input values as expected: input values
+            packable_input_throttle:int = (input_throttle_uint16 * 100) // 65535            # express between 0 and 100
+            packable_input_pitch:int = (((input_pitch_int16 * 100) // 65535) * 2) - 100     # express between -100 and 100
+            packable_input_roll:int = (((input_roll_int16 * 100) // 65535) * 2) - 100       # express between -100 and 100
+            packable_input_yaw:int = (((input_yaw_int16 * 100) // 65535) * 2) - 100         # express between -100 and 100
+
+            # Prepar input valuesas expected: motor throttles
             packable_m1_throttle:int = (m1_pwm_pw - 1000000) // 10000                 # express between 0 and 100
             packable_m2_throttle:int = (m2_pwm_pw - 1000000) // 10000                 # express between 0 and 100
             packable_m3_throttle:int = (m3_pwm_pw - 1000000) // 10000                 # express between 0 and 100
