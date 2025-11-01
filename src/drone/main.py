@@ -24,6 +24,7 @@ M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1
 print("Importing other libraries...")
 import time
 import tools
+import os
 
 ####################
 ##### SETTINGS #####
@@ -250,8 +251,11 @@ gyro_bias_z:int = gzs // samples
 print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
 send_special("Calib Gyro OK")
 
-
-
+# determine how much space we have in storage to store telemetry
+stats:tuple = os.statvfs('/')
+block_size:int = stats[0]
+free_blocks:int = stats[3]
+free_bytes:int = block_size * free_blocks # how much free space is on the device, in bytes. This will be decremented as we add to it.
 
 # declare variables: desired rate inputs
 # these will later be updated via incoming desired rate packets (over UART from HL-MCU)
@@ -643,7 +647,9 @@ try:
                 # flush to flash storage
                 log = open("log", "ab")
                 for i in range(temp_telemetry_storage_used):
-                    log.write(bytes([temp_telemetry_storage[i]]))
+                    if free_bytes > 0: # if we have free bytes in capacity
+                        log.write(bytes([temp_telemetry_storage[i]]))
+                        free_bytes = free_bytes - 1 # decrement the number of bytes that are now free
                 log.close()
 
                 # clear out the temporary storage bytearray
