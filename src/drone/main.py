@@ -333,6 +333,7 @@ try:
         # 1 - control data
         # 2 - Settings update data (PID settings)
         # 3 - PING
+        mem1 = gc.mem_free()
         try:  
 
             # This uses a rather complicated "conveyer belt" approach
@@ -410,9 +411,12 @@ try:
             input_roll_int16 = 0
             input_yaw_int16 = 0
             send_special("CommsRx Err: " + str(ex))
+        mem2 = gc.mem_free()
+        print("Mem used in rx: " + str(mem1 - mem2))
 
         # Capture RAW IMU data: both gyroscope and accelerometer
         # Goal here is ONLY to capture the data, not to transform it
+        mem1 = gc.mem_free()
         GoodRead:bool = False
         imu_read_attemp_started_ticks_ms:int = time.ticks_ms()
         while not GoodRead:
@@ -433,6 +437,10 @@ try:
 
                     # fatal fail!
                     FATAL_ERROR("IMU Read Error: read failed")
+        mem2 = gc.mem_free()
+        print("Mem used in imu read: " + str(mem1 - mem2))
+
+        mem1 = gc.mem_free()
 
         # Process & Transform raw Gyroscope data
         gyro_x = (gyro_data[0] << 8) | gyro_data[1]
@@ -456,6 +464,9 @@ try:
         accel_y = (accel_y * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
         accel_z = (accel_z * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
+        mem2 = gc.mem_free()
+        print("Mem used in imu trans: " + str(mem1 - mem2))
+
         # subtract out (account for) gyro bias that was calculated during calibration phase
         pitch_rate = pitch_rate - gyro_bias_y
         roll_rate = roll_rate - gyro_bias_x
@@ -472,19 +483,28 @@ try:
         # we will later "fuse" this with gyro input in the complementary filter
         # note: the pitch and roll calculated here will be in degrees * 1000. For example, a reading of 22435 can be interpreted as 22.435 degrees (we do this for integer math purposes)
         # Performance Note: This uses 128 new bytes of memory each time. Need to find a way to limit that.
+        mem1 = gc.mem_free()
         expected_pitch_angle_accel:int = int(math.atan2(accel_x, math.sqrt(accel_y**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the pitch angle is
         expected_roll_angle_accel:int = int(math.atan2(accel_y, math.sqrt(accel_x**2 + accel_z**2)) * 180000 / math.pi) # the accelerometers opinion of what the roll angle is
+        mem2 = gc.mem_free()
+        print("Mem used in trig: " + str(mem1 - mem2))
 
         # calculate what the gyro's expected pitch and roll angle should be
         # you can take this as the gyro's "opinion" of what the pitch and roll angle should be, just on its data
+        mem1 = gc.mem_free()
         elapsed_us:int = time.ticks_diff(time.ticks_us(), last_compfilt_ticks_us) # the amount of time, in microseconds (us), that has elapsed since we did this in the last loop
         last_compfilt_ticks_us = time.ticks_us() # update the time
         expected_pitch_angle_gyro:int = pitch_angle + (pitch_rate * elapsed_us // 1000000)
         expected_roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_us // 1000000)
+        mem2 = gc.mem_free()
+        print("Mem used in expected: " + str(mem1 - mem2))
 
         # Now use a complementary filter to determine angle (fuse gyro + accelerometer data)
+        mem1 = gc.mem_free()
         pitch_angle = ((expected_pitch_angle_gyro * alpha) + (expected_pitch_angle_accel * (100 - alpha))) // 100
         roll_angle = ((expected_roll_angle_gyro * alpha) + (expected_roll_angle_accel * (100 - alpha))) // 100
+        mem2 = gc.mem_free()
+        print("Mem used in comp filter: " + str(mem1 - mem2))
 
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
         # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
@@ -500,6 +520,7 @@ try:
         error_yaw_rate:int = desired_yaw_rate - yaw_rate
 
         # Pitch PID calculation
+        mem1 = gc.mem_free()
         pitch_p:int = (error_pitch_rate * pitch_kp) // PID_SCALING_FACTOR
         pitch_i:int = pitch_last_i + ((error_pitch_rate * pitch_ki) // PID_SCALING_FACTOR)
         pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
@@ -519,6 +540,9 @@ try:
         yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
         yaw_d = (yaw_kd * (error_yaw_rate - yaw_last_error)) // PID_SCALING_FACTOR
         yaw_pid = yaw_p + yaw_i + yaw_d
+
+        mem2 = gc.mem_free()
+        print("Mem used in PIDs: " + str(mem1 - mem2))
 
         # save state values for next loop
         pitch_last_error = error_pitch_rate
@@ -574,6 +598,7 @@ try:
         M4.duty_ns(m4_pwm_pw)
 
         # Telemetry: Check if it is time to Stream/Record
+        mem1 = gc.mem_free()
         TimeToStreamTelemetry:bool = False
         TimeToRecordTelemetry:bool = False
         if input_throttle_uint16 == 0: # if we are unarmed (throttle is 0%), we will consider streaming some telemetry periodically to the controller. It is important to only send data via HC-12 while unarmed because the HC-12 is half duplex, meaning it can't send and receive at the same time. Full focus should be put into receiving input commands while armed.
@@ -582,9 +607,13 @@ try:
         else: # we are armed, flying. We will not stream telemetry (send), but we may record it to flash memory!
             if time.ticks_diff(time.ticks_ms(), telemetry_last_recorded_ticks_ms) >= 250: # every 250 ms (4 times per second)
                 TimeToRecordTelemetry = True
+        mem2 = gc.mem_free()
+        print("Mem used in telemetry check: " + str(mem1 - mem2))
 
         # if we need to stream/record telemetry, do it now
         if TimeToStreamTelemetry or TimeToRecordTelemetry:
+
+            mem1 = gc.mem_free()
 
             # first, get a ADC reading
             vbat_u16:int = vbat_adc.read_u16() # read the value on the ADC pin, as a uint16 (0-65535)
@@ -622,6 +651,9 @@ try:
             packable_m3_throttle:int = (m3_pwm_pw - 1000000) // 10000                 # express between 0 and 100
             packable_m4_throttle:int = (m4_pwm_pw - 1000000) // 10000                 # express between 0 and 100
 
+            mem2 = gc.mem_free()
+            print("Mem used in telemetry prep: " + str(mem1 - mem2))
+
             # pack and send if time
             if TimeToStreamTelemetry:
                 tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_stream, False)
@@ -630,6 +662,8 @@ try:
 
             # pack and record if time
             if TimeToRecordTelemetry:
+
+                mem1 = gc.mem_free()
 
                 # pack it - takes about 460 us
                 tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store, True)
@@ -642,6 +676,9 @@ try:
 
                 # mark that we did it
                 telemetry_last_recorded_ticks_ms = time.ticks_ms() # update last time recorded
+
+                mem2 = gc.mem_free()
+                print("Mem used in telemtry record: " + str(mem1 - mem2))
 
         # Do we have an opportunity to flush the telemetry? (we do if we are unarmed)
         if input_throttle_uint16 == 0: # if we are unarmed
