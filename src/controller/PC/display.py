@@ -54,8 +54,6 @@ class DisplayPack:
         self.pitch_rate:float = 0.0
         self.roll_rate:float = 0.0
         self.yaw_rate:float = 0.0
-        self.pitch_angle:int = 0 # -90 to 90
-        self.roll_angle:int = 0 # -90 to 90
 
         # messages being received from the drone
         self.messages:list[Message] = []
@@ -112,8 +110,6 @@ def construct(dp:DisplayPack) -> rich.console.Group:
     # construct what to display in telemety column (telemetry from quadcopter)
     txt_status:str = ""
     txt_status = txt_status + "Battery: " + str(round(dp.drone_battery, 1)) + " v"
-    txt_status = txt_status + "\n" + "Pitch Angle: " + str(dp.pitch_angle) + " °"
-    txt_status = txt_status + "\n" + "Roll Angle: " + str(dp.roll_angle) + " °"
     txt_status = txt_status + "\n" + "Pitch Rate: " + str(dp.pitch_rate) + " °/s"
     txt_status = txt_status + "\n" + "Roll Rate: " + str(dp.roll_rate) + " °/s"
     txt_status = txt_status + "\n" + "Yaw Rate: " + str(dp.yaw_rate) + " °/s"

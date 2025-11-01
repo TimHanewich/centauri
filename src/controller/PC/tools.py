@@ -96,7 +96,7 @@ def unpack_telemetry(data:bytes) -> dict:
     """Unpacks telemetry packet coming from the drone"""
 
     # if it is not long enough, return None to indicate it didn't work
-    if len(data) < 7:
+    if len(data) < 5:
         return None
 
     # the first byte is a header (metadata) byte
@@ -109,11 +109,9 @@ def unpack_telemetry(data:bytes) -> dict:
     pitch_rate:int = data[2] - 128
     roll_rate:int = data[3] - 128
     yaw_rate:int = data[4] - 128
-    pitch_angle:int = data[5] - 128
-    roll_angle:int = data[6] - 128
 
     # return
-    ToReturn:dict = {"vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle}
+    ToReturn:dict = {"vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate}
     return ToReturn
 
 def unpack_special_packet(data:bytes) -> str:
