@@ -25,6 +25,7 @@ print("Importing other libraries...")
 import time
 import math
 import tools
+import gc
 
 ####################
 ##### SETTINGS #####
@@ -285,6 +286,7 @@ TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison s
 # declare uart conveyer read objects
 rxBufferLen:int = 128
 rxBuffer:bytearray = bytearray(rxBufferLen) # a buffer of received messages from the HL-MCU
+rxBufferMV:memoryview = memoryview(rxBuffer)
 write_idx:int = 0 # last write location into the rxBuffer
 terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (13, 10 in bytes)
 
@@ -324,7 +326,7 @@ try:
         if time.ticks_diff(time.ticks_ms(), led_last_flickered_ticks_ms) >= 250: # every 250 ms (4 times per second)
             led.toggle()
             led_last_flickered_ticks_ms = time.ticks_ms()
-        
+         
         # check for received data (input data) from the HC-12
         # the data that we receive from the HC-12 could be:
         # 1 - control data
@@ -342,8 +344,11 @@ try:
                 available_space:int = rxBufferLen - write_idx # calculate how many bytes we have remaining in the buffer
                 BytesWeWillReadRightNow:int = min(BytesAvailable, available_space)
                 if available_space > 0:
-                    target_write_window = memoryview(rxBuffer)[write_idx:write_idx + BytesWeWillReadRightNow] # create a memoryview pointer target to the area of the rxBuffer we want to write to with these new bytes
-                    bytes_read:int = uart_hc12.readinto(target_write_window, BytesWeWillReadRightNow) # read directly into that target window, but specify the number of bytes. Specifying exactly how many bytes to read into drastically improves performance. From like 3,000 microseconds to like 70 (unless the window you want to read into fits the bytes available, which we do here, but adding number of bytes just to be sure)
+                    mem1 = gc.mem_free()
+                    bytes_read:int = uart_hc12.readinto(rxBufferMV[write_idx:], BytesWeWillReadRightNow) # read directly into that target window, but specify the number of bytes. Specifying exactly how many bytes to read into drastically improves performance. From like 3,000 microseconds to like 70 (unless the window you want to read into fits the bytes available, which we do here, but adding number of bytes just to be sure)
+                    mem2 = gc.mem_free()
+                    mem_used = mem1 - mem2
+                    print("Mem leak: " + str(mem_used))
                     write_idx = write_idx + bytes_read # increment the write location forward
                 else:
                     write_idx = 0 # if there is no space, reset the write location for next time around 
@@ -402,6 +407,8 @@ try:
                 if unprocessed_byte_count > 0:
                     rxBuffer[0:unprocessed_byte_count] = rxBuffer[search_from:write_idx]
                 write_idx = unprocessed_byte_count
+
+            
 
         except Exception as ex:
             input_throttle_uint16 = 0
@@ -666,8 +673,6 @@ try:
         excess_us:int = cycle_time_us - time.ticks_diff(time.ticks_us(), loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
         if excess_us > 0:
             time.sleep_us(excess_us)
-        else:
-            print(str(excess_us))
             
 except Exception as ex: # unhandled error somewhere in the loop
 
