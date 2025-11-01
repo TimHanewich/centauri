@@ -252,10 +252,13 @@ print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gy
 send_special("Calib Gyro OK")
 
 # determine how much space we have in storage to store telemetry
+print()
+print("CHECKING STORAGE SPACE")
 stats:tuple = os.statvfs('/')
 block_size:int = stats[0]
 free_blocks:int = stats[3]
 free_bytes:int = block_size * free_blocks # how much free space is on the device, in bytes. This will be decremented as we add to it.
+print(str(free_bytes) + " bytes free for telemetry storage")
 
 # declare variables: desired rate inputs
 # these will later be updated via incoming desired rate packets (over UART from HL-MCU)
