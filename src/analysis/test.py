@@ -5,4 +5,4 @@ packets:list[bytes] = data.split("\r\n".encode())
 for p in packets:
     if len(p) > 0:
         unpacked:dict = tools.unpack_packet(p)
-        print(str(unpacked))
+        print(str(unpacked["input_pitch"]))
