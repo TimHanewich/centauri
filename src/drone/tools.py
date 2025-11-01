@@ -80,7 +80,7 @@ def unpack_settings_update(data:bytes) -> dict:
 
 ##### PACKING DATA TO BE SENT TO THE CONTROLLER #####
 
-def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, input_throttle:int, input_pitch:int, input_roll:int, input_yaw:int, m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, into:bytearray, mode:bool = False) -> None:
+def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, input_throttle:int, input_pitch:int, input_roll:int, input_yaw:int, m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, into:bytearray, mode:bool = False) -> None:
     """
     Packs telemetry into an existing bytearray.
     Use 'mode' to switch between packing for STREAM or STORAGE
