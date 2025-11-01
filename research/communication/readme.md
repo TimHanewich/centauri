@@ -60,8 +60,6 @@ Two HC-12 radio transceiver modules will be used to facilitate bidirectional rem
         - Actual Pitch Rate: 1 signed byte, interpretted literally
         - Actual Roll Rate: 1 signed byte, interpretted literally
         - Actual Yaw Rate: 1 signed byte, interpretted literally
-        - Estimated Pitch Angle: 1 signed byte, interpretted literally
-        - Estimated Roll Angle: 1 signed byte, interpretted literally
     - Special Packet (text)
         - Metadata byte:
             - Bit 7: *reserved*
