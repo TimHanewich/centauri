@@ -587,7 +587,7 @@ try:
         TimeToRecordTelemetry:bool = False
         if input_throttle_uint16 == 0: # if we are unarmed (throttle is 0%), we will consider streaming some telemetry periodically to the controller. It is important to only send data via HC-12 while unarmed because the HC-12 is half duplex, meaning it can't send and receive at the same time. Full focus should be put into receiving input commands while armed.
             if time.ticks_diff(time.ticks_ms(), status_last_sent_ticks_ms) >= 1000: # every 1000 ms (1 time per second)
-                TimeToStreamTelemetry = True  
+                TimeToStreamTelemetry = True
         else: # we are armed, flying. We will not stream telemetry (send), but we may record it to flash memory!
             if time.ticks_diff(time.ticks_ms(), telemetry_last_recorded_ticks_ms) >= 250: # every 250 ms (4 times per second)
                 TimeToRecordTelemetry = True
@@ -639,15 +639,15 @@ try:
 
             # pack and record if time
             if TimeToRecordTelemetry:
-                
-                # pack it
+
+                # pack it - takes about 460 us
                 tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store, True)
-                
+
                 # add it to the temporary memory buffer we have going while in flight
-                if (temp_telemetry_storage_len - temp_telemetry_storage_used) > len(telemetry_packet_store): # if we have enough room for another telemetry packet store
-                    temp_telemetry_storage[temp_telemetry_storage_used:temp_telemetry_storage_used + len(telemetry_packet_store)] = telemetry_packet_store # save the telemetry
-                    temp_telemetry_storage_used = temp_telemetry_storage_used + len(telemetry_packet_store) # increment how many bytes are now used
-                
+                if (temp_telemetry_storage_len - temp_telemetry_storage_used) > len(telemetry_packet_store): # if we have enough room for another telemetry packet store. Takes about 85 us
+                    temp_telemetry_storage[temp_telemetry_storage_used:temp_telemetry_storage_used + len(telemetry_packet_store)] = telemetry_packet_store # save the telemetry. Takes about 1,870 us
+                    temp_telemetry_storage_used = temp_telemetry_storage_used + len(telemetry_packet_store) # increment how many bytes are now used. Takes about 80 us
+
                 # mark that we did it
                 telemetry_last_recorded_ticks_ms = time.ticks_ms() # update last time recorded
 
