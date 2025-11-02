@@ -531,11 +531,24 @@ try:
 
         # min/max those duty times
         # constrain to within 1 ms and 2 ms (1,000,000 nanoseconds and 2,000,000 nanoseconds), which is the min and max throttle duty cycles
-        # takes ~440 us, uses 0 bytes of new memory
-        m1_pwm_pw = min(max(m1_pwm_pw, 1000000), 2000000)
-        m2_pwm_pw = min(max(m2_pwm_pw, 1000000), 2000000)
-        m3_pwm_pw = min(max(m3_pwm_pw, 1000000), 2000000)
-        m4_pwm_pw = min(max(m4_pwm_pw, 1000000), 2000000)
+        # takes ~60 us
+        # you may think why not just use the min/max functions here - I originally was! But those are very slow, taking ~440 us to min/max all four. Saving a lot of time doing it manually like this.
+        if m1_pwm_pw < 1000000:
+            m1_pwm_pw = 1000000
+        elif m1_pwm_pw > 2000000:
+            m1_pwm_pw = 2000000
+        if m2_pwm_pw < 1000000:
+            m2_pwm_pw = 1000000
+        elif m2_pwm_pw > 2000000:
+            m2_pwm_pw = 2000000
+        if m3_pwm_pw < 1000000:
+            m3_pwm_pw = 1000000
+        elif m3_pwm_pw > 2000000:
+            m3_pwm_pw = 2000000
+        if m4_pwm_pw < 1000000:
+            m4_pwm_pw = 1000000
+        elif m4_pwm_pw > 2000000:
+            m4_pwm_pw = 2000000
         
         # MOTOR SHUTDOWN CONDITIONS (safety)
         # there are two conditions that would mean, no matter what happened above, ALL FOUR motors should be shut down (0% throttle)
