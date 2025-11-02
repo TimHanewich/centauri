@@ -409,7 +409,7 @@ try:
                 search_from = loc + 2 # +2 to jump after \r\n
 
             # Step 3: move the conveyer belt
-            # the conveyer belt will only be moved if not every byte was processed and thus we are done with
+            # the conveyer belt will only be moved if not every byte was processed and thus we are done with (which rarely happens)
             if search_from > 0: # if search_from was moved, that means at least one line was extracted and processed.
                 unprocessed_byte_count:int = write_idx - search_from # how many bytes are on the conveyer and still unprocessed
                 if unprocessed_byte_count > 0:
