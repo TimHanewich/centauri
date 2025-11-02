@@ -492,7 +492,10 @@ try:
         # Pitch PID calculation
         pitch_p:int = (error_pitch_rate * pitch_kp) // PID_SCALING_FACTOR
         pitch_i:int = pitch_last_i + ((error_pitch_rate * pitch_ki) // PID_SCALING_FACTOR)
-        pitch_i = min(max(pitch_i, -i_limit), i_limit) # constrain within I limit
+        if pitch_i < -i_limit: # constrain within I limit. I originally was using min(max()) here but that takes 210 us. Way too slow. Doing it this way uses only 40 us.
+            pitch_i = -i_limit
+        elif pitch_i > i_limit:
+            pitch_i = i_limit
         pitch_d = (pitch_kd * (error_pitch_rate - pitch_last_error)) // PID_SCALING_FACTOR
         pitch_pid = pitch_p + pitch_i + pitch_d
 
