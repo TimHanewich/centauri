@@ -1,3 +1,5 @@
+import time
+
 ##### UNPACKING DATA FROM THE CONTROLLER #####
 
 def unpack_control_packet(data:bytes, into:list[int]) -> bool:
@@ -124,7 +126,10 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     # 2. divide by the voltage range of 10.8, but expressed as 108 since we are using 10x units here (i.e. voltage of 6.5 is expressed as 65 in vbat)
     vbat = vbat - 60
     vbat_asbyte:int = (vbat * 255) // 108
-    vbat_asbyte = min(max(vbat_asbyte, 0), 255)
+    if vbat_asbyte < 0: # min/max vbat_asbyte within byte range (0-255). Doing it this way takes ~25 us, vs. 80 us using min(max())
+        vbat_asbyte = 0
+    elif vbat_asbyte > 255:
+        vbat_asbyte = 255
 
     # rates
     # we add 128 to "shift" from a signed byte to an unsigned byte for the sake of storage
