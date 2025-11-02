@@ -502,14 +502,20 @@ try:
         # Roll PID calculation
         roll_p:int = (error_roll_rate * roll_kp) // PID_SCALING_FACTOR
         roll_i:int = roll_last_i + ((error_roll_rate * roll_ki) // PID_SCALING_FACTOR)
-        roll_i = min(max(roll_i, -i_limit), i_limit) # constrain within I limit
+        if roll_i < -i_limit: # constrain within I limit
+            roll_i = -i_limit
+        elif roll_i > i_limit:
+            roll_i = i_limit
         roll_d = (roll_kd * (error_roll_rate - roll_last_error)) // PID_SCALING_FACTOR
         roll_pid = roll_p + roll_i + roll_d
 
         # Yaw PID calculation
         yaw_p:int = (error_yaw_rate * yaw_kp) // PID_SCALING_FACTOR
         yaw_i:int = yaw_last_i + ((error_yaw_rate * yaw_ki) // PID_SCALING_FACTOR)
-        yaw_i = min(max(yaw_i, -i_limit), i_limit) # constrain within I limit
+        if yaw_i < -i_limit: # constrain within I limit
+            yaw_i = -i_limit
+        elif yaw_i > i_limit:
+            yaw_i = i_limit
         yaw_d = (yaw_kd * (error_yaw_rate - yaw_last_error)) // PID_SCALING_FACTOR
         yaw_pid = yaw_p + yaw_i + yaw_d
 
