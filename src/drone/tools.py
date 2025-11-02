@@ -1,6 +1,3 @@
-import time
-import gc
-
 ##### UNPACKING DATA FROM THE CONTROLLER #####
 
 def unpack_control_packet(data:bytes, into:list[int]) -> bool:
