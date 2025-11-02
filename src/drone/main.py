@@ -626,7 +626,7 @@ try:
             telemetry_last_recorded_ticks_ms = time.ticks_ms() # update last time recorded
 
             # if we also have the opportunity to send telemetry right now, send it
-            # We send under 2 conditions:
+            # We only send under 2 conditions:
             # 1. We are unarmed (throttle = 0)
             # 2. It is due time!
             if input_throttle_uint16 == 0: # if we are unarmed (throttle is 0%), we will consider streaming some telemetry periodically to the controller. It is important to only send data via HC-12 while unarmed because the HC-12 is half duplex, meaning it can't send and receive at the same time. Full focus should be put into receiving input commands while armed.
