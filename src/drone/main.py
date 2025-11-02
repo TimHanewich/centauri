@@ -615,6 +615,7 @@ try:
             tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store)
 
             # Record it by adding it to the temporary memory buffer we have going while in flight
+            # takes ~490 us, uses 0 bytes of new memory
             if (temp_telemetry_storage_len - temp_telemetry_storage_used) > len(telemetry_packet_store): # if we have enough room for another telemetry packet store. Takes about 85 us
                 for i in range(len(telemetry_packet_store)): # manually copy telemetry packet via loop. Takes about 450 us to complete
                     temp_telemetry_storage[temp_telemetry_storage_used + i] = telemetry_packet_store[i]
