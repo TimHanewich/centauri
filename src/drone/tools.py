@@ -1,4 +1,5 @@
 import time
+import gc
 
 ##### UNPACKING DATA FROM THE CONTROLLER #####
 
@@ -101,6 +102,10 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     m3_throttle between 0 and 100
     m4_throttle between 0 and 100
     """
+    
+    # performance note:
+    # at least as of commit 6325282c3ae4bc9b6036c344c595748014e9aa2d, the entire function below (within the function) takes about 232 us and 0 new bytes of memory
+    
 
     # ensure the provided bytearray is big enough
     if len(into) < 15:
@@ -175,7 +180,6 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     into[14] = m4_throttle
 
     # no need to do \r\n at the end as we assume that is already set as the last two bytes of the into byte array
-
 
 
         
