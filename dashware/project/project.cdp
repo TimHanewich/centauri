@@ -1,0 +1,85 @@
+<Project version="2">
+  <Information logoX="-1" logoY="-1" logoWidth="-1" logoHeight="-1">
+    <StartTitle enabled="False" duration="3" fadeIn="False" fadeInDuration="1" fadeOut="False" fadeOutDuration="1" fontRectWidth="1" fontRectHeight="1" fontFace="Arial" fontSize="64" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="center" fontVAlign="center" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255" backgroundTransparency="0" backgroundRed="255" backgroundGreen="255" backgroundBlue="255">
+    </StartTitle>
+    <EndTitle enabled="False" duration="3" fadeIn="False" fadeInDuration="1" fadeOut="False" fadeOutDuration="1" fontRectWidth="1" fontRectHeight="1" fontFace="Arial" fontSize="64" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="center" fontVAlign="center" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255" backgroundTransparency="0" backgroundRed="255" backgroundGreen="255" backgroundBlue="255">Produced with
+DashWare</EndTitle>
+    <Notes>Enter your project notes.</Notes>
+  </Information>
+  <InputSettings>
+    <DataFiles>
+      <DataFile profile="Centauri" fileName="C:\Users\tim\Desktop\data.csv" currentTime="220.415" dataSynced="True" syncOffset="25.185" closedCourse="True" startFinishSetInUI="False" openCourseStartOffset="-1" openCourseFinishOffset="-1" lapStartX="0" lapStartY="0" lapEndX="0" lapEndY="0" lapToDraw="0" startFinishDistanceThreshold="40" showDistanceThreshold="True" ignoreFirstLap="True" ignoreLastLap="True" lapTimeHoldSecs="5" startTrim="32.272" endTrim="220.415">
+        <LapSplits />
+      </DataFile>
+    </DataFiles>
+    <VideoFiles>
+      <VideoFile trimStart="0" trimEnd="202500" videoUniqueID="" rotateVideo="False">C:\Users\tim\Desktop\video.MP4</VideoFile>
+    </VideoFiles>
+  </InputSettings>
+  <OutputSettings>
+    <Video />
+    <OverscanSettings useSafeArea="False" showSafeArea="True" percentage="10" />
+  </OutputSettings>
+  <GaugeSettings>
+    <Gauge name="M1 Throttle" transparency="1" x="1580.381" y="765.5555">
+      <InputMapping gaugeInput="motor_throttle" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="M1 Throttle" />
+    </Gauge>
+    <Gauge name="M2 Throttle" transparency="1" x="1750.62" y="765.1233">
+      <InputMapping gaugeInput="motor_throttle" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="M2 Throttle" />
+    </Gauge>
+    <Gauge name="M3 Throttle" transparency="1" x="1580.11" y="901.4136">
+      <InputMapping gaugeInput="motor_throttle" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="M3 Throttle" />
+    </Gauge>
+    <Gauge name="M4 Throttle" transparency="1" x="1750.956" y="901.3684">
+      <InputMapping gaugeInput="motor_throttle" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="M4 Throttle" />
+    </Gauge>
+    <Gauge name="Throttle Input" transparency="1" x="1590.989" y="18.9806">
+      <InputMapping gaugeInput="Throttle Position" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Input Throttle" />
+    </Gauge>
+    <Gauge name="Battery Voltage" transparency="1" x="1702.323" y="353.2903">
+      <InputMapping gaugeInput="Battery Voltage" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Battery Voltage" />
+    </Gauge>
+  </GaugeSettings>
+  <ChartSettings>
+    <ChartTab Type="Time">
+      <Inputs>
+        <Input Filename="C:\Users\tim\Desktop\data.csv">
+          <Laps>
+            <Lap Number="0" />
+          </Laps>
+        </Input>
+      </Inputs>
+      <Charts>
+        <Chart ChartType="Map">
+          <Graphs />
+        </Chart>
+        <Chart ChartType="G-Plot">
+          <Graphs />
+        </Chart>
+        <Chart ChartType="LineChart">
+          <Graphs />
+        </Chart>
+      </Charts>
+    </ChartTab>
+    <ChartTab Type="Distance">
+      <Inputs>
+        <Input Filename="C:\Users\tim\Desktop\data.csv">
+          <Laps>
+            <Lap Number="0" />
+          </Laps>
+        </Input>
+      </Inputs>
+      <Charts>
+        <Chart ChartType="Map">
+          <Graphs />
+        </Chart>
+        <Chart ChartType="G-Plot">
+          <Graphs />
+        </Chart>
+        <Chart ChartType="LineChart">
+          <Graphs />
+        </Chart>
+      </Charts>
+    </ChartTab>
+  </ChartSettings>
+</Project>

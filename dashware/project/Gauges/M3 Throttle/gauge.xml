@@ -1,0 +1,17 @@
+<Gauge version="3" x="919.4136" y="406.5362" readOnly="False" width="216.6755" height="216.6755" transparency="1" thumbnailBackgroundTransparency="1" thumbnailBackgroundRed="135" thumbnailBackgroundGreen="206" thumbnailBackgroundBlue="235">
+  <Components>
+    <AnimatedArc x="108.3378" y="108.3378" radius="70.10091" syncValueRangeWithParent="False" syncAngleRangeWithParent="False" minValue="0" maxValue="100" loop="False" minAngle="-225" maxAngle="45" penWidth="10.83378" transparency="1" red="255" green="255" blue="255">
+      <Inputs>
+        <Input name="Value">motor_throttle</Input>
+      </Inputs>
+    </AnimatedArc>
+    <DynamicText x="60.66913" y="72.58633" displayType="Decimal" decimalPrecision="0" showPlus="False" restrictRange="False" restrictedMinValue="-3.40282346638529E+38" restrictedMaxValue="3.40282346638529E+38" convertFromGMT="True" fontRectWidth="224.2592" fontRectHeight="67.16942" fontFace="Arial" fontSize="52.55081" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+      <Inputs>
+        <Input name="Value">motor_throttle</Input>
+      </Inputs>
+    </DynamicText>
+  </Components>
+  <Inputs>
+    <Input category="Generic" name="Other" fromFastestLapSamePos="False">motor_throttle</Input>
+  </Inputs>
+</Gauge>

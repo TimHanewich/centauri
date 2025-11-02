@@ -1,0 +1,16 @@
+<Gauge version="3" x="0" y="0" readOnly="False" width="200" height="200" transparency="1" thumbnailBackgroundTransparency="1" thumbnailBackgroundRed="135" thumbnailBackgroundGreen="206" thumbnailBackgroundBlue="235">
+  <Components>
+    <Text x="107" y="42" text="vBat" fontRectWidth="83" fontRectHeight="33" fontFace="Arial" fontSize="15.84" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="right" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+      <Components>
+        <DynamicText x="-53" y="-47" displayType="Decimal" decimalPrecision="2" showPlus="False" restrictRange="False" restrictedMinValue="-3.40282346638529E+38" restrictedMaxValue="3.40282346638529E+38" convertFromGMT="True" fontRectWidth="148" fontRectHeight="71" fontFace="Arial" fontSize="34.08" fontBold="True" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="right" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+          <Inputs>
+            <Input name="Value">Battery Voltage</Input>
+          </Inputs>
+        </DynamicText>
+      </Components>
+    </Text>
+  </Components>
+  <Inputs>
+    <Input category="Engine, Transmission" name="Battery Voltage" fromFastestLapSamePos="False">Battery Voltage</Input>
+  </Inputs>
+</Gauge>
