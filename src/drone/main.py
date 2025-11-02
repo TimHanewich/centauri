@@ -584,7 +584,7 @@ try:
             # and then have to divide the whole thing again by 0.1804 to get back to a battery pack voltage
             # combining them both together and rounding to an integer, that is the same as just dividing by 11820!
             # note: we are not multiplying the denominator by 10 as well (like we did for the numerator) because we WANT the output result to be 10x higher, so that was it is like 65 and not 6.5.
-            vbat:int = (vbat_u16 * 33) // 11820 # this is a voltage reading. 60 would be 6.0 volts, 168 would be 168 volts.
+            vbat:int = (vbat_u16 * 33) // 11820 # this will result in a voltage reading as an integer from 60 to 168. 60 would be 6.0 volts, 168 would be 168 volts.
 
             # Prepare input values to packet as expected: rates
             packable_pitch_rate:int = pitch_rate // 1000                              # express as whole number  
