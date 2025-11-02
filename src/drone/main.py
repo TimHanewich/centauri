@@ -659,13 +659,13 @@ try:
                     # construct stream packet
                     # we just packed all the data into the record buffer
                     # so pull out the telemetry we will send from there directly
-                    telemetry_packet_stream[0] = 0b00000000                # header byte. Bit 0 = 0 means it is a status packet.
-                    telemetry_packet_stream[1] = telemetry_packet_store[3] # vbat
-                    telemetry_packet_stream[2] = telemetry_packet_store[4] # pitch rate
-                    telemetry_packet_stream[3] = telemetry_packet_store[5] # roll rate
-                    telemetry_packet_stream[4] = telemetry_packet_store[6] # yaw rate
-                    telemetry_packet_stream[5] = 13                        # \r
-                    telemetry_packet_stream[6] = 10                        # \n
+                    telemetry_packet_stream[0] = 0b00000000                     # header byte. Bit 0 = 0 means it is a status packet.
+                    telemetry_packet_stream[1] = telemetry_packet_store[3]      # vbat
+                    telemetry_packet_stream[2] = telemetry_packet_store[4]      # pitch rate
+                    telemetry_packet_stream[3] = telemetry_packet_store[5]      # roll rate
+                    telemetry_packet_stream[4] = telemetry_packet_store[6]      # yaw rate
+                    telemetry_packet_stream[5] = 13                             # \r
+                    telemetry_packet_stream[6] = 10                             # \n
 
                     # send
                     uart_hc12.write(telemetry_packet_stream) # no need to append \r\n to it because the bytearray packet already has it at the end!
