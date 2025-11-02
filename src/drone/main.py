@@ -644,6 +644,8 @@ try:
                     status_last_sent_ticks_ms = time.ticks_ms() # update last sent time
 
         # Do we have an opportunity to flush the telemetry? (we do if we are unarmed)
+        # In this scenario, "flushing" means saving the telemetry that has built up in the temporary in-memory buffer and saving it file storage
+        # We will ONLY do this if unarmed because it takes a significant amount of time (garbage collection). And when unarmed is when the tight time loop is not necessary
         if input_throttle_uint16 == 0: # if we are unarmed
             if temp_telemetry_storage_used > 0: # if we have some telemetry to write
 
