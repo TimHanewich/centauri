@@ -12,34 +12,37 @@ f = open(path_log, "rb")
 data:bytes = f.read()
 f.close()
 
-# prepare for CSV file
-rows:list[list] = []
-rows.append(["Seconds", "Battery Voltage", "Pitch Rate", "Roll Rate", "Yaw Rate", "Input Throttle", "Input Pitch", "Input Roll", "Input Yaw", "M1 Throttle", "M2 Throttle", "M3 Throttle", "M4 Throttle"]) # append headers
-
-# unpack
-packets:list[bytes] = data.split("\r\n".encode())
-for p in packets:
+# unpack each, one by one
+lines:list[bytes] = data.split("\r\n".encode())
+packets:list[dict] = []
+for p in lines:
     if len(p) > 0:
         unpacked:dict = tools.unpack_packet(p)
+        packets.append(unpacked)  
 
-        # construct this row
-        newrow:list = []
-        newrow.append(unpacked["ticks_ms"]/1000)
-        newrow.append(round(unpacked["vbat"], 1))
-        newrow.append(unpacked["pitch_rate"])
-        newrow.append(unpacked["roll_rate"])
-        newrow.append(unpacked["yaw_rate"])
-        newrow.append(unpacked["input_throttle"])
-        newrow.append(unpacked["input_pitch"])
-        newrow.append(unpacked["input_roll"])
-        newrow.append(unpacked["input_yaw"])
-        newrow.append(unpacked["m1_throttle"])
-        newrow.append(unpacked["m2_throttle"])
-        newrow.append(unpacked["m3_throttle"])
-        newrow.append(unpacked["m4_throttle"])
+# construct into a CSV file
+rows:list[list] = []
+rows.append(["Seconds", "Battery Voltage", "Pitch Rate", "Roll Rate", "Yaw Rate", "Input Throttle", "Input Pitch", "Input Roll", "Input Yaw", "M1 Throttle", "M2 Throttle", "M3 Throttle", "M4 Throttle"]) # append headers
+for packet in packets:
 
-        # append to rows
-        rows.append(newrow)
+    # construct this row
+    newrow:list = []
+    newrow.append(packet["ticks_ms"]/1000)
+    newrow.append(round(packet["vbat"], 1))
+    newrow.append(packet["pitch_rate"])
+    newrow.append(packet["roll_rate"])
+    newrow.append(packet["yaw_rate"])
+    newrow.append(packet["input_throttle"])
+    newrow.append(packet["input_pitch"])
+    newrow.append(packet["input_roll"])
+    newrow.append(packet["input_yaw"])
+    newrow.append(packet["m1_throttle"])
+    newrow.append(packet["m2_throttle"])
+    newrow.append(packet["m3_throttle"])
+    newrow.append(packet["m4_throttle"])
+
+    # append to rows
+    rows.append(newrow)
 
 # save to output
 output = open(path_csv, "w", newline="")
