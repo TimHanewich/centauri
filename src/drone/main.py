@@ -378,7 +378,7 @@ try:
                 if ThisLine == TIMHPING: # PING: simple check of life
                     uart_hc12.write("TIMHPONG\r\n".encode()) # PONG back
                 elif ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
-                    unpack_successful:bool = tools.unpack_control_packet(ThisLine, control_input)
+                    unpack_successful:bool = tools.unpack_control_packet(ThisLine, control_input) # takes ~350 us, uses 0 bytes of new memory
                     if unpack_successful:
                         input_throttle_uint16 = control_input[0]
                         input_pitch_int16 = control_input[1]
