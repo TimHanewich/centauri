@@ -365,7 +365,7 @@ try:
             while True:
 
                 # find terminator
-                loc = rxBuffer.find(terminator, search_from, write_idx) # search for a terminator somewhere in the new data
+                loc = rxBuffer.find(terminator, search_from, write_idx) # search for a terminator somewhere in the new data. Takes 40-95 us, uses 0 new bytes of memory
                 if loc == -1:
                     break
                 
