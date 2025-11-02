@@ -662,7 +662,11 @@ try:
                     temp_telemetry_storage[i] = 0
                 temp_telemetry_storage_used = 0 # reset used counter
 
-        # wait if there is excess time 
+        # Wait if there is excess time
+        # note: because of how telemetry is logged to temp buffer every 250 ms and then it is later to local storage immediately after if unarmed, on the loops when it is unarmed, it will be significantly behind
+        # In testing, for each unarmed loop that performed a flush, it is slow by like > 300,000 us (300 ms)
+        # This is because the process of opening the log file, appending to it, closing it, clearing the temp storage, etc. is SLOW!
+        # It doesn't really matter when unarmed because that is not when the ultra tight PID loop is super important. But worth noting in case you see that and get concerned
         excess_us:int = cycle_time_us - time.ticks_diff(time.ticks_us(), loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
         if excess_us > 0:
             time.sleep_us(excess_us)
