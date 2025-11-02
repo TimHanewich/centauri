@@ -370,6 +370,7 @@ try:
                     break
                 
                 # Get line
+                # takes ~40 us, uses 16 new bytes of memory
                 ThisLine = rxBufferMV[search_from:write_idx]
 
                 # handle according to what it is
