@@ -5,7 +5,7 @@
         <DynamicText x="-243.9087" y="228.7346" displayType="Decimal" decimalPrecision="0" showPlus="False" restrictRange="False" restrictedMinValue="-3.40282346638529E+38" restrictedMaxValue="3.40282346638529E+38" convertFromGMT="True" fontRectWidth="196.4012" fontRectHeight="133.046" fontFace="Arial" fontSize="47.13631" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="right" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
           <Components>
             <Text x="180.3247" y="4.423828" text="%" fontRectWidth="172.5279" fontRectHeight="116.4932" fontFace="Arial" fontSize="41.4067" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255" />
-            <Text x="136.663" y="58.56015" text="throttle" fontRectWidth="100.2726" fontRectHeight="36.86494" fontFace="Arial" fontSize="17.69517" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="right" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255" />
+            <Text x="136.663" y="58.56015" text="Throttle" fontRectWidth="100.2726" fontRectHeight="36.86494" fontFace="Arial" fontSize="17.69517" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="right" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255" />
           </Components>
           <Inputs>
             <Input name="Value">Throttle Position</Input>

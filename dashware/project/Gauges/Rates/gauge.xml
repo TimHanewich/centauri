@@ -1,0 +1,36 @@
+<Gauge version="3" x="11.44057" y="10.34963" readOnly="False" width="436.951" height="291.3007" transparency="1" thumbnailBackgroundTransparency="1" thumbnailBackgroundRed="135" thumbnailBackgroundGreen="206" thumbnailBackgroundBlue="235">
+  <Components>
+    <Text x="0" y="0" text="Pitch Rate (°/s): " fontRectWidth="260.7141" fontRectHeight="34.95609" fontFace="Arial" fontSize="24.98195" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+      <Components>
+        <DynamicText x="247.6056" y="0" displayType="Decimal" decimalPrecision="0" showPlus="False" restrictRange="False" restrictedMinValue="-3.40282346638529E+38" restrictedMaxValue="3.40282346638529E+38" convertFromGMT="True" fontRectWidth="187.889" fontRectHeight="62.62965" fontFace="Arial" fontSize="26.81226" fontBold="True" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+          <Inputs>
+            <Input name="Value">pitch_rate</Input>
+          </Inputs>
+        </DynamicText>
+      </Components>
+    </Text>
+    <Text x="0" y="45.15161" text="Roll Rate (°/s): " fontRectWidth="260.7141" fontRectHeight="34.95609" fontFace="Arial" fontSize="24.98195" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+      <Components>
+        <DynamicText x="247.6056" y="0" displayType="Decimal" decimalPrecision="0" showPlus="False" restrictRange="False" restrictedMinValue="-3.40282346638529E+38" restrictedMaxValue="3.40282346638529E+38" convertFromGMT="True" fontRectWidth="187.889" fontRectHeight="62.62965" fontFace="Arial" fontSize="26.81226" fontBold="True" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+          <Inputs>
+            <Input name="Value">roll_rate</Input>
+          </Inputs>
+        </DynamicText>
+      </Components>
+    </Text>
+    <Text x="1.456504" y="91.75972" text="Yaw Rate (°/s): " fontRectWidth="260.7141" fontRectHeight="34.95609" fontFace="Arial" fontSize="24.98195" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+      <Components>
+        <DynamicText x="247.6057" y="0" displayType="Decimal" decimalPrecision="0" showPlus="False" restrictRange="False" restrictedMinValue="-3.40282346638529E+38" restrictedMaxValue="3.40282346638529E+38" convertFromGMT="True" fontRectWidth="187.889" fontRectHeight="62.62965" fontFace="Arial" fontSize="26.81226" fontBold="True" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+          <Inputs>
+            <Input name="Value">yaw_rate</Input>
+          </Inputs>
+        </DynamicText>
+      </Components>
+    </Text>
+  </Components>
+  <Inputs>
+    <Input category="Generic" name="Other" fromFastestLapSamePos="False">pitch_rate</Input>
+    <Input category="Generic" name="Other" fromFastestLapSamePos="False">roll_rate</Input>
+    <Input category="Generic" name="Other" fromFastestLapSamePos="False">yaw_rate</Input>
+  </Inputs>
+</Gauge>

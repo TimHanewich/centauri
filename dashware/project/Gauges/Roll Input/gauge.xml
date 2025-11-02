@@ -1,0 +1,14 @@
+<Gauge version="3" x="0" y="0" readOnly="False" width="255.2115" height="255.2115" transparency="1" thumbnailBackgroundTransparency="1" thumbnailBackgroundRed="135" thumbnailBackgroundGreen="206" thumbnailBackgroundBlue="235">
+  <Components>
+    <DynamicText x="-31.98364" y="2.007538" displayType="Decimal" decimalPrecision="0" showPlus="False" restrictRange="False" restrictedMinValue="-3.40282346638529E+38" restrictedMaxValue="3.40282346638529E+38" convertFromGMT="True" fontRectWidth="222.1128" fontRectHeight="154.7508" fontFace="Arial" fontSize="57.8808" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="right" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+      <Inputs>
+        <Input name="Value">control_input</Input>
+      </Inputs>
+    </DynamicText>
+    <Text x="170.6311" y="4.730255" text="%" fontRectWidth="226.7054" fontRectHeight="163.8538" fontFace="Arial" fontSize="54.40928" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255" />
+    <Text x="-117.0398" y="80.29321" text="Roll Input" fontRectWidth="364.1195" fontRectHeight="40.75188" fontFace="Arial" fontSize="22.64797" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="right" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255" />
+  </Components>
+  <Inputs>
+    <Input category="Generic" name="Other" fromFastestLapSamePos="False">control_input</Input>
+  </Inputs>
+</Gauge>

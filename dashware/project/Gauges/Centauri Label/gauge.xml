@@ -1,0 +1,7 @@
+<Gauge version="3" x="16.81119" y="999.8116" readOnly="False" width="521.8318" height="208.7327" transparency="1" thumbnailBackgroundTransparency="1" thumbnailBackgroundRed="135" thumbnailBackgroundGreen="206" thumbnailBackgroundBlue="235">
+  <Components>
+    <Text x="0" y="0" text="Centauri Flight Controller" fontRectWidth="513.4824" fontRectHeight="51.13952" fontFace="Arial" fontSize="29.22258" fontBold="True" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255" />
+    <Text x="4.174654" y="42.79016" text="github.com/TimHanewich/Centauri" fontRectWidth="475.9106" fontRectHeight="55.31417" fontFace="Arial" fontSize="18.78595" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255" />
+  </Components>
+  <Inputs />
+</Gauge>

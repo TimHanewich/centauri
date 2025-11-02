@@ -8,12 +8,12 @@ DashWare</EndTitle>
   </Information>
   <InputSettings>
     <DataFiles>
-      <DataFile profile="Centauri" fileName="C:\Users\tim\Desktop\data.csv" currentTime="220.415" dataSynced="True" syncOffset="25.185" closedCourse="True" startFinishSetInUI="False" openCourseStartOffset="-1" openCourseFinishOffset="-1" lapStartX="0" lapStartY="0" lapEndX="0" lapEndY="0" lapToDraw="0" startFinishDistanceThreshold="40" showDistanceThreshold="True" ignoreFirstLap="True" ignoreLastLap="True" lapTimeHoldSecs="5" startTrim="32.272" endTrim="220.415">
+      <DataFile profile="Centauri" fileName="C:\Users\tim\Desktop\telemetry.csv" currentTime="8.941" dataSynced="True" syncOffset="-5.83988470066514" closedCourse="True" startFinishSetInUI="False" openCourseStartOffset="-1" openCourseFinishOffset="-1" lapStartX="0" lapStartY="0" lapEndX="0" lapEndY="0" lapToDraw="0" startFinishDistanceThreshold="40" showDistanceThreshold="True" ignoreFirstLap="True" ignoreLastLap="True" lapTimeHoldSecs="5" startTrim="8.941" endTrim="548.069">
         <LapSplits />
       </DataFile>
     </DataFiles>
     <VideoFiles>
-      <VideoFile trimStart="0" trimEnd="202500" videoUniqueID="" rotateVideo="False">C:\Users\tim\Desktop\video.MP4</VideoFile>
+      <VideoFile trimStart="0" trimEnd="542500" videoUniqueID="" rotateVideo="False">C:\Users\tim\Desktop\video.MP4</VideoFile>
     </VideoFiles>
   </InputSettings>
   <OutputSettings>
@@ -36,14 +36,29 @@ DashWare</EndTitle>
     <Gauge name="Throttle Input" transparency="1" x="1590.989" y="18.9806">
       <InputMapping gaugeInput="Throttle Position" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Input Throttle" />
     </Gauge>
-    <Gauge name="Battery Voltage" transparency="1" x="1702.323" y="353.2903">
+    <Gauge name="Battery Voltage" transparency="1" x="1707.694" y="710.4371">
       <InputMapping gaugeInput="Battery Voltage" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Battery Voltage" />
+    </Gauge>
+    <Gauge name="Pitch Input" transparency="1" x="1654.725" y="343.3211">
+      <InputMapping gaugeInput="control_input" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Input Pitch" />
+    </Gauge>
+    <Gauge name="Roll Input" transparency="1" x="1660.096" y="461.475">
+      <InputMapping gaugeInput="control_input" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Input Roll" />
+    </Gauge>
+    <Gauge name="Centauri Label" transparency="1" x="6.81119" y="999.8116" />
+    <Gauge name="Yaw Input" transparency="1" x="1660.096" y="582.3141">
+      <InputMapping gaugeInput="control_input" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Input Yaw" />
+    </Gauge>
+    <Gauge name="Rates" transparency="1" x="11.44057" y="10.34963">
+      <InputMapping gaugeInput="pitch_rate" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Pitch Rate" />
+      <InputMapping gaugeInput="roll_rate" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Roll Rate" />
+      <InputMapping gaugeInput="yaw_rate" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Yaw Rate" />
     </Gauge>
   </GaugeSettings>
   <ChartSettings>
     <ChartTab Type="Time">
       <Inputs>
-        <Input Filename="C:\Users\tim\Desktop\data.csv">
+        <Input Filename="C:\Users\tim\Desktop\telemetry.csv">
           <Laps>
             <Lap Number="0" />
           </Laps>
@@ -63,7 +78,7 @@ DashWare</EndTitle>
     </ChartTab>
     <ChartTab Type="Distance">
       <Inputs>
-        <Input Filename="C:\Users\tim\Desktop\data.csv">
+        <Input Filename="C:\Users\tim\Desktop\telemetry.csv">
           <Laps>
             <Lap Number="0" />
           </Laps>
