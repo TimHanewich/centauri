@@ -25,7 +25,7 @@ for p in packets:
         # construct this row
         newrow:list = []
         newrow.append(unpacked["ticks_ms"]/1000)
-        newrow.append(unpacked["vbat"])
+        newrow.append(round(unpacked["vbat"], 1))
         newrow.append(unpacked["pitch_rate"])
         newrow.append(unpacked["roll_rate"])
         newrow.append(unpacked["yaw_rate"])
