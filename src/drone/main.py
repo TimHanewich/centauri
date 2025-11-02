@@ -312,7 +312,6 @@ temp_telemetry_storage_used:int = 0                                          # f
 led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was swapped, in ms ticks
 status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the remote controller via HC-12
 telemetry_last_recorded_ticks_ms:int = 0 # the ast time the telemetry was last recorded
-last_compfilt_ticks_us:int = 0 # the last time the complementary filter was used. This is used to know how much time has ELAPSED and thus calculate roughly how many degrees changed based on the degrees per second value from the gyros
 control_input_last_received_ticks_ms:int = 0 # timestamp (in ms) of the last time a valid control packet was received. This is used to check and shut down motors if it has been too long (failsafe)
 
 # Infinite loop for all operations!
