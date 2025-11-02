@@ -25,6 +25,7 @@ print("Importing other libraries...")
 import time
 import tools
 import os
+import gc
 
 ####################
 ##### SETTINGS #####
@@ -610,6 +611,7 @@ try:
             packable_m4_throttle:int = (m4_pwm_pw - 1000000) // 10000                 # express between 0 and 100
 
             # pack it
+            # takes ~460 us, uses 0 bytes of new memory
             tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store)
 
             # Record it by adding it to the temporary memory buffer we have going while in flight
