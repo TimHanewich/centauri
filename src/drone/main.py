@@ -310,8 +310,8 @@ temp_telemetry_storage_used:int = 0                                          # f
 # timestamps for tracking other processes that need to be done on a schedule
 # originally was using asyncio for this but now resorting to timestamp-based
 led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was swapped, in ms ticks
-status_last_sent_ticks_ms:int = 0 # the last time the telemetry status was sent to the remote controller via HC-12
-telemetry_last_recorded_ticks_ms:int = 0 # the ast time the telemetry was last recorded
+telemetry_last_recorded_ticks_ms:int = 0 # the most recent time the telemetry was last recorded
+status_last_sent_ticks_ms:int = 0 # the most recent time the telemetry status was sent to the remote controller via HC-12
 control_input_last_received_ticks_ms:int = 0 # timestamp (in ms) of the last time a valid control packet was received. This is used to check and shut down motors if it has been too long (failsafe)
 
 # Infinite loop for all operations!
