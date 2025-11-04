@@ -600,7 +600,7 @@ try:
             # 297 = "M" value in the equation y = mx + b. But M is multiplied by 1,000,000 for scaling purposes to avoid floating point math
             # 50,000 = half of the divisor. Adding this to the numerator is a trick to ensure that the resulting value is "rounded up". Integer division just truncates the remainder, which I don't want to happen, I want it to round up if it should round up. (i.e. 16.77 should be 16.8, not 16.7)
             # 100,000 = 10x less than the total scaler of 1,000,000 (used to scale M and B). We divide by 100,000 and not 1,000,000 so that way the resulting value is NOT a floating point number but instead an integer
-            vbat:int = ((-248065 + (vbat_u16 * 297)) + 50_000) // 100_000 # results in a value between 60 and 168 (6.0 and 16.8 volts respectively)
+            vbat:int = ((-248_065 + (vbat_u16 * 297)) + 50_000) // 100_000 # results in a value between 60 and 168 (6.0 and 16.8 volts respectively)
 
             # Prepare input values to packet as expected: rates
             packable_pitch_rate:int = pitch_rate // 1000                              # express as whole number  
