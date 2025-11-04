@@ -119,19 +119,13 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     ticks_ms_byte3:int = ticks_ms & 0xFF             # Least significant byte
     
     # battery voltage
-    # first subtract 60 out of it (60 is the floor for a valid reading, 6.0 volts)
-    # Plan if we were using floating point math:
-    # 1. divide by the possible voltage range (16.8 - 6.0 = 10.8 volts) to get a % of total range
-    # 2. then multiply by 255 to turn that to a byte, between 0-255 to express the percentage
-    # Since we are using integer math, we combine both into one:
-    # 1. multiply first by 255
-    # 2. divide by the voltage range of 10.8, but expressed as 108 since we are using 10x units here (i.e. voltage of 6.5 is expressed as 65 in vbat)
-    vbat = vbat - 60
-    vbat_asbyte:int = (vbat * 255) // 108
-    if vbat_asbyte < 0: # min/max vbat_asbyte within byte range (0-255). Doing it this way takes ~25 us, vs. 80 us using min(max())
-        vbat_asbyte = 0
-    elif vbat_asbyte > 255:
-        vbat_asbyte = 255
+    # we just supply this directly as the byte it came in as
+    # i.e. 60 would be 6.0 volts and 168 would be 16.8 volts - just supply it as is!
+    # however, let's min/max it within byte constraints to be safe
+    if vbat < 0:
+        vbat = 0
+    elif vbat > 255:
+        vbat = 255
 
     # rates
     # we add 128 to "shift" from a signed byte to an unsigned byte for the sake of storage
@@ -157,7 +151,7 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     into[2] = ticks_ms_byte3
 
     # vbat
-    into[3] = vbat_asbyte
+    into[3] = vbat
 
     # rates
     into[4] = pitch_rate_unsigned
