@@ -593,23 +593,14 @@ try:
             # first, get a ADC reading
             vbat_u16:int = vbat_adc.read_u16() # read the value on the ADC pin, as a uint16 (0-65535)
 
-            # convert the battery ADC reading to a voltage reading
-            # I know the function below looks weird! But let me explain it a bit.
-            # This is a condensed calculation of a several small calculations.
-            # The u16 reading from the ADC pin is basically 0-65535, with that value being mapped to a voltage 0-3.3v
-            # We want to calculate what voltage it corresponds to, and then scale that back to the est. voltage of the BATTERY PACK via the inverse of the voltage divider
-            # the voltage divider we use here is cutting the voltage down to 18.04% of the voltage, so we divide by 0.1804 (roughly) to get back to that voltage
-            # however, that whole calculation above would involve floating point math, which we are trying to avoid for performance purposes.
-            # So instead, we consolidate all multiplication and divison into a single line, like this. 
-            # BUT, instead of multiplying by 3.3 (would be floating point math), I am bumpping it up to 33 to avoid integer math
-            # so, that would mean the vbat calculated here is an integer, but is 10x more than it actually is
-            # so, for example, a vbat here of 65 means the battery voltage is 6.5 volts. Or a vbat of 122 is a battery voltage of 12.2 volts.
-            # And how did we get to the denominator, 11820? 
-            # We wanted to divide by 65535 to turn the ADC reading into a % anyway
-            # and then have to divide the whole thing again by 0.1804 to get back to a battery pack voltage
-            # combining them both together and rounding to an integer, that is the same as just dividing by 11820!
-            # note: we are not multiplying the denominator by 10 as well (like we did for the numerator) because we WANT the output result to be 10x higher, so that was it is like 65 and not 6.5.
-            vbat:int = (vbat_u16 * 33) // 11820 # this will result in a voltage reading as an integer from 60 to 168. 60 would be 6.0 volts, 168 would be 168 volts.
+            # Using the ADC reading, estimate the actual supply voltage
+            # I can do this because I have sampled what the ADC reading is at several KNOWN voltage supplies in tests previously (see R&D notes in this project)
+            # Explanation of the values below:
+            # -248,065 = "B" value in the equation y = mx + b. But B is multiplied by 1,000,000 for scaling purposes to avoid floating point math
+            # 297 = "M" value in the equation y = mx + b. But M is multiplied by 1,000,000 for scaling purposes to avoid floating point math
+            # 50,000 = half of the divisor. Adding this to the numerator is a trick to ensure that the resulting value is "rounded up". Integer division just truncates the remainder, which I don't want to happen, I want it to round up if it should round up. (i.e. 16.77 should be 16.8, not 16.7)
+            # 100,000 = 10x less than the total scaler of 1,000,000 (used to scale M and B). We divide by 100,000 and not 1,000,000 so that way the resulting value is NOT a floating point number but instead an integer
+            vbat:int = ((-248065 + (vbat_u16 * 297)) + 50_000) // 100_000 # results in a value between 60 and 168 (6.0 and 16.8 volts respectively)
 
             # Prepare input values to packet as expected: rates
             packable_pitch_rate:int = pitch_rate // 1000                              # express as whole number  
