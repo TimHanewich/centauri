@@ -11,3 +11,7 @@ Instead, I wrote [this test](./test_src/) that runs on the drone. I then supply 
 |11.4|39,256|
 |8.7|30,008|
 |6.0|21,058|
+
+Using Excel's `=LINEEST()` on those above results (using ADC reading as X's and Supply Voltage as Y), we arrive at the following `m` and `b` values in the equation `y = mx + b`:
+- `m` = 0.000297206685231603
+- `b` = -0.248064966259934
