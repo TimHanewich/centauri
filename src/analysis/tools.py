@@ -4,7 +4,9 @@ def unpack_packet(data:bytes) -> dict:
     ticks_ms:int = data[0] << 16 | data[1] << 8 | data[2]
 
     # extract battery reading
-    vbat:float = 6.0 + ((16.8 - 6.0) * (data[3] / 255))
+    # the battery voltage will come in 10x what it is - so 168 would be 16.8, 60 would be 6.0
+    # so just divide by 10 to get the actual value (as a float)
+    vbat:float = data[3] / 10
 
     # rates
     pitch_rate:int = data[4] - 128

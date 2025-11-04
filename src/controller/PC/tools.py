@@ -104,7 +104,9 @@ def unpack_telemetry(data:bytes) -> dict:
     # the first byte is a header (metadata) byte
 
     # battery voltage
-    vbat:float = 6.0 + ((16.8 - 6.0) * (data[1] / 255))
+    # the battery voltage will come in 10x what it is - so 168 would be 16.8, 60 would be 6.0
+    # so just divide by 10 to get the actual value (as a float)
+    vbat:float = data[1] / 10
 
     # others
     # we subtract 128 here to "shift back" to a signed byte from an unsigned byte (128 is added before packing it)
