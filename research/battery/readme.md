@@ -1,7 +1,9 @@
 # Battery Reading
+I want to get as accurate as a battery reading as possible. I was originally "backing in" to the battery voltage by using proportions from the ADC pin's 3.3v max, but that slightly underestimates the battery's voltage by something like 0.5-0.8 volts (around there I think).
 
-## Tests
-Running tests of battery voltage with `main.py` on commit `71bebcb2916298bfc26e5f8b4d5a92d53049cb41`.
+Instead, I wrote [this test](./test_src/) that runs on the drone. I then supply varying levels of voltages (see below) and observe what ADC value it is reporting back. I can then do some linear math to determine the correct voltage reading at any ADC reading!
+
+## Results
 |Supply Voltage|ADC Reading (uint16)|
 |-|-|
 |16.8|57,331|
