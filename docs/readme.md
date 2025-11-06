@@ -4,6 +4,7 @@
 Looking to build your own quadcopter right away? Do so with [the getting started guide](../guide/)!
 
 ## Resources
-- [Centauri Logo](https://github.com/TimHanewich/centauri/releases/download/5/logo2.svg)
-- [Centauri Banner](https://github.com/TimHanewich/centauri/releases/download/6/banner.pptx) (from home page)
-- [Centauri Cartoon](https://github.com/TimHanewich/centauri/releases/download/7/centauri_cartoon.png)
+- [Centauri Logo SVG](https://github.com/TimHanewich/centauri/releases/download/5/logo2.svg)
+- [Centauri home screenBanner (PowerPoint slide)](https://github.com/TimHanewich/centauri/releases/download/6/banner.pptx) (from home page)
+- [Anatomy Slide (PowerPoint)](https://github.com/TimHanewich/centauri/releases/download/8/architecture.pptx)
+- [Cartoon images used in Anatomy slide](https://github.com/TimHanewich/centauri/releases/download/8/centauri_cartoons.zip)
