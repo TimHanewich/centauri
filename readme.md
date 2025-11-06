@@ -1,4 +1,4 @@
-![banner](https://i.imgur.com/O9KBXjJ.png)
+![banner](https://i.imgur.com/oSwhZjR.png)
 
 # Centauri: Custom Quadcopter Fight Controller
 *Centauri* is a custom, MicroPython-based, quadcopter flight controller that is capable of efficiently running on a low-power microcontroller like the Raspberry Pi Pico.
