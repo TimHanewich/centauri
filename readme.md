@@ -8,8 +8,9 @@ Centauri is the successor to my [Scout flight controller](https://github.com/Tim
 To watch *Centauri* in action, click below!
 [![demo video](https://i.imgur.com/zbcKlFx.png)](https://www.youtube.com/watch?v=-Kj5vSNrLSk)
 
-## Design
-Every aspect of Centauri - from hardware to software - was designed and developed from scratch. This repository provides everything you need to duplicate Centauri, including:
+## What this Project Contains
+![anatomy](https://i.imgur.com/6TYY0Nv.png)
+Every aspect of Centauri - from hardware to software - was designed and developed from scratch. This repository provides *everything* you need to build your own Centauri quadcopter and get off the ground, including:
 - **The Centauri quadcopter design** - 3D design files for Centauri's body.
 - **The Centauri fight controller** - an efficient fight controller that runs onboard a quadcopter and maintains safe and level flight.
 - **The Centauri controller** - a PC-based program that reads input data from a wired Xbox controller and transmits control input back to the quadcopter.
