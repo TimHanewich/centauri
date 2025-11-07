@@ -11,8 +11,7 @@ To watch *Centauri* in action, click below!
 ## What this Project Contains
 ![anatomy](https://i.imgur.com/6TYY0Nv.png)
 Every aspect of Centauri - from hardware to software - was designed and developed from scratch. This repository provides *everything* you need to build your own Centauri quadcopter and get off the ground, including:
-- **The Centauri quadcopter design** - 3D design files for Centauri's body.
-- **The Centauri fight controller** - an efficient fight controller that runs onboard a quadcopter and maintains safe and level flight.
-- **The Centauri controller** - a PC-based program that reads input data from a wired Xbox controller and transmits control input back to the quadcopter.
-- **Bi-directional transceiver** - a simple platform used by the Centauri controller for facilitating bidirectional radio communications with the drone.
+- **The Centauri Quadcopter** - 3D-printable design files, flight controller software, electric wiring diagrams
+- **Pilot Controller** - a PC-based program that reads input data from a wired Xbox controller and transmits control input back to the quadcopter.
+    - **Bi-directional transceiver** - a simple platform used by the Centauri controller (USB-connected) with a radio transceiver for facilitating bidirectional communication with the drone.
 - **Analysis script** - lightweight Python script for unpacking encoded telemetry data (Centauri stores on the MCU's flash storage) into a CSV file.
