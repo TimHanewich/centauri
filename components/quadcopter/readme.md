@@ -5,6 +5,8 @@ This page contains everything you need to fully reconstruct the Centauri quadcop
 
 
 ## 3D Printed Body
+![body](https://i.imgur.com/kmZ4yZn.gif)
+
 You can download the `.stl` files to 3D print the quadcopter body [from Thingiverse here](https://www.thingiverse.com/thing:7194383).
 
 The Centauri frame is designed to balance simplicity and strength. Its 3D‑printed design is lightweight yet durable, making assembly straightforward without sacrificing structural integrity. With a 225 mm diagonal motor‑to‑motor distance, the frame supports 5‑inch propellers, offering an ideal setup for stable flight and responsive performance.
