@@ -14,15 +14,15 @@ Below is an example of the telemetry output:
 
 As shown above, the telemetry maps multiple onboard parameters against a timestamp, including:
 
-- **Battery Voltage** — supply voltage from the onboard battery  
-- **Pitch Rate** — actual pitch rate (°/s)  
-- **Roll Rate** — actual roll rate (°/s)  
-- **Yaw Rate** — actual yaw rate (°/s)  
-- **Input Throttle** — pilot throttle input, expressed as a percentage (0–100)  
-- **Input Pitch** — pilot pitch input, expressed as a percentage (−100 to 100)  
-- **Input Roll** — pilot roll input, expressed as a percentage (−100 to 100)  
-- **Input Yaw** — pilot yaw input, expressed as a percentage (−100 to 100)  
-- **M1 Throttle** — front‑left motor throttle (calculated by the flight controller)  
-- **M2 Throttle** — front‑right motor throttle (calculated by the flight controller)  
-- **M3 Throttle** — rear‑left motor throttle (calculated by the flight controller)  
-- **M4 Throttle** — rear‑right motor throttle (calculated by the flight controller)  
+- **Battery Voltage** - supply voltage from the onboard battery  
+- **Pitch Rate** - actual pitch rate (°/s)  
+- **Roll Rate** - actual roll rate (°/s)  
+- **Yaw Rate** - actual yaw rate (°/s)  
+- **Input Throttle** - pilot throttle input, expressed as a percentage (0–100)  
+- **Input Pitch** - pilot pitch input, expressed as a percentage (−100 to 100)  
+- **Input Roll** - pilot roll input, expressed as a percentage (−100 to 100)  
+- **Input Yaw** - pilot yaw input, expressed as a percentage (−100 to 100)  
+- **M1 Throttle** - front‑left motor throttle (calculated by the flight controller)  
+- **M2 Throttle** - front‑right motor throttle (calculated by the flight controller)  
+- **M3 Throttle** - rear‑left motor throttle (calculated by the flight controller)  
+- **M4 Throttle** - rear‑right motor throttle (calculated by the flight controller)  
