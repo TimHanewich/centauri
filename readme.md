@@ -15,10 +15,9 @@ To watch *Centauri* in action, click below:
 
 This repository provides *everything* you need to build your own Centauri quadcopter and take flight. The system includes:
 
-- **Centauri Quadcopter** — 3D‑printable frame design files, custom flight controller software, and wiring diagrams  
-- **Pilot Controller** — a PC‑based program that reads input from a wired Xbox controller and transmits commands to the quadcopter  
-  - **Bi‑directional Transceiver** — a USB‑connected platform with an HC‑12 radio module, enabling wireless communication between the PC and the drone  
-- **Analysis Script** — a lightweight Python tool for unpacking binary telemetry logs stored on the Pico into human‑readable `.csv` files  
+- [**Centauri Quadcopter**](./components/quadcopter/) - 3D‑printable frame design files, custom flight controller software, and wiring diagrams  
+- [**Pilot Controller**](./components/controller/) - a PC‑based program that reads input from a wired Xbox controller and transmits commands to the quadcopter  
+- [**Analysis Script**](./components/analysis/) - a lightweight Python tool for unpacking binary telemetry logs stored on the Pico into human‑readable `.csv` files  
 
 ---
 
