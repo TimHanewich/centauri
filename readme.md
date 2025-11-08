@@ -8,8 +8,6 @@ Centauri builds on my earlier [Scout flight controller](https://github.com/TimHa
 To watch *Centauri* in action, click below:  
 [![demo video](https://i.imgur.com/zbcKlFx.png)](https://www.youtube.com/watch?v=-Kj5vSNrLSk)
 
----
-
 ## What This Project Contains
 ![anatomy](https://i.imgur.com/6TYY0Nv.png)
 
@@ -18,7 +16,3 @@ This repository provides *everything* you need to build your own Centauri quadco
 - [**Centauri Quadcopter**](./components/quadcopter/) - 3D‑printable frame design files, custom flight controller software, and wiring diagrams  
 - [**Pilot Controller**](./components/controller/) - a PC‑based program that reads input from a wired Xbox controller and transmits commands to the quadcopter  
 - [**Analysis Script**](./components/analysis/) - a lightweight Python tool for unpacking binary telemetry logs stored on the Pico into human‑readable `.csv` files  
-
----
-
-Centauri is a rare example of a quadcopter project where *every layer of the stack* (hardware, software, and communication) has been custom‑engineered.
