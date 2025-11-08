@@ -69,13 +69,13 @@ def atan_approx_int(z:int) -> int:
     
     else: # it is beyond -1.0 or 1.0 (-1,000 and 1,000)
         if z > 0: # if it is positive
-            return 1571 - atan_approx_int((1000 * 1000) // i)
+            return 1571 - atan_approx_int((1000 * 1000) // z)
         else: # if it is negative
-            return -(1571 - atan_approx_int((1000 * 1000) // abs(i)))
+            return -(1571 - atan_approx_int((1000 * 1000) // abs_z))
 
 
 # perform a calculation
-i:int = 530
+i:int = -7400
 calc1 = math.atan(i / 1000)
 calc2 = atan_approx_int(i)
 print("Calc1: " + str(calc1))
