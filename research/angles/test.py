@@ -35,8 +35,30 @@ def atan_approx(z:float) -> float:
         else:
             return (-math.pi / 2) - atan_approx(1 / z)
 
-i:float = 1.34
-calc1 = math.atan(i)
-calc2 = atan_approx(i)
-print(calc1)
-print(calc2)
+
+
+# demo atan INTEGER calc manually
+def atan_approx_int(z:int) -> int:
+    """
+    Approximates the math.atan() formula WITHOUT using math.atan to avoid floating point math.
+    Expects input as an integer, the 1000x scale of the floating point number you'd be working with
+    Returns as an integer, 1000x the scale what would be returned
+    """
+    abs_z:int = abs(z)
+    pi:int = 3142 # 3.142 * 1,000
+    if abs_z <= 1000: # less than 1
+        term1:int = (pi * z) // 4
+        term2:int = z * (abs_z - 1000) * (245 + ((66 * abs_z) // 1000)) // 1000
+        return term1 - term2
+    else:
+        if z > 0: # if positive
+            return (pi // 2000) - atan_approx_int(1000 // z)
+        else: # if negative
+            return (-pi // 2000) - atan_approx_int(1000 // z)
+        
+i:int = 333
+calc1 = math.atan(i / 1000)
+calc2 = atan_approx_int(i)
+print("Calc1: " + str(calc1))
+print("Calc2: " + str(calc2))
+print("Calc2f: " + str(calc2 / 1000000))
