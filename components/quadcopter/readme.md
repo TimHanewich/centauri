@@ -2,6 +2,25 @@
 This page contains everything you need to fully reconstruct the Centauri quadcopter exactly as you've seen in the demo videos!
 
 ## Components Needed
+Here you'll find a list of all the components need to fabricate and assemble your own Centauri quadcopter. In the components list below, I provide estimates for the prices for each component, normally just using the price that *I* paid for the component, along with that component link provided.
+
+|Component|Est. Price (USD)|
+|-|-|
+|PLA for 3D Printing the Frame|$2.25|
+|[4 Brushless Motors](https://a.co/d/6Pua6ZV)|$38.99|
+|[4 Propellers (2 CW, 2 CWW)](https://a.co/d/6Pua6ZV)|$4.40|
+|[4 Electronic Speed Controllers (ESCs)](https://a.co/d/jm61OU4)|$31.29|
+|[MPU-6050 IMU](https://a.co/d/429WnGv)|$3.67|
+|[HC-12](https://a.co/d/8L9nex9)|$9.49|
+|[4S LiPo Battery](https://a.co/d/f8O8tPR)|$32.29|
+|100,000 Ohm Resistor|$0.05|
+|22,000 Ohm Resistor|$0.05|
+|[LM2596 Buck Converter](https://a.co/d/f8O8tPR)|$1.30|
+|Raspberry Pi Pico|$4.00|
+|Misc. Screws and Nuts|$2.00|
+|Misc. Wire|$2.00|
+
+All in, the estimate in cost is approximately **$132 USD** - at least if you use parts I did above! You are welcome to experiment with different motors, propellers, ESCs, a smaller battery, etc.!
 
 
 ## 3D Printed Body
