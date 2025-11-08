@@ -45,39 +45,38 @@ def atan_approx_int(z:int) -> int:
     Returns as an integer, 1000x the scale what would be returned
     """
 
-    # variables
+    # establish variables
     abs_z:int = abs(z)
     pi:int = 3142 # 3.142 * 1,000
     const1:int = 245
     const2:int = 66
 
-    # calculate term 1
-    # the first part of the subtraction: (pi / 4) * z
-    term1:int = (pi * z) // 4
+    if abs_z < 1000: # if it is between -1.0 and 1.0 (-1,000 and 1,000 scaled by 1000x)
 
-    # calculate const2z which will be used in term2
-    const2z:int = (const2 * abs_z) // 1000
+        # calculate term 1
+        # the first part of the subtraction: (pi / 4) * z
+        term1:int = (pi * z) // 4
 
-    # calculate term 2
-    # the second part of the subtraction
-    term2:int = z * (abs_z - 1000) * (const1 + const2z)
-    term2 = term2 // 1000 # divide the whole thing by 1,000 before it is used to subtract (we must de-scale before subtraction)
+        # calculate const2z which will be used in term2
+        const2z:int = (const2 * abs_z) // 1000
 
-    return (term1 - term2) // 1000
+        # calculate term 2
+        # the second part of the subtraction
+        term2:int = z * (abs_z - 1000) * (const1 + const2z)
+        term2 = term2 // 1000 # divide the whole thing by 1,000 before it is used to subtract (we must de-scale before subtraction)
+
+        return (term1 - term2) // 1000
+    
+    else: # it is beyond -1.0 or 1.0 (-1,000 and 1,000)
+        if z > 0: # if it is positive
+            return 1571 - atan_approx_int((1000 * 1000) // i)
+        else: # if it is negative
+            return -(1571 - atan_approx_int((1000 * 1000) // abs(i)))
 
 
 # perform a calculation
-i:int = -5300
+i:int = 530
 calc1 = math.atan(i / 1000)
-
-if abs(i) < 1000:
-    calc2 = atan_approx_int(i)
-else:
-    if i > 0:
-        calc2 = 1571 - atan_approx_int((1000 * 1000) // i)
-    else:
-        calc2 = - (1571 - atan_approx_int((1000 * 1000) // abs(i)))
-
-
+calc2 = atan_approx_int(i)
 print("Calc1: " + str(calc1))
 print("Calc2: " + str(calc2))
