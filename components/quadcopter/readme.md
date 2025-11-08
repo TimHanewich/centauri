@@ -55,3 +55,10 @@ If you'd like to customize or experiment with the design, you can download a fol
 With all the components assembled on the 3D-printed frame, you are now ready to wire everything up! The wiring diagram is depicted above, but you can also [download it as a SVG](https://github.com/TimHanewich/centauri/releases/download/13/wiring.drawio.svg) or open [the original design directly in draw.io](https://app.diagrams.net/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FTimHanewich%2Fcentauri%2Frefs%2Fheads%2Fmaster%2Fcomponents%2Fquadcopter%2Fwiring.drawio#%7B%22pageId%22%3A%22W1gebfnubh0FSxZTr-fW%22%7D).
 
 ## Flight Controller Firmware
+The Centauri Flight Controller firmware is written in MicroPython and is designed (at least to the best of my ability), to run as efficiently as possible, but within legibility reason.
+
+The flight controller code can be found [here](./src/). It is only two `.py` files:
+- `main.py` - the main flight controller program that receives pilot input over a radio channel, observes IMU readings, and applies thrust to reconcile actual gyroscopic rates with desired rates.
+- `tools.py` - contains helper functions for unpacking command input, packing telemetry data, and more.
+
+With your quadcopter fully assembled and wired up, all you need to do is flash these two files to the root directory of the Raspberry Pi Pico acting as the MCU. Assuming you wired each component to the Pico's GP pins as depicted in the wiring diagram, it will work without further configuration. Alternatively, you may need to make minor tweaks to the pin mappings.
