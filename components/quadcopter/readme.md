@@ -22,6 +22,10 @@ To print all components at 30% infill, 149 grams of PLA are required, as shown b
 |LM5696 Frame|9 g|
 |GoPro Mount|8 g|
 
+If you'd like to customize or experiment with the design, you can download a folder containing all the iterative saves that led to the final Centauri frame. These snapshots make it easier to trace back to an earlier, less‑modified version of a part and adapt it to your needs:
+- [August 10, 2025 – original Centauri quadcopter design with two MCUs](https://github.com/TimHanewich/centauri/releases/download/1/design.zip)
+- [September 17, 2025 – streamlined Centauri design with a single MCU (Pico), sensors removed, and zip‑tie slots added for securing the battery adapter](https://github.com/TimHanewich/centauri/releases/download/3/centauri-mono.zip)
+
 ## Wiring Diagram
 
 ## Flight Controller Firmware
