@@ -5,8 +5,11 @@ This page contains everything you need to fully reconstruct the Centauri quadcop
 
 
 ## 3D Printed Body
-Diagonal Propeller Distance: 225mm
-- Click [here](https://github.com/TimHanewich/centauri/releases/download/12/centauri.stl) to download a single `.stl` file of the entire Centauri design to see what it all looks like together.
+You can download the `.stl` files to 3D print the quadcopter body [from Thingiverse here](https://www.thingiverse.com/thing:7194383).
+
+The Centauri frame is designed to balance simplicity and strength. Its 3D‑printed design is lightweight yet durable, making assembly straightforward without sacrificing structural integrity. With a 225 mm diagonal motor‑to‑motor distance, the frame supports 5‑inch propellers, offering an ideal setup for stable flight and responsive performance.
+
+To print all components at 30% infill, 149 grams of PLA are required, as shown below:
 
 |Part|PLA @ 30% Infill|
 |-|-|
@@ -16,8 +19,6 @@ Diagonal Propeller Distance: 225mm
 |MPU-6050 Frame|4 g|
 |LM5696 Frame|9 g|
 |GoPro Mount|8 g|
-
-Total grams of PLA filament (at 30% infill): **149 g**
 
 ## Wiring Diagram
 
