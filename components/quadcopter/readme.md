@@ -46,5 +46,8 @@ If you'd like to customize or experiment with the design, you can download a fol
 - [September 17, 2025 – streamlined Centauri design with a single MCU (Pico), sensors removed, and zip‑tie slots added for securing the battery adapter](https://github.com/TimHanewich/centauri/releases/download/3/centauri-mono.zip)
 
 ## Wiring Diagram
+![wiring](https://i.imgur.com/8pOK9ik.png)
+
+With all the components assembled on the 3D-printed frame, you are now ready to wire everything up! The wiring diagram is depicted above, but you can also [download it as a SVG](https://github.com/TimHanewich/centauri/releases/download/13/wiring.drawio.svg) or open [the original design in draw.io]().
 
 ## Flight Controller Firmware
