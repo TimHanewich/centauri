@@ -65,8 +65,19 @@ def atan_approx_int(z:int) -> int:
 
     return (term1 - term2) // 1000
 
-i:int = 330
+
+# perform a calculation
+i:int = -5300
 calc1 = math.atan(i / 1000)
-calc2 = atan_approx_int(i)
+
+if abs(i) < 1000:
+    calc2 = atan_approx_int(i)
+else:
+    if i > 0:
+        calc2 = 1571 - atan_approx_int((1000 * 1000) // i)
+    else:
+        calc2 = - (1571 - atan_approx_int((1000 * 1000) // abs(i)))
+
+
 print("Calc1: " + str(calc1))
 print("Calc2: " + str(calc2))
