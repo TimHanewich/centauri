@@ -22,10 +22,10 @@ At its core, the program runs an infinite loop with three main steps:
 Beyond sending commands, the program also **receives telemetry** broadcasted back from the drone, such as battery status, flight rates, and error messages, and can **update PID settings on the fly**, allowing real‑time tuning of flight performance.
 
 Key libraries used:
-- **[pygame](https://pypi.org/project/pygame/)** — captures Xbox controller input  
-- **[rich](https://pypi.org/project/rich/)** — renders a live telemetry dashboard during operation  
-- **[pyserial](https://pypi.org/project/pyserial/)** — manages serial communication with the transceiver  
-- **[keyboard](https://pypi.org/project/keyboard/)** — detects pilot keyboard commands for adjusting settings  
+- **[pygame](https://pypi.org/project/pygame/)** - captures Xbox controller input  
+- **[rich](https://pypi.org/project/rich/)** - renders a live telemetry dashboard during operation  
+- **[pyserial](https://pypi.org/project/pyserial/)** - manages serial communication with the transceiver  
+- **[keyboard](https://pypi.org/project/keyboard/)** - detects pilot keyboard commands for adjusting settings  
 
 ## Transceiver Platform
 ![transceiver](https://i.imgur.com/zod1oGl.png)
