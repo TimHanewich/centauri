@@ -38,3 +38,5 @@ The transceiver platfrom is rather simple. It consists of three components:
 - A [CP2102 USB to UART module](https://a.co/d/4rJMLjy) that is plugged into the USB and allows communication directly between the USB serial on the PC and the Raspberry Pi Pico.
 
 I designed a simple 3D design that allows you to mount the Raspberry Pi Pico and HC-12 together, you can download it [here](https://github.com/TimHanewich/centauri/releases/download/2/transceiver_platform.stl).
+
+With the transceiver platform assembled, you can flash [these two files](./src/transceiver/) to the Pico.
