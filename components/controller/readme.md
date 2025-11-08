@@ -30,13 +30,13 @@ Key libraries used:
 ## Transceiver Platform
 ![transceiver](https://i.imgur.com/zod1oGl.png)
 
-The transceiver platform is a peripheral support device that is USB-connected to the PC that runs the controller program. Because the PC does not have a HC-12 radio transceiver, this attached device (that contains an HC-12) will allow the PC to transmit and receive data to and from the drone by sending/receiving data over USB to the transceiver device (which in turn interfaces with the HC-12).
+The transceiver platform is a USB‑connected support device that bridges the PC running the controller program with the quadcopter. Since the PC itself does not include an HC‑12 radio transceiver, this external module provides the necessary hardware to transmit and receive flight data. Communication flows through USB to the platform, which then interfaces with the HC‑12 for wireless exchange with the drone.
 
-The transceiver platfrom is rather simple. It consists of three components:
-- A HC-12 radio transceiver that sends data to the quadcopter and receives data from the quadcopter.
-- A Raspberry Pi Pico which brokers the data transfer between the PC and the HC-12, also providing light meta-telemetry about the health of the transceiver itself (used to confirm it is still operating0)
-- A [CP2102 USB to UART module](https://a.co/d/4rJMLjy) that is plugged into the USB and allows communication directly between the USB serial on the PC and the Raspberry Pi Pico.
+The platform is intentionally simple, consisting of three main components:
+- **HC‑12 radio transceiver** - handles wireless communication, sending commands to the quadcopter and receiving telemetry back.  
+- **Raspberry Pi Pico** - brokers data transfer between the PC and the HC‑12, while also providing lightweight meta‑telemetry to confirm the transceiver’s operational status.  
+- **[CP2102 USB to UART module](https://a.co/d/4rJMLjy)** - connects directly to the PC via USB, enabling serial communication with the Raspberry Pi Pico.  
 
-I designed a simple 3D design that allows you to mount the Raspberry Pi Pico and HC-12 together, you can download it [here](https://github.com/TimHanewich/centauri/releases/download/2/transceiver_platform.stl).
+To make assembly easier, I designed a compact 3D‑printed mount that secures the Raspberry Pi Pico and HC‑12 together. You can download the design [here](https://github.com/TimHanewich/centauri/releases/download/2/transceiver_platform.stl).
 
-With the transceiver platform assembled, you can flash [these two files](./src/transceiver/) to the Pico.
+Once the platform is assembled, flash the required firmware files from [./src/transceiver/](./src/transceiver/) onto the Pico to complete setup.
