@@ -44,21 +44,29 @@ def atan_approx_int(z:int) -> int:
     Expects input as an integer, the 1000x scale of the floating point number you'd be working with
     Returns as an integer, 1000x the scale what would be returned
     """
+
+    # variables
     abs_z:int = abs(z)
     pi:int = 3142 # 3.142 * 1,000
-    if abs_z <= 1000: # less than 1
-        term1:int = (pi * z) // 4
-        term2:int = z * (abs_z - 1000) * (245 + ((66 * abs_z) // 1000)) // 1000
-        return term1 - term2
-    else:
-        if z > 0: # if positive
-            return (pi // 2000) - atan_approx_int(1000 // z)
-        else: # if negative
-            return (-pi // 2000) - atan_approx_int(1000 // z)
-        
-i:int = 333
+    const1:int = 245
+    const2:int = 66
+
+    # calculate term 1
+    # the first part of the subtraction: (pi / 4) * z
+    term1:int = (pi * z) // 4
+
+    # calculate const2z which will be used in term2
+    const2z:int = (const2 * abs_z) // 1000
+
+    # calculate term 2
+    # the second part of the subtraction
+    term2:int = z * (abs_z - 1000) * (const1 + const2z)
+    term2 = term2 // 1000 # divide the whole thing by 1,000 before it is used to subtract (we must de-scale before subtraction)
+
+    return (term1 - term2) // 1000
+
+i:int = 330
 calc1 = math.atan(i / 1000)
 calc2 = atan_approx_int(i)
 print("Calc1: " + str(calc1))
 print("Calc2: " + str(calc2))
-print("Calc2f: " + str(calc2 / 1000000))
