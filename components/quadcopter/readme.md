@@ -1,5 +1,9 @@
 # The "Centauri" Quadcopter
-This page contains everything you need to fully reconstruct the Centauri quadcopter exactly as you've seen in the demo videos!
+![quadcopter](https://i.imgur.com/8PIMXgb.jpeg)
+
+The Centauri quadcopter was completely designed and developed from the ground up - the 3D-printed body, the electronics package, *and* the quadcopter flight controller firmware!
+
+This page contains everything you need to fully reconstruct the Centauri quadcopter exactly as you've seen in the demo videos.
 
 ## Components Needed
 Here you'll find a list of all the components need to fabricate and assemble your own Centauri quadcopter. In the components list below, I provide estimates for the prices for each component, normally just using the price that *I* paid for the component, along with that component link provided.
