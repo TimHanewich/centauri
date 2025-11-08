@@ -22,11 +22,11 @@ while True:
     accel_y = (accel_y * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
     accel_z = (accel_z * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
+    print("Accel data: " + str(accel_x) + ", " + str(accel_y) + ", " + str(accel_z))
 
     # calculate angle
     expected_pitch_angle_accel:int = int(math.atan2(accel_x, math.sqrt(accel_y*accel_y + accel_z*accel_z)) * 180000 / math.pi) # the accelerometers opinion of what the pitch angle is
     expected_roll_angle_accel:int = int(math.atan2(accel_y, math.sqrt(accel_x*accel_x + accel_z*accel_z)) * 180000 / math.pi) # the accelerometers opinion of what the roll angle is
-
 
     # print and wait
     print("Pitch Angle: " + str(expected_pitch_angle_accel) + ", Roll Angle: " + str(expected_roll_angle_accel))
