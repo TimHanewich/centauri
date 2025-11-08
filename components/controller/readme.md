@@ -11,16 +11,20 @@ The controller is composed of three key components working together to transmit 
 - **Python Program**: Running on the PC, this program reads the controller inputs, converts them into structured data packets, and transmits them to the quadcopter. It also performs additional tasks, which are explained in later sections.  
 - **Transceiver Platform**: A USB‑connected microcontroller paired with an HC‑12 radio module acts as the communication bridge between the PC and the quadcopter, enabling bidirectional data exchange over wireless signals.  
 
-## Controller Program Described
-The controller program, [main.py](./src/PC/main.py) is primarily responsible for handling communication between the pilot (who is inputting control commands via the Xbox controller) and the quadcopter.
+## Controller Program
+The controller software, [main.py](./src/PC/main.py), serves as the communication hub between the pilot and the quadcopter. It continuously processes inputs from the Xbox controller, encodes them into compact data packets, and relays them to the drone via the transceiver.
 
-The program runs an infinite loop with the following steps summarized below:
-1. Reads control input from the Xbox controller
-2. Packs that input into a special encoded, dense data packet structure
-3. Sends that data packet to the attached transceiver via serial USB connection (the transceiver, in turn, transmits it to the quadcopter)
+At its core, the program runs an infinite loop with three main steps:
+1. **Read inputs** from the Xbox controller  
+2. **Encode inputs** into a dense, structured data packet  
+3. **Transmit packets** to the USB‑connected transceiver, which forwards them wirelessly to the quadcopter  
 
-But that isn't all the control program does - the control program also listens to telemetry being broadcasted *back* from the drone to the pilot (i.e. battery level, rates, error messages, etc) and can also flash new PID settings over to the quadcopter to update flight settings on the fly!
+Beyond sending commands, the program also **receives telemetry** broadcasted back from the drone, such as battery status, flight rates, and error messages, and can **update PID settings on the fly**, allowing real‑time tuning of flight performance.
 
-The control program uses the [pygame](https://pypi.org/project/pygame/) package for reading input from the Xbox controller, the [rich](https://pypi.org/project/rich/) library for rendering a "live display" of telemetry during operation, the [pyserial](https://pypi.org/project/pyserial/) library for serial communication with the USB-connected transceiver, and the [keyboard](https://pypi.org/project/keyboard/) package for recognizing keyboard inputs from the pilot to do things like change settings.
+Key libraries used:
+- **[pygame](https://pypi.org/project/pygame/)** — captures Xbox controller input  
+- **[rich](https://pypi.org/project/rich/)** — renders a live telemetry dashboard during operation  
+- **[pyserial](https://pypi.org/project/pyserial/)** — manages serial communication with the transceiver  
+- **[keyboard](https://pypi.org/project/keyboard/)** — detects pilot keyboard commands for adjusting settings  
 
 ## Transceiver Platform
