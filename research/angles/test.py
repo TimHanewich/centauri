@@ -25,6 +25,7 @@ print("Calc: " + str(calc))
 
 # demo atan manually
 def atan_approx(z:float) -> float:
+    """Approximates the math.atan() formula WITHOUT using math.atan."""
     abs_z:float = abs(z)
     if abs_z <= 1.0:
         return (math.pi / 4) * z - z * (abs_z - 1.0) * (0.2447 + 0.0663 * abs_z)
