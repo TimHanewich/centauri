@@ -1,4 +1,4 @@
-# The "Centauri" Quadcopter
+# The Centauri Quadcopter
 ![quadcopter](https://i.imgur.com/8PIMXgb.jpeg)
 
 The Centauri quadcopter was completely designed and developed from the ground up - the 3D-printed body, the electronics package, *and* the quadcopter flight controller firmware!
