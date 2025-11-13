@@ -360,7 +360,7 @@ try:
             # Step 2: Do we have a complete line to work with (a "\r\n" terminator is there)
             # if we do, isolate it, process it
             # Instead of doing a one-time find of the terminator here, should really be a while loop of all data, processing it all at once here before proceeding (avoid build ups)
-            TerminatorLoc:int = ProcessBuffer.find(terminator, ProcessBufferOccupied)
+            TerminatorLoc:int = ProcessBuffer.find(terminator, 0, ProcessBufferOccupied)
             if TerminatorLoc != -1: # -1 means it did not find a terminator. So checking here that we DID find the terminator
 
                 # At this point, we can assume the ProcessBuffer's NEXT LINE (that we have yet to process) is between position 0 and "TerminatorLoc"
