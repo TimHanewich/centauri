@@ -286,12 +286,11 @@ telemetry_packet_stream:bytearray = bytearray(7) # array that we will repopulate
 telemetry_packet_store:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with telemetry data intended to be stored to local flash storage
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
 
-# declare uart conveyer read objects
-rxBufferLen:int = 128
-rxBuffer:bytearray = bytearray(rxBufferLen) # a buffer of received messages from the HL-MCU
-rxBufferMV:memoryview = memoryview(rxBuffer)
-write_idx:int = 0 # last write location into the rxBuffer
-terminator:bytes = "\r\n".encode() # example \r\n for comparison sake later on (13, 10 in bytes)
+# declare objects that will be used for reading incoming data from the HC-12 (conveyer approach)
+terminator:bytes = "\r\n".encode()        # example \r\n for comparison sake later on (13, 10 in bytes)
+rxBuffer:bytearray = bytearray(128)       # buffer we st up only to append new incoming data received over the HC-12 (via UART)
+ProcessBuffer:bytearray = bytearray(256)  # buffer we immediately append newly received bytes to and then process the lines out of
+ProcessBufferOccupied:int = 0             # simple counter of how many bytes of the process buffer are occupied (starting from position 0)
 
 # declare PID state variables
 # declaring them here because their "previous state" (value from previous loop) must be referenced in each loop
@@ -331,92 +330,49 @@ try:
             led_last_flickered_ticks_ms = time.ticks_ms()
          
         # check for received data (input data) from the HC-12
-        # Mem Used fluctuates between 0 and 32 (may be depending on how much data is received)
-        # Takes ~110-350 us while in flight, but ~1,100 us when not in flight. Not sure why of the difference. Weird.
         # the data that we receive from the HC-12 could be:
         # 1 - control data
         # 2 - Settings update data (PID settings)
         # 3 - PING
         try:  
 
-            # This uses a rather complicated "conveyer belt" approach
-            # I know it is complex, but we do this to avoid constantly uart.read() which creates a new bytes. Slow and memory leak.
-            # So we want to uart.readinto() which requires an rxBuffer, which requires all of this:
+            # Step 1: If bytes received and available via HC-12, collect them
+            bytesavailable:int = uart_hc12.any()
+            if bytesavailable > 0: # there are bytes available
 
-            # Step 1: Read Data
-            BytesAvailable:int = uart_hc12.any()
-            if BytesAvailable > 0:
-                available_space:int = rxBufferLen - write_idx # calculate how many bytes we have remaining in the buffer
-                BytesWeWillReadRightNow:int = min(BytesAvailable, available_space)
-                if available_space > 0:
-                    
-                    # Read from the HC-12 into the rxBuffer, but using the memoryview.
-                    # Note, this always uses 16 bytes of new memory because of the slicing of the memoryview
-                    # takes about 90-120 us
-                    bytes_read:int = uart_hc12.readinto(rxBufferMV[write_idx:], BytesWeWillReadRightNow) # read directly into that target window, but specify the number of bytes. Specifying exactly how many bytes to read into drastically improves performance. From like 3,000 microseconds to like 70 (unless the window you want to read into fits the bytes available, which we do here, but adding number of bytes just to be sure). This uses 16 bytes of memory.
+                # read into the rxBuffer (just a place to read them into)
+                bytesread:int = uart_hc12.readinto(rxBuffer, bytesavailable)
 
-                    # increment the write location forward
-                    write_idx = write_idx + bytes_read 
+                # Now copy them into the ProcessBuffer, but only ifwe have room for the entirety of it
+                # if we don't have room for all of it, ignore it
+                if bytesread <= len(ProcessBuffer) - ProcessBufferOccupied: # if we have room left in the process buffer that will fit all the bytes we just received
 
-                else:
-                    write_idx = 0 # if there is no space, reset the write location for next time around 
-            
+                    # copy the bytes we just received in the rxBuffer into the ProcessBuffer, byte by byte (one by one)
+                    for i in range(0, bytesread):
+                        ProcessBuffer[ProcessBufferOccupied + 1] = rxBuffer[i]
 
-            # Step 2: Process Lines
-            search_from:int = 0
-            while True:
+                    # increment how much of the ProcessBuffer is now occupied
+                    ProcessBufferOccupied = ProcessBufferOccupied + bytesread
 
-                # find terminator
-                loc = rxBuffer.find(terminator, search_from, write_idx) # search for a terminator somewhere in the new data. Takes 40-95 us, uses 0 new bytes of memory
-                if loc == -1:
-                    break
+            # Step 2: Do we have a complete line to work with (a "\r\n" terminator is there)\
+            # if we do, isolate it, process it
+            TerminatorLoc:int = ProcessBuffer.find(terminator)
+            if TerminatorLoc != -1: # -1 means it did not find a terminator. So checking here that we DID find the terminator
+
+                LineEndLoc:int = TerminatorLoc + 2 # add 2 to know where the line actually ends (include the \r\n)
+
+                # process the line here!
+                ThisLine:bytes = ProcessBuffer[0:LineEndLoc]
+                print("ThisLine: " + str(ThisLine))
+
+                # now that the line has been processed, move everything forward from this line (unprocessed data) in the ProcessBuffer back (like a conveyer belt)
+                for i in range(LineEndLoc, len(ProcessBuffer) - 1): # the range of bytes from the end of the last line (beginning of new, unprocessed data) to the very end of the ProcessBuffer
+                    ProcessBuffer[i - LineEndLoc] = ProcessBuffer[i]
                 
-                # Get line
-                # takes ~40 us, uses 16 new bytes of memory
-                ThisLine = rxBufferMV[search_from:write_idx]
+                # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
+                ProcessBufferOccupied = ProcessBufferOccupied - LineEndLoc
 
-                # handle according to what it is
-                # we must check if it is a TIMHPING first because the "T" byte has a 0 in bit 0, so it would think it is a control packet if we checked for that first!
-                if ThisLine == TIMHPING: # PING: simple check of life
-                    uart_hc12.write("TIMHPONG\r\n".encode()) # PONG back
-                elif ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
-                    unpack_successful:bool = tools.unpack_control_packet(ThisLine, control_input) # takes ~350 us, uses 0 bytes of new memory
-                    if unpack_successful:
-                        input_throttle_uint16 = control_input[0]
-                        input_pitch_int16 = control_input[1]
-                        input_roll_int16 = control_input[2]
-                        input_yaw_int16 = control_input[3]
-                        control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
-                elif ThisLine[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
-                    settings:dict = tools.unpack_settings_update(ThisLine)
-                    if settings != None:
-                        pitch_kp = settings["pitch_kp"]
-                        pitch_ki = settings["pitch_ki"]
-                        pitch_kd = settings["pitch_kd"]
-                        roll_kp = settings["roll_kp"]
-                        roll_ki = settings["roll_ki"]
-                        roll_kd = settings["roll_kd"]
-                        yaw_kp = settings["yaw_kp"]
-                        yaw_ki = settings["yaw_ki"]
-                        yaw_kd = settings["yaw_kd"]
-                        i_limit = settings["i_limit"]
-                        send_special("SETUPOK") # send special packet "SETUPOK", short for "Settings Update OK".
-                    else:
-                        print("It was settings but it failed.")
-                else: # unknown packet
-                    print("Unknown data received: " + str(ThisLine))
-                    send_special("?") # respond with a simple question mark to indicate the message was not understood.
-
-                # increment search start location... there is possibly another \r\n in there (and thus a new line to process)
-                search_from = loc + 2 # +2 to jump after \r\n
-
-            # Step 3: move the conveyer belt
-            # the conveyer belt will only be moved if not every byte was processed and thus we are done with (which rarely happens)
-            if search_from > 0: # if search_from was moved, that means at least one line was extracted and processed.
-                unprocessed_byte_count:int = write_idx - search_from # how many bytes are on the conveyer and still unprocessed
-                if unprocessed_byte_count > 0:
-                    rxBuffer[0:unprocessed_byte_count] = rxBuffer[search_from:write_idx]
-                write_idx = unprocessed_byte_count
+                
         except Exception as ex:
             input_throttle_uint16 = 0
             input_pitch_int16 = 0
