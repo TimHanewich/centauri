@@ -73,8 +73,8 @@ print("Returning HC-12 SET pin to HIGH (exiting AT mode)...")
 hc12_set.high()
 time.sleep(0.5) # wait a moment for the HC-12 to successfully get out of AT mode before proceeding with sending any messages
 
-
 # Setup
+terminator:bytes = "\r\n".encode()
 rxBuffer:bytearray = bytearray(128)         # maximum length of single receive
 ProcessBuffer:bytearray = bytearray(256)    # buffer we set up and append to to process lines. And once we process, we "back out" what we processed
 ProcessBufferOccupied:int = 0               # how many bytes of the process buffer (starting from the beginning) has new, unprocessed information in it
@@ -83,6 +83,8 @@ ProcessBufferOccupied:int = 0               # how many bytes of the process buff
 print("--- ENTERING TEST LOOP ---")
 gc.disable() # disable garbace collection so no memory is reclaimed (testing purposes)
 while True:
+
+    mem1 = gc.mem_free()
 
     # If bytes available, collect them to ProcessBuffer where they will later be processed from
     bytesavailable:int = uart_hc12.any()
@@ -103,17 +105,17 @@ while True:
             ProcessBufferOccupied = ProcessBufferOccupied + bytesread
 
         else:
-            print("Process buffer full. Ignorning last received.")
+            print("Process buffer full. Ignorning last received.") 
 
     # If we have a terminator in the process buffer (\r\n), grab the next line and process it
-    TerminatorLoc:int = ProcessBuffer.find("\r\n".encode())
+    TerminatorLoc:int = ProcessBuffer.find(terminator)
     if TerminatorLoc != -1:
 
         LineEndLoc:int = TerminatorLoc + 2 # +2 to include the \r\n terminator
 
         # get the line
-        ThisLine:bytes = ProcessBuffer[0:LineEndLoc] 
-        print("Got a line: " + str(ThisLine))
+        #ThisLine:bytes = ProcessBuffer[0:LineEndLoc] 
+        #print("Got a line: " + str(ThisLine))
 
         # move everything on the ProcessBuffer back
         for i in range(LineEndLoc, len(ProcessBuffer) - 1):
@@ -124,3 +126,6 @@ while True:
 
     # wait
     time.sleep(0.005)
+
+    mem2 = gc.mem_free()
+    print("Mem used: " + str(mem1 - mem2))
