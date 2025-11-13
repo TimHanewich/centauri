@@ -404,11 +404,8 @@ try:
                 # now that the line has been processed, move everything forward from this line (unprocessed data) in the ProcessBuffer back (like a conveyer belt)
                 # the "conveyer belt" loop takes forever... ~4,300 us!
                 NextLineLoc:int = TerminatorLoc + 2 # add 2 to know where the next line (unprocessed data) begins (hopping past the \r\n)
-                t1 = time.ticks_us()
                 for i in range(NextLineLoc, len(ProcessBuffer) - 1): # the range of bytes from the end of the last line (beginning of new, unprocessed data) to the very end of the ProcessBuffer
                     ProcessBuffer[i - NextLineLoc] = ProcessBuffer[i]
-                t2 = time.ticks_us()
-                print(str(t2 - t1))
                 
                 # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
                 ProcessBufferOccupied = ProcessBufferOccupied - NextLineLoc
