@@ -361,17 +361,44 @@ try:
             TerminatorLoc:int = ProcessBuffer.find(terminator)
             if TerminatorLoc != -1: # -1 means it did not find a terminator. So checking here that we DID find the terminator
 
-                LineEndLoc:int = TerminatorLoc + 2 # add 2 to know where the line actually ends (include the \r\n)
-
-                # process the line here!
+                # At this point, we can assume the ProcessBuffer's NEXT LINE (that we have yet to process) is between position 0 and "TerminatorLoc"
+                # example below (commented out) of what we could do if I was not worried about memory management
                 #ThisLine:bytes = ProcessBuffer[0:LineEndLoc]
-                #print("ThisLine: " + str(ThisLine))
+                # we will not do that because any slicing (using "[]") uses NEW memory... even if you slice via a memoryview!!!!!
 
                 # Process the line 
                 if ProcessBuffer.startswith(TIMHPING): # PING: simple check of life
                     uart_hc12.write(TIMHPONG) # PONG back
+                elif ProcessBuffer[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
+                    unpack_successful:bool = tools.unpack_control_packet(ProcessBuffer, control_input) # takes ~350 us, uses 0 bytes of new memory
+                    if unpack_successful:
+                        input_throttle_uint16 = control_input[0]
+                        input_pitch_int16 = control_input[1]
+                        input_roll_int16 = control_input[2]
+                        input_yaw_int16 = control_input[3]
+                        control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
+                elif ProcessBuffer[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
+                    settings:dict = tools.unpack_settings_update(ProcessBuffer)
+                    if settings != None:
+                        pitch_kp = settings["pitch_kp"]
+                        pitch_ki = settings["pitch_ki"]
+                        pitch_kd = settings["pitch_kd"]
+                        roll_kp = settings["roll_kp"]
+                        roll_ki = settings["roll_ki"]
+                        roll_kd = settings["roll_kd"]
+                        yaw_kp = settings["yaw_kp"]
+                        yaw_ki = settings["yaw_ki"]
+                        yaw_kd = settings["yaw_kd"]
+                        i_limit = settings["i_limit"]
+                        send_special("SETUPOK") # send special packet "SETUPOK", short for "Settings Update OK".
+                    else:
+                        print("It was settings but it failed.")
+                else: # unknown packet
+                    print("Unknown data received via HC-12")
+                    send_special("?") # respond with a simple question mark to indicate the message was not understood.
 
                 # now that the line has been processed, move everything forward from this line (unprocessed data) in the ProcessBuffer back (like a conveyer belt)
+                LineEndLoc:int = TerminatorLoc + 2 # add 2 to know where the line actually ends (include the \r\n)
                 for i in range(LineEndLoc, len(ProcessBuffer) - 1): # the range of bytes from the end of the last line (beginning of new, unprocessed data) to the very end of the ProcessBuffer
                     ProcessBuffer[i - LineEndLoc] = ProcessBuffer[i]
                 
