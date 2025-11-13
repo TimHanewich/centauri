@@ -358,7 +358,7 @@ try:
             # Step 2: Do we have a complete line to work with (a "\r\n" terminator is there)
             # if we do, isolate it, process it
             # Instead of doing a one-time find of the terminator here, should really be a while loop of all data, processing it all at once here before proceeding (avoid build ups)
-            TerminatorLoc:int = ProcessBuffer.find(terminator)
+            TerminatorLoc:int = ProcessBuffer.find(terminator, ProcessBufferOccupied)
             if TerminatorLoc != -1: # -1 means it did not find a terminator. So checking here that we DID find the terminator
 
                 # At this point, we can assume the ProcessBuffer's NEXT LINE (that we have yet to process) is between position 0 and "TerminatorLoc"
@@ -406,6 +406,7 @@ try:
                 ProcessBufferOccupied = ProcessBufferOccupied - LineEndLoc
         except Exception as ex:
             print("RX FAIL: " + str(ex))
+            raise ex
             input_throttle_uint16 = 0
             input_pitch_int16 = 0
             input_roll_int16 = 0
@@ -682,6 +683,7 @@ try:
             time.sleep_us(excess_us)
             
 except Exception as ex: # unhandled error somewhere in the loop
+    raise ex
 
     # turn off all motors!!!!!!!
     # 1,000,000 nanoseconds = 0% throttle
