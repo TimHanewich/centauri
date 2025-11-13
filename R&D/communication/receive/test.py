@@ -84,8 +84,6 @@ print("--- ENTERING TEST LOOP ---")
 gc.disable() # disable garbace collection so no memory is reclaimed (testing purposes)
 while True:
 
-    mem1 = gc.mem_free()
-
     # If bytes available, collect them to ProcessBuffer where they will later be processed from
     bytesavailable:int = uart_hc12.any()
     if bytesavailable > 0:
@@ -126,6 +124,3 @@ while True:
 
     # wait
     time.sleep(0.005)
-
-    mem2 = gc.mem_free()
-    print("Mem used: " + str(mem1 - mem2))
