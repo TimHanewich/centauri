@@ -331,6 +331,8 @@ try:
             led_last_flickered_ticks_ms = time.ticks_ms()
          
         # check for received data (input data) from the HC-12
+        # Mem Used fluctuates between 0 and 32 (may be depending on how much data is received)
+        # Takes ~110-350 us while in flight, but ~1,100 us when not in flight. Not sure why of the difference. Weird.
         # the data that we receive from the HC-12 could be:
         # 1 - control data
         # 2 - Settings update data (PID settings)
