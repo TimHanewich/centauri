@@ -90,12 +90,18 @@ while True:
         # read into rxbuffer (starts at 0)
         bytesread:int = uart_hc12.readinto(rxBuffer, bytesavailable)
         
-        # copy into ProcessBuffer
-        for i in range(0, bytesread):
-            ProcessBuffer[ProcessBufferOccupied + i] = rxBuffer[i]
+        # copy into ProcessBuffer, but only if we have room for the entirety of it
+        # if we don't have room for the entirety of it, skip it (ignore it)
+        if bytesread <= len(ProcessBuffer) - ProcessBufferOccupied: # if we have room to copy the entire thing in
+            for i in range(0, bytesread):
+                ProcessBuffer[ProcessBufferOccupied + i] = rxBuffer[i]
 
-        # increment how much of the process buffer is now occupied
-        ProcessBufferOccupied = ProcessBufferOccupied + bytesread
+            # increment how much of the process buffer is now occupied
+            ProcessBufferOccupied = ProcessBufferOccupied + bytesread
+
+            print(str(ProcessBuffer[-30:]))
+        else:
+            print("Process buffer full. Ignorning last received.")
     
 
     # wait
