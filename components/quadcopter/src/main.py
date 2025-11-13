@@ -360,6 +360,7 @@ try:
             # Step 2: Do we have a complete line to work with (a "\r\n" terminator is there)
             # if we do, isolate it, process it
             # Instead of doing a one-time find of the terminator here, should really be a while loop of all data, processing it all at once here before proceeding (avoid build ups)
+            # takes ~480 us
             TerminatorLoc:int = ProcessBuffer.find(terminator, 0, ProcessBufferOccupied)
             if TerminatorLoc != -1: # -1 means it did not find a terminator. So checking here that we DID find the terminator
 
@@ -369,7 +370,8 @@ try:
                 # we will not do that because any slicing (using "[]") uses NEW memory... even if you slice via a memoryview!!!!!
 
                 # Process the line 
-                if ProcessBuffer.startswith(TIMHPING): # PING: simple check of life
+                t1 = time.ticks_us()
+                if ProcessBuffer.startswith(TIMHPING): # PING: simple check of life. Checking "startswith" is quick, only ~70 us
                     uart_hc12.write(TIMHPONG) # PONG back
                 elif ProcessBuffer[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
                     unpack_successful:bool = tools.unpack_control_packet(ProcessBuffer, control_input) # takes ~350 us, uses 0 bytes of new memory
@@ -400,12 +402,16 @@ try:
                     send_special("?") # respond with a simple question mark to indicate the message was not understood.
 
                 # now that the line has been processed, move everything forward from this line (unprocessed data) in the ProcessBuffer back (like a conveyer belt)
-                LineEndLoc:int = TerminatorLoc + 2 # add 2 to know where the line actually ends (include the \r\n)
-                for i in range(LineEndLoc, len(ProcessBuffer) - 1): # the range of bytes from the end of the last line (beginning of new, unprocessed data) to the very end of the ProcessBuffer
-                    ProcessBuffer[i - LineEndLoc] = ProcessBuffer[i]
+                # the "conveyer belt" loop takes forever... ~4,300 us!
+                NextLineLoc:int = TerminatorLoc + 2 # add 2 to know where the next line (unprocessed data) begins (hopping past the \r\n)
+                t1 = time.ticks_us()
+                for i in range(NextLineLoc, len(ProcessBuffer) - 1): # the range of bytes from the end of the last line (beginning of new, unprocessed data) to the very end of the ProcessBuffer
+                    ProcessBuffer[i - NextLineLoc] = ProcessBuffer[i]
+                t2 = time.ticks_us()
+                print(str(t2 - t1))
                 
                 # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
-                ProcessBufferOccupied = ProcessBufferOccupied - LineEndLoc
+                ProcessBufferOccupied = ProcessBufferOccupied - NextLineLoc
         except Exception as ex:
             print("RX FAIL: " + str(ex))
             raise ex
