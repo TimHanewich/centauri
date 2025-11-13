@@ -79,9 +79,9 @@ rxBuffer:bytearray = bytearray(128)         # maximum length of single receive
 ProcessBuffer:bytearray = bytearray(256)    # buffer we set up and append to to process lines. And once we process, we "back out" what we processed
 ProcessBufferOccupied:int = 0               # how many bytes of the process buffer (starting from the beginning) has new, unprocessed information in it
 
-# text
-gc.disable() # disable garbace collection so no memory is reclaimed (testing purposes)
+# test
 print("--- ENTERING TEST LOOP ---")
+gc.disable() # disable garbace collection so no memory is reclaimed (testing purposes)
 while True:
 
     # If bytes available, collect them to ProcessBuffer where they will later be processed from
