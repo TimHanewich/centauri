@@ -83,7 +83,7 @@ ProcessBufferOccupied:int = 0               # how many bytes of the process buff
 print("--- ENTERING TEST LOOP ---")
 while True:
 
-    # If bytes available
+    # If bytes available, collect them to ProcessBuffer where they will later be processed from
     bytesavailable:int = uart_hc12.any()
     if bytesavailable > 0:
 
