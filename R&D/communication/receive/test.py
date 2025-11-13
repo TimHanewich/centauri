@@ -75,21 +75,28 @@ time.sleep(0.5) # wait a moment for the HC-12 to successfully get out of AT mode
 
 
 # Setup
-rxBuffer:bytearray = bytearray(3)      # 128 = maximum length of single receive
-ToProcess:bytearray = bytearray(256)     
+rxBuffer:bytearray = bytearray(128)         # maximum length of single receive
+ProcessBuffer:bytearray = bytearray(256)    # buffer we set up and append to to process lines. And once we process, we "back out" what we processed
+ProcessBufferOccupied:int = 0               # how many bytes of the process buffer (starting from the beginning) has new, unprocessed information in it
 
 # read
+print("--- ENTERING TEST LOOP ---")
 while True:
 
-    # read
+    # If bytes available
     bytesavailable:int = uart_hc12.any()
     if bytesavailable > 0:
-        mem1 = gc.mem_free()
+
+        # read into rxbuffer (starts at 0)
         bytesread:int = uart_hc12.readinto(rxBuffer, bytesavailable)
-        for i in range(bytesread):
-            ToProcess[i] = rxBuffer[i]
-        mem2 = gc.mem_free()
-        print("Mem usd: " + str(mem1 - mem2))
+        
+        # copy into ProcessBuffer
+        for i in range(0, bytesread):
+            ProcessBuffer[ProcessBufferOccupied + i] = rxBuffer[i]
+
+        # increment how much of the process buffer is now occupied
+        ProcessBufferOccupied = ProcessBufferOccupied + bytesread
+    
 
     # wait
     time.sleep(0.005)
