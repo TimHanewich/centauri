@@ -354,7 +354,7 @@ try:
                     # increment how much of the ProcessBuffer is now occupied
                     ProcessBufferOccupied = ProcessBufferOccupied + bytesread
 
-            # Step 2: Do we have a complete line to work with (a "\r\n" terminator is there)\
+            # Step 2: Do we have a complete line to work with (a "\r\n" terminator is there)
             # if we do, isolate it, process it
             TerminatorLoc:int = ProcessBuffer.find(terminator)
             if TerminatorLoc != -1: # -1 means it did not find a terminator. So checking here that we DID find the terminator
