@@ -405,6 +405,7 @@ try:
                 # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
                 ProcessBufferOccupied = ProcessBufferOccupied - LineEndLoc
         except Exception as ex:
+            print("RX FAIL: " + str(ex))
             input_throttle_uint16 = 0
             input_pitch_int16 = 0
             input_roll_int16 = 0
