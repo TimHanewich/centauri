@@ -349,7 +349,7 @@ try:
 
                     # copy the bytes we just received in the rxBuffer into the ProcessBuffer, byte by byte (one by one)
                     for i in range(0, bytesread):
-                        ProcessBuffer[ProcessBufferOccupied + 1] = rxBuffer[i]
+                        ProcessBuffer[ProcessBufferOccupied + i] = rxBuffer[i]
 
                     # increment how much of the ProcessBuffer is now occupied
                     ProcessBufferOccupied = ProcessBufferOccupied + bytesread
