@@ -291,6 +291,7 @@ TIMHPONG:bytes = "TIMHPONG\r\n".encode() # example TIMHPONG\r\n that we will sen
 terminator:bytes = "\r\n".encode()        # example \r\n for comparison sake later on (13, 10 in bytes)
 rxBuffer:bytearray = bytearray(128)       # buffer we st up only to append new incoming data received over the HC-12 (via UART)
 ProcessBuffer:bytearray = bytearray(256)  # buffer we immediately append newly received bytes to and then process the lines out of
+ProcessBufferMV:memoryview = memoryview(ProcessBuffer)
 ProcessBufferOccupied:int = 0             # simple counter of how many bytes of the process buffer are occupied (starting from position 0)
 
 # declare PID state variables
@@ -401,14 +402,14 @@ try:
                     print("Unknown data received via HC-12")
                     send_special("?") # respond with a simple question mark to indicate the message was not understood.
 
-                # now that the line has been processed, move everything forward from this line (unprocessed data) in the ProcessBuffer back (like a conveyer belt)
-                # the "conveyer belt" loop takes forever... ~4,300 us!
-                NextLineLoc:int = TerminatorLoc + 2 # add 2 to know where the next line (unprocessed data) begins (hopping past the \r\n)
-                for i in range(NextLineLoc, len(ProcessBuffer) - 1): # the range of bytes from the end of the last line (beginning of new, unprocessed data) to the very end of the ProcessBuffer
-                    ProcessBuffer[i - NextLineLoc] = ProcessBuffer[i]
-                
-                # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
-                ProcessBufferOccupied = ProcessBufferOccupied - NextLineLoc
+                # Move the conveyer belt back so the new unprocessed data is right at the beginning
+                # ~180 us
+                # 16 bytes of new memory used each time... unavoidable due to memoryview slicer
+                NextLineLoc:int = TerminatorLoc + 2                                                                           # Where the "next line" (new, unprocessed data) begins, skipping past the \r\n terminator
+                NumberOfBytesToMove:int = ProcessBufferOccupied - NextLineLoc                                                 # how many bytes in the ProcessBuffer we need to move back (left)... basically how big that entire chunk is
+                ProcessBufferMV[0:NumberOfBytesToMove] = ProcessBufferMV[NextLineLoc:NextLineLoc + NumberOfBytesToMove]       # take that entire unprocessed chunk and shift it to the beginning
+                ProcessBufferOccupied = ProcessBufferOccupied - NextLineLoc                                                   # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
+
         except Exception as ex:
             print("RX FAIL: " + str(ex))
             raise ex
