@@ -93,6 +93,8 @@ while True:
         # copy into ProcessBuffer, but only if we have room for the entirety of it
         # if we don't have room for the entirety of it, skip it (ignore it)
         if bytesread <= len(ProcessBuffer) - ProcessBufferOccupied: # if we have room to copy the entire thing in
+
+            # copy it in, byte by byte
             for i in range(0, bytesread):
                 ProcessBuffer[ProcessBufferOccupied + i] = rxBuffer[i]
 
