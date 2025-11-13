@@ -338,6 +338,8 @@ try:
         # 3 - PING
         try:  
 
+            t1 = time.ticks_us()
+
             # Step 1: If bytes received and available via HC-12, collect them
             # ~250-330 us
             # 0 bytes of new memory used
@@ -409,6 +411,9 @@ try:
                 NumberOfBytesToMove:int = ProcessBufferOccupied - NewDataStarts                                                 # how many bytes in the ProcessBuffer we need to move back (left)... basically how big that entire chunk is
                 ProcessBufferMV[0:NumberOfBytesToMove] = ProcessBufferMV[NewDataStarts:NewDataStarts + NumberOfBytesToMove]     # take that entire unprocessed chunk and shift it to the beginning
                 ProcessBufferOccupied = ProcessBufferOccupied - NewDataStarts                                                   # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
+
+            t2 = time.ticks_us()
+            print(str(t2 - t1))
 
         except Exception as ex:
             print("RX FAIL: " + str(ex))
