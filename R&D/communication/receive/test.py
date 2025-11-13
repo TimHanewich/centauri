@@ -117,7 +117,9 @@ while True:
         # move everything on the ProcessBuffer back
         for i in range(LineEndLoc, len(ProcessBuffer) - 1):
             ProcessBuffer[i - LineEndLoc] = ProcessBuffer[i]
-    
+
+        # decrement how much of the process buffer is now used since we just extracted a line and then moved everything back like a conveyer belt
+        ProcessBufferOccupied = ProcessBufferOccupied - LineEndLoc
 
     # wait
     time.sleep(0.005)
