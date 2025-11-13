@@ -12,7 +12,7 @@ Here you'll find a list of all the components need to fabricate and assemble you
 |-|-|
 |PLA for 3D Printing the Frame|$2.25|
 |[4 Brushless Motors](https://a.co/d/6Pua6ZV)|$38.99|
-|[4 Propellers (2 CW, 2 CWW)](https://a.co/d/6Pua6ZV)|$4.40|
+|[4 Propellers (2 CW, 2 CWW)](https://a.co/d/6pNksCt)|$4.40|
 |[4 Electronic Speed Controllers (ESCs)](https://a.co/d/jm61OU4)|$31.29|
 |[MPU-6050 IMU](https://a.co/d/429WnGv)|$3.67|
 |[HC-12](https://a.co/d/8L9nex9)|$9.49|
