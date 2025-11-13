@@ -101,9 +101,22 @@ while True:
             # increment how much of the process buffer is now occupied
             ProcessBufferOccupied = ProcessBufferOccupied + bytesread
 
-            print(str(ProcessBuffer[-30:]))
         else:
             print("Process buffer full. Ignorning last received.")
+
+    # If we have a terminator in the process buffer (\r\n), grab the next line and process it
+    TerminatorLoc:int = ProcessBuffer.find("\r\n".encode())
+    if TerminatorLoc != -1:
+
+        LineEndLoc:int = TerminatorLoc + 2 # +2 to include the \r\n terminator
+
+        # get the line
+        ThisLine:bytes = ProcessBuffer[0:LineEndLoc] 
+        print("Got a line: " + str(ThisLine))
+
+        # move everything on the ProcessBuffer back
+        for i in range(LineEndLoc, len(ProcessBuffer) - 1):
+            ProcessBuffer[i - LineEndLoc] = ProcessBuffer[i]
     
 
     # wait
