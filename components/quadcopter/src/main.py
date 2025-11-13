@@ -338,6 +338,8 @@ try:
         try:  
 
             # Step 1: If bytes received and available via HC-12, collect them
+            # ~250-330 us
+            # 0 bytes of new memory used
             bytesavailable:int = uart_hc12.any()
             if bytesavailable > 0: # there are bytes available
 
