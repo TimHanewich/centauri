@@ -285,6 +285,7 @@ control_input:list[int] = [0,0,0,0] # array that we will unpack control input in
 telemetry_packet_stream:bytearray = bytearray(7) # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.).
 telemetry_packet_store:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with telemetry data intended to be stored to local flash storage
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
+TIMHPONG:bytes = "TIMHPONG\r\n".encode() # example TIMHPONG\r\n that we will send back out later on. Making it here to avoid re-making it in the loop
 
 # declare objects that will be used for reading incoming data from the HC-12 (conveyer approach)
 terminator:bytes = "\r\n".encode()        # example \r\n for comparison sake later on (13, 10 in bytes)
@@ -363,8 +364,12 @@ try:
                 LineEndLoc:int = TerminatorLoc + 2 # add 2 to know where the line actually ends (include the \r\n)
 
                 # process the line here!
-                ThisLine:bytes = ProcessBuffer[0:LineEndLoc]
-                print("ThisLine: " + str(ThisLine))
+                #ThisLine:bytes = ProcessBuffer[0:LineEndLoc]
+                #print("ThisLine: " + str(ThisLine))
+
+                # Process the line 
+                if ProcessBuffer.startswith(TIMHPING): # PING: simple check of life
+                    uart_hc12.write(TIMHPONG) # PONG back
 
                 # now that the line has been processed, move everything forward from this line (unprocessed data) in the ProcessBuffer back (like a conveyer belt)
                 for i in range(LineEndLoc, len(ProcessBuffer) - 1): # the range of bytes from the end of the last line (beginning of new, unprocessed data) to the very end of the ProcessBuffer
@@ -373,7 +378,6 @@ try:
                 # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
                 ProcessBufferOccupied = ProcessBufferOccupied - LineEndLoc
 
-                
         except Exception as ex:
             input_throttle_uint16 = 0
             input_pitch_int16 = 0
