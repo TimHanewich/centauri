@@ -405,10 +405,10 @@ try:
                 # Move the conveyer belt back so the new unprocessed data is right at the beginning
                 # ~180 us
                 # 16 bytes of new memory used each time... unavoidable due to memoryview slicer
-                NextLineLoc:int = TerminatorLoc + 2                                                                           # Where the "next line" (new, unprocessed data) begins, skipping past the \r\n terminator
-                NumberOfBytesToMove:int = ProcessBufferOccupied - NextLineLoc                                                 # how many bytes in the ProcessBuffer we need to move back (left)... basically how big that entire chunk is
-                ProcessBufferMV[0:NumberOfBytesToMove] = ProcessBufferMV[NextLineLoc:NextLineLoc + NumberOfBytesToMove]       # take that entire unprocessed chunk and shift it to the beginning
-                ProcessBufferOccupied = ProcessBufferOccupied - NextLineLoc                                                   # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
+                NewDataStarts:int = TerminatorLoc + 2                                                                           # Where the "next line" (new, unprocessed data) begins, skipping past the \r\n terminator
+                NumberOfBytesToMove:int = ProcessBufferOccupied - NewDataStarts                                                 # how many bytes in the ProcessBuffer we need to move back (left)... basically how big that entire chunk is
+                ProcessBufferMV[0:NumberOfBytesToMove] = ProcessBufferMV[NewDataStarts:NewDataStarts + NumberOfBytesToMove]       # take that entire unprocessed chunk and shift it to the beginning
+                ProcessBufferOccupied = ProcessBufferOccupied - NewDataStarts                                                   # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
 
         except Exception as ex:
             print("RX FAIL: " + str(ex))
