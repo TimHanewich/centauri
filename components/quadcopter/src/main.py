@@ -692,7 +692,6 @@ try:
         # This is because the process of opening the log file, appending to it, closing it, clearing the temp storage, etc. is SLOW!
         # It doesn't really matter when unarmed because that is not when the ultra tight PID loop is super important. But worth noting in case you see that and get concerned
         excess_us:int = cycle_time_us - time.ticks_diff(time.ticks_us(), loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
-        print("Excess us: " + str(excess_us))
         if excess_us > 0:
             time.sleep_us(excess_us)
             
