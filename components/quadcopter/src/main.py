@@ -25,7 +25,6 @@ print("Importing other libraries...")
 import time
 import tools
 import os
-import gc
 
 ####################
 ##### SETTINGS #####
