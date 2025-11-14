@@ -424,6 +424,7 @@ try:
 
         # Capture RAW IMU data: both gyroscope and accelerometer
         # Goal here is ONLY to capture the data, not to transform it
+        # ~700 us
         GoodRead:bool = False
         imu_read_attemp_started_ticks_ms:int = time.ticks_ms()
         while not GoodRead:
@@ -446,6 +447,7 @@ try:
                     FATAL_ERROR("IMU Read Error: read failed")
 
         # Process & Transform raw Gyroscope data
+        # ~100 us
         gyro_x = (gyro_data[0] << 8) | gyro_data[1]
         gyro_y = (gyro_data[2] << 8) | gyro_data[3]
         gyro_z = (gyro_data[4] << 8) | gyro_data[5]
@@ -457,6 +459,7 @@ try:
         yaw_rate = gyro_z * 1000 // 131 # now, divide by the scale factor to get the actual degrees per second. But multiply by 1,000 to work in larger units so we can do integer math.
 
         # Process & Transform raw accelerometer data
+        # ~100 us
         accel_x = (accel_data[0] << 8) | accel_data[1]
         accel_y = (accel_data[2] << 8) | accel_data[3]
         accel_z = (accel_data[4] << 8) | accel_data[5]
