@@ -415,7 +415,6 @@ try:
                     ProcessBufferOccupied = ProcessBufferOccupied - NewDataStarts                                                   # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
         except Exception as ex:
             print("RX FAIL: " + str(ex))
-            raise ex
             input_throttle_uint16 = 0
             input_pitch_int16 = 0
             input_roll_int16 = 0
@@ -696,7 +695,6 @@ try:
             time.sleep_us(excess_us)
             
 except Exception as ex: # unhandled error somewhere in the loop
-    raise ex
 
     # turn off all motors!!!!!!!
     # 1,000,000 nanoseconds = 0% throttle
