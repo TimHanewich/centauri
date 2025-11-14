@@ -533,10 +533,12 @@ try:
         # Calculate the mean pulse width the PWM signals will use
         # each motor will then offset this a bit based on the PID values for each axis
         # "pwm_pw" short for "Pulse Width Modulation Pulse Width"
-        mem1 = gc.mem_free()
-        mean_pwm_pw:int = 1000000 + (input_throttle_uint16 * 1000000) // 65535
-        mem2 = gc.mem_free()
-        print("Mem used: " + str(mem1 - mem2))
+        # I originally had this: mean_pwm_pw:int = 1000000 + (input_throttle_uint16 * 1000000) // 65535
+        # however, that was causing a big memory usage as new memory had to be allocated to store the result of input_throttle_uint16 * 1,000,000 (it is in the billions)
+        # to avoid that multiplication blowing up, I first multiply by 10,000 (keep the number small), AND THEN multiply by 100 afterwards
+        # this saves memory by not allowing it to blow up into a big int, but also takes a small amount of accuracy off
+        # for example, 1,078,340 will now be 1,078,300... but that is so small, it is negligible
+        mean_pwm_pw:int = 1_000_000 + ((input_throttle_uint16 * 10_000) // 65535) * 100
 
         # calculate throttle values for each motor using those PID influences
         m1_pwm_pw = mean_pwm_pw + pitch_pid + roll_pid - yaw_pid
