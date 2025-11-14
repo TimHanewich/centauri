@@ -10,7 +10,7 @@ answer = math.atan(0.15)
 mem2 = gc.mem_free()
 print("Mem used: " + str(mem1 - mem2))
 
-# in a function
+# in a native function
 @micropython.native
 def doatan(input:float) -> float:
     return math.atan(input)
@@ -20,14 +20,30 @@ answer = doatan(0.15)
 mem2 = gc.mem_free()
 print("Mem used: " + str(mem1 - mem2))
 
-# in a viper function
+
+
+
+
+
+
+
+
+
+
 @micropython.viper
-def doatanV(input:int) -> int:
-    ToReturn:float = math.atan(input)
-    return int(round(ToReturn, 1))
+def isqrt(x: int) -> int:
+    # Integer square root using Newton's method
+    if x <= 0:
+        return 0
+    r = x
+    while True:
+        new_r = (r + x // r) // 2
+        if new_r >= r:
+            return r
+        r = new_r
 
+val1 = 314200
 mem1 = gc.mem_free()
-answer = doatanV(15)
+isqrt(val1)
 mem2 = gc.mem_free()
-print("Mem used: " + str(mem1 - mem2))
-
+print("Memory used: " + str(mem1 - mem2))
