@@ -332,7 +332,7 @@ try:
             led_last_flickered_ticks_ms = time.ticks_ms()
          
         # check for received data (input data) from the HC-12
-        # ~100-300 us
+        # ~250 us when there is data coming in rapidly, ~650 us when there is not data coming in. The reason it takes longer when there is NOT new data is because the ProcessBuffer.find() spends more time searching through the entire bytearray... just to find nothing. Versus when it has data, it finds something quickly shallow in the ProcessBuffer
         # ~16 bytes of memory used, but only when it has a full new line and thus has to use the memoryview slice to move the conveyer belt back
         # the data that we receive from the HC-12 could be:
         # 1 - control data
@@ -688,6 +688,7 @@ try:
         # This is because the process of opening the log file, appending to it, closing it, clearing the temp storage, etc. is SLOW!
         # It doesn't really matter when unarmed because that is not when the ultra tight PID loop is super important. But worth noting in case you see that and get concerned
         excess_us:int = cycle_time_us - time.ticks_diff(time.ticks_us(), loop_begin_us) # calculate how much excess time we have to kill until it is time for the next loop
+        print("Excess us: " + str(excess_us))
         if excess_us > 0:
             time.sleep_us(excess_us)
             
