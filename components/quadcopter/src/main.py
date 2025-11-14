@@ -332,13 +332,13 @@ try:
             led_last_flickered_ticks_ms = time.ticks_ms()
          
         # check for received data (input data) from the HC-12
+        # ~100-300 us
+        # ~16 bytes of memory used, but only when it has a full new line and thus has to use the memoryview slice to move the conveyer belt back
         # the data that we receive from the HC-12 could be:
         # 1 - control data
         # 2 - Settings update data (PID settings)
         # 3 - PING
         try:  
-
-            t1 = time.ticks_us()
 
             # Step 1: If bytes received and available via HC-12, collect them
             # ~250-330 us
@@ -364,57 +364,56 @@ try:
             # if we do, isolate it, process it
             # Instead of doing a one-time find of the terminator here, should really be a while loop of all data, processing it all at once here before proceeding (avoid build ups)
             # takes ~480 us
-            TerminatorLoc:int = ProcessBuffer.find(terminator, 0, ProcessBufferOccupied)
-            if TerminatorLoc != -1: # -1 means it did not find a terminator. So checking here that we DID find the terminator
+            while True:
+                TerminatorLoc:int = ProcessBuffer.find(terminator, 0, ProcessBufferOccupied)
+                if TerminatorLoc == -1:
+                    break
+                else:
 
-                # At this point, we can assume the ProcessBuffer's NEXT LINE (that we have yet to process) is between position 0 and "TerminatorLoc"
-                # example below (commented out) of what we could do if I was not worried about memory management
-                #ThisLine:bytes = ProcessBuffer[0:LineEndLoc]
-                # we will not do that because any slicing (using "[]") uses NEW memory... even if you slice via a memoryview!!!!!
+                    # At this point, we can assume the ProcessBuffer's NEXT LINE (that we have yet to process) is between position 0 and "TerminatorLoc"
+                    # example below (commented out) of what we could do if I was not worried about memory management
+                    #ThisLine:bytes = ProcessBuffer[0:LineEndLoc]
+                    # we will not do that because any slicing (using "[]") uses NEW memory... even if you slice via a memoryview!!!!!
 
-                # Process the line 
-                t1 = time.ticks_us()
-                if ProcessBuffer.startswith(TIMHPING): # PING: simple check of life. Checking "startswith" is quick, only ~70 us
-                    uart_hc12.write(TIMHPONG) # PONG back
-                elif ProcessBuffer[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
-                    unpack_successful:bool = tools.unpack_control_packet(ProcessBuffer, control_input) # takes ~350 us, uses 0 bytes of new memory
-                    if unpack_successful:
-                        input_throttle_uint16 = control_input[0]
-                        input_pitch_int16 = control_input[1]
-                        input_roll_int16 = control_input[2]
-                        input_yaw_int16 = control_input[3]
-                        control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
-                elif ProcessBuffer[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
-                    settings:dict = tools.unpack_settings_update(ProcessBuffer)
-                    if settings != None:
-                        pitch_kp = settings["pitch_kp"]
-                        pitch_ki = settings["pitch_ki"]
-                        pitch_kd = settings["pitch_kd"]
-                        roll_kp = settings["roll_kp"]
-                        roll_ki = settings["roll_ki"]
-                        roll_kd = settings["roll_kd"]
-                        yaw_kp = settings["yaw_kp"]
-                        yaw_ki = settings["yaw_ki"]
-                        yaw_kd = settings["yaw_kd"]
-                        i_limit = settings["i_limit"]
-                        send_special("SETUPOK") # send special packet "SETUPOK", short for "Settings Update OK".
-                    else:
-                        print("It was settings but it failed.")
-                else: # unknown packet
-                    print("Unknown data received via HC-12")
-                    send_special("?") # respond with a simple question mark to indicate the message was not understood.
+                    # Process the line 
+                    t1 = time.ticks_us()
+                    if ProcessBuffer.startswith(TIMHPING): # PING: simple check of life. Checking "startswith" is quick, only ~70 us
+                        uart_hc12.write(TIMHPONG) # PONG back
+                    elif ProcessBuffer[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
+                        unpack_successful:bool = tools.unpack_control_packet(ProcessBuffer, control_input) # takes ~350 us, uses 0 bytes of new memory
+                        if unpack_successful:
+                            input_throttle_uint16 = control_input[0]
+                            input_pitch_int16 = control_input[1]
+                            input_roll_int16 = control_input[2]
+                            input_yaw_int16 = control_input[3]
+                            control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
+                    elif ProcessBuffer[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
+                        settings:dict = tools.unpack_settings_update(ProcessBuffer)
+                        if settings != None:
+                            pitch_kp = settings["pitch_kp"]
+                            pitch_ki = settings["pitch_ki"]
+                            pitch_kd = settings["pitch_kd"]
+                            roll_kp = settings["roll_kp"]
+                            roll_ki = settings["roll_ki"]
+                            roll_kd = settings["roll_kd"]
+                            yaw_kp = settings["yaw_kp"]
+                            yaw_ki = settings["yaw_ki"]
+                            yaw_kd = settings["yaw_kd"]
+                            i_limit = settings["i_limit"]
+                            send_special("SETUPOK") # send special packet "SETUPOK", short for "Settings Update OK".
+                        else:
+                            print("It was settings but it failed.")
+                    else: # unknown packet
+                        print("Unknown data received via HC-12")
+                        send_special("?") # respond with a simple question mark to indicate the message was not understood.
 
-                # Move the conveyer belt back so the new unprocessed data is right at the beginning
-                # ~180 us
-                # 16 bytes of new memory used each time... unavoidable due to memoryview slicer
-                NewDataStarts:int = TerminatorLoc + 2                                                                           # Where the "next line" (new, unprocessed data) begins, skipping past the \r\n terminator
-                NumberOfBytesToMove:int = ProcessBufferOccupied - NewDataStarts                                                 # how many bytes in the ProcessBuffer we need to move back (left)... basically how big that entire chunk is
-                ProcessBufferMV[0:NumberOfBytesToMove] = ProcessBufferMV[NewDataStarts:NewDataStarts + NumberOfBytesToMove]     # take that entire unprocessed chunk and shift it to the beginning
-                ProcessBufferOccupied = ProcessBufferOccupied - NewDataStarts                                                   # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
-
-            t2 = time.ticks_us()
-            print(str(t2 - t1))
-
+                    # Move the conveyer belt back so the new unprocessed data is right at the beginning
+                    # ~180 us
+                    # 16 bytes of new memory used each time... unavoidable due to memoryview slicer
+                    NewDataStarts:int = TerminatorLoc + 2                                                                           # Where the "next line" (new, unprocessed data) begins, skipping past the \r\n terminator
+                    NumberOfBytesToMove:int = ProcessBufferOccupied - NewDataStarts                                                 # how many bytes in the ProcessBuffer we need to move back (left)... basically how big that entire chunk is
+                    ProcessBufferMV[0:NumberOfBytesToMove] = ProcessBufferMV[NewDataStarts:NewDataStarts + NumberOfBytesToMove]     # take that entire unprocessed chunk and shift it to the beginning
+                    ProcessBufferOccupied = ProcessBufferOccupied - NewDataStarts                                                   # decrement how much of the ProcessBuffer is now occupied since we just "extracted" (processed) a line and then moved everything backward like a conveyer belt
         except Exception as ex:
             print("RX FAIL: " + str(ex))
             raise ex
