@@ -6,9 +6,11 @@ The Centauri quadcopter logs telemetry directly onto the Raspberry Pi Pico’s o
 1. The path to the binary telemetry file on your computer  
 2. The target path for the `.csv` output  
 
-Once provided, the script decodes the binary packets and generates a structured `.csv` file for easy inspection.
+As you can see below, the Centauri quadcopter will log telemetry as a binary file named `log`. That data can be retrieved from the microcontroller via Thonny.
 
-Below is an example of the telemetry output:
+![log](https://i.imgur.com/B5EOT7c.png)
+
+Use can use this analysis script to decode the binary `log` file and generate a structured `.csv` file for easy inspection. Below is an example of the telemetry output:
 
 ![telemetry](https://i.imgur.com/522dEtC.png)
 
