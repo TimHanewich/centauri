@@ -4,6 +4,17 @@ import time
 import gc
 
 i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17))
+
+# Set up MPU-6050
+print("Waking up MPU-6050...")
+i2c.writeto_mem(0x68, 0x6B, bytes([0])) # wake up 
+print("Setting MPU-6050 gyro scale range to 250 d/s...")
+i2c.writeto_mem(0x68, 0x1B, bytes([0x00])) # set full scale range of gyro to 250 degrees per second
+print("Setting MPU-6050 accelerometer scale range to 2g...")
+i2c.writeto_mem(0x68, 0x1C, bytes([0x00])) # set full scale range of accelerometer to 2g (lowest, most sensitive)
+print("Setting MPU-6050 LPF to 10 Hz...")
+i2c.writeto_mem(0x68, 0x1A, bytes([0x05])) # set low pass filter for both gyro and accel to 10 hz (level 5 out of 6 in smoothing)
+
 accel_data:bytearray = bytearray(6)
 gyro_data:bytearray = bytearray(6)
 
