@@ -26,3 +26,4 @@
 - `fffb3ff3d44cfcaa7561e7b6fd52661ec379cb79` - first successful flight on October 26, 2025
 - `659b1df36c1548b4aa942828f4455192aad7f1b1` - final commit before removing calculation of pitch and roll angles (focus on just rates only)
 - `f5d5ee41b780a90d643e48387e8cea1f385519a7` - final commit before introducing new HC-12 rx method *and* changing calculation of mean_pwm to avoid big ints
+- `273427cc2d9437f5790862fe962c95087a1ab306` - final commit before introducing calculation of pitch and roll angles again (this time, more efficiently)
