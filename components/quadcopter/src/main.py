@@ -511,7 +511,6 @@ try:
         else:
             pitch_angle = pitch_angle_accel
             roll_angle = roll_angle_accel
-        print("Pitch Angle: " + str(pitch_angle) + ", Roll Angle: " + str(roll_angle))
 
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
         # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
