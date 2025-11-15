@@ -30,6 +30,7 @@ def isqrt(x: int) -> int:
         r = new_r
 
 # atan2 estimator (integer math)
+@micropython.viper
 def iatan2(y:int, x:int) -> int:
     # constants scaled by 1000
     PI     = 3141   # ~π * 1000
@@ -39,17 +40,27 @@ def iatan2(y:int, x:int) -> int:
     if x == 0:
         return PI_2 if y > 0 else -PI_2 if y < 0 else 0
 
-    abs_y = abs(y)
+    # calculate abs y
+    abs_y = y
+    if abs_y < 0:
+        abs_y = abs_y * -1
+
+    # calculate abs x
+    abs_x = x
+    if abs_x < 0:
+        abs_x = abs_x * -1
+
+
     angle = 0
 
-    if abs(x) >= abs_y:
+    if abs_x >= abs_y:
         # slope = y/x
-        slope = (abs_y * 1000) // abs(x)
+        slope = (abs_y * 1000) // abs_x
         # polynomial approx of atan(slope)
         angle = (PI_4 * slope) // 1000
     else:
         # slope = x/y
-        slope = (abs(x) * 1000) // abs_y
+        slope = (abs_x * 1000) // abs_y
         angle = (PI_2 - (PI_4 * slope) // 1000)
 
     # adjust quadrant
@@ -82,9 +93,12 @@ while True:
 
     # Calculates the pitch angles, x1000 (so like 1453 is 1.453 degrees)
     # 0 bytes of new memory
-    # ~260 us
+    # ~110 us (it was ~260 us when the atan2 approx was NOT viper, only the sqrt was viper)
+    t1 = time.ticks_us()
     pitch_angle:int = iatan2(accel_x, isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
     roll_angle:int = iatan2(accel_y, isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
+    t2 = time.ticks_us()
+    print("Time: " + str(t2 - t1))
 
     print("Pitch: " + str(pitch_angle) + ", Roll: " + str(roll_angle))
     time.sleep(0.25)
