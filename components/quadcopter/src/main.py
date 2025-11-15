@@ -191,13 +191,13 @@ i2c.writeto_mem(0x68, 0x1A, bytes([0x05])) # set low pass filter for both gyro a
 
 # wait a moment, then validate MPU-6050 settings have taken place
 time.sleep(0.25)
-if i2c.readfrom_mem(0x68, 0x1B, 1)[0] == 0x00:
-    print("MPU-6050 Gyro full scale range confirmed to be set at 250 d/s")
+if i2c.readfrom_mem(0x68, 0x1B, 1)[0] == 0x10:
+    print("MPU-6050 Gyro full scale range confirmed to be set at 1,000 d/s")
 else:
     print("MPU-6050 Gyro full scale range set failed!")
     FATAL_ERROR("MPU6050 gyro range set failed.")
-if i2c.readfrom_mem(0x68, 0x1C, 1)[0] == 0x00:
-    print("MPU-6050 accelerometer full scale range confirmed to be set at 2g")
+if i2c.readfrom_mem(0x68, 0x1C, 1)[0] == 0x10:
+    print("MPU-6050 accelerometer full scale range confirmed to be set at 8g")
 else:
     print("MPU-6050 accelerometer full scale range set failed!")
     FATAL_ERROR("MPU6050 accel range set failed!")
@@ -500,6 +500,7 @@ try:
         # Now use a complementary filter to determine angle (fuse accelerometer and gyro data)
         pitch_angle = ((pitch_angle_gyro * alpha) + (pitch_angle_accel * (100 - alpha))) // 100
         roll_angle = ((roll_angle_gyro * alpha) + (roll_angle_accel * (100 - alpha))) // 100
+        print("Pitch Angle: " + str(pitch_angle) + ", Roll Angle: " + str(roll_angle))
 
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
         # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
