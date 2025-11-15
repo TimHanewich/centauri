@@ -21,5 +21,7 @@
     <ColumnMapping inputColumnText="M2 Throttle" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="Generic" dataType="Other" />
     <ColumnMapping inputColumnText="M3 Throttle" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="Generic" dataType="Other" />
     <ColumnMapping inputColumnText="M4 Throttle" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="Generic" dataType="Other" />
+    <ColumnMapping inputColumnText="Pitch Angle" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="Generic" dataType="Other" />
+    <ColumnMapping inputColumnText="Roll Angle" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="Generic" dataType="Other" />
   </ColumnMappings>
 </DataProfile>
