@@ -30,6 +30,7 @@ import os
 ##### SETTINGS #####
 ####################
 
+alpha:int = 98                 # complementary filter alpha value for pitch/roll angle estimation. A value closer to 100 (MAX 100!) favor's gyroscope's opinion, lower (MIN 0!) favors accelerometer (noisy)
 PID_SCALING_FACTOR:int = 10000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
 
 # Flight Control PID Gains
@@ -275,6 +276,8 @@ vbat:int = 0         # battery voltage between 6.0 and 16.8 volts, but expressed
 pitch_rate:int = 0   # pitch rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
 roll_rate:int = 0    # roll rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
 yaw_rate:int = 0     # yaw rate, multiplied by 1,000. So, for example, 3543 would be 3.543 degrees per second.
+pitch_angle:int = 0  # pitch angle, multiplied by 1,000. So, for example, 3543 would be 3.543.
+roll_angle:int = 0   # roll angle, multiplied by 1,000. So, for example, 3543 would be 3.543.
 
 # declare objects we will reuse in the loop instead of remaking each time (for efficiency)
 cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, the full PID loop must happen within. 4,000 microseconds (4 ms) to achieve a 250 Hz loop speed for example.
@@ -314,6 +317,7 @@ led_last_flickered_ticks_ms:int = 0 # the last time the onboard (pico) LED was s
 telemetry_last_recorded_ticks_ms:int = 0 # the most recent time the telemetry was last recorded
 status_last_sent_ticks_ms:int = 0 # the most recent time the telemetry status was sent to the remote controller via HC-12
 control_input_last_received_ticks_ms:int = 0 # timestamp (in ms) of the last time a valid control packet was received. This is used to check and shut down motors if it has been too long (failsafe)
+last_gyro_dead_reckoning_ticks_us:int = 0 # timestamp (in us) of when we did the last dead reckoning via the gyroscope to estimate the pitch and roll angle. Important for the calculation
 
 # Infinite loop for all operations!
 print()
@@ -484,9 +488,18 @@ try:
         pitch_angle_accel:int = tools.iatan2(accel_x, tools.isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
         roll_angle_accel:int = tools.iatan2(accel_y, tools.isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
 
-        
+        # calculate the "gyro's" opinion using dead reckoning
+        # why do we divide by 1,000,000?
+        # Because the pitch rate is in degrees per second... and we measured it as us, of which there are 1,000,000 us in one second.
+        # so we have to divide by 1,000,000 to calculate how far, in degrees, it drifted in that time at that degrees/second rate
+        elapsed_since_ldr_ticks_us:int = time.ticks_diff(time.ticks_us(), last_gyro_dead_reckoning_ticks_us) # how many ticks have elapsed sine the last dead reckoning
+        last_gyro_dead_reckoning_ticks_us = time.ticks_us() # update the time
+        pitch_angle_gyro:int = pitch_angle + (pitch_rate * elapsed_since_ldr_ticks_us // 1_000_000)
+        roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_since_ldr_ticks_us // 1_000_000)
 
-
+        # Now use a complementary filter to determine angle (fuse accelerometer and gyro data)
+        pitch_angle = ((pitch_angle_gyro * alpha) + (pitch_angle_accel * (100 - alpha))) // 100
+        roll_angle = ((roll_angle_gyro * alpha) + (roll_angle_accel * (100 - alpha))) // 100
 
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
         # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
