@@ -80,6 +80,7 @@ while True:
     accel_y = (accel_y * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
     accel_z = (accel_z * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
+    # Calculates the pitch angles, x1000 (so like 1453 is 1.453 degrees)
     # 0 bytes of new memory
     # ~260 us
     pitch_angle:int = iatan2(accel_x, isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
