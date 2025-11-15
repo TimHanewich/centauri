@@ -498,7 +498,7 @@ try:
         # This also avoids the problem of the angles shooting up massively when first starting up because the time elapsed would have been so high
         if elapsed_since_ldr_ticks_us < 250_000: 
             
-            # calculate the "gyro's" opinion using dead reckoning
+            # calculate the "gyro's opinion" using dead reckoning
             # why do we divide by 1,000,000?
             # Because the pitch rate is in degrees per second... and we measured it as us, of which there are 1,000,000 us in one second.
             # so we have to divide by 1,000,000 to calculate how far, in degrees, it drifted in that time at that degrees/second rate
