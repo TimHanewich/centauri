@@ -488,18 +488,29 @@ try:
         pitch_angle_accel:int = tools.iatan2(accel_x, tools.isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
         roll_angle_accel:int = tools.iatan2(accel_y, tools.isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
 
-        # calculate the "gyro's" opinion using dead reckoning
-        # why do we divide by 1,000,000?
-        # Because the pitch rate is in degrees per second... and we measured it as us, of which there are 1,000,000 us in one second.
-        # so we have to divide by 1,000,000 to calculate how far, in degrees, it drifted in that time at that degrees/second rate
+        # Now calculate how much time has elapsed since the last time we were here, about to use dead reckoning with the gyro's data to estimate the angles
         elapsed_since_ldr_ticks_us:int = time.ticks_diff(time.ticks_us(), last_gyro_dead_reckoning_ticks_us) # how many ticks have elapsed sine the last dead reckoning
-        last_gyro_dead_reckoning_ticks_us = time.ticks_us() # update the time
-        pitch_angle_gyro:int = pitch_angle + (pitch_rate * elapsed_since_ldr_ticks_us // 1_000_000)
-        roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_since_ldr_ticks_us // 1_000_000)
+        last_gyro_dead_reckoning_ticks_us = time.ticks_us() # update the time, just as a flag
 
-        # Now use a complementary filter to determine angle (fuse accelerometer and gyro data)
-        pitch_angle = ((pitch_angle_gyro * alpha) + (pitch_angle_accel * (100 - alpha))) // 100
-        roll_angle = ((roll_angle_gyro * alpha) + (roll_angle_accel * (100 - alpha))) // 100
+        # if the elapsed time since the last dead reckoning is less than 250 ms, we should use fusion
+        # otherwise, we should just accept whatever the accelerometer is telling us (that will prob be more reliable than combining w/ the gyro's dead reckoning)
+        # I learned the "dead reckoning" used by the gyro is really only reliable in very tight read loops
+        # This also avoids the problem of the angles shooting up massively when first starting up because the time elapsed would have been so high
+        if elapsed_since_ldr_ticks_us < 250_000: 
+            
+            # calculate the "gyro's" opinion using dead reckoning
+            # why do we divide by 1,000,000?
+            # Because the pitch rate is in degrees per second... and we measured it as us, of which there are 1,000,000 us in one second.
+            # so we have to divide by 1,000,000 to calculate how far, in degrees, it drifted in that time at that degrees/second rate
+            pitch_angle_gyro:int = pitch_angle + (pitch_rate * elapsed_since_ldr_ticks_us // 1_000_000)
+            roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_since_ldr_ticks_us // 1_000_000)
+
+            # Now use a complementary filter to determine angle (fuse accelerometer and gyro data)
+            pitch_angle = ((pitch_angle_gyro * alpha) + (pitch_angle_accel * (100 - alpha))) // 100
+            roll_angle = ((roll_angle_gyro * alpha) + (roll_angle_accel * (100 - alpha))) // 100
+        else:
+            pitch_angle = pitch_angle_accel
+            roll_angle = roll_angle_accel
         print("Pitch Angle: " + str(pitch_angle) + ", Roll Angle: " + str(roll_angle))
 
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
