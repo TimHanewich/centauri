@@ -16,6 +16,54 @@ i2c.writeto_mem(0x68, 0x1C, bytes([0x00])) # set full scale range of acceleromet
 print("Setting MPU-6050 LPF to 10 Hz...")
 i2c.writeto_mem(0x68, 0x1A, bytes([0x05])) # set low pass filter for both gyro and accel to 10 hz (level 5 out of 6 in smoothing)
 
+# Viper sqrt estimator (integer math)
+@micropython.viper
+def isqrt(x: int) -> int:
+    # Integer square root using Newton's method
+    if x <= 0:
+        return 0
+    r = x
+    while True:
+        new_r = (r + x // r) // 2
+        if new_r >= r:
+            return r
+        r = new_r
+
+# atan2 estimator (integer math)
+def iatan2(y:int, x:int) -> int:
+    # constants scaled by 1000
+    PI     = 3141   # ~π * 1000
+    PI_2   = 1571   # ~π/2 * 1000
+    PI_4   = 785    # ~π/4 * 1000
+
+    if x == 0:
+        return PI_2 if y > 0 else -PI_2 if y < 0 else 0
+
+    abs_y = abs(y)
+    angle = 0
+
+    if abs(x) >= abs_y:
+        # slope = y/x
+        slope = (abs_y * 1000) // abs(x)
+        # polynomial approx of atan(slope)
+        angle = (PI_4 * slope) // 1000
+    else:
+        # slope = x/y
+        slope = (abs(x) * 1000) // abs_y
+        angle = (PI_2 - (PI_4 * slope) // 1000)
+
+    # adjust quadrant
+    if x < 0:
+        if y >= 0:
+            angle = PI - angle
+        else:
+            angle = -PI + angle
+    else:
+        if y < 0:
+            angle = -angle
+
+    return angle
+
 while True:
 
     # read from IMU
@@ -32,12 +80,12 @@ while True:
     accel_y = (accel_y * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
     accel_z = (accel_z * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
-    print("Accel data: " + str(accel_x) + ", " + str(accel_y) + ", " + str(accel_z))
+    accel_y_power2 = accel_y * accel_y
+    accel_z_power2 = accel_z * accel_z
+    sqrt_result:int = isqrt(accel_y_power2 + accel_z_power2)
+    atan2_result:int = iatan2(accel_x, sqrt_result)
+    final:int = atan2_result * 180000 // 3142
 
-    # calculate angle
-    expected_pitch_angle_accel:int = int(math.atan2(accel_x, math.sqrt(accel_y*accel_y + accel_z*accel_z)) * 180000 / math.pi) # the accelerometers opinion of what the pitch angle is
-    expected_roll_angle_accel:int = int(math.atan2(accel_y, math.sqrt(accel_x*accel_x + accel_z*accel_z)) * 180000 / math.pi) # the accelerometers opinion of what the roll angle is
-
-    # print and wait
-    print("Pitch Angle: " + str(expected_pitch_angle_accel) + ", Roll Angle: " + str(expected_roll_angle_accel))
+    print("angle: " + str(final))
+    
     time.sleep(0.25)
