@@ -92,7 +92,7 @@ while True:
 
     # Calculates the pitch angles, x1000 (so like 1453 is 1.453 degrees)
     # 0 bytes of new memory
-    # ~110 us (it was ~260 us when the atan2 approx was NOT viper, only the sqrt was viper)
+    # ~110 us with both iatan2 and isqrt viper, ~370 us without
     t1 = time.ticks_us()
     pitch_angle:int = iatan2(accel_x, isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
     roll_angle:int = iatan2(accel_y, isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
