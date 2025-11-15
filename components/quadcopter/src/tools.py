@@ -80,7 +80,7 @@ def unpack_settings_update(data:bytes) -> dict:
 
 ##### PACKING DATA TO BE SENT TO THE CONTROLLER #####
 
-def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, input_throttle:int, input_pitch:int, input_roll:int, input_yaw:int, m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, into:bytearray) -> None:
+def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, input_throttle:int, input_pitch:int, input_roll:int, input_yaw:int, m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, into:bytearray) -> None:
     """
     Packs telemetry into an existing bytearray.
 
@@ -90,6 +90,8 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     pitch_rate between -128 and 127 (signed byte)
     roll_rate between -128 and 127 (signed byte)
     yaw_rate between -128 and 127 (signed byte)
+    pitch_angle between -128 and 127 (signed byte)... though anything beyond -90 to 90 should be impossible
+    roll_angle between -128 and 127 (signed byte)... though anything beyond -90 to 90 should be impossible
     input_throtle between 0 and 100
     input_pitch between -100 and 100
     input_roll between -100 and 100
@@ -105,8 +107,8 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     
 
     # ensure the provided bytearray is big enough
-    if len(into) < 15:
-        raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing telemetry into. Must be at least 15 bytes.")
+    if len(into) < 17:
+        raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing telemetry into. Must be at least 17 bytes.")
 
     # First, prep values
 
@@ -134,6 +136,12 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     roll_rate_unsigned = roll_rate + 128
     yaw_rate_unsigned = yaw_rate + 128
 
+    # angles
+    # we add 128 to "shift" from a signed byte to an unsigned byte for the sake of storage
+    # that means, when unpacking this (the PC unpacks it), 128 will be subtracted out to get the signed value
+    pitch_angle_unsigned = pitch_angle + 128
+    roll_angle_unsigned = roll_angle + 128
+
     # input values
     # no need to do input throtte - it is good as is! (between 0 and 100)
     input_pitch_unsigned:int = input_pitch + 100
@@ -158,17 +166,21 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     into[5] = roll_rate_unsigned
     into[6] = yaw_rate_unsigned
 
+    # angles
+    into[7] = pitch_angle_unsigned
+    into[8] = roll_angle_unsigned
+
     # inputs
-    into[7] = input_throttle
-    into[8] = input_pitch_unsigned
-    into[9] = input_roll_unsigned
-    into[10] = input_yaw_unsigned
+    into[9] = input_throttle
+    into[10] = input_pitch_unsigned
+    into[11] = input_roll_unsigned
+    into[12] = input_yaw_unsigned
 
     # motor throttles
-    into[11] = m1_throttle
-    into[12] = m2_throttle
-    into[13] = m3_throttle
-    into[14] = m4_throttle
+    into[13] = m1_throttle
+    into[14] = m2_throttle
+    into[15] = m3_throttle
+    into[16] = m4_throttle
 
     # no need to do \r\n at the end as we assume that is already set as the last two bytes of the into byte array
 

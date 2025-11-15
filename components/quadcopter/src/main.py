@@ -650,6 +650,10 @@ try:
             packable_roll_rate:int = roll_rate // 1000                                # express as whole number
             packable_yaw_rate:int = yaw_rate // 1000                                  # express as whole number
 
+            # Prepare input values to packet as expected: angles
+            packable_pitch_angle:int = pitch_angle // 1000                            # express as whole number  
+            packable_roll_angle:int = roll_angle // 1000                              # express as whole number  
+
             # prepare input values as expected: input values
             # we need to convert the pitch, roll, and yaw input (expressed as int16 between -32,768 and 32,767) to a percentage from -100 to 100
             # I have found the most efficient way of doing this is to:
@@ -672,7 +676,7 @@ try:
             # pack it
             # takes ~460 us, uses 0 bytes of new memory
             # note: while calling this function below takes > 400 us, it takes only around 200 within the function. Maybe 200 us wasted by calling a function. Can save time running it inline below.
-            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store)
+            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store)
 
             # Record it by adding it to the temporary memory buffer we have going while in flight
             # takes ~490 us, uses 0 bytes of new memory. I tried slicing via memoryview and array itself and that takes much longer - like 2,000 us! I also tried storing the len(telemetry_packet_store) and reusing it... doesnt do anything.
