@@ -632,7 +632,6 @@ try:
         # if we need to stream/record telemetry, pack telemetry
         # uses 0 bytes of new memory
         # ~1,000 us while armed, ~1,200 us when unarmed (it may send if unarmed)
-        t1 = time.ticks_us()
         if time.ticks_diff(time.ticks_ms(), telemetry_last_recorded_ticks_ms) >= 250: # every 250 ms, telemetry will be recorded
 
             # first, get a ADC reading
