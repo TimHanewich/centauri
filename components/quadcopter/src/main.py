@@ -25,6 +25,7 @@ print("Importing other libraries...")
 import time
 import tools
 import os
+import gc
 
 ####################
 ##### SETTINGS #####
@@ -485,6 +486,7 @@ try:
         # calculate the "accelerometers opinion" of the pitch and roll angles
         # these will later be "fused" with the gyro's opinion via a complementary filter
         # This will output the pitch and roll angle as 1000x what it is (so like 5493 is 5.493 degrees)
+        # 0 bytes of memory, takes ~145 us (as viper), but would take ~600 us if iatan2 and isqrt were NOT viper (i checked)
         pitch_angle_accel:int = tools.iatan2(accel_x, tools.isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
         roll_angle_accel:int = tools.iatan2(accel_y, tools.isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
 
