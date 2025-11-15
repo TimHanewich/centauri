@@ -174,3 +174,72 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
 
 # don't need to write a function for packing special packet
 # because main.py already makes that ("send_special()")
+
+
+
+
+
+##### TRIGONOMETRY APPROXIMATION FUNCTIONS #####
+# We use this instead of using the "math" module because:
+# A) the math module uses floating point math
+# B) the math module always allocates memory using math.atan2 and math.sqrt, which we want to avoid (to avoid garbage collection)
+# I'll be honest - I did NOT write these. These were written by GPT-5 via Copilot and I understand little about them... trig is complicated.
+# The viper emitters speed it up significantly
+
+# Integer-based Square Root Estimator
+# uses Neton's method
+@micropython.viper
+def isqrt(x: int) -> int:
+    if x <= 0:
+        return 0
+    r = x
+    while True:
+        new_r = (r + x // r) // 2
+        if new_r >= r:
+            return r
+        r = new_r
+
+# atan2 estimator (integer math)
+@micropython.viper
+def iatan2(y:int, x:int) -> int:
+    # constants scaled by 1000
+    PI     = 3141   # ~π * 1000
+    PI_2   = 1571   # ~π/2 * 1000
+    PI_4   = 785    # ~π/4 * 1000
+
+    if x == 0:
+        return PI_2 if y > 0 else -PI_2 if y < 0 else 0
+
+    # calculate abs y
+    abs_y = y
+    if abs_y < 0:
+        abs_y = abs_y * -1
+
+    # calculate abs x
+    abs_x = x
+    if abs_x < 0:
+        abs_x = abs_x * -1
+
+    angle = 0
+
+    if abs_x >= abs_y:
+        # slope = y/x
+        slope = (abs_y * 1000) // abs_x
+        # polynomial approx of atan(slope)
+        angle = (PI_4 * slope) // 1000
+    else:
+        # slope = x/y
+        slope = (abs_x * 1000) // abs_y
+        angle = (PI_2 - (PI_4 * slope) // 1000)
+
+    # adjust quadrant
+    if x < 0:
+        if y >= 0:
+            angle = PI - angle
+        else:
+            angle = -PI + angle
+    else:
+        if y < 0:
+            angle = -angle
+
+    return angle
