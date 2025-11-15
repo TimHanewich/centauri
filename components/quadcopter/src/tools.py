@@ -172,8 +172,5 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
 
     # no need to do \r\n at the end as we assume that is already set as the last two bytes of the into byte array
 
-
-        
-
 # don't need to write a function for packing special packet
 # because main.py already makes that ("send_special()")
