@@ -723,6 +723,7 @@ try:
             if temp_telemetry_storage_used > 0: # if we have some telemetry to write
 
                 # flush to flash storage
+                # takes ~40,000 us, uses ~2,496 bytes of new memory
                 log = open("log", "ab")
                 for i in range(temp_telemetry_storage_used):
                     if free_bytes > 0: # if we have free bytes in capacity
@@ -731,6 +732,7 @@ try:
                 log.close()
 
                 # clear out the temporary storage bytearray
+                # takes ~259,000 us, uses 0 bytes of new memory
                 for i in range(temp_telemetry_storage_len):
                     temp_telemetry_storage[i] = 0
                 temp_telemetry_storage_used = 0 # reset used counter
