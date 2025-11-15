@@ -50,7 +50,6 @@ def iatan2(y:int, x:int) -> int:
     if abs_x < 0:
         abs_x = abs_x * -1
 
-
     angle = 0
 
     if abs_x >= abs_y:
