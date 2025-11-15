@@ -478,6 +478,16 @@ try:
         pitch_rate = pitch_rate * -1    # this ensures as the drone pitches down towards the ground, that is a NEGATIVE pitch rate. And a tile up would be positive
         yaw_rate = yaw_rate * -1        # this ensures the drone rotating towards the right is a POSITIVE yaw rate, with a left turn being negative
 
+        # calculate the "accelerometers opinion" of the pitch and roll angles
+        # these will later be "fused" with the gyro's opinion via a complementary filter
+        # This will output the pitch and roll angle as 1000x what it is (so like 5493 is 5.493 degrees)
+        pitch_angle_accel:int = tools.iatan2(accel_x, tools.isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
+        roll_angle_accel:int = tools.iatan2(accel_y, tools.isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
+
+        
+
+
+
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
         # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
         # We are multplying by 90,000 instead of 90,000 here so we can keep it in units of 1,000 and do integer math instead of floating point math
