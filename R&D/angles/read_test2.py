@@ -80,12 +80,8 @@ while True:
     accel_y = (accel_y * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
     accel_z = (accel_z * 1000) // 16384 # divide by scale factor for 2g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
-    accel_y_power2 = accel_y * accel_y
-    accel_z_power2 = accel_z * accel_z
-    sqrt_result:int = isqrt(accel_y_power2 + accel_z_power2)
-    atan2_result:int = iatan2(accel_x, sqrt_result)
-    final:int = atan2_result * 180000 // 3142
+    pitch_angle:int = iatan2(accel_x, isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
+    roll_angle:int = iatan2(accel_y, isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
 
-    print("angle: " + str(final))
-    
+    print("Pitch: " + str(pitch_angle) + ", Roll: " + str(roll_angle))
     time.sleep(0.25)
