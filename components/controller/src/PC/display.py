@@ -51,9 +51,11 @@ class DisplayPack:
 
         # telemetry being received from drone: control status
         self.drone_battery:float = 0.0 # battery voltage
-        self.pitch_rate:float = 0.0
-        self.roll_rate:float = 0.0
-        self.yaw_rate:float = 0.0
+        self.pitch_rate:int = 0.0 # in degrees/second
+        self.roll_rate:int = 0.0 # in degrees/second
+        self.yaw_rate:int = 0.0 # in degrees/second
+        self.pitch_angle:int = 0 # in degrees
+        self.roll_angle:int = 0 # in degrees
 
         # messages being received from the drone
         self.messages:list[Message] = []
@@ -113,6 +115,8 @@ def construct(dp:DisplayPack) -> rich.console.Group:
     txt_status = txt_status + "\n" + "Pitch Rate: " + str(dp.pitch_rate) + " °/s"
     txt_status = txt_status + "\n" + "Roll Rate: " + str(dp.roll_rate) + " °/s"
     txt_status = txt_status + "\n" + "Yaw Rate: " + str(dp.yaw_rate) + " °/s"
+    txt_status = txt_status + "\n" + "Pitch Angle: " + str(dp.pitch_angle) + " °"
+    txt_status = txt_status + "\n" + "Roll Angle: " + str(dp.roll_angle) + " °"
 
     # construct what to display in messages column
     max_messages:int = 10 # maxiumum number of messages that can be displayed

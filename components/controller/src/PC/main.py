@@ -55,6 +55,8 @@ async def main() -> None:
     pitch_rate:int = 0 # in degrees per second
     roll_rate:int = 0 # in degrees per second
     yaw_rate:int = 0 # in degrees per second
+    pitch_angle:int = 0 # in degrees
+    roll_angle:int = 0 # in degrees
 
     # set up system info variables
     packets_sent:int = 0
@@ -559,6 +561,8 @@ async def main() -> None:
                 dp.pitch_rate = pitch_rate
                 dp.roll_rate = roll_rate
                 dp.yaw_rate = yaw_rate
+                dp.pitch_angle = pitch_angle
+                dp.roll_angle = roll_angle
 
                 # plug in drone messages
                 dp.messages = drone_messages
@@ -604,6 +608,8 @@ async def main() -> None:
         nonlocal pitch_rate
         nonlocal roll_rate
         nonlocal yaw_rate
+        nonlocal pitch_angle
+        nonlocal roll_angle
 
         # declare rxBuffer of all data received from transceiver through the USB serial line
         rxBuffer:bytearray = bytearray()
@@ -637,6 +643,8 @@ async def main() -> None:
                         pitch_rate = TelemetryData["pitch_rate"]
                         roll_rate = TelemetryData["roll_rate"]
                         yaw_rate = TelemetryData["yaw_rate"]
+                        pitch_angle = TelemetryData["pitch_angle"]
+                        roll_angle = TelemetryData["roll_angle"]
                 elif ThisLine[0] & 0b00000001 > 0: # if bit 0 is 1, it is a special packet (text)
                     msg:str = tools.unpack_special_packet(ThisLine)
                     drone_messages.append(display.Message(msg, time.time()))

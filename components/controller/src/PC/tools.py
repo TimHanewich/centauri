@@ -108,14 +108,16 @@ def unpack_telemetry(data:bytes) -> dict:
     # so just divide by 10 to get the actual value (as a float)
     vbat:float = data[1] / 10
 
-    # others
+    # rates & angles
     # we subtract 128 here to "shift back" to a signed byte from an unsigned byte (128 is added before packing it)
     pitch_rate:int = data[2] - 128
     roll_rate:int = data[3] - 128
     yaw_rate:int = data[4] - 128
+    pitch_angle:int = data[5] - 128
+    roll_angle:int = data[6] - 128
 
     # return
-    ToReturn:dict = {"vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate}
+    ToReturn:dict = {"vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle}
     return ToReturn
 
 def unpack_special_packet(data:bytes) -> str:
