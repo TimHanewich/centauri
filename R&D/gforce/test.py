@@ -82,17 +82,10 @@ while True:
     #print(accel_x, accel_y, accel_z)
 
     # calculate G force
-    gforce:int = isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z) # 1,000 would be 1g
-    gforce = gforce + gforce_offset
+    gforce:int = isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
+    gforce = gforce + gforce_offset                                                 # adjust for offset, calculated earlier during calibration
+    gforce_packable = (gforce + 50) // 100                                          # convert it to a two-digit, "packable" (single byte), value. "10" would be 1.0g, "23" would be 2.3g, 8 would be 0.8 g, etc.
     
-    # convert to a value between 
-    # i.e:
-    # 10 would be 1.0 g
-    # 100 would be 10.0 g
-    # 34 would be 3.4 g
-    # 8 would be 0.8 g
-    gforce = (gforce+50) // 100
-
-    print("GForce: " + str(gforce))
+    print("GForce: " + str(gforce) + ", packable: " + str(gforce_packable))
 
     time.sleep(0.05)
