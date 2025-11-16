@@ -353,7 +353,7 @@ control_input:list[int] = [0,0,0,0] # array that we will unpack control input in
 telemetry_packet_stream:bytearray = bytearray(9) # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.).
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
 TIMHPONG:bytes = "TIMHPONG\r\n".encode() # example TIMHPONG\r\n that we will send back out later on. Making it here to avoid re-making it in the loop
-ms_between_telemetry_snapshots:int = 1000 // telemetry_frames_per_second
+record_telemetry_every_ms:int = 1000 // telemetry_frames_per_second # how many ms to wait in between recording telemetry frames
 
 # timestamps for tracking other processes that need to be done on a schedule
 # originally was using asyncio for this but now resorting to timestamp-based
@@ -681,7 +681,7 @@ try:
         # if we need to stream/record telemetry, pack telemetry
         # uses 0 bytes of new memory
         # ~1,000 us while armed, ~1,200 us when unarmed (it may send if unarmed)
-        if time.ticks_diff(time.ticks_ms(), telemetry_last_recorded_ticks_ms) >= (1000 // telemetry_frames_per_second): # proceed to store a snapshot if it is time
+        if time.ticks_diff(time.ticks_ms(), telemetry_last_recorded_ticks_ms) >= record_telemetry_every_ms: # proceed to store a snapshot if it is time
 
             # first, get a ADC reading
             vbat_u16:int = vbat_adc.read_u16() # read the value on the ADC pin, as a uint16 (0-65535)
