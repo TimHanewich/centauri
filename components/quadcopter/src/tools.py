@@ -92,7 +92,7 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     yaw_rate between -128 and 127 (signed byte)
     pitch_angle between -128 and 127 (signed byte)... though anything beyond -90 to 90 should be impossible
     roll_angle between -128 and 127 (signed byte)... though anything beyond -90 to 90 should be impossible
-    input_throtle between 0 and 100
+    input_throttle between 0 and 100
     input_pitch between -100 and 100
     input_roll between -100 and 100
     input_yaw between -100 and 100
