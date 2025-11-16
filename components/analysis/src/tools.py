@@ -17,6 +17,9 @@ def unpack_packet(data:bytes) -> dict:
     pitch_angle:int = data[7] - 128
     roll_angle:int = data[8] - 128
 
+    # gforce
+    gforce:int = data[9] / 10 # divide by 10 because it is stored as 10x what it is, like vbat!
+
     # inputs
     input_throttle:int = data[9]     # flat percentage (0-100)
     input_pitch:int = data[10] - 100  # flat percentage (-100 to 100), stored as a uint8, so subtract out 100 to allow negatives
@@ -29,4 +32,4 @@ def unpack_packet(data:bytes) -> dict:
     m3_throttle:int = data[15]
     m4_throttle:int = data[16]
 
-    return {"ticks_ms": ticks_ms, "vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle, "input_throttle": input_throttle, "input_pitch": input_pitch, "input_roll": input_roll, "input_yaw": input_yaw, "m1_throttle": m1_throttle, "m2_throttle": m2_throttle, "m3_throttle": m3_throttle, "m4_throttle": m4_throttle}
+    return {"ticks_ms": ticks_ms, "vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle, "gforce": gforce, "input_throttle": input_throttle, "input_pitch": input_pitch, "input_roll": input_roll, "input_yaw": input_yaw, "m1_throttle": m1_throttle, "m2_throttle": m2_throttle, "m3_throttle": m3_throttle, "m4_throttle": m4_throttle}
