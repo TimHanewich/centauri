@@ -213,26 +213,27 @@ send_special("IMU SET")
 
 ## print header: Gyro calibration
 print()
-print("GYRO CALIBRATION")
+print("IMU CALIBRATION")
 
-# measure gyro to estimate bias
-gxs:int = 0
-gys:int = 0
-gzs:int = 0
-samples:int = 0
+# Perform IMU (Gyro & Accel) Calibration
+gfs:int = 0          # g-force samples (sum)
+gxs:int = 0          # gyro x samples (sum)
+gys:int = 0          # gyro y samples (sum)
+gzs:int = 0          # gyro z samples (sum)
+samples:int = 0      # to count the number of samples we collect
 for i in range(3):
-    print("Beginning gyro calibration in " + str(3 - i) + "... ")
-    #endtimhmsg("GyroCal in " + str(3 - i))
+    print("Beginning IMU calibration in " + str(3 - i) + "... ")
     time.sleep(1.0)
-send_special("Gyro Cal...")
-print("Calibrating gyro...")
+send_special("IMU Cal...")
+print("Calibrating IMU...")
 started_at_ticks_ms:int = time.ticks_ms()
 while time.ticks_diff(time.ticks_ms(), started_at_ticks_ms) < 3000: # 3 seconds
     
     # Read
-    gyro_data:bytes = i2c.readfrom_mem(0x68, 0x43, 6) # read 6 bytes, 2 for each axis
+    gyro_data:bytes = i2c.readfrom_mem(0x68, 0x43, 6)    # read 6 gyro bytes, 2 for each axis
+    accel_data:bytes = i2c.readfrom_mem(0x68, 0x3B, 6)   # read 6 accelerometer bytes, 2 for each axis
 
-    # Transform
+    # Transform gyro data
     gyro_x = (gyro_data[0] << 8) | gyro_data[1]
     gyro_y = (gyro_data[2] << 8) | gyro_data[3]
     gyro_z = (gyro_data[4] << 8) | gyro_data[5]
@@ -243,21 +244,40 @@ while time.ticks_diff(time.ticks_ms(), started_at_ticks_ms) < 3000: # 3 seconds
     gyro_y = gyro_y * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 326 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
     gyro_z = gyro_z * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 326 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
 
+    # Transform accel data
+    accel_x = (accel_data[0] << 8) | accel_data[1]
+    accel_y = (accel_data[2] << 8) | accel_data[3]
+    accel_z = (accel_data[4] << 8) | accel_data[5]
+    if accel_x >= 32768: accel_x = ((65535 - accel_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+    if accel_y >= 32768: accel_y = ((65535 - accel_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+    if accel_z >= 32768: accel_z = ((65535 - accel_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
+    accel_x = (accel_x * 1000) // 4096 # divide by scale factor for 8g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
+    accel_y = (accel_y * 1000) // 4096 # divide by scale factor for 8g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
+    accel_z = (accel_z * 1000) // 4096 # divide by scale factor for 8g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
+
+    # use accel data to calculate current G-Force
+    gforce:int = tools.isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
+
     # increment
     gxs = gxs + gyro_x
     gys = gys + gyro_y
     gzs = gzs + gyro_z
+    gfs = gfs + gforce
     samples = samples + 1
+
+    # wait
     time.sleep(0.01)
 
-# calculate gyro bias
+# calculate biases
 # the resulting gyro bias will be in degrees per second * 1000 (with no decimal). We do this instead of a floating point number because integer math is faster.
-print(str(samples) + " gyro samples collected.")
+print(str(samples) + " IMU samples collected.")
 gyro_bias_x:int = gxs // samples
 gyro_bias_y:int = gys // samples
 gyro_bias_z:int = gzs // samples
+gforce_bias:int = (gfs // samples) - 1000     # the "bias" can be described as the difference between 1 full g and the avg reading. So if, being totally still, the IMU is reading 0.9g, we know it is off by 0.1g, because it should be 1.0g standing still!
 print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gyro_bias_z))
-send_special("Calib Gyro OK")
+print("GForce Bias: " + str(gforce_bias))
+send_special("IMU Calib OK")
 
 # determine how much space we have in storage to store telemetry
 print()
