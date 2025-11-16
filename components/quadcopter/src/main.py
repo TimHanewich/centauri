@@ -312,7 +312,6 @@ gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading d
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
 control_input:list[int] = [0,0,0,0] # array that we will unpack control input into (throttle input, pitch input, roll input, yaw input) - throttle as uint16, the rest as int16
 telemetry_packet_stream:bytearray = bytearray(9) # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.).
-telemetry_packet_store:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with telemetry data intended to be stored to local flash storage
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
 TIMHPONG:bytes = "TIMHPONG\r\n".encode() # example TIMHPONG\r\n that we will send back out later on. Making it here to avoid re-making it in the loop
 
@@ -333,10 +332,11 @@ yaw_last_i:int = 0
 yaw_last_error:int = 0
 
 # declare variables that serve for storing telemetry
-temp_telemetry_storage_len:int = 25000                                       # declare length of the temporary storage
-temp_telemetry_storage:bytearray = bytearray(temp_telemetry_storage_len)     # create the fixed-length bytearray for storing telemetry while in flight (fast)
-temp_telemetry_storage_mv:memoryview = memoryview(temp_telemetry_storage)    # create a memoryview of that temp storage array for faster copying into later on
-temp_telemetry_storage_used:int = 0                                          # for tracking how many bytes of the temp storage have been used so far
+telemetry_packet_store:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\n')      # array that we will repopulate with telemetry data (while in flight) intended to be stored to local flash storage later, once disarmed
+temp_telemetry_storage_len:int = 25000                                                                                                     # declare length of the temporary storage
+temp_telemetry_storage:bytearray = bytearray(temp_telemetry_storage_len)                                                                   # create the fixed-length bytearray for storing telemetry while in flight (fast)
+temp_telemetry_storage_mv:memoryview = memoryview(temp_telemetry_storage)                                                                  # create a memoryview of that temp storage array for faster copying into later on
+temp_telemetry_storage_used:int = 0                                                                                                        # for tracking how many bytes of the temp storage have been used so far
 
 # timestamps for tracking other processes that need to be done on a schedule
 # originally was using asyncio for this but now resorting to timestamp-based
