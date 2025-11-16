@@ -281,15 +281,6 @@ print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gy
 print("GForce Bias: " + str(gforce_bias))
 send_special("IMU Calib OK")
 
-# determine how much space we have in storage to store telemetry
-print()
-print("CHECKING STORAGE SPACE")
-stats:tuple = os.statvfs('/')
-block_size:int = stats[0]
-free_blocks:int = stats[3]
-free_bytes:int = block_size * free_blocks # how much free space is on the device, in bytes. This will be decremented as we add to it.
-print(str(free_bytes) + " bytes free for telemetry storage")
-
 # declare variables: desired rate inputs
 # these will later be updated via incoming desired rate packets (over UART from HL-MCU)
 input_throttle_uint16:int = 0        # from 0 to 65535, representing 0-100%
@@ -332,8 +323,9 @@ temp_telemetry_storage_mv:memoryview = memoryview(temp_telemetry_storage)       
 temp_telemetry_storage_used:int = 0                                                                                                        # for tracking how many bytes of the temp storage have been used so far
 
 # Perform a simple estimation of how many seconds of flight time we have given the telemetry packet size, buffer length, and snapshot frequency
+# This below is regarding the temporary buffer that is used to record telemetry quickly before it is later saved to the MCU's file storage when unarmed
 print()
-print("TELEMETRY BUFFER ESTIMATE")
+print("TEMP TELEMETRY BUFFER ESTIMATE")
 telemetry_bytes_per_second:int = len(telemetry_packet_store) * telemetry_frames_per_second        # The bytes per second that will be stored in the buffer
 seconds_of_buffer:int = temp_telemetry_storage_len // telemetry_bytes_per_second                  # The number of seconds the buffer will last
 minutes_of_buffer:float = seconds_of_buffer / 60.0                                                # The number of minutes the buffer will last
@@ -342,6 +334,16 @@ print("Telemetry bytes per second (" + str(len(telemetry_packet_store)) + " byte
 print("With a telemetry buffer of " + str(temp_telemetry_storage_len) + " bytes...")
 print(str(seconds_of_buffer) + " seconds of uninterupted flight")
 print(str(round(minutes_of_buffer, 1)) + " minutes of uninterupted flight")
+
+# determine how much space we have in storage to store telemetry
+# This below is intended for HARD storage, on the flash storage of the MCU directly (as a file)
+print()
+print("CHECKING MCU STORAGE SPACE")
+stats:tuple = os.statvfs('/')
+block_size:int = stats[0]
+free_blocks:int = stats[3]
+free_bytes:int = block_size * free_blocks # how much free space is on the device, in bytes. This will be decremented as we add to it.
+print(str(free_bytes) + " bytes free for telemetry storage")
 
 # declare objects we will reuse in the loop instead of remaking each time (for efficiency)
 cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, the full PID loop must happen within. 4,000 microseconds (4 ms) to achieve a 250 Hz loop speed for example.
