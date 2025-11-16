@@ -80,18 +80,23 @@ def unpack_settings_update(data:bytes) -> dict:
 
 ##### PACKING DATA TO BE SENT TO THE CONTROLLER #####
 
-def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, input_throttle:int, input_pitch:int, input_roll:int, input_yaw:int, m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, into:bytearray) -> None:
+def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, gforce:int, input_throttle:int, input_pitch:int, input_roll:int, input_yaw:int, m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, into:bytearray) -> None:
     """
     Packs telemetry into an existing bytearray.
 
     Expects:
     ticks_ms between 0 and 16,777,215 (3 bytes)
+
+    VALUES THAT WILL ALSO BE SENT OVER HC-12
     vbat between 60 and 168 (10x higher than 6.0 and 16.8 respectively, to avoid floating point math)
     pitch_rate between -128 and 127 (signed byte)
     roll_rate between -128 and 127 (signed byte)
     yaw_rate between -128 and 127 (signed byte)
     pitch_angle between -128 and 127 (signed byte)... though anything beyond -90 to 90 should be impossible
     roll_angle between -128 and 127 (signed byte)... though anything beyond -90 to 90 should be impossible
+
+    VALUES COLLECTED ONLY FOR ON-MCU TELEMETRY LOGGING
+    gforce between 0 and 255 - i.e. 10 would be 1.0g, 14 would be 1.4g, 8 would be 0.8g, etc.
     input_throttle between 0 and 100
     input_pitch between -100 and 100
     input_roll between -100 and 100
@@ -101,14 +106,10 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     m3_throttle between 0 and 100
     m4_throttle between 0 and 100
     """
-    
-    # performance note:
-    # at least as of commit 6325282c3ae4bc9b6036c344c595748014e9aa2d, the entire function below (within the function) takes about 232 us and 0 new bytes of memory
-    
 
     # ensure the provided bytearray is big enough
-    if len(into) < 17:
-        raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing telemetry into. Must be at least 17 bytes.")
+    if len(into) < 18:
+        raise Exception("Provided bytearray of length " + str(len(into)) + " is too small for packing telemetry into. Must be at least 18 bytes.")
 
     # First, prep values
 
@@ -170,17 +171,20 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     into[7] = pitch_angle_unsigned
     into[8] = roll_angle_unsigned
 
+    # gforce
+    into[9] = gforce
+
     # inputs
-    into[9] = input_throttle
-    into[10] = input_pitch_unsigned
-    into[11] = input_roll_unsigned
-    into[12] = input_yaw_unsigned
+    into[10] = input_throttle
+    into[11] = input_pitch_unsigned
+    into[12] = input_roll_unsigned
+    into[13] = input_yaw_unsigned
 
     # motor throttles
-    into[13] = m1_throttle
-    into[14] = m2_throttle
-    into[15] = m3_throttle
-    into[16] = m4_throttle
+    into[14] = m1_throttle
+    into[15] = m2_throttle
+    into[16] = m3_throttle
+    into[17] = m4_throttle
 
     # no need to do \r\n at the end as we assume that is already set as the last two bytes of the into byte array
 

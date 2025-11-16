@@ -312,7 +312,7 @@ gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading d
 accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
 control_input:list[int] = [0,0,0,0] # array that we will unpack control input into (throttle input, pitch input, roll input, yaw input) - throttle as uint16, the rest as int16
 telemetry_packet_stream:bytearray = bytearray(9) # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.).
-telemetry_packet_store:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with telemetry data intended to be stored to local flash storage
+telemetry_packet_store:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\n') # array that we will repopulate with telemetry data intended to be stored to local flash storage
 TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
 TIMHPONG:bytes = "TIMHPONG\r\n".encode() # example TIMHPONG\r\n that we will send back out later on. Making it here to avoid re-making it in the loop
 
@@ -687,6 +687,9 @@ try:
             packable_pitch_angle:int = pitch_angle // 1000                            # express as whole number  
             packable_roll_angle:int = roll_angle // 1000                              # express as whole number  
 
+            # Prepare input values to packet as expected: gforce
+            packable_gforce:int = (gforce + 50) // 100                                # converts gforce, which is something like 1,000, to a two-digit, "packable" (single byte), value. "10" would be 1.0g, "23" would be 2.3g, 8 would be 0.8 g, etc. Adding 50 to it ensures that it will "round up" during integer division.
+
             # prepare input values as expected: input values
             # we need to convert the pitch, roll, and yaw input (expressed as int16 between -32,768 and 32,767) to a percentage from -100 to 100
             # I have found the most efficient way of doing this is to:
@@ -709,7 +712,7 @@ try:
             # pack it
             # takes ~460 us, uses 0 bytes of new memory
             # note: while calling this function below takes > 400 us, it takes only around 200 within the function. Maybe 200 us wasted by calling a function. Can save time running it inline below.
-            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store)
+            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_gforce, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store)
 
             # Record it by adding it to the temporary memory buffer we have going while in flight
             # takes ~490 us, uses 0 bytes of new memory. I tried slicing via memoryview and array itself and that takes much longer - like 2,000 us! I also tried storing the len(telemetry_packet_store) and reusing it... doesnt do anything.
