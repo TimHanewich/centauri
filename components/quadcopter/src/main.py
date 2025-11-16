@@ -47,6 +47,8 @@ yaw_ki:int = 0
 yaw_kd:int = 0
 i_limit:int = 0
 
+telemetry_frames_per_second:int = 4 # how many telemetry frames to record per second
+
 ####################
 ####################
 ####################
@@ -306,15 +308,6 @@ yaw_rate:int = 0     # yaw rate, multiplied by 1,000. So, for example, 3543 woul
 pitch_angle:int = 0  # pitch angle, multiplied by 1,000. So, for example, 3543 would be 3.543.
 roll_angle:int = 0   # roll angle, multiplied by 1,000. So, for example, 3543 would be 3.543.
 
-# declare objects we will reuse in the loop instead of remaking each time (for efficiency)
-cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, the full PID loop must happen within. 4,000 microseconds (4 ms) to achieve a 250 Hz loop speed for example.
-gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
-accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
-control_input:list[int] = [0,0,0,0] # array that we will unpack control input into (throttle input, pitch input, roll input, yaw input) - throttle as uint16, the rest as int16
-telemetry_packet_stream:bytearray = bytearray(9) # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.).
-TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
-TIMHPONG:bytes = "TIMHPONG\r\n".encode() # example TIMHPONG\r\n that we will send back out later on. Making it here to avoid re-making it in the loop
-
 # declare objects that will be used for reading incoming data from the HC-12 (conveyer approach)
 terminator:bytes = "\r\n".encode()        # example \r\n for comparison sake later on (13, 10 in bytes)
 rxBuffer:bytearray = bytearray(128)       # buffer we st up only to append new incoming data received over the HC-12 (via UART)
@@ -337,6 +330,28 @@ temp_telemetry_storage_len:int = 25000                                          
 temp_telemetry_storage:bytearray = bytearray(temp_telemetry_storage_len)                                                                   # create the fixed-length bytearray for storing telemetry while in flight (fast)
 temp_telemetry_storage_mv:memoryview = memoryview(temp_telemetry_storage)                                                                  # create a memoryview of that temp storage array for faster copying into later on
 temp_telemetry_storage_used:int = 0                                                                                                        # for tracking how many bytes of the temp storage have been used so far
+
+# Perform a simple estimation of how many seconds of flight time we have given the telemetry packet size, buffer length, and snapshot frequency
+print()
+print("TELEMETRY BUFFER ESTIMATE")
+telemetry_bytes_per_second:int = len(telemetry_packet_store) * telemetry_frames_per_second        # The bytes per second that will be stored in the buffer
+seconds_of_buffer:int = temp_telemetry_storage_len // telemetry_bytes_per_second                  # The number of seconds the buffer will last
+minutes_of_buffer:float = seconds_of_buffer / 60.0                                                # The number of minutes the buffer will last
+print("Telemetry frames per second: " + str(telemetry_frames_per_second))
+print("Telemetry bytes per second (" + str(len(telemetry_packet_store)) + " bytes per frame): " + str(telemetry_bytes_per_second))
+print("With a telemetry buffer of " + str(temp_telemetry_storage_len) + " bytes...")
+print(str(seconds_of_buffer) + " seconds of uninterupted flight")
+print(str(round(minutes_of_buffer, 1)) + " minutes of uninterupted flight")
+
+# declare objects we will reuse in the loop instead of remaking each time (for efficiency)
+cycle_time_us:int = 1000000 // target_hz # The amount of time, in microseconds, the full PID loop must happen within. 4,000 microseconds (4 ms) to achieve a 250 Hz loop speed for example.
+gyro_data:bytearray = bytearray(6) # 6 bytes for reading the gyroscope reading directly from the MPU-6050 via I2C (instead of Python creating another 6-byte bytes object each time!)
+accel_data:bytearray = bytearray(6) # 6 bytes to reading the accelerometer reading directly from the MPU-6050 via I2C
+control_input:list[int] = [0,0,0,0] # array that we will unpack control input into (throttle input, pitch input, roll input, yaw input) - throttle as uint16, the rest as int16
+telemetry_packet_stream:bytearray = bytearray(9) # array that we will repopulate with updated telemetry data (i.e. battery level, pitch rate, etc.).
+TIMHPING:bytes = "TIMHPING\r\n".encode() # example TIMHPING\r\n for comparison sake later (so we don't have to keep encoding it and making a new bytes object later)
+TIMHPONG:bytes = "TIMHPONG\r\n".encode() # example TIMHPONG\r\n that we will send back out later on. Making it here to avoid re-making it in the loop
+ms_between_telemetry_snapshots:int = 1000 // telemetry_frames_per_second
 
 # timestamps for tracking other processes that need to be done on a schedule
 # originally was using asyncio for this but now resorting to timestamp-based
@@ -664,7 +679,7 @@ try:
         # if we need to stream/record telemetry, pack telemetry
         # uses 0 bytes of new memory
         # ~1,000 us while armed, ~1,200 us when unarmed (it may send if unarmed)
-        if time.ticks_diff(time.ticks_ms(), telemetry_last_recorded_ticks_ms) >= 250: # every 250 ms, telemetry will be recorded
+        if time.ticks_diff(time.ticks_ms(), telemetry_last_recorded_ticks_ms) >= (1000 // telemetry_frames_per_second): # proceed to store a snapshot if it is time
 
             # first, get a ADC reading
             vbat_u16:int = vbat_adc.read_u16() # read the value on the ADC pin, as a uint16 (0-65535)
@@ -729,7 +744,7 @@ try:
             # 1. We are unarmed (throttle = 0)
             # 2. It is due time!
             if input_throttle_uint16 == 0: # if we are unarmed (throttle is 0%), we will consider streaming some telemetry periodically to the controller. It is important to only send data via HC-12 while unarmed because the HC-12 is half duplex, meaning it can't send and receive at the same time. Full focus should be put into receiving input commands while armed.
-                if time.ticks_diff(time.ticks_ms(), status_last_sent_ticks_ms) >= 1000: # every 1000 ms (1 time per second)
+                if time.ticks_diff(time.ticks_ms(), status_last_sent_ticks_ms) >= 1000: # send via HC-12 to controller every 1000 ms (1 time per second)
                     
                     # construct stream packet
                     # we just packed all the data into the record buffer
