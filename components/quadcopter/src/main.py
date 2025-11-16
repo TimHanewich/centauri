@@ -405,7 +405,6 @@ try:
                     # we will not do that because any slicing (using "[]") uses NEW memory... even if you slice via a memoryview!!!!!
 
                     # Process the line 
-                    t1 = time.ticks_us()
                     if ProcessBuffer.startswith(TIMHPING): # PING: simple check of life. Checking "startswith" is quick, only ~70 us
                         uart_hc12.write(TIMHPONG) # PONG back
                     elif ProcessBuffer[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
@@ -508,6 +507,11 @@ try:
         # I could in theory not need to do this if I mounted it flipped over, but preferring to leave it as is physically and just make the adjustment here!
         pitch_rate = pitch_rate * -1    # this ensures as the drone pitches down towards the ground, that is a NEGATIVE pitch rate. And a tile up would be positive
         yaw_rate = yaw_rate * -1        # this ensures the drone rotating towards the right is a POSITIVE yaw rate, with a left turn being negative
+
+        # calculate g-force
+        # ~100 us, 0 bytes of memory used
+        gforce:int = tools.isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
+        gforce = gforce - gforce_bias                                                         # subtract out bias, which was calculated during IMU calibration earlier    
 
         # calculate the "accelerometers opinion" of the pitch and roll angles
         # these will later be "fused" with the gyro's opinion via a complementary filter
