@@ -23,5 +23,6 @@
     <ColumnMapping inputColumnText="M4 Throttle" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="Generic" dataType="Other" />
     <ColumnMapping inputColumnText="Pitch Angle" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="Generic" dataType="Other" />
     <ColumnMapping inputColumnText="Roll Angle" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="Generic" dataType="Other" />
+    <ColumnMapping inputColumnText="G-Force" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="G-Forces" dataType="Acceleration Gs" />
   </ColumnMappings>
 </DataProfile>

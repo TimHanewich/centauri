@@ -8,12 +8,12 @@ DashWare</EndTitle>
   </Information>
   <InputSettings>
     <DataFiles>
-      <DataFile profile="Centauri" fileName="C:\Users\tim\Desktop\telemetry.csv" currentTime="85.7996937611699" dataSynced="True" syncOffset="-41.060355189879" closedCourse="True" startFinishSetInUI="False" openCourseStartOffset="-1" openCourseFinishOffset="-1" lapStartX="0" lapStartY="0" lapEndX="0" lapEndY="0" lapToDraw="0" startFinishDistanceThreshold="40" showDistanceThreshold="True" ignoreFirstLap="True" ignoreLastLap="True" lapTimeHoldSecs="5" startTrim="8.999" endTrim="113.773">
+      <DataFile profile="Centauri" fileName="C:\Users\tim\Desktop\telemetry.csv" currentTime="588.452190062335" dataSynced="True" syncOffset="-9.89558825797742" closedCourse="True" startFinishSetInUI="False" openCourseStartOffset="-1" openCourseFinishOffset="-1" lapStartX="0" lapStartY="0" lapEndX="0" lapEndY="0" lapToDraw="0" startFinishDistanceThreshold="40" showDistanceThreshold="True" ignoreFirstLap="True" ignoreLastLap="True" lapTimeHoldSecs="5" startTrim="9.062" endTrim="610.302">
         <LapSplits />
       </DataFile>
     </DataFiles>
     <VideoFiles>
-      <VideoFile trimStart="91416.0839160839" trimEnd="145825.174825175" videoUniqueID="" rotateVideo="False">C:\Users\tim\Desktop\video.MP4</VideoFile>
+      <VideoFile trimStart="0" trimEnd="597500" videoUniqueID="" rotateVideo="False">C:\Users\tim\Desktop\video.MP4</VideoFile>
     </VideoFiles>
   </InputSettings>
   <OutputSettings>
@@ -54,9 +54,12 @@ DashWare</EndTitle>
       <InputMapping gaugeInput="roll_rate" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Roll Rate" />
       <InputMapping gaugeInput="yaw_rate" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Yaw Rate" />
     </Gauge>
-    <Gauge name="Angles Readout" transparency="1" x="-0.2692371" y="137.2773">
+    <Gauge name="Angles Readout" transparency="1" x="-0.2692371" y="190.9836">
       <InputMapping gaugeInput="pitch_angle" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Pitch Angle" />
       <InputMapping gaugeInput="roll_angle" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Roll Angle" />
+    </Gauge>
+    <Gauge name="G-Force Readout" transparency="1" x="17.18182" y="147.3007">
+      <InputMapping gaugeInput="gforce" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="G-Force" />
     </Gauge>
   </GaugeSettings>
   <ChartSettings>
