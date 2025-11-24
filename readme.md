@@ -1,7 +1,7 @@
 ![banner](https://i.imgur.com/oSwhZjR.png)
 
 # Centauri: A Fully Custom Quadcopter System
-*Centauri* is not just another drone project - it's a complete, end‑to‑end custom quadcopter ecosystem. From the airframe to the pilot's controller, from the communication platform to the analysis tools, every piece has been designed and built from scratch. At the heart of Centauri lies the  *Centauri Flight Controller*, a **custom MicroPython‑based flight controller** running efficiently on a low‑power Raspberry Pi Pico. Unlike most quadcopter projects that rely on off‑the‑shelf flight stacks, Centauri's controller is entirely original.
+*Centauri* is a complete, end‑to‑end custom quadcopter system. From the airframe to the pilot's controller, from the communication platform to the analysis tools, every piece has been designed and built from scratch. At the heart of Centauri lies the *Centauri Flight Controller*, a **custom MicroPython‑based flight controller**, running efficiently on a low‑power Raspberry Pi Pico. Unlike most quadcopter projects that rely on off‑the‑shelf flight controllers, Centauri is entirely original.
 
 Centauri builds on my earlier [Scout flight controller](https://github.com/TimHanewich/scout), representing a major leap forward in capability, performance, and system integration.
 
@@ -11,7 +11,7 @@ To watch *Centauri* in action, click below:
 ## In This Project
 ![anatomy](https://i.imgur.com/6TYY0Nv.png)
 
-This repository provides *everything* you need to build your own Centauri quadcopter and take flight. The system includes:
+This repository provides *everything* you need to build your own Centauri quadcopter and take flight. This includes:
 
 |Project Component|Thumbnail|Description|
 |-|-|-|
