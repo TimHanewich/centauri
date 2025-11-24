@@ -1,4 +1,4 @@
-![banner](https://i.imgur.com/oSwhZjR.png)
+![banner](https://i.imgur.com/0WhL6Q5.png)
 
 # Centauri: A Fully Custom Quadcopter System
 *Centauri* is a complete, end‑to‑end custom quadcopter system. From the airframe to the pilot's controller, from the communication platform to the analysis tools, every piece has been designed and built from scratch. At the heart of Centauri lies the *Centauri Flight Controller*, a **custom MicroPython‑based flight controller**, running efficiently on a low‑power Raspberry Pi Pico. Unlike most quadcopter projects that rely on off‑the‑shelf flight controllers, Centauri is entirely original.
