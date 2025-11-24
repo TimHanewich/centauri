@@ -62,3 +62,8 @@ The flight controller code can be found [here](./src/). It is only two `.py` fil
 - `tools.py` - contains helper functions for unpacking command input, packing telemetry data, and more.
 
 With your quadcopter fully assembled and wired up, all you need to do is flash these two files to the root directory of the Raspberry Pi Pico acting as the MCU. Assuming you wired each component to the Pico's GP pins as depicted in the wiring diagram, it will work without further configuration. Alternatively, you may need to make minor tweaks to the pin mappings.
+
+## Weight
+- Complete drone, with 4S LiPo battery, and GoPro attached = [920 grams](https://i.imgur.com/8M9BNGq.jpeg)
+- GoPro, GoPro frame, internal GoPro battery, and M4 screw + nut = [146 grams](https://i.imgur.com/HSME9m7.jpeg)
+- 4S Battery weight: 347 grams
