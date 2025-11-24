@@ -16,3 +16,7 @@ This repository provides *everything* you need to build your own Centauri quadco
 - [**Centauri Quadcopter**](./components/quadcopter/) - 3D‑printable frame design files, custom flight controller software, and wiring diagrams  
 - [**Pilot Controller**](./components/controller/) - a PC‑based program that reads input from a wired Xbox controller and transmits commands to the quadcopter  
 - [**Analysis Script**](./components/analysis/) - a lightweight Python tool for unpacking binary telemetry logs stored on the Pico into human‑readable `.csv` files  
+
+|Component|Thumbnail|Description|
+|-|-|-|
+|[Quadcopter](./components/quadcopter/)|![img](https://i.imgur.com/yLjl0wW.png)|Custom quadcopter, with:<br>- [3D-Printable Design](https://www.thingiverse.com/thing:7194383)<br>- [Components List](./components/quadcopter/)<br>- [Wiring Diagram](https://app.diagrams.net/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FTimHanewich%2Fcentauri%2Frefs%2Fheads%2Fmaster%2Fcomponents%2Fquadcopter%2Fwiring.drawio#%7B%22pageId%22%3A%22W1gebfnubh0FSxZTr-fW%22%7D)<br>- [Custom Flight Controller, written in MicroPython](https://github.com/TimHanewich/centauri/blob/master/components/quadcopter/src/main.py)|
