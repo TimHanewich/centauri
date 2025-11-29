@@ -53,7 +53,6 @@ while True:
 
     # Read the raw data and update the variables we are using to track
     for event in pygame.event.get():
-        print(str(event))
         if event.type == pygame.JOYAXISMOTION: # it has to do with a variable input, like a joystick or trigger
 
             # Xbox Controller Axes (on linux)
@@ -78,6 +77,7 @@ while True:
                 input_right_trigger = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
 
         elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed down
+            print("BUTTON DOWN: " + str(event))
             
             # Button ID's below
             # A = 0
@@ -168,7 +168,7 @@ while True:
     
     # pack
     packed:bytes = tools.pack_controls(input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
-    print(str(packed))
+    #print(str(packed))
 
     # wait a moment
     time.sleep(0.05)
