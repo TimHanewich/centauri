@@ -55,4 +55,7 @@ def pack_controls(a:bool, b:bool, x:bool, y:bool, up:bool, right:bool, down:bool
     asint16:int = min(max(int(round(rt * 65535, 0)), 0), 65535)
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
-    return ToReturn
+    # add terminator
+    ToReturn.extend("\r\n".encode())
+
+    return bytes(ToReturn)
