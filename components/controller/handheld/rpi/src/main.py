@@ -166,7 +166,7 @@ while True:
             #print("Unknown event: " + str(event))
 
     # print
-    if True:
+    if False:
         ToPrint:dict = {}
         ToPrint["ls"] = input_left_stick_click
         ToPrint["rs"] = input_right_stick_click
@@ -192,7 +192,7 @@ while True:
     
     # pack
     packed:bytes = tools.pack_controls(input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
-    #print(str(packed))
+    print(str(packed))
 
     # wait a moment
     time.sleep(0.05)
