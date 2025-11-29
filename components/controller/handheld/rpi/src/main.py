@@ -166,8 +166,12 @@ while True:
             #print("Unknown event: " + str(event))
 
     # print
-    if False:
+    if True:
         ToPrint:dict = {}
+        ToPrint["ls"] = input_left_stick_click
+        ToPrint["rs"] = input_right_stick_click
+        ToPrint["back"] = input_back
+        ToPrint["start"] = input_start
         ToPrint["a"] = input_a
         ToPrint["b"] = input_b
         ToPrint["x"] = input_x
