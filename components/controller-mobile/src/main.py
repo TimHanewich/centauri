@@ -38,7 +38,7 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.JOYAXISMOTION: # it has to do with a variable input, like a joystick or trigger
             if event.axis == 5: # right trigger
-                throttle = (throttle + 1.0) / 2.0 # gets it to between 0.0 and 1.0
+                throttle = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
             elif event.axis == 0: # left stick X axis (left/right)
                 roll = event.value
             elif event.axis == 1: # left stick Y axis (up/down)
