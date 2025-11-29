@@ -32,6 +32,7 @@ async def main() -> None:
     print("Controller #0, '" + controller.get_name() + "' will be used.")
 
     # Declare control input variables
+    armed:bool = False         # Controlled by Xbox A & B buttons
     throttle:float = 0.0       # between 0.0 and 1.0
     pitch:float = 0.0          # between -1.0 and 1.0
     roll:float = 0.0           # between -1.0 and 1.0
@@ -40,6 +41,7 @@ async def main() -> None:
     def continuous_read_xbox() -> None:
 
         # declare nonlocal properties
+        nonlocal armed
         nonlocal throttle
         nonlocal pitch
         nonlocal roll
@@ -69,9 +71,12 @@ async def main() -> None:
                     elif event.axis == 3: # right stick X axis (left/right) - will be 3 on linux devices, but another ID number on windows.
                         yaw = nlt_yaw.transform(event.value)
                 elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed or depressed
-                    pass
+                    if event.button == 0: # A
+                        armed = True
+                    elif event.button == 1: # B
+                        armed = False
             
-            print("Throttle: " + str(throttle) + ", Pitch: " + str(pitch) + ", Roll: " + str(roll) + ", Yaw: " + str(yaw))
+            print("ARMED:" + str(armed) + ", Throttle: " + str(throttle) + ", Pitch: " + str(pitch) + ", Roll: " + str(roll) + ", Yaw: " + str(yaw))
 
             # wait a moment
             time.sleep(0.05)
