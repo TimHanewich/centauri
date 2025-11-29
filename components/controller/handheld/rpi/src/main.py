@@ -104,7 +104,14 @@ while True:
                 input_left_bumper = True
             elif event.button == 5:
                 input_right_bumper = True
-
+            elif event.button == 9:
+                input_left_stick_click = True
+            elif event.button == 10:
+                input_right_stick_click = True
+            elif event.button == 6:
+                input_back = True
+            elif event.button == 7:
+                input_start = True
         elif event.type == pygame.JOYBUTTONUP: # a button was depressed (stopped being pressed)
             if event.button == 0:
                 input_a = False
@@ -118,6 +125,14 @@ while True:
                 input_left_bumper = False
             elif event.button == 5:
                 input_right_bumper = False
+            elif event.button == 9:
+                input_left_stick_click = False
+            elif event.button == 10:
+                input_right_stick_click = False
+            elif event.button == 6:
+                input_back = False
+            elif event.button == 7:
+                input_start = False
         elif event.type == pygame.JOYHATMOTION: # D-Pad
 
             # "value" looks something like (-1, 1)
