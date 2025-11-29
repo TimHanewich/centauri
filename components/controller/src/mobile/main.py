@@ -42,7 +42,7 @@ while True:
                 if event.axis == 5: # right trigger
                     throttle = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
                 elif event.axis == 0: # left stick X axis (left/right)
-                    roll = event.roll
+                    roll = event.value
                 elif event.axis == 1: # left stick Y axis (up/down)
                     # pushing the left stick forward will result in a NEGATIVE value. While this may seem incorrect at first, it is actually correct... pushing the left stick forward should prompt the quadcopter to pitch down (forward), hence it should be negative!
                     pitch = event.value
