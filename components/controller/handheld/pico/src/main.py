@@ -16,7 +16,6 @@ graphic = framebuf.FrameBuffer(CENTAURI_GRAPHIC, 128, 64, framebuf.MONO_HLSB)
 oled.blit(graphic, 0, 0)
 oled.show()
 
-
 # Set up UART to receive controller input data from the RPi
 uart = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
 
