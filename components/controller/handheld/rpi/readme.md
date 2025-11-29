@@ -5,7 +5,7 @@ Just a lightweight script for reading controller input and then providing that t
 A total of **16 bytes**. So at 30 packets per second, that is 480 bytes per second.
 - Button Byte (1 byte)
     - Bit 7: *reserved*
-    - Bit 6: *reserved*
+    - Bit 6: **problem encountered**. 0 = all good, 1 = problem!
     - Bit 5: Left Stick Click
     - Bit 4: Right Stick Click
     - Bit 3: Back ("select"?) Button
