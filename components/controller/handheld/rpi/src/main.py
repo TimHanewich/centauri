@@ -49,6 +49,7 @@ while True:
 
     # Read the raw data and update the variables we are using to track
     for event in pygame.event.get():
+        print(str(event))
         if event.type == pygame.JOYAXISMOTION: # it has to do with a variable input, like a joystick or trigger
 
             # Xbox Controller Axes (on linux)
