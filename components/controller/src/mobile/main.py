@@ -66,3 +66,5 @@ def continuous_read_xbox() -> None:
 
         # wait a moment
         time.sleep(0.05)
+
+continuous_read_xbox()
