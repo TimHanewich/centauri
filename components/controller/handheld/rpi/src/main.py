@@ -61,11 +61,11 @@ while True:
             if event.axis == 0: # Left Stick X axis (left/right)
                 input_left_stick_x = event.value
             elif event.axis == 1: # Left Stick Y axis (up/down)
-                input_left_stick_y = event.value
+                input_left_stick_y = event.value # NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
             elif event.axis == 3: # Right Stick X axis
                 input_right_stick_x = event.value
             elif event.axis == 4: # Right stick Y axis
-                input_right_stick_y = event.value
+                input_right_stick_y = event.value # NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
             elif event.axis == 2: # left trigger
                 input_left_trigger = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
             elif event.axis == 5: # right trigger
