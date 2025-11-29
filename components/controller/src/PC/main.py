@@ -14,6 +14,9 @@ import serial
 import tools
 import sys
 import keyboard
+import os
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../")) # Add parent directory to path so we can import utils.py (shared module)
+from utils import pack_control_packet, pack_settings_update, unpack_telemetry, unpack_special_packet, NonlinearTransformer
 
 async def main() -> None:
 
@@ -375,7 +378,7 @@ async def main() -> None:
 
                 # pack it
                 print("Packing PID updates...")
-                ToSend:bytes = tools.pack_settings_update(pitch_kp_eff, pitch_ki_eff, pitch_kd_eff, roll_kp_eff, roll_ki_eff, roll_kd_eff, yaw_kp_eff, yaw_ki_eff, yaw_kd_eff, i_limit)
+                ToSend:bytes = pack_settings_update(pitch_kp_eff, pitch_ki_eff, pitch_kd_eff, roll_kp_eff, roll_ki_eff, roll_kd_eff, yaw_kp_eff, yaw_ki_eff, yaw_kd_eff, i_limit)
 
                 # send it
                 print("Sending PID updates...")
@@ -442,9 +445,9 @@ async def main() -> None:
         # These do two things:
         # 1 - implements a deadzone
         # 2 - dampens early inputs (smooth gradually increasing curve, not linear)
-        nlt_pitch:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
-        nlt_roll:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
-        nlt_yaw:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.10) # my deadzone is higher than the others because I have a broken right stick on my controller that often rests at around 8% in either direction
+        nlt_pitch:tools.NonlinearTransformer = NonlinearTransformer(2.0, 0.05)
+        nlt_roll:tools.NonlinearTransformer = NonlinearTransformer(2.0, 0.05)
+        nlt_yaw:tools.NonlinearTransformer = NonlinearTransformer(2.0, 0.10) # my deadzone is higher than the others because I have a broken right stick on my controller that often rests at around 8% in either direction
 
         # determine what the yaw axis ID is (right stick X, horizontal, axis)
         # it is different based on what OS you are on I find
@@ -585,13 +588,13 @@ async def main() -> None:
         while True:
             if armed:
                 throttle_to_send:float = idle_throttle + ((max_throttle - idle_throttle) * throttle) # scale within range, if armed
-                ToSend:bytes = tools.pack_control_packet(throttle_to_send, pitch, roll, yaw) # pack into bytes
+                ToSend:bytes = pack_control_packet(throttle_to_send, pitch, roll, yaw) # pack into bytes
                 if ser != None:
                     ser.write(ToSend + "\r\n".encode()) # send it via HC-12 by sending it to the transceiver over the serial line
                     packets_sent = packets_sent + 1
                 await asyncio.sleep(0.05) # 20 Hz
             else:
-                ToSend:bytes = tools.pack_control_packet(0.0, 0.0, 0.0, 0.0) # pack all 0 inputs
+                ToSend:bytes = pack_control_packet(0.0, 0.0, 0.0, 0.0) # pack all 0 inputs
                 if ser != None:
                     ser.write(ToSend + "\r\n".encode()) # send it via HC-12 by sending it to the transceiver over the serial line
                     packets_sent = packets_sent + 1
@@ -637,7 +640,7 @@ async def main() -> None:
 
                 # Handle the line based on what it is
                 if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a telemetry packet
-                    TelemetryData:dict = tools.unpack_telemetry(ThisLine)
+                    TelemetryData:dict = unpack_telemetry(ThisLine)
                     if TelemetryData != None: # it returns None if there was an issue like it wasn't long enough
                         vbat = TelemetryData["vbat"]
                         pitch_rate = TelemetryData["pitch_rate"]
@@ -646,7 +649,7 @@ async def main() -> None:
                         pitch_angle = TelemetryData["pitch_angle"]
                         roll_angle = TelemetryData["roll_angle"]
                 elif ThisLine[0] & 0b00000001 > 0: # if bit 0 is 1, it is a special packet (text)
-                    msg:str = tools.unpack_special_packet(ThisLine)
+                    msg:str = unpack_special_packet(ThisLine)
                     drone_messages.append(display.Message(msg, time.time()))
                 else:
                     # handle uknown packet type?
