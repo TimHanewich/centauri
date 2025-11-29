@@ -164,7 +164,7 @@ while True:
             pass
             #print("Unknown event: " + str(event))
 
-    # print
+    # print (change to True for debugging purposes)
     if False:
         ToPrint:dict = {}
         ToPrint["ls"] = input_left_stick_click
