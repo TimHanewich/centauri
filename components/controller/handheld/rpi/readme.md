@@ -6,10 +6,10 @@ A total of **16 bytes**. So at 30 packets per second, that is 480 bytes per seco
 - Button Byte (1 byte)
     - Bit 7: *reserved*
     - Bit 6: *reserved*
-    - Bit 5: *reserved*
-    - Bit 4: *reserved*
-    - Bit 3: *reserved*
-    - Bit 2: *reserved*
+    - Bit 5: Left Stick Click
+    - Bit 4: Right Stick Click
+    - Bit 3: Back ("select"?) Button
+    - Bit 2: Start Button
     - Bit 1: A
     - Bit 0: B
 - Button Byte (1 byte)
