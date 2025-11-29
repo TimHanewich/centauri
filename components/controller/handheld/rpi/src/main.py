@@ -3,6 +3,12 @@ import time
 import tools
 import serial
 
+# Set up serial communication that will later be used to send data to the connected device via UART
+serport:str = "/dev/ttyS0"
+print("Opening serial port on '" + serport + "'...")
+ser = serial.Serial(serport, 9600)
+print("Serial port opened!")
+
 # Set up controller
 print("Initializing pygame module...")
 pygame.init()
@@ -26,11 +32,7 @@ controller = pygame.joystick.Joystick(0)
 controller.init()
 print("Controller #0, '" + controller.get_name() + "' will be used.")
 
-# Set up serial communication that will later be used to send data to the connected device via UART
-serport:str = "/dev/ttyS0"
-print("Opening serial port on '" + serport + "'...")
-ser = serial.Serial(serport, 9600)
-print("Serial port opened!")
+
 
 # Declare control input variables
 input_left_stick_click:bool = False
