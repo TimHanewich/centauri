@@ -26,6 +26,10 @@ controller.init()
 print("Controller #0, '" + controller.get_name() + "' will be used.")
 
 # Declare control input variables
+input_left_stick_click:bool = False
+input_right_stick_click:bool = False
+input_back:bool = False # the "back" button (or is it called "select"?)... to the left of the Xbox logo
+input_start:bool = False
 input_a:bool = False
 input_b:bool = False
 input_y:bool = False
@@ -163,7 +167,7 @@ while True:
         print(str(ToPrint))
     
     # pack
-    packed:bytes = tools.pack_controls(input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
+    packed:bytes = tools.pack_controls(input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
     print(str(packed))
 
     # wait a moment
