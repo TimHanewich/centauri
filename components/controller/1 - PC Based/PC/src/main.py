@@ -15,7 +15,6 @@ import tools
 import sys
 import keyboard
 import os
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../")) # Add parent directory to path so we can import utils.py (shared module)
 from utils import pack_control_packet, pack_settings_update, unpack_telemetry, unpack_special_packet, NonlinearTransformer
 
 async def main() -> None:
