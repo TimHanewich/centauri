@@ -69,6 +69,8 @@ while True:
             # Y = 3 
             # RB = 5 
             # LB = 4 
+        else:
+            print("Unknown event: " + str(event))
 
             
     
