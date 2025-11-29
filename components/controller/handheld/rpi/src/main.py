@@ -60,6 +60,16 @@ while True:
             #     yaw = event.value
         elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed or depressed
             print(str(event.button))
+            print(str(event))
+            
+            # Button ID's below
+            # A = 0
+            # B = 1
+            # X = 2
+            # Y = 3 
+            # RB = 5 
+            # LB = 4 
+
             
     
     
