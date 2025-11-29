@@ -77,7 +77,6 @@ while True:
                 input_right_trigger = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
 
         elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed down
-            print("BUTTON DOWN: " + str(event))
             
             # Button ID's below
             # A = 0
