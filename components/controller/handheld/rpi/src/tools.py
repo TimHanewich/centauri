@@ -9,7 +9,7 @@ def pack_controls(a:bool, b:bool, x:bool, y:bool, up:bool, right:bool, down:bool
     if a:
         ToReturn[0] = ToReturn[0] | 0b00000010
     if b:
-        ToReturn[0] = ToReturn[0] | 0b00000010
+        ToReturn[0] = ToReturn[0] | 0b00000001
     if x:
         ToReturn[1] = ToReturn[1] | 0b10000000
     if y:
