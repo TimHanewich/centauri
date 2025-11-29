@@ -1,5 +1,9 @@
 import pygame
 import time
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../"))
+from utils import pack_control_packet, pack_settings_update, unpack_telemetry, unpack_special_packet, NonlinearTransformer
 
 # Set up controller
 print("Initializing pygame module...")
