@@ -86,6 +86,11 @@ while True:
             # Y = 3 
             # RB = 5 
             # LB = 4
+            # Left Stick clicked down = 9
+            # Right stick clicked down = 10
+            # "Back" button ("select"?) = 6
+            # Start button = 7
+            # Share button (on Xbox Series S/X controllers only) = 11
 
             if event.button == 0:
                 input_a = True
