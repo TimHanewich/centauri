@@ -1,6 +1,9 @@
 def unpack_controls(data:bytes) -> dict:
     """Unpacks control data (from a Raspberry Pi w/ a controller connected) to normal data."""
 
+    if len(data) < 14: # while the full packet is normally 16, that is including the \r\n terminator. 14 is the actual data. So it has to be at least 14 in length.
+        return None
+
     ToReturn:dict = {}
 
     # left stick pressed? (clicked down)
