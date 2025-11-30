@@ -24,8 +24,6 @@ async def main() -> None:
     oled.blit(graphic, 0, 0)
     oled.show()
 
-    
-
     # Set up variables to contain the most up to date controller input data
     # "ci" short for "controller input"
     ci_ls:bool = False        # left stick clicked in
