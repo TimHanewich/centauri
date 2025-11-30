@@ -91,7 +91,7 @@ async def main() -> None:
             dc.display()
 
             # wait
-            await asyncio.sleep(0.25)
+            await asyncio.sleep(0.1)
 
     # get all threads going
     task_read_xbox = asyncio.create_task(continuous_xbox_read())
