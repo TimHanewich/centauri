@@ -49,7 +49,6 @@ async def main() -> None:
     ci_lt:float = 0.0         # Left Trigger = 0.0 to 1.0
     ci_rt:float = 0.0         # Right Trigger = 0.0 to 1.0
 
-
     # declare xbox controller input variables
     armed:bool = False
     throttle:float = 0.0      # between 0.0 and 1.0
