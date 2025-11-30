@@ -87,9 +87,16 @@ def unpack_controls(data:bytes) -> dict:
     else:
         ToReturn["rb"] = False
 
-    # left stick x axis (left right)
-    left_stick_x_axis:float = ((data[2] << data[3]) - 32768) / 32768
-    ToReturn["left_x"] = left_stick_x_axis
-
+    # Axes (variables)
+    ToReturn["left_x"] = -1 + ((data[2] << 8 | data[3]) / 65535) * 2
+    ToReturn["left_y"] = -1 + ((data[4] << 8 | data[5]) / 65535) * 2
+    ToReturn["right_x"] = -1 + ((data[6] << 8 | data[7]) / 65535) * 2
+    ToReturn["right_y"] = -1 + ((data[8] << 8 | data[9]) / 65535) * 2
+    ToReturn["lt"] = (data[10] << 8 | data[11]) / 65535
+    ToReturn["rt"] = (data[12] << 8 | data[13]) / 65535
 
     return ToReturn
+
+data = b'\x15D\xbf\xff@\x00\xdf\xff,\xcd\x1e\xb8Y\x99\r\n'
+result = unpack_controls(data)
+print(str(result))
