@@ -63,6 +63,14 @@ async def main() -> None:
                     # unpack it
                     inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
                     if inputs != None:
+
+                        # armed/unarmed
+                        if inputs["a"]:
+                            armed = True
+                        elif inputs["b"]:
+                            armed = False
+
+                        # Set variable inputs
                         throttle = inputs["rt"]
                         pitch = inputs["left_y"]
                         roll = inputs["left_x"]
