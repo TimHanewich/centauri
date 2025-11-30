@@ -3,6 +3,8 @@ import machine
 import ssd1306
 import asyncio
 import framebuf
+import tools
+from display import Display
 
 async def main() -> None:
 
@@ -53,16 +55,44 @@ async def main() -> None:
             while True:
                 term_loc:int = rxBuffer.find("\r\n".encode())
                 if term_loc != -1:
+
+                    # extract the line                    
                     ThisLine:bytes = rxBuffer[0:term_loc+2]
                     rxBuffer = rxBuffer[16:] # keep the rest, trim out that line
-                    print(ThisLine)
+
+                    # unpack it
+                    inputs:dict = tools.unpack_controls(ThisLine)
+                    roll = inputs["left_x"]
+
+
                 else:
                     break
                 
             await asyncio.wait(0.025)
 
+    async def continuous_display() -> None:
+
+        # declare display
+        dc:Display = Display(oled)
+
+        while True:
+
+            # plug in values collected via xbox input
+            dc.armed = armed
+            dc.throttle = throttle
+            dc.pitch = pitch
+            dc.roll = roll
+            dc.yaw = yaw
+
+            # display
+            dc.display()
+
+            # wait
+            await asyncio.wait(0.25)
+
     # get all threads going
     task_read_xbox = asyncio.create_task(continuous_xbox_read())
-    await asyncio.gather(task_read_xbox)
+    task_display = asyncio.create_task(continuous_display())
+    await asyncio.gather(task_read_xbox, task_display)
 
 asyncio.run(main())
