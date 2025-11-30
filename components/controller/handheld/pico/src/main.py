@@ -63,8 +63,10 @@ async def main() -> None:
 
                     # unpack it
                     inputs:dict = tools.unpack_controls(ThisLine)
+                    throttle = inputs["rt"]
+                    pitch = inputs["left_y"]
                     roll = inputs["left_x"]
-
+                    yaw = inputs["right_x"]
 
                 else:
                     break
