@@ -67,3 +67,6 @@ def pack_controls(left_stick:bool, right_stick:bool, back:bool, start:bool, a:bo
     ToReturn.extend("\r\n".encode())
 
     return bytes(ToReturn)
+
+#data = pack_controls(False, True, False, True, False,True, False, True, False, False, False, True, False, False, 0.50, -0.5, 0.75, -0.65, 0.12, 0.35)
+#print(str(data))
