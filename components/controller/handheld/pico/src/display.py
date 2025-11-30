@@ -84,15 +84,15 @@ class Display:
         # show
         self._oled.show()
 
-import machine
-i2c = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
-oled = ssd1306.SSD1306_I2C(128, 64, i2c)
+# import machine
+# i2c = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
+# oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 
-d = Display(oled)
-d.controller_soc = 1.0
-d.vbat_drone = 16.4
-d.last_recv = 1000
-d.armed = False
-d.throttle = 1.0
-d.pitch = -1.0
-d.display()
+# d = Display(oled)
+# d.controller_soc = 1.0
+# d.vbat_drone = 16.4
+# d.last_recv = 1000
+# d.armed = False
+# d.throttle = 1.0
+# d.pitch = -1.0
+# d.display()
