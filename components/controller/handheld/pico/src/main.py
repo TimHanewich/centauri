@@ -166,6 +166,6 @@ async def main() -> None:
     task_read_xbox = asyncio.create_task(continuous_xbox_read())
     task_display = asyncio.create_task(continuous_display())
     task_MAINCONTROL = asyncio.create_task(MAINCONTROL())
-    await asyncio.gather(task_read_xbox, task_display, MAINCONTROL)
+    await asyncio.gather(task_read_xbox, task_display, task_MAINCONTROL)
 
 asyncio.run(main())
