@@ -58,7 +58,6 @@ async def main() -> None:
 
                     # extract the line                    
                     ThisLine:bytes = rxBuffer[0:term_loc+2]
-                    print(str(ThisLine))
                     rxBuffer = rxBuffer[16:] # keep the rest, trim out that line
 
                     # unpack it
