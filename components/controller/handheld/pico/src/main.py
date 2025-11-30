@@ -44,6 +44,11 @@ async def main() -> None:
         nonlocal roll
         nonlocal yaw  
 
+        # Declare NonlinearTransformers
+        nlt_pitch:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
+        nlt_roll:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
+        nlt_yaw:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.10) # higher deadzone because the X axis on the right stick on my controller is broken, doesn't rest at 0% in the middle.
+
         while True:
             
             # check if we have any input data to receive from the xbox controller
@@ -72,9 +77,9 @@ async def main() -> None:
 
                         # Set variable inputs
                         throttle = inputs["rt"]
-                        pitch = inputs["left_y"]
-                        roll = inputs["left_x"]
-                        yaw = inputs["right_x"]
+                        pitch = nlt_pitch.transform(inputs["left_y"])
+                        roll = nlt_roll.transform(inputs["left_x"])
+                        yaw = nlt_yaw.transform(inputs["right_x"])
 
                 else:
                     break
