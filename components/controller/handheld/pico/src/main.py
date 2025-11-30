@@ -62,11 +62,12 @@ async def main() -> None:
                     rxBuffer = rxBuffer[16:] # keep the rest, trim out that line
 
                     # unpack it
-                    inputs:dict = tools.unpack_controls(ThisLine)
-                    throttle = inputs["rt"]
-                    pitch = inputs["left_y"]
-                    roll = inputs["left_x"]
-                    yaw = inputs["right_x"]
+                    inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
+                    if inputs != None:
+                        throttle = inputs["rt"]
+                        pitch = inputs["left_y"]
+                        roll = inputs["left_x"]
+                        yaw = inputs["right_x"]
 
                 else:
                     break
