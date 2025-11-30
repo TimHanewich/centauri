@@ -8,8 +8,8 @@ class Display:
         # unique identifier for the "page" we are on right now
         # Could be: 
         # "home" = main home screen
-        # "PID" = Send PID settings to drone
-        # "telemetry" = see all the telemetry from the drone
+        # "pid confirm" = confirm they want to send over pre-flashed PID settings
+        # "send pid" = currently sending pid (or waiting for confirmation)
         self.page:str = "home"
 
         # for "home" screen
@@ -21,6 +21,10 @@ class Display:
         self.pitch:float = 0.0             # pitch input, from -1.0 to 1.0
         self.roll:float = 0.0              # roll input, from -1.0 to 1.0
         self.yaw:float = 0.0               # yaw input, from -1.0 to 1.0
+
+        # "send pid" settings
+        self.send_pid_attempt:int = 0
+        self.send_pid_status:str = "sending"
 
     def display(self) -> None:
 
@@ -84,9 +88,23 @@ class Display:
                 yaw_to_display = " " + yaw_to_display
             self._oled.text("Y " + yaw_to_display, 59, 46)
 
-        elif self.page == "PID":
-            self._oled.text("PID SETTINGS", 16, 0)
+        elif self.page == "pid confirm":
+            self._oled.text("Send PID?", 28, 0)
+            self._oled.text("Y to confirm", 16, 10)
+            self._oled.text("B to cancel", 20, 20)
+        elif self.page == "send pid":
 
+            self._oled.text("SEND PID SETTING", 0, 0)
+
+            # Attempt #
+            txt:str = "Attempt " + str(self.send_pid_attempt)
+            xpos:int = int((128 - (len(txt) * 8)) / 2)
+            self._oled.text(txt, xpos, 20)
+
+            # Status
+            txt:str = self.send_pid_status
+            xpos:int = int((128 - (len(txt) * 8)) / 2)
+            self._oled.text(txt, xpos, 30)
 
         else:
             self._oled.text("UNKNOWN PAGE", 0, 0)
@@ -99,10 +117,22 @@ i2c = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
 oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 
 d = Display(oled)
+
+# home
+d.page = "home"
 d.controller_soc = 1.0
 d.vbat_drone = 16.4
 d.last_recv = 1000
 d.armed = False
 d.throttle = 1.0
 d.pitch = -1.0
+
+# pid confrim
+d.page = "pid confirm"
+
+# send pid
+d.page = "send pid"
+d.send_pid_attempt = 3
+d.send_pid_status = "CONFIRMED!"
+
 d.display()
