@@ -6,9 +6,13 @@ class Display:
         self._oled = oled
 
         # unique identifier for the "page" we are on right now
+        # Could be: 
+        # "home" = main home screen
+        # "PID" = Send PID settings to drone
+        # "telemetry" = see all the telemetry from the drone
         self.page:str = "home"
 
-        # for home screen
+        # for "home" screen
         self.last_recv:int = 0             # number of seconds since last received telemetry from drone
         self.controller_soc:float = 0.0    # between 0.0 and 1.0, the percentage charge of the controller (only a 1S lithium battery)
         self.vbat_drone:float = 0.0        # voltage of the battery on the drone (comes in from the telemetry we will receive from it)
@@ -45,7 +49,7 @@ class Display:
             while len(lastrecv_todisplay) < 4:
                 lastrecv_todisplay = " " + lastrecv_todisplay
             self._oled.text("L" + lastrecv_todisplay, 0, 56)
-            
+
             # Draw vertical line to separate info pane!
             self._oled.line(46, 0, 46, 64, 1)
 
@@ -79,6 +83,10 @@ class Display:
             while len(yaw_to_display) < 5:
                 yaw_to_display = " " + yaw_to_display
             self._oled.text("Y " + yaw_to_display, 59, 46)
+
+        elif self.page == "PID":
+            self._oled.text("PID SETTINGS", 16, 0)
+
 
         else:
             self._oled.text("UNKNOWN PAGE", 0, 0)
