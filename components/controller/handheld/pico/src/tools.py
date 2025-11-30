@@ -96,7 +96,3 @@ def unpack_controls(data:bytes) -> dict:
     ToReturn["rt"] = (data[12] << 8 | data[13]) / 65535
 
     return ToReturn
-
-data = b'\x15D\xbf\xff@\x00\xdf\xff,\xcd\x1e\xb8Y\x99\r\n'
-result = unpack_controls(data)
-print(str(result))
