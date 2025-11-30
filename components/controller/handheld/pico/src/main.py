@@ -24,11 +24,31 @@ async def main() -> None:
     oled.blit(graphic, 0, 0)
     oled.show()
 
-    # Set up UART to receive controller input data from the RPi
-    uart = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
-    if uart.any(): # clear out the rxbuffer
-        uart.read(uart.any())
-    rxBuffer:bytearray = bytearray()
+    
+
+    # Set up variables to contain the most up to date controller input data
+    # "ci" short for "controller input"
+    ci_ls:bool = False        # left stick clicked in
+    ci_rs:bool = False        # right stick clicked in
+    ci_back:bool = False      # back button currently pressed
+    ci_start:bool = False     # start button currently pressed
+    ci_a:bool = False         # a button currently pressed
+    ci_b:bool = False         # b button currently pressed
+    ci_x:bool = False         # x button currently pressed
+    ci_y:bool = False         # y button currently pressed
+    ci_up:bool = False        # D-Pad up currently pressed
+    ci_right:bool = False     # D-Pad right currently pressed
+    ci_down:bool = False      # D-Pad down currently pressed
+    ci_left:bool = False      # D-Pad left currently pressed
+    ci_lb:bool = False        # Left bumper currently pressed
+    ci_rb:bool = False        # right bumper currently pressed
+    ci_left_x:float = 0.0     # Left Stick X axis (left/right) = -1.0 to 1.0
+    ci_left_y:float = 0.0     # Left Stick Y axis (left/right) = -1.0 to 1.0
+    ci_right_x:float = 0.0    # Right Stick X axis (left/right) = -1.0 to 1.0
+    ci_right_y:float = 0.0    # Right Stick Y axis (left/right) = -1.0 to 1.0
+    ci_lt:float = 0.0         # Left Trigger = 0.0 to 1.0
+    ci_rt:float = 0.0         # Right Trigger = 0.0 to 1.0
+
 
     # declare xbox controller input variables
     armed:bool = False
@@ -38,20 +58,35 @@ async def main() -> None:
     yaw:float = 0.0           # between -1.0 and 1.0
 
     async def continuous_xbox_read() -> None:
+
+        # declare nonlocal (shared) variables
+        nonlocal ci_ls
+        nonlocal ci_rs
+        nonlocal ci_back
+        nonlocal ci_start
+        nonlocal ci_a
+        nonlocal ci_b
+        nonlocal ci_x
+        nonlocal ci_y
+        nonlocal ci_up
+        nonlocal ci_right
+        nonlocal ci_down
+        nonlocal ci_left
+        nonlocal ci_lb
+        nonlocal ci_rb
+        nonlocal ci_left_x
+        nonlocal ci_left_y
+        nonlocal ci_right_x
+        nonlocal ci_right_y
+        nonlocal ci_lt
+        nonlocal ci_rt
+
+        # Set up UART to receive controller input data from the RPi
+        uart = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
+        if uart.any(): # clear out the rxbuffer
+            uart.read(uart.any())
+        rxBuffer:bytearray = bytearray()
         
-        # declare nonlocal variables
-        nonlocal rxBuffer
-        nonlocal armed
-        nonlocal throttle
-        nonlocal pitch
-        nonlocal roll
-        nonlocal yaw  
-
-        # Declare NonlinearTransformers
-        nlt_pitch:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
-        nlt_roll:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
-        nlt_yaw:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.10) # higher deadzone because the X axis on the right stick on my controller is broken, doesn't rest at 0% in the middle.
-
         while True:
             
             # check if we have any input data to receive from the xbox controller
@@ -71,33 +106,30 @@ async def main() -> None:
                     # unpack it
                     inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
                     if inputs != None:
-
-                        # handle "special" inputs that go to a pre-programmed sequence (i.e. send PID settings?)
-                        if inputs["start"] == True: # if they are clicking the start button, PID settings send
-                            
-                            # show "want to send PID settings?"
-                            dc.page = "pid confirm"
-                            dc.display()
-
-                            # wait for them to confirm
-                        
-
-                        # armed/unarmed
-                        if inputs["a"]:
-                            armed = True
-                        elif inputs["b"]:
-                            armed = False
-
-                        # Set variable inputs
-                        throttle = inputs["rt"]
-                        pitch = nlt_pitch.transform(inputs["left_y"])
-                        roll = nlt_roll.transform(inputs["left_x"])
-                        yaw = nlt_yaw.transform(inputs["right_x"])
-
+                        ci_ls = inputs["ls"]
+                        ci_rs = inputs["rs"]
+                        ci_back = inputs["back"]
+                        ci_start = inputs["start"]
+                        ci_a = inputs["a"]
+                        ci_b = inputs["b"]
+                        ci_x = inputs["x"]
+                        ci_y = inputs["y"]
+                        ci_up = inputs["up"]
+                        ci_right = inputs["right"]
+                        ci_down = inputs["down"]
+                        ci_left = inputs["left"]
+                        ci_lb = inputs["lb"]
+                        ci_rb = inputs["rb"]
+                        ci_left_x = inputs["left_x"]
+                        ci_left_y = inputs["left_y"]
+                        ci_right_x = inputs["right_x"]
+                        ci_right_y = inputs["right_y"]
+                        ci_lt = inputs["lt"]
+                        ci_rt = inputs["rt"]
                 else:
                     break
                 
-            await asyncio.sleep(0.025)
+            await asyncio.sleep(0.025) # 40 times per second
 
     async def continuous_display() -> None:
         while True:
