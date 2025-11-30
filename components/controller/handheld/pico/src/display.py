@@ -30,18 +30,24 @@ class Display:
             while len(controller_soc_to_display) < 3: # ensure it is 3 characters long
                 controller_soc_to_display = " " + controller_soc_to_display
             self._oled.text("C " + controller_soc_to_display, 0, 0)
+
+            # "DRONE"
+            self._oled.text("DRONE", 0, 36)
             
             # show the drone vbat level
             vbat_drone_to_display:str = str(round(self.vbat_drone, 1)) + "v"
             while len(vbat_drone_to_display) < 5:
                 vbat_drone_to_display = " " + vbat_drone_to_display
-            self._oled.text(vbat_drone_to_display, 0, 12)
+            self._oled.text(vbat_drone_to_display, 0, 46)
 
             # last time we received telemetry (seconds)
             lastrecv_todisplay:str = str(min(max(self.last_recv, 0), 999))
             while len(lastrecv_todisplay) < 4:
                 lastrecv_todisplay = " " + lastrecv_todisplay
-            self._oled.text("L" + lastrecv_todisplay, 0, 24)
+            self._oled.text("L" + lastrecv_todisplay, 0, 56)
+            
+            # Draw vertical line to separate info pane!
+            self._oled.line(46, 0, 46, 64, 1)
 
             # armed/unarmed
             if self.armed:
@@ -74,25 +80,21 @@ class Display:
                 yaw_to_display = " " + yaw_to_display
             self._oled.text("Y " + yaw_to_display, 59, 46)
 
-
-            # Draw vertical line to separate info pane!
-            self._oled.line(46, 0, 46, 64, 1)
-
         else:
             self._oled.text("UNKNOWN PAGE", 0, 0)
 
         # show
         self._oled.show()
 
-# import machine
-# i2c = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
-# oled = ssd1306.SSD1306_I2C(128, 64, i2c)
+import machine
+i2c = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
+oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 
-# d = Display(oled)
-# d.controller_soc = 1.0
-# d.vbat_drone = 16.4
-# d.last_recv = 1000
-# d.armed = False
-# d.throttle = 1.0
-# d.pitch = -1.0
-# d.display()
+d = Display(oled)
+d.controller_soc = 1.0
+d.vbat_drone = 16.4
+d.last_recv = 1000
+d.armed = False
+d.throttle = 1.0
+d.pitch = -1.0
+d.display()
