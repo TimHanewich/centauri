@@ -47,12 +47,7 @@ async def main() -> None:
     ci_lt:float = 0.0         # Left Trigger = 0.0 to 1.0
     ci_rt:float = 0.0         # Right Trigger = 0.0 to 1.0
 
-    # declare xbox controller input variables
-    armed:bool = False
-    throttle:float = 0.0      # between 0.0 and 1.0
-    pitch:float = 0.0         # between -1.0 and 1.0
-    roll:float = 0.0          # between -1.0 and 1.0
-    yaw:float = 0.0           # between -1.0 and 1.0
+    
 
     async def continuous_xbox_read() -> None:
 
@@ -133,9 +128,44 @@ async def main() -> None:
             dc.display()
             await asyncio.sleep(0.1) # 10 Hz
 
+    async def MAINCONTROL() -> None:
+
+        # declare xbox controller input variables
+        armed:bool = False
+        throttle:float = 0.0      # between 0.0 and 1.0
+        pitch:float = 0.0         # between -1.0 and 1.0
+        roll:float = 0.0          # between -1.0 and 1.0
+        yaw:float = 0.0           # between -1.0 and 1.0
+
+        while True:
+            if dc.page == "home": # we are on the home page
+                
+                # armed?
+                if ci_a:
+                    armed = True
+                elif ci_b:
+                    armed = False
+
+                # other inputs
+                throttle = ci_rt
+                pitch = ci_left_y
+                roll = ci_left_x
+                yaw = ci_right_x
+
+                # plug into display controller
+                dc.armed = armed
+                dc.throttle = throttle
+                dc.pitch = pitch
+                dc.roll = roll
+                dc.yaw = yaw
+
+                # standard wait time
+                await asyncio.sleep(0.10)
+
     # get all threads going
     task_read_xbox = asyncio.create_task(continuous_xbox_read())
     task_display = asyncio.create_task(continuous_display())
-    await asyncio.gather(task_read_xbox, task_display)
+    task_MAINCONTROL = asyncio.create_task(MAINCONTROL())
+    await asyncio.gather(task_read_xbox, task_display, MAINCONTROL)
 
 asyncio.run(main())
