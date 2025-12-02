@@ -132,6 +132,13 @@ async def main() -> None:
 
     async def MAINCONTROL() -> None:
 
+        # first - wait for controller input until it comes in via UART
+        started_waiting_ticks_ms:int = time.ticks_ms()
+        while ci_last_received_ticks_us == None:
+            dc.page = "awaiting_ci"
+            dc.seconds_waiting = int((time.ticks_ms() - started_waiting_ticks_ms)/1000)
+            await asyncio.sleep(0.25)
+
         # declare xbox controller input variables
         armed:bool = False
         throttle:float = 0.0      # between 0.0 and 1.0
