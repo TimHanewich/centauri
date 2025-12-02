@@ -25,7 +25,6 @@ async def main() -> None:
     # Set up variables to contain the most up to date controller input data
     # "ci" short for "controller input"
     ci_last_received_ticks_us:int = None     # The last time control input was received via UART
-    ci_PROBLEM:bool = False                  # Flag for if there was a problem with the controller input being received
     ci_ls:bool = False                       # left stick clicked in
     ci_rs:bool = False                       # right stick clicked in
     ci_back:bool = False                     # back button currently pressed
@@ -152,28 +151,27 @@ async def main() -> None:
 
         while True:
 
-            # first, check for problems
-            if not ci_PROBLEM:
-                if dc.page == "home": # we are on the home page
-                    
-                    # armed?
-                    if ci_a:
-                        armed = True
-                    elif ci_b:
-                        armed = False
+            # handle what to do based on what page we are on
+            if dc.page == "home": # we are on the home page
+                
+                # armed?
+                if ci_a:
+                    armed = True
+                elif ci_b:
+                    armed = False
 
-                    # other inputs
-                    throttle = ci_rt
-                    pitch = ci_left_y
-                    roll = ci_left_x
-                    yaw = ci_right_x
+                # other inputs
+                throttle = ci_rt
+                pitch = ci_left_y
+                roll = ci_left_x
+                yaw = ci_right_x
 
-                    # plug into display controller
-                    dc.armed = armed
-                    dc.throttle = throttle
-                    dc.pitch = pitch
-                    dc.roll = roll
-                    dc.yaw = yaw
+                # plug into display controller
+                dc.armed = armed
+                dc.throttle = throttle
+                dc.pitch = pitch
+                dc.roll = roll
+                dc.yaw = yaw
 
             # standard wait time
             await asyncio.sleep(0.10)
