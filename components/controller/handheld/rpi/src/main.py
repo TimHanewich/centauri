@@ -61,13 +61,17 @@ try:
                 # Left Trigger = 2
 
                 if event.axis == 0: # Left Stick X axis (left/right)
-                    EventEncoded = pack_joystick_input_event(Joystick.LS_X, event.value)
+                    value:float = min(max(event.value, -1.0), 1.0)
+                    EventEncoded = pack_joystick_input_event(Joystick.LS_X, value)
                 elif event.axis == 1: # Left Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
-                    EventEncoded = pack_joystick_input_event(Joystick.LS_Y, event.value)
+                    value:float = min(max(event.value, -1.0), 1.0)
+                    EventEncoded = pack_joystick_input_event(Joystick.LS_Y, value)
                 elif event.axis == 3: # Right Stick X axis
-                    EventEncoded = pack_joystick_input_event(Joystick.RS_X, event.value)
+                    value:float = min(max(event.value, -1.0), 1.0)
+                    EventEncoded = pack_joystick_input_event(Joystick.RS_X, value)
                 elif event.axis == 4: # Right Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
-                    EventEncoded = pack_joystick_input_event(Joystick.RS_Y, event.value)
+                    value:float = min(max(event.value, -1.0), 1.0)
+                    EventEncoded = pack_joystick_input_event(Joystick.RS_Y, value)
                 elif event.axis == 2: # left trigger
                     value:float = min(max((event.value + 1.0) / 2.0, 0.0), 1.0) # gets it to between 0.0 and 1.0
                     EventEncoded = pack_joystick_input_event(Joystick.LT, value)
