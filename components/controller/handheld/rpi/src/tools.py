@@ -127,7 +127,7 @@ def pack_joystick_input_event(js:Joystick, value:float) -> bytes:
             raise Exception("Unable to pack joystick variable input: value must be provided as between -1.0 and 1.0!")
         aspor:float = (value + 1.0) / 2.0 # as percent of total possible range
         asint16:int = min(max(int(round(aspor * 65535, 0)), 0), 65535)
-        ToReturn.extend(asint16)
+        ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # append \r\n
     ToReturn.extend("\r\n".encode())
