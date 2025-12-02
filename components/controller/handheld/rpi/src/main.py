@@ -21,6 +21,7 @@ print("Number of connected controllers: " + str(num_joysticks))
 if num_joysticks == 0:
     print("No controller connected! Must connect a controller.")
     while True:
+        print("Broadcasting problem error...")
         ser.write(PROBLEM_MSG)
         time.sleep(1.0)
 
