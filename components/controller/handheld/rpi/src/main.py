@@ -1,7 +1,7 @@
 import pygame
 import time
-import tools
 import serial
+from tools import Joystick, pack_button_input_event, pack_joystick_input_event, Button
 
 # Set up serial communication that will later be used to send data to the connected device via UART
 serport:str = "/dev/ttyS0"
@@ -39,28 +39,6 @@ controller = pygame.joystick.Joystick(0)
 controller.init()
 print("Controller #0, '" + controller.get_name() + "' will be used.")
 
-# Declare control input variables
-input_left_stick_click:bool = False
-input_right_stick_click:bool = False
-input_back:bool = False # the "back" button (or is it called "select"?)... to the left of the Xbox logo
-input_start:bool = False
-input_a:bool = False
-input_b:bool = False
-input_y:bool = False
-input_x:bool = False
-input_dpad_up:bool = False
-input_dpad_right:bool = False
-input_dpad_down:bool = False
-input_dpad_left:bool = False
-input_right_bumper:bool = False
-input_left_bumper:bool = False
-input_left_stick_x:float = 0.0      # -1.0 to 1.0 for left stick right/left
-input_left_stick_y:float = 0.0      # -1.0 to 1.0 for left stick up/down
-input_right_stick_x:float = 0.0     # -1.0 to 1.0 for right stick right/left
-input_right_stick_y:float = 0.0     # -1.0 to 1.0 for right stick up/down
-input_right_trigger:float = 0.0     # 0.0 to 1.0 for right trigger
-input_left_trigger:float = 0.0      # 0.0 to 1.0 for left trigger
-
 # start reading from it!
 try:
     print("NOW READING FROM XBOX CONTROLLER!")
@@ -68,6 +46,10 @@ try:
 
         # Read the raw data and update the variables we are using to track
         for event in pygame.event.get():
+
+            # declare a binary message we will encode and then send to the attached pico via UART
+            EventEncoded:bytes = None
+
             if event.type == pygame.JOYAXISMOTION: # it has to do with a variable input, like a joystick or trigger
 
                 # Xbox Controller Axes (on linux)
@@ -79,21 +61,23 @@ try:
                 # Left Trigger = 2
 
                 if event.axis == 0: # Left Stick X axis (left/right)
-                    input_left_stick_x = event.value
-                elif event.axis == 1: # Left Stick Y axis (up/down)
-                    input_left_stick_y = event.value # NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
+                    EventEncoded = pack_joystick_input_event(Joystick.LS_X, event.value)
+                elif event.axis == 1: # Left Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
+                    EventEncoded = pack_joystick_input_event(Joystick.LS_Y, event.value)
                 elif event.axis == 3: # Right Stick X axis
-                    input_right_stick_x = event.value
-                elif event.axis == 4: # Right stick Y axis
-                    input_right_stick_y = event.value # NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
+                    EventEncoded = pack_joystick_input_event(Joystick.RS_X, event.value)
+                elif event.axis == 4: # Right Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
+                    EventEncoded = pack_joystick_input_event(Joystick.RS_Y, event.value)
                 elif event.axis == 2: # left trigger
-                    input_left_trigger = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
+                    value:float = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
+                    EventEncoded = pack_joystick_input_event(Joystick.LT, value)
                 elif event.axis == 5: # right trigger
-                    input_right_trigger = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
+                    value:float = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
+                    EventEncoded = pack_joystick_input_event(Joystick.RT, value)
 
             elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed down
                 
-                # Button ID's below
+                # PyGame's Button ID's below
                 # A = 0
                 # B = 1
                 # X = 2
@@ -107,46 +91,26 @@ try:
                 # Share button (on Xbox Series S/X controllers only) = 11
 
                 if event.button == 0:
-                    input_a = True
+                    EventEncoded = pack_button_input_event(Button.A)
                 elif event.button == 1:
-                    input_b = True
+                    EventEncoded = pack_button_input_event(Button.B)
                 elif event.button == 2:
-                    input_x = True
+                    iEventEncoded = pack_button_input_event(Button.X)
                 elif event.button == 3:
-                    input_y = True
+                    EventEncoded = pack_button_input_event(Button.Y)
                 elif event.button == 4:
-                    input_left_bumper = True
+                    EventEncoded = pack_button_input_event(Button.LB)
                 elif event.button == 5:
-                    input_right_bumper = True
+                    EventEncoded = pack_button_input_event(Button.RB)
                 elif event.button == 9:
-                    input_left_stick_click = True
+                    EventEncoded = pack_button_input_event(Button.LS)
                 elif event.button == 10:
-                    input_right_stick_click = True
+                    EventEncoded = pack_button_input_event(Button.RS)
                 elif event.button == 6:
-                    input_back = True
+                    EventEncoded = pack_button_input_event(Button.Back)
                 elif event.button == 7:
-                    input_start = True
-            elif event.type == pygame.JOYBUTTONUP: # a button was depressed (stopped being pressed)
-                if event.button == 0:
-                    input_a = False
-                elif event.button == 1:
-                    input_b = False
-                elif event.button == 2:
-                    input_x = False
-                elif event.button == 3:
-                    input_y = False
-                elif event.button == 4:
-                    input_left_bumper = False
-                elif event.button == 5:
-                    input_right_bumper = False
-                elif event.button == 9:
-                    input_left_stick_click = False
-                elif event.button == 10:
-                    input_right_stick_click = False
-                elif event.button == 6:
-                    input_back = False
-                elif event.button == 7:
-                    input_start = False
+                    EventEncoded = pack_button_input_event(Button.Start)
+
             elif event.type == pygame.JOYHATMOTION: # D-Pad
 
                 # "value" looks something like (-1, 1)
@@ -155,29 +119,15 @@ try:
                 
                 # Check left/right
                 if event.value[0] == -1:
-                    input_dpad_left = True
-                    input_dpad_right = False
+                    EventEncoded = pack_button_input_event(Button.Left)
                 elif event.value[0] == 1:
-                    input_dpad_left = False
-                    input_dpad_right = True
-                else: # neither are pressed (0)
-                    input_dpad_left = False
-                    input_dpad_right = False
+                    EventEncoded = pack_button_input_event(Button.Right)
 
                 # Check Up/Down
                 if event.value[1] == -1:
-                    input_dpad_down = True
-                    input_dpad_up = False
+                    EventEncoded = pack_button_input_event(Button.Down)
                 elif event.value[1] == 1:
-                    input_dpad_down = False
-                    input_dpad_up = True
-                else: # neither are pressed (0)
-                    input_dpad_down = False
-                    input_dpad_up = False
-                
-            else:
-                pass
-                #print("Unknown event: " + str(event))
+                    EventEncoded = pack_button_input_event(Button.Up)
 
         # print (change to True for debugging purposes)
         if False:
@@ -203,14 +153,12 @@ try:
             ToPrint["right_x"] = input_right_stick_x
             ToPrint["right_y"] = input_right_stick_y
             print(str(ToPrint))
-        
-        # pack
-        packed:bytes = tools.pack_controls(input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
-        
-        # transmit via serial (UART)
-        ser.write(packed)
+
+        # Something to send?
+        if EventEncoded != None:
+            ser.write(EventEncoded) # yes, it will already contain \r\n
 
         # wait a moment
-        time.sleep(0.05)
+        time.sleep(0.01)
 except:
     FOREVER_BROADCAST_PROBLEM_FLAG()

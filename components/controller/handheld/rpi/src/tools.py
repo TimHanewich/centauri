@@ -84,7 +84,7 @@ class Button(Enum):
     LS = 10 # Left Stick Click
     RS = 11 # Right Stick Click
     Back = 12
-    Select = 13
+    Start = 13
 
 class Joystick(Enum):
     LS_X = 0    # Left stick X axis (left-right)
