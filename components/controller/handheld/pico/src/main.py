@@ -23,6 +23,7 @@ async def main() -> None:
     graphic = framebuf.FrameBuffer(CENTAURI_GRAPHIC, 128, 64, framebuf.MONO_HLSB)
     oled.blit(graphic, 0, 0)
     oled.show()
+    time.sleep(2.0) # wait for 2 seconds
 
     # Set up variables to contain the most up to date controller input data
     # "ci" short for "controller input"
@@ -46,8 +47,6 @@ async def main() -> None:
     ci_right_y:float = 0.0    # Right Stick Y axis (left/right) = -1.0 to 1.0
     ci_lt:float = 0.0         # Left Trigger = 0.0 to 1.0
     ci_rt:float = 0.0         # Right Trigger = 0.0 to 1.0
-
-    
 
     async def continuous_xbox_read() -> None:
 
