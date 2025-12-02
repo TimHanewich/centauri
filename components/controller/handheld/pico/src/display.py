@@ -7,6 +7,7 @@ class Display:
 
         # unique identifier for the "page" we are on right now
         # Could be: 
+        # "awaiting_ci" = awaiting controller input
         # "home" = main home screen
         # "pid confirm" = confirm they want to send over pre-flashed PID settings
         # "send pid" = currently sending pid (or waiting for confirmation)
@@ -25,6 +26,9 @@ class Display:
         # "send pid" settings
         self.send_pid_attempt:int = 0
         self.send_pid_status:str = "sending"
+
+        # "awaiting_ci" screen
+        self.seconds_waiting:int = 0
 
     def display(self) -> None:
 
@@ -88,6 +92,13 @@ class Display:
                 yaw_to_display = " " + yaw_to_display
             self._oled.text("Y " + yaw_to_display, 59, 46)
 
+        elif self.page == "awaiting_ci":
+            self._oled.text("Awaiting", 32, 0)
+            self._oled.text("Controller", 24, 10)
+            self._oled.text("Input", 22, 20)
+            txt:str = "Waiting " + str(self.seconds_waiting)
+            xpos:int = int((128 - (len(txt) * 8)) / 2)
+            self._oled.text(txt, xpos, 40)
         elif self.page == "pid confirm":
             self._oled.text("Send PID?", 28, 0)
             self._oled.text("Y to confirm", 16, 10)
