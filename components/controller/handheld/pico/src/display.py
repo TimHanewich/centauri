@@ -123,31 +123,31 @@ class Display:
         # show
         self._oled.show()
 
-import machine
-i2c = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
-oled = ssd1306.SSD1306_I2C(128, 64, i2c)
+# import machine
+# i2c = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
+# oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 
-d = Display(oled)
+# d = Display(oled)
 
-# home
-d.page = "home"
-d.controller_soc = 1.0
-d.vbat_drone = 16.4
-d.last_recv = 1000
-d.armed = False
-d.throttle = 1.0
-d.pitch = -1.0
+# # home
+# d.page = "home"
+# d.controller_soc = 1.0
+# d.vbat_drone = 16.4
+# d.last_recv = 1000
+# d.armed = False
+# d.throttle = 1.0
+# d.pitch = -1.0
 
-# pid confrim
-d.page = "pid confirm"
+# # pid confrim
+# d.page = "pid confirm"
 
-# send pid
-d.page = "send pid"
-d.send_pid_attempt = 3
-d.send_pid_status = "CONFIRMED!"
+# # send pid
+# d.page = "send pid"
+# d.send_pid_attempt = 3
+# d.send_pid_status = "CONFIRMED!"
 
-# awaiting CI
-d.page = "awaiting_ci"
-d.seconds_waiting = 12
+# # awaiting CI
+# d.page = "awaiting_ci"
+# d.seconds_waiting = 12
 
-d.display()
+# d.display()
