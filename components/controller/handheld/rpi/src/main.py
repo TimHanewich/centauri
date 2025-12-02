@@ -8,7 +8,13 @@ serport:str = "/dev/ttyS0"
 print("Opening serial port on '" + serport + "'...")
 ser = serial.Serial(serport, 9600)
 print("Serial port opened!")
-PROBLEM_MSG:bytes = b'@\r\n' # this is 0b010000 followed by \r\n (3 bytes). What we will transmit to indicate a problem encountered
+
+def FOREVER_BROADCAST_PROBLEM_FLAG() -> None:
+    PROBLEM_MSG:bytes = b'@\r\n' # this is 0b010000 followed by \r\n (3 bytes). What we will transmit to indicate a problem encountered
+    while True:
+        print("Broadcasting problem error @ time " + str(int(time.time())) + "...")
+        ser.write(PROBLEM_MSG)
+        time.sleep(1.0)
 
 # Set up controller
 print("Initializing pygame module...")
@@ -20,10 +26,7 @@ num_joysticks:int = pygame.joystick.get_count()
 print("Number of connected controllers: " + str(num_joysticks))
 if num_joysticks == 0:
     print("No controller connected! Must connect a controller.")
-    while True:
-        print("Broadcasting problem error...")
-        ser.write(PROBLEM_MSG)
-        time.sleep(1.0)
+    FOREVER_BROADCAST_PROBLEM_FLAG()
 
 # loop through each connected controller
 for i in range(num_joysticks):
@@ -210,6 +213,4 @@ try:
         # wait a moment
         time.sleep(0.05)
 except:
-    while True:
-        ser.write(PROBLEM_MSG)
-        time.sleep(1.0)
+    FOREVER_BROADCAST_PROBLEM_FLAG()
