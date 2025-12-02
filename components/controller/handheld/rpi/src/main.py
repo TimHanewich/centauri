@@ -163,4 +163,5 @@ try:
         time.sleep(0.01)
 except Exception as ex:
     print("FATAL ERROR: " + str(ex))
+    raise ex
     FOREVER_BROADCAST_PROBLEM_FLAG()
