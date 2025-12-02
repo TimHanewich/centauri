@@ -25,6 +25,7 @@ async def main() -> None:
     # Set up variables to contain the most up to date controller input data
     # "ci" short for "controller input"
     ci_last_received_ticks_us:int = None     # The last time control input was received via UART
+    ci_PROBLEM:bool = False                  # Flag for if there was a problem with the controller input being received
     ci_ls:bool = False                       # left stick clicked in
     ci_rs:bool = False                       # right stick clicked in
     ci_back:bool = False                     # back button currently pressed
@@ -50,6 +51,7 @@ async def main() -> None:
 
         # declare nonlocal (shared) variables
         nonlocal ci_last_received_ticks_us
+        nonlocal ci_PROBLEM
         nonlocal ci_ls
         nonlocal ci_rs
         nonlocal ci_back
@@ -95,7 +97,7 @@ async def main() -> None:
 
                     # is it a problem?
                     if ThisLine == b'@\r\n': # this is 0b010000 followed by \r\n (3 bytes), indicating there is a problem
-                        pass
+                        ci_PROBLEM = True
                     else: # it is good control data!
                         inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
                         if inputs != None:
@@ -150,29 +152,34 @@ async def main() -> None:
         yaw:float = 0.0           # between -1.0 and 1.0
 
         while True:
-            if dc.page == "home": # we are on the home page
-                
-                # armed?
-                if ci_a:
-                    armed = True
-                elif ci_b:
-                    armed = False
 
-                # other inputs
-                throttle = ci_rt
-                pitch = ci_left_y
-                roll = ci_left_x
-                yaw = ci_right_x
+            # first, check for problems
+            if ci_PROBLEM:
+                pass
+            else: # no problems, so in normal operating mode... good!
+                if dc.page == "home": # we are on the home page
+                    
+                    # armed?
+                    if ci_a:
+                        armed = True
+                    elif ci_b:
+                        armed = False
 
-                # plug into display controller
-                dc.armed = armed
-                dc.throttle = throttle
-                dc.pitch = pitch
-                dc.roll = roll
-                dc.yaw = yaw
+                    # other inputs
+                    throttle = ci_rt
+                    pitch = ci_left_y
+                    roll = ci_left_x
+                    yaw = ci_right_x
 
-                # standard wait time
-                await asyncio.sleep(0.10)
+                    # plug into display controller
+                    dc.armed = armed
+                    dc.throttle = throttle
+                    dc.pitch = pitch
+                    dc.roll = roll
+                    dc.yaw = yaw
+
+                    # standard wait time
+                    await asyncio.sleep(0.10)
 
     # get all threads going
     task_read_xbox = asyncio.create_task(continuous_xbox_read())
