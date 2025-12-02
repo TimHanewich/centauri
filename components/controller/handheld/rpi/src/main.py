@@ -69,12 +69,11 @@ try:
                 elif event.axis == 4: # Right Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
                     EventEncoded = pack_joystick_input_event(Joystick.RS_Y, event.value)
                 elif event.axis == 2: # left trigger
-                    value:float = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
-                    EventEncoded = pack_joystick_input_event(Joystick.LT, 0.0)
+                    value:float = min(max((event.value + 1.0) / 2.0, 0.0), 1.0) # gets it to between 0.0 and 1.0
+                    EventEncoded = pack_joystick_input_event(Joystick.LT, value)
                 elif event.axis == 5: # right trigger
-                    value:float = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
-                    print("RAW VALUE: " + str(event.value) + " translated: " + str(value))
-                    EventEncoded = pack_joystick_input_event(Joystick.RT, 0.0)
+                    value:float = min(max((event.value + 1.0) / 2.0, 0.0), 1.0) # gets it to between 0.0 and 1.0
+                    EventEncoded = pack_joystick_input_event(Joystick.RT, value)
 
             elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed down
                 
