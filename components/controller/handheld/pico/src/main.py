@@ -51,7 +51,6 @@ async def main() -> None:
 
         # declare nonlocal (shared) variables
         nonlocal ci_last_received_ticks_us
-        nonlocal ci_PROBLEM
         nonlocal ci_ls
         nonlocal ci_rs
         nonlocal ci_back
@@ -97,7 +96,7 @@ async def main() -> None:
 
                     # is it a problem?
                     if ThisLine == b'@\r\n': # this is 0b010000 followed by \r\n (3 bytes), indicating there is a problem
-                        ci_PROBLEM = True
+                        dc.page = "ci_problem" # change the display controller to ci_problem for it to be displayed there is a problem
                     else: # it is good control data!
                         inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
                         if inputs != None:
@@ -154,9 +153,7 @@ async def main() -> None:
         while True:
 
             # first, check for problems
-            if ci_PROBLEM:
-                pass
-            else: # no problems, so in normal operating mode... good!
+            if not ci_PROBLEM:
                 if dc.page == "home": # we are on the home page
                     
                     # armed?
@@ -178,8 +175,8 @@ async def main() -> None:
                     dc.roll = roll
                     dc.yaw = yaw
 
-                    # standard wait time
-                    await asyncio.sleep(0.10)
+            # standard wait time
+            await asyncio.sleep(0.10)
 
     # get all threads going
     task_read_xbox = asyncio.create_task(continuous_xbox_read())
