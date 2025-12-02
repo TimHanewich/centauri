@@ -161,5 +161,6 @@ try:
 
         # wait a moment
         time.sleep(0.01)
-except:
+except Exception as ex:
+    print("FATAL ERROR: " + str(ex))
     FOREVER_BROADCAST_PROBLEM_FLAG()
