@@ -47,6 +47,8 @@ try:
         # Read the raw data and update the variables we are using to track
         for event in pygame.event.get():
 
+            print(str(event))
+
             # declare a binary message we will encode and then send to the attached pico via UART
             EventEncoded:bytes = None
 
@@ -161,7 +163,6 @@ try:
         # Something to send?
         if EventEncoded != None:
             ser.write(EventEncoded) # yes, it will already contain \r\n
-            print(str(EventEncoded))
 
         # wait a moment
         time.sleep(0.01)
