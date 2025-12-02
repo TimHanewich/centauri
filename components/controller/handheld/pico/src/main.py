@@ -90,33 +90,36 @@ async def main() -> None:
                 if term_loc != -1:
 
                     # extract the line                    
-                    ThisLine:bytes = rxBuffer[0:term_loc+2]
-                    rxBuffer = rxBuffer[16:] # keep the rest, trim out that line
+                    ThisLine:bytes = rxBuffer[0:term_loc+2] # include the \r\n at the end
+                    rxBuffer = rxBuffer[len(term_loc):] # keep the rest, trim out that line
 
-                    # unpack it
-                    inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
-                    if inputs != None:
-                        ci_last_received_ticks_us = time.ticks_us()
-                        ci_ls = inputs["ls"]
-                        ci_rs = inputs["rs"]
-                        ci_back = inputs["back"]
-                        ci_start = inputs["start"]
-                        ci_a = inputs["a"]
-                        ci_b = inputs["b"]
-                        ci_x = inputs["x"]
-                        ci_y = inputs["y"]
-                        ci_up = inputs["up"]
-                        ci_right = inputs["right"]
-                        ci_down = inputs["down"]
-                        ci_left = inputs["left"]
-                        ci_lb = inputs["lb"]
-                        ci_rb = inputs["rb"]
-                        ci_left_x = inputs["left_x"]
-                        ci_left_y = inputs["left_y"]
-                        ci_right_x = inputs["right_x"]
-                        ci_right_y = inputs["right_y"]
-                        ci_lt = inputs["lt"]
-                        ci_rt = inputs["rt"]
+                    # is it a problem?
+                    if ThisLine == b'@\r\n': # this is 0b010000 followed by \r\n (3 bytes), indicating there is a problem
+                        pass
+                    else: # it is good control data!
+                        inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
+                        if inputs != None:
+                            ci_last_received_ticks_us = time.ticks_us()
+                            ci_ls = inputs["ls"]
+                            ci_rs = inputs["rs"]
+                            ci_back = inputs["back"]
+                            ci_start = inputs["start"]
+                            ci_a = inputs["a"]
+                            ci_b = inputs["b"]
+                            ci_x = inputs["x"]
+                            ci_y = inputs["y"]
+                            ci_up = inputs["up"]
+                            ci_right = inputs["right"]
+                            ci_down = inputs["down"]
+                            ci_left = inputs["left"]
+                            ci_lb = inputs["lb"]
+                            ci_rb = inputs["rb"]
+                            ci_left_x = inputs["left_x"]
+                            ci_left_y = inputs["left_y"]
+                            ci_right_x = inputs["right_x"]
+                            ci_right_y = inputs["right_y"]
+                            ci_lt = inputs["lt"]
+                            ci_rt = inputs["rt"]
                 else:
                     break
                 
