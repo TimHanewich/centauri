@@ -95,7 +95,7 @@ class Display:
         elif self.page == "awaiting_ci":
             self._oled.text("Awaiting", 32, 0)
             self._oled.text("Controller", 24, 10)
-            self._oled.text("Input", 22, 20)
+            self._oled.text("Input", 44, 20)
             txt:str = "Waiting " + str(self.seconds_waiting)
             xpos:int = int((128 - (len(txt) * 8)) / 2)
             self._oled.text(txt, xpos, 40)
@@ -145,5 +145,9 @@ d.page = "pid confirm"
 d.page = "send pid"
 d.send_pid_attempt = 3
 d.send_pid_status = "CONFIRMED!"
+
+# awaiting CI
+d.page = "awaiting_ci"
+d.seconds_waiting = 12
 
 d.display()
