@@ -91,7 +91,7 @@ async def main() -> None:
 
                     # extract the line                    
                     ThisLine:bytes = rxBuffer[0:term_loc+2] # include the \r\n at the end
-                    rxBuffer = rxBuffer[len(term_loc):] # keep the rest, trim out that line
+                    rxBuffer = rxBuffer[len(ThisLine):] # keep the rest, trim out that line
 
                     # is it a problem?
                     if ThisLine == b'@\r\n': # this is 0b010000 followed by \r\n (3 bytes), indicating there is a problem
