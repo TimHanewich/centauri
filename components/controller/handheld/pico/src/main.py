@@ -136,6 +136,9 @@ async def main() -> None:
             dc.seconds_waiting = int((time.ticks_ms() - started_waiting_ticks_ms)/1000)
             await asyncio.sleep(0.25)
 
+        # We are good to go now! So switch to home screen
+        dc.page = "home"
+
         # declare xbox controller input variables
         armed:bool = False
         throttle:float = 0.0      # between 0.0 and 1.0
