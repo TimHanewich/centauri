@@ -95,6 +95,7 @@ async def main() -> None:
 
                     # is it a problem?
                     if ThisLine == b'@\r\n': # this is 0b010000 followed by \r\n (3 bytes), indicating there is a problem
+                        print("Problem flag received from RPi! Issue with controller telemetry.")
                         dc.page = "ci_problem" # change the display controller to ci_problem for it to be displayed there is a problem
                     else: # it is good control data!
                         inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
@@ -132,16 +133,6 @@ async def main() -> None:
 
     async def MAINCONTROL() -> None:
 
-        # first - wait for controller input until it comes in via UART
-        started_waiting_ticks_ms:int = time.ticks_ms()
-        while ci_last_received_ticks_us == None:
-            dc.page = "awaiting_ci"
-            dc.seconds_waiting = int((time.ticks_ms() - started_waiting_ticks_ms)/1000)
-            await asyncio.sleep(0.25)
-
-        # We are good to go now! So switch to home screen
-        dc.page = "home"
-
         # declare xbox controller input variables
         armed:bool = False
         throttle:float = 0.0      # between 0.0 and 1.0
@@ -149,10 +140,20 @@ async def main() -> None:
         roll:float = 0.0          # between -1.0 and 1.0
         yaw:float = 0.0           # between -1.0 and 1.0
 
+        # start on awaiting_ci page as that will be what happens first
+        started_waiting_ticks_ms:int = time.ticks_ms()
+        dc.page = "awaiting_ci"
+
         while True:
 
             # handle what to do based on what page we are on
-            if dc.page == "home": # we are on the home page
+            if dc.page == "awaiting_ci":
+                if ci_last_received_ticks_us != None: # if we finally go telemetry from the controller...
+                    dc.page = "home" # move on!
+                else: # if we haven't gotten any good telemetry yet...
+                    dc.seconds_waiting = int((time.ticks_ms() - started_waiting_ticks_ms)/1000) # update the seconds we have been waiting
+
+            elif dc.page == "home": # we are on the home page
                 
                 # armed?
                 if ci_a:
