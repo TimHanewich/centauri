@@ -27,30 +27,32 @@ async def main() -> None:
 
     # Set up variables to contain the most up to date controller input data
     # "ci" short for "controller input"
-    ci_ls:bool = False        # left stick clicked in
-    ci_rs:bool = False        # right stick clicked in
-    ci_back:bool = False      # back button currently pressed
-    ci_start:bool = False     # start button currently pressed
-    ci_a:bool = False         # a button currently pressed
-    ci_b:bool = False         # b button currently pressed
-    ci_x:bool = False         # x button currently pressed
-    ci_y:bool = False         # y button currently pressed
-    ci_up:bool = False        # D-Pad up currently pressed
-    ci_right:bool = False     # D-Pad right currently pressed
-    ci_down:bool = False      # D-Pad down currently pressed
-    ci_left:bool = False      # D-Pad left currently pressed
-    ci_lb:bool = False        # Left bumper currently pressed
-    ci_rb:bool = False        # right bumper currently pressed
-    ci_left_x:float = 0.0     # Left Stick X axis (left/right) = -1.0 to 1.0
-    ci_left_y:float = 0.0     # Left Stick Y axis (left/right) = -1.0 to 1.0
-    ci_right_x:float = 0.0    # Right Stick X axis (left/right) = -1.0 to 1.0
-    ci_right_y:float = 0.0    # Right Stick Y axis (left/right) = -1.0 to 1.0
-    ci_lt:float = 0.0         # Left Trigger = 0.0 to 1.0
-    ci_rt:float = 0.0         # Right Trigger = 0.0 to 1.0
+    ci_last_received_ticks_us:int = None     # The last time control input was received via UART
+    ci_ls:bool = False                       # left stick clicked in
+    ci_rs:bool = False                       # right stick clicked in
+    ci_back:bool = False                     # back button currently pressed
+    ci_start:bool = False                    # start button currently pressed
+    ci_a:bool = False                        # a button currently pressed
+    ci_b:bool = False                        # b button currently pressed
+    ci_x:bool = False                        # x button currently pressed
+    ci_y:bool = False                        # y button currently pressed
+    ci_up:bool = False                       # D-Pad up currently pressed
+    ci_right:bool = False                    # D-Pad right currently pressed
+    ci_down:bool = False                     # D-Pad down currently pressed
+    ci_left:bool = False                     # D-Pad left currently pressed
+    ci_lb:bool = False                       # Left bumper currently pressed
+    ci_rb:bool = False                       # right bumper currently pressed
+    ci_left_x:float = 0.0                    # Left Stick X axis (left/right) = -1.0 to 1.0
+    ci_left_y:float = 0.0                    # Left Stick Y axis (left/right) = -1.0 to 1.0
+    ci_right_x:float = 0.0                   # Right Stick X axis (left/right) = -1.0 to 1.0
+    ci_right_y:float = 0.0                   # Right Stick Y axis (left/right) = -1.0 to 1.0
+    ci_lt:float = 0.0                        # Left Trigger = 0.0 to 1.0
+    ci_rt:float = 0.0                        # Right Trigger = 0.0 to 1.0
 
     async def continuous_xbox_read() -> None:
 
         # declare nonlocal (shared) variables
+        nonlocal ci_last_received_ticks_us
         nonlocal ci_ls
         nonlocal ci_rs
         nonlocal ci_back
@@ -97,6 +99,7 @@ async def main() -> None:
                     # unpack it
                     inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
                     if inputs != None:
+                        ci_last_received_ticks_us = time.ticks_us()
                         ci_ls = inputs["ls"]
                         ci_rs = inputs["rs"]
                         ci_back = inputs["back"]
