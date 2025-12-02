@@ -84,7 +84,7 @@ A total of **16 bytes**. So at 30 packets per second, that is 480 bytes per seco
 |12|0b00001100|Back|
 |13|0b00001101|Select|
 
-### Variable Input to Corresponding ID
+### Joystick to Corresponding ID
 |Number|Binary(8-bit)|Input|
 |-|-|-|
 |0|0b00000000|Left Stick X|
