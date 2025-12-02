@@ -70,10 +70,11 @@ try:
                     EventEncoded = pack_joystick_input_event(Joystick.RS_Y, event.value)
                 elif event.axis == 2: # left trigger
                     value:float = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
-                    EventEncoded = pack_joystick_input_event(Joystick.LT, value)
+                    EventEncoded = pack_joystick_input_event(Joystick.LT, 0.0)
                 elif event.axis == 5: # right trigger
                     value:float = (event.value + 1.0) / 2.0 # gets it to between 0.0 and 1.0
-                    EventEncoded = pack_joystick_input_event(Joystick.RT, value)
+                    print("RAW VALUE: " + str(event.value) + " translated: " + str(value))
+                    EventEncoded = pack_joystick_input_event(Joystick.RT, 0.0)
 
             elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed down
                 
