@@ -140,10 +140,12 @@ async def main() -> None:
         roll:float = 0.0          # between -1.0 and 1.0
         yaw:float = 0.0           # between -1.0 and 1.0
 
-        # start on awaiting_ci page as that will be what happens first
+        # start on awaiting_ci page as that is what we do first: verify telemetry comes in
         started_waiting_ticks_ms:int = time.ticks_ms()
         dc.page = "awaiting_ci"
 
+        # Infinite loop handling what to do in each "mode" we are on, 
+        # with that "mode" often indicated by what page we are on
         while True:
 
             # handle what to do based on what page we are on
