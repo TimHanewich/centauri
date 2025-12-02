@@ -119,12 +119,12 @@ def pack_joystick_input_event(js:Joystick, value:float) -> bytes:
     # set up value bytes (as a uint16)
     if js == Joystick.LT or js == Joystick.RT: # one of the triggers (0.0 to 1.0)
         if value < 0.0 or value > 1.0:
-            raise Exception("Unable to pack LT/RT input: value must be provided as between 0.0 and 1.0!")
+            raise Exception("Unable to pack LT/RT input: value must be provided as between 0.0 and 1.0! You provided '" + str(value) + "'.")
         asint16:int = min(max(int(round(value * 65535, 0)), 0), 65535)
         ToReturn.extend(asint16.to_bytes(2, "big"))
     else: # one of the stick axis inputs
         if value < -1.0 or value > 1.0:
-            raise Exception("Unable to pack joystick variable input: value must be provided as between -1.0 and 1.0!")
+            raise Exception("Unable to pack joystick variable input: value must be provided as between -1.0 and 1.0! You provided '" + str(value) + "'.")
         aspor:float = (value + 1.0) / 2.0 # as percent of total possible range
         asint16:int = min(max(int(round(aspor * 65535, 0)), 0), 65535)
         ToReturn.extend(asint16.to_bytes(2, "big"))
