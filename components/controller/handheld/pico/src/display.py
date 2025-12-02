@@ -13,6 +13,7 @@ class Display:
         # "pid confirm" = confirm they want to send over pre-flashed PID settings
         # "send pid" = currently sending pid (or waiting for confirmation)
         # "logo" = Centauri logo
+        # "ci_problem" = control input problem
         self.page:str = "home"
 
         # for "home" screen
@@ -123,6 +124,10 @@ class Display:
             graphic = framebuf.FrameBuffer(CENTAURI_GRAPHIC, 128, 64, framebuf.MONO_HLSB)
             self._oled.blit(graphic, 0, 0)
             self._oled.show()
+        elif self.page == "ci_problem":
+            self._oled.text("Controller", 24, 10)
+            self._oled.text("Input", 44, 20)
+            self._oled.text("Problem!", 32, 30)
         else:
             self._oled.text("UNKNOWN PAGE", 0, 0)
 
@@ -132,28 +137,6 @@ class Display:
 # import machine
 # i2c = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
 # oled = ssd1306.SSD1306_I2C(128, 64, i2c)
-
 # d = Display(oled)
-
-# # home
-# d.page = "home"
-# d.controller_soc = 1.0
-# d.vbat_drone = 16.4
-# d.last_recv = 1000
-# d.armed = False
-# d.throttle = 1.0
-# d.pitch = -1.0
-
-# # pid confrim
-# d.page = "pid confirm"
-
-# # send pid
-# d.page = "send pid"
-# d.send_pid_attempt = 3
-# d.send_pid_status = "CONFIRMED!"
-
-# # awaiting CI
-# d.page = "awaiting_ci"
-# d.seconds_waiting = 12
-
+# d.page = "ci_problem"
 # d.display()
