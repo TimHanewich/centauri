@@ -91,8 +91,3 @@ class NonlinearTransformer:
             return self._transform(percent)
         else:
             return (self._transform(abs(percent)) * -1)
-        
-data = b'D*\x89\r\n'
-btn = unpack_joystick_input(data)
-print(btn[0])
-print(str(round(btn[1], 2)))
