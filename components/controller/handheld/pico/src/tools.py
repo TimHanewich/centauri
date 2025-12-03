@@ -38,10 +38,10 @@ def unpack_joystick_input(packed:bytes) -> tuple[int, float]: # unpacks as the I
     # Get the value
     value:float = 0.0 # start w/ 0
     if joystick_id == 4 or joystick_id == 5: # if it is the LT or RT, it is between 0.0 and 1.0
-        asuint16:int = packed[1] << packed[2]
+        asuint16:int = (packed[1] << 8) | packed[2]
         value = asuint16 / 65535 # just a flat % of the total range!
     else: # otherwise, it is the X/Y axis of the Left/Right stick... which can be between -1.0 and 1.0
-        asuint16:int = packed[1] << packed[2]
+        asuint16:int = (packed[1] << 8) | packed[2]
         aspor:float = asuint16 / 65535 # % of total range
         value = (2 * aspor) - 1.0 # restore to a -1.0 to 1.0
 
@@ -92,6 +92,7 @@ class NonlinearTransformer:
         else:
             return (self._transform(abs(percent)) * -1)
         
-data = b'\t\r\n'
-btn = unpack_button_input(data)
-print(str(btn))
+data = b'D*\x89\r\n'
+btn = unpack_joystick_input(data)
+print(btn[0])
+print(str(round(btn[1], 2)))
