@@ -156,7 +156,6 @@ try:
 
         # Update display?
         if time.ticks_diff(time.ticks_us(), last_display_update) > 100_000:
-            print("Updating display: " + str(dc.page))
             dc.display()
             last_display_update = time.ticks_us()
 
