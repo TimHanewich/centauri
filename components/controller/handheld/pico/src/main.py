@@ -94,7 +94,7 @@ async def main() -> None:
                     rxBuffer = rxBuffer[len(ThisLine):] # keep the rest, trim out that line
 
                     # is it a problem?
-                    if ThisLine == b'@\r\n': # this is 0b010000 followed by \r\n (3 bytes), indicating there is a problem
+                    if ThisLine == b'@\r\n': # this is 0b01000000 followed by \r\n (3 bytes), indicating there is a problem
                         print("Problem flag received from RPi! Issue with controller telemetry.")
                         dc.page = "ci_problem" # change the display controller to ci_problem for it to be displayed there is a problem
                     else: # it is good control data!

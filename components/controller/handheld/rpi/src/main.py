@@ -10,7 +10,7 @@ ser = serial.Serial(serport, 9600)
 print("Serial port opened!")
 
 def FOREVER_BROADCAST_PROBLEM_FLAG() -> None:
-    PROBLEM_MSG:bytes = b'@\r\n' # this is 0b010000 followed by \r\n (3 bytes). What we will transmit to indicate a problem encountered
+    PROBLEM_MSG:bytes = b'@\r\n' # this is 0b01000000 followed by \r\n (3 bytes). What we will transmit to indicate a problem encountered
     while True:
         print("Broadcasting problem error @ time " + str(int(time.time())) + "...")
         ser.write(PROBLEM_MSG)
