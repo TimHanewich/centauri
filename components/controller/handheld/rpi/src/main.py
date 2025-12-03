@@ -42,6 +42,9 @@ print("Controller #0, '" + controller.get_name() + "' will be used.")
 # declare a bytearray we will append stuff to send to and then clear
 ToSend:bytearray = bytearray()
 
+# Just before starting, transmit "HELLO\r\n" to confirm we are online and ready to go
+ser.write("HELLO\r\n".encode())
+
 # start reading from it!
 try:
     print("NOW READING FROM XBOX CONTROLLER!")
