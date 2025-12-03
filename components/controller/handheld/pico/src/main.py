@@ -149,9 +149,9 @@ boot_update("Control Input")
 print("Setting up uart_ci...")
 uart_ci = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
 print("Clearing out uart_ci...")
-if uart_ci.any(): # clear out the rxbuffer
+if uart_ci.any(): # clear out the rxBuffer
     uart_ci.read(uart_ci.any())
-rxBuffer:bytearray = bytearray()
+rxBuffer_ci:bytearray = bytearray()
 
 # Set up variables to contain the most up to date controller input data
 # "ci" short for "controller input"
@@ -224,11 +224,11 @@ try:
             ba:int = uart_ci.any()
             if ba > 0:
                 newdata:bytes = uart_ci.read(ba)
-                rxBuffer.extend(newdata)
+                rxBuffer_ci.extend(newdata)
             
             # Do we have a line?
             while True:
-                term_loc:int = rxBuffer.find("\r\n".encode())
+                term_loc:int = rxBuffer_ci.find("\r\n".encode())
                 if term_loc != -1:
 
                     # update the last time we received control input from the RPi 
@@ -237,8 +237,8 @@ try:
                     ci_last_received_ticks_us = time.ticks_us() # update last received time
 
                     # extract the line                    
-                    ThisLine:bytes = rxBuffer[0:term_loc+2] # include the \r\n at the end
-                    rxBuffer = rxBuffer[len(ThisLine):] # keep the rest, trim out that line
+                    ThisLine:bytes = rxBuffer_ci[0:term_loc+2] # include the \r\n at the end
+                    rxBuffer_ci = rxBuffer_ci[len(ThisLine):] # keep the rest, trim out that line
 
                     # is it a problem?
                     if ThisLine == b'@\r\n': # this is 0b01000000 followed by \r\n (3 bytes), indicating there is a problem
@@ -306,6 +306,11 @@ try:
 
 
         ### MAIN PROGRAM BELOW! ###
+
+        # check for any received telemetery from the drone
+        nb:int = uart_hc12.any()
+        if nb > 0:
+            pass
 
         # handle what to do based on what page we are on
         if dc.page == "awaiting_ci":
