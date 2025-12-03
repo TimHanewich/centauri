@@ -335,7 +335,7 @@ try:
             elif ci_b: # go back home
                 dc.page = "home"
         
-        elif dc.page == "pid send":
+        elif dc.page == "send pid":
 
             # completely hijack thead while sending
 
@@ -372,7 +372,7 @@ try:
                 dc.display()
 
                 # wait for a moment for a response to be received
-                time.sleep(1.5)
+                time.sleep(3.0)
 
                 # check - did we receive the confirmation?
                 nb:int = uart_hc12.any()
@@ -392,7 +392,7 @@ try:
                 dc.display()
                 time.sleep(2.0)
             else:
-                dc.send_pid_attempt = "FAILED!"
+                dc.send_pid_status = "FAILED!"
                 dc.display()
                 time.sleep(3.0)
 
