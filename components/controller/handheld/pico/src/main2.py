@@ -64,12 +64,13 @@ dc.page = "awaiting_ci"
 # Timestamps, in ticks_us, for each primary function
 last_ci_check:int = 0           # the last time we checked for controller input via UART (received from RPi)
 last_display_update:int = 0     # the last time we updated the SSD-1306 display
-last_main_control:int = 0       # the last time the main programmed processed what to do given the current state and current inputs
 
 
 # INFINITE LOOP FOR ALL!
 try:
     while True:
+
+        ### PERIODIC TIMESTAMP BASED THINGS BELOW ###
 
         # Check for UART?
         if time.ticks_diff(time.ticks_us(), last_ci_check) > 25_000:
@@ -150,39 +151,40 @@ try:
             dc.display()
             last_display_update = time.ticks_us()
 
-        # Main Program (handle control input)
-        if time.ticks_diff(time.ticks_us(), last_main_control) > 100_000:
 
-            # handle what to do based on what page we are on
-            if dc.page == "awaiting_ci":
-                if ci_last_received_ticks_us != None: # if we finally go telemetry from the controller...
-                    dc.page = "home" # move on!
-                else: # if we haven't gotten any good telemetry yet...
-                    dc.seconds_waiting = int((time.ticks_ms() - started_waiting_ticks_ms)/1000) # update the seconds we have been waiting
 
-            elif dc.page == "home": # we are on the home page
-                
-                # armed?
-                if ci_a:
-                    armed = True
-                elif ci_b:
-                    armed = False
 
-                # other inputs
-                throttle = ci_rt
-                pitch = ci_left_y
-                roll = ci_left_x
-                yaw = ci_right_x
 
-                # plug into display controller
-                dc.armed = armed
-                dc.throttle = throttle
-                dc.pitch = pitch
-                dc.roll = roll
-                dc.yaw = yaw
 
-            # update last time
-            last_main_control = time.ticks_us()
+        ### MAIN PROGRAM BELOW! ###
+
+        # handle what to do based on what page we are on
+        if dc.page == "awaiting_ci":
+            if ci_last_received_ticks_us != None: # if we finally go telemetry from the controller...
+                dc.page = "home" # move on!
+            else: # if we haven't gotten any good telemetry yet...
+                dc.seconds_waiting = int((time.ticks_ms() - started_waiting_ticks_ms)/1000) # update the seconds we have been waiting
+
+        elif dc.page == "home": # we are on the home page
+            
+            # armed?
+            if ci_a:
+                armed = True
+            elif ci_b:
+                armed = False
+
+            # other inputs
+            throttle = ci_rt
+            pitch = ci_left_y
+            roll = ci_left_x
+            yaw = ci_right_x
+
+            # plug into display controller
+            dc.armed = armed
+            dc.throttle = throttle
+            dc.pitch = pitch
+            dc.roll = roll
+            dc.yaw = yaw
 
 
 except Exception as ex:
