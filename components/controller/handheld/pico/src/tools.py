@@ -1,5 +1,7 @@
 import math
 
+### FOR RECEIVING CONTROLLER INPUT ###
+
 def unpack_button_input(packed:bytes) -> tuple[int, bool]: # returns the int that corresponds to the Button - see the "Button" Enum in the RPi's tools.py (MicroPython doesn't support Enum), and then the status (True = pressed, False = depressed)
 
     if len(packed) == 0:
@@ -50,6 +52,42 @@ def unpack_joystick_input(packed:bytes) -> tuple[int, float]: # unpacks as the I
         value = (2 * aspor) - 1.0 # restore to a -1.0 to 1.0
 
     return (joystick_id, value)
+
+
+
+
+##################################################
+### FOR PACKING/UNPACKING TELEMETRY FROM DRONE ###
+### LIFTED DIRECTLY OUT OF THE PC's utils.py   ###
+##################################################
+
+def unpack_telemetry(data:bytes) -> dict:
+    """Unpacks telemetry packet coming from the drone"""
+
+    # if it is not long enough, return None to indicate it didn't work
+    if len(data) < 5:
+        return None
+
+    # the first byte is a header (metadata) byte
+
+    # battery voltage
+    # the battery voltage will come in 10x what it is - so 168 would be 16.8, 60 would be 6.0
+    # so just divide by 10 to get the actual value (as a float)
+    vbat:float = data[1] / 10
+
+    # rates & angles
+    # we subtract 128 here to "shift back" to a signed byte from an unsigned byte (128 is added before packing it)
+    pitch_rate:int = data[2] - 128
+    roll_rate:int = data[3] - 128
+    yaw_rate:int = data[4] - 128
+    pitch_angle:int = data[5] - 128
+    roll_angle:int = data[6] - 128
+
+    # return
+    ToReturn:dict = {"vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle}
+    return ToReturn
+
+
 
 
 # Lifted from the Scout Flight Controller, my previous work: https://github.com/TimHanewich/scout/blob/master/src/toolkit.py
