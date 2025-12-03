@@ -1,7 +1,7 @@
 import pygame
 import time
 import serial
-from tools import Joystick, pack_button_input_event, pack_joystick_input_event, Button
+from tools import pack_controls
 
 # Set up serial communication that will later be used to send data to the connected device via UART
 serport:str = "/dev/ttyS0"
@@ -39,8 +39,27 @@ controller = pygame.joystick.Joystick(0)
 controller.init()
 print("Controller #0, '" + controller.get_name() + "' will be used.")
 
-# declare a bytearray we will append stuff to send to and then clear
-ToSend:bytearray = bytearray()
+# Declare control input variables
+input_left_stick_click:bool = False
+input_right_stick_click:bool = False
+input_back:bool = False # the "back" button (or is it called "select"?)... to the left of the Xbox logo
+input_start:bool = False
+input_a:bool = False
+input_b:bool = False
+input_y:bool = False
+input_x:bool = False
+input_dpad_up:bool = False
+input_dpad_right:bool = False
+input_dpad_down:bool = False
+input_dpad_left:bool = False
+input_right_bumper:bool = False
+input_left_bumper:bool = False
+input_left_stick_x:float = 0.0      # -1.0 to 1.0 for left stick right/left
+input_left_stick_y:float = 0.0      # -1.0 to 1.0 for left stick up/down
+input_right_stick_x:float = 0.0     # -1.0 to 1.0 for right stick right/left
+input_right_stick_y:float = 0.0     # -1.0 to 1.0 for right stick up/down
+input_right_trigger:float = 0.0     # 0.0 to 1.0 for right trigger
+input_left_trigger:float = 0.0      # 0.0 to 1.0 for left trigger
 
 # Just before starting, transmit "HELLO\r\n" to confirm we are online and ready to go
 print("Transmitting 'HELLO' online message...")
@@ -66,22 +85,22 @@ try:
 
                 if event.axis == 0: # Left Stick X axis (left/right)
                     value:float = min(max(event.value, -1.0), 1.0)
-                    ToSend.extend(pack_joystick_input_event(Joystick.LS_X, value))
+                    input_left_stick_x = value
                 elif event.axis == 1: # Left Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
                     value:float = min(max(event.value, -1.0), 1.0)
-                    ToSend.extend(pack_joystick_input_event(Joystick.LS_Y, value))
+                    input_left_stick_y = value
                 elif event.axis == 3: # Right Stick X axis
                     value:float = min(max(event.value, -1.0), 1.0)
-                    ToSend.extend(pack_joystick_input_event(Joystick.RS_X, value))
+                    input_right_stick_x = value
                 elif event.axis == 4: # Right Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
                     value:float = min(max(event.value, -1.0), 1.0)
-                    ToSend.extend(pack_joystick_input_event(Joystick.RS_Y, value))
+                    input_right_stick_y = value
                 elif event.axis == 2: # left trigger
                     value:float = min(max((event.value + 1.0) / 2.0, 0.0), 1.0) # gets it to between 0.0 and 1.0
-                    ToSend.extend(pack_joystick_input_event(Joystick.LT, value))
+                    input_left_trigger = value
                 elif event.axis == 5: # right trigger
                     value:float = min(max((event.value + 1.0) / 2.0, 0.0), 1.0) # gets it to between 0.0 and 1.0
-                    ToSend.extend(pack_joystick_input_event(Joystick.RT, value))
+                    input_right_trigger
 
             elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed down
                 
@@ -99,77 +118,84 @@ try:
                 # Share button (on Xbox Series S/X controllers only) = 11
 
                 if event.button == 0:
-                    ToSend.extend(pack_button_input_event(Button.A, True))
+                    input_a = True
                 elif event.button == 1:
-                    ToSend.extend(pack_button_input_event(Button.B, True))
+                    input_b = True
                 elif event.button == 2:
-                    ToSend.extend(pack_button_input_event(Button.X, True))
+                    input_x = True
                 elif event.button == 3:
-                    ToSend.extend(pack_button_input_event(Button.Y, True))
+                    input_y = True
                 elif event.button == 4:
-                    ToSend.extend(pack_button_input_event(Button.LB, True))
+                    input_left_bumper = True
                 elif event.button == 5:
-                    ToSend.extend(pack_button_input_event(Button.RB, True))
+                    input_right_bumper = True
                 elif event.button == 9:
-                    ToSend.extend(pack_button_input_event(Button.LS, True))
+                    input_left_stick_click = True
                 elif event.button == 10:
-                    ToSend.extend(pack_button_input_event(Button.RS, True))
+                    input_right_stick_click = True
                 elif event.button == 6:
-                    ToSend.extend(pack_button_input_event(Button.Back, True))
+                    input_back = True
                 elif event.button == 7:
-                    ToSend.extend(pack_button_input_event(Button.Start, True))
+                    input_start = True
 
             elif event.type == pygame.JOYBUTTONUP:
                 if event.button == 0:
-                    ToSend.extend(pack_button_input_event(Button.A, False))
+                    input_a = False
                 elif event.button == 1:
-                    ToSend.extend(pack_button_input_event(Button.B, False))
+                    input_b = False
                 elif event.button == 2:
-                    ToSend.extend(pack_button_input_event(Button.X, False))
+                    input_x = False
                 elif event.button == 3:
-                    ToSend.extend(pack_button_input_event(Button.Y, False))
+                    input_y = False
                 elif event.button == 4:
-                    ToSend.extend(pack_button_input_event(Button.LB, False))
+                    input_left_bumper = False
                 elif event.button == 5:
-                    ToSend.extend(pack_button_input_event(Button.RB, False))
+                    input_right_bumper = False
                 elif event.button == 9:
-                    ToSend.extend(pack_button_input_event(Button.LS, False))
+                    input_left_stick_click = False
                 elif event.button == 10:
-                    ToSend.extend(pack_button_input_event(Button.RS, False))
+                    input_right_stick_click = False
                 elif event.button == 6:
-                    ToSend.extend(pack_button_input_event(Button.Back, False))
+                    input_back = False
                 elif event.button == 7:
-                    ToSend.extend(pack_button_input_event(Button.Start, False))
+                    input_start = False
 
             elif event.type == pygame.JOYHATMOTION: # D-Pad
 
                 # "value" looks something like (-1, 1)
                 # first value in the tuple represents Left/Right Dpad. -1 would mean left down, 1 mean right down, 0 mean neither down
                 # second value in the tuple represents up/down Dpad. -1 would mean down is down, 1 mean up is down.
-                # yes, due to the way this works, D-pad is technically the most bandwidth-intensive thing... I wish it was just the normal button up/down!
 
                 # Check left/right
                 if event.value[0] == -1:
-                    ToSend.extend(pack_button_input_event(Button.Left, True))
+                    input_dpad_left = True
+                    input_dpad_right = False
                 elif event.value[0] == 1:
-                    ToSend.extend(pack_button_input_event(Button.Right, True))
-                else: # they are both now NOT pressed
-                    ToSend.extend(pack_button_input_event(Button.Left, False))
-                    ToSend.extend(pack_button_input_event(Button.Right, False))
+                    input_dpad_left = False
+                    input_dpad_right = True
+                else: # neither are pressed (0)
+                    input_dpad_left = False
+                    input_dpad_right = False
 
                 # Check Up/Down
                 if event.value[1] == -1:
-                    ToSend.extend(pack_button_input_event(Button.Down, True))
+                    input_dpad_down = True
+                    input_dpad_up = False
                 elif event.value[1] == 1:
-                    ToSend.extend(pack_button_input_event(Button.Up, True))
-                else: # they are both now NOT pressed
-                    ToSend.extend(pack_button_input_event(Button.Down, False))
-                    ToSend.extend(pack_button_input_event(Button.Up, False))
+                    input_dpad_down = False
+                    input_dpad_up = True
+                else: # neither are pressed (0)
+                    input_dpad_down = False
+                    input_dpad_up = False
 
-            # Something to send?
-            if len(ToSend) > 0:
-                ser.write(ToSend)  # send
-                ToSend.clear()     # clear
+        # pack
+        packed:bytes = pack_controls(input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
+        
+        # transmit via serial (UART)
+        ser.write(packed)
+
+        # wait a moment
+        time.sleep(0.05)
 
         # wait a moment
         time.sleep(0.01)
