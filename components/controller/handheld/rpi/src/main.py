@@ -189,7 +189,7 @@ try:
                     input_dpad_up = False
 
         # print (change to True for debugging purposes)
-        if True:
+        if False:
             ToPrint:dict = {}
             ToPrint["ls"] = input_left_stick_click
             ToPrint["rs"] = input_right_stick_click
@@ -218,6 +218,7 @@ try:
         
         # transmit via serial (UART)
         ser.write(packed)
+        print(str(packed))
 
         # wait a moment
         time.sleep(0.05)
