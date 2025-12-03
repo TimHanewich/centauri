@@ -82,7 +82,7 @@ A total of **16 bytes**. So at 30 packets per second, that is 480 bytes per seco
 |10|0b00001010|Left Stick Click|
 |11|0b00001011|Right Stick Click|
 |12|0b00001100|Back|
-|13|0b00001101|Select|
+|13|0b00001101|Start|
 
 ### Joystick to Corresponding ID
 |Number|Binary(8-bit)|Input|
