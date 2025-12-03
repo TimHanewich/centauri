@@ -82,7 +82,6 @@ try:
             ba:int = uart.any()
             if ba > 0:
                 newdata:bytes = uart.read(ba)
-                print("Just received: " + str(newdata))
                 rxBuffer.extend(newdata)
             
             # Do we have a line?
