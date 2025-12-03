@@ -186,6 +186,9 @@ try:
             dc.roll = roll
             dc.yaw = yaw
 
+        # Standard wait time
+        time.sleep(0.01)
+
 
 except Exception as ex:
     raise ex
