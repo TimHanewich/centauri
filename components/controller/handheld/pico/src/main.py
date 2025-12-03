@@ -78,7 +78,9 @@ try:
             # check if we have any input data to receive from the xbox controller
             ba:int = uart.any()
             if ba > 0:
-                rxBuffer.extend(uart.read(ba))
+                newdata:bytes = uart.read(ba)
+                print("Just received: " + str(newdata))
+                rxBuffer.extend(newdata)
             
             # Do we have a line?
             while True:
