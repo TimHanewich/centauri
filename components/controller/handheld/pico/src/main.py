@@ -256,50 +256,29 @@ try:
                         print("Problem flag received from RPi! Issue with controller telemetry.")
                         dc.page = "ci_problem" # change the display controller to ci_problem for it to be displayed there is a problem
                     else: # it is good control data! So just update the control input states...
-                        if ThisLine[0] & 0b01000000 > 0: # if bit 6 is a 1, that means it is a joystick (variable) input, i.e. LT/RT or joystick X/Y axes
-                            id,value = tools.unpack_joystick_input(ThisLine)
-                            if id == 0:
-                                ci_left_x = value
-                            elif id == 1:
-                                ci_left_y = value
-                            elif id == 2:
-                                ci_right_x = value
-                            elif id == 3:
-                                ci_right_y = value
-                            elif id == 4:
-                                ci_lt = value
-                            elif id == 5:
-                                ci_rt = value
-                        else: # if bit 6 is 0, it is a button press down
-                            btn,status = tools.unpack_button_input(ThisLine)
-                            if btn == 0:
-                                ci_a = status
-                            elif btn == 1:
-                                ci_b = status
-                            elif btn == 2:
-                                ci_x = status
-                            elif btn == 3:
-                                ci_y = status
-                            elif btn == 4:
-                                ci_up = status
-                            elif btn == 5:
-                                ci_right = status
-                            elif btn == 6:
-                                ci_down = status
-                            elif btn == 7:
-                                ci_left = status
-                            elif btn == 8:
-                                ci_lb = status
-                            elif btn == 9:
-                                ci_rb = status
-                            elif btn == 10:
-                                ci_ls = status
-                            elif btn == 11:
-                                ci_rs = status
-                            elif btn == 12:
-                                ci_back = status
-                            elif btn == 13:
-                                ci_start = status
+                        inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
+                        if inputs != None:
+                            ci_last_received_ticks_us = time.ticks_us()
+                            ci_ls = inputs["ls"]
+                            ci_rs = inputs["rs"]
+                            ci_back = inputs["back"]
+                            ci_start = inputs["start"]
+                            ci_a = inputs["a"]
+                            ci_b = inputs["b"]
+                            ci_x = inputs["x"]
+                            ci_y = inputs["y"]
+                            ci_up = inputs["up"]
+                            ci_right = inputs["right"]
+                            ci_down = inputs["down"]
+                            ci_left = inputs["left"]
+                            ci_lb = inputs["lb"]
+                            ci_rb = inputs["rb"]
+                            ci_left_x = inputs["left_x"]
+                            ci_left_y = inputs["left_y"]
+                            ci_right_x = inputs["right_x"]
+                            ci_right_y = inputs["right_y"]
+                            ci_lt = inputs["lt"]
+                            ci_rt = inputs["rt"]
                 else:
                     break
 
