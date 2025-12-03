@@ -5,6 +5,12 @@ import tools
 from display import Display
 
 
+
+
+#################################
+###### SET UP SSD1306 OLED! #####
+#################################
+
 # Set up the SSD1306 OLED
 i2c = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
 if 60 not in i2c.scan():
@@ -26,6 +32,18 @@ def FATAL_ERROR() -> None:
     oled.fill(0)
     oled.text("FATAL ERROR!", 0, 0)
     oled.show()
+
+
+
+
+
+
+
+
+###############################################
+###### SET UP UART FOR HC-12 RADIO COMMS! #####
+###############################################
+
 
 # set up UART interface for radio communications via HC-12
 print("Setting up HC-12 via UART...")
@@ -105,6 +123,26 @@ print("Returning HC-12 SET pin to HIGH (exiting AT mode)...")
 hc12_set.high()
 time.sleep(0.5) # wait a moment for the HC-12 to successfully get out of AT mode before proceeding with sending any messages
 
+
+
+
+
+
+
+
+
+#################################################################
+###### NOW SET UP UART TO RECEIVE CONTRLLER INPUT FROM RPI! #####
+#################################################################
+
+# Set up UART to receive controller input data from the RPi
+print("Setting up UART...")
+uart = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
+print("Clearing out UART...")
+if uart.any(): # clear out the rxbuffer
+    uart.read(uart.any())
+rxBuffer:bytearray = bytearray()
+
 # Set up variables to contain the most up to date controller input data
 # "ci" short for "controller input"
 ci_last_received_ticks_us:int = None     # The last time control input was received via UART
@@ -129,14 +167,6 @@ ci_right_y:float = 0.0                   # Right Stick Y axis (left/right) = -1.
 ci_lt:float = 0.0                        # Left Trigger = 0.0 to 1.0
 ci_rt:float = 0.0                        # Right Trigger = 0.0 to 1.0
 
-# Set up UART to receive controller input data from the RPi
-print("Setting up UART...")
-uart = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
-print("Clearing out UART...")
-if uart.any(): # clear out the rxbuffer
-    uart.read(uart.any())
-rxBuffer:bytearray = bytearray()
-
 # declare xbox controller input variables
 armed:bool = False
 throttle:float = 0.0      # between 0.0 and 1.0
@@ -149,6 +179,13 @@ nlt_pitch:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
 nlt_roll:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
 nlt_yaw:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.10) # my deadzone is higher than the others because I have a broken right stick on my controller that often rests at around 8% in either direction
 
+
+
+
+################################
+##### FINAL START UP STUFF #####
+################################
+
 # start on awaiting_ci page as that is what we do first: verify telemetry comes in
 started_waiting_ticks_ms:int = time.ticks_ms()
 dc.page = "awaiting_ci"
@@ -157,7 +194,13 @@ dc.page = "awaiting_ci"
 last_ci_check:int = time.ticks_us()            # the last time we checked for controller input via UART (received from RPi)
 last_display_update:int = time.ticks_us()      # the last time we updated the SSD-1306 display
 
-# INFINITE LOOP FOR ALL!
+
+
+
+
+##############################
+##### NOW INFINITE LOOP! #####
+##############################
 print("Beginning infinite control loop!")
 try:
     while True:
