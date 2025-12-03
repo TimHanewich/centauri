@@ -46,7 +46,7 @@ def FATAL_ERROR() -> None:
 
 
 # set up UART interface for radio communications via HC-12
-print("Setting up HC-12 via UART...")
+print("Setting up HC-12 via uart_ci...")
 hc12_set = machine.Pin(6, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
 uart_hc12 = machine.UART(1, tx=machine.Pin(4), rx=machine.Pin(5), baudrate=9600)
 uart_hc12.read(uart_hc12.any()) # clear out any RX buffer that may exist
@@ -136,11 +136,11 @@ time.sleep(0.5) # wait a moment for the HC-12 to successfully get out of AT mode
 #################################################################
 
 # Set up UART to receive controller input data from the RPi
-print("Setting up UART...")
-uart = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
-print("Clearing out UART...")
-if uart.any(): # clear out the rxbuffer
-    uart.read(uart.any())
+print("Setting up uart_ci...")
+uart_ci = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
+print("Clearing out uart_ci...")
+if uart_ci.any(): # clear out the rxbuffer
+    uart_ci.read(uart_ci.any())
 rxBuffer:bytearray = bytearray()
 
 # Set up variables to contain the most up to date controller input data
@@ -211,9 +211,9 @@ try:
         if time.ticks_diff(time.ticks_us(), last_ci_check) > 5_000:
 
             # check if we have any input data to receive from the xbox controller
-            ba:int = uart.any()
+            ba:int = uart_ci.any()
             if ba > 0:
-                newdata:bytes = uart.read(ba)
+                newdata:bytes = uart_ci.read(ba)
                 rxBuffer.extend(newdata)
             
             # Do we have a line?
@@ -324,6 +324,80 @@ try:
             dc.pitch = pitch
             dc.roll = roll
             dc.yaw = yaw
+
+            # "back" button means they want to go to PID-sending area
+            if ci_back:
+                dc.page = "pid confirm"
+
+        elif dc.page == "pid confirm":
+            if ci_y: # confirm, yes I want to send pid settings
+                dc.page = "send pid"
+            elif ci_b: # go back home
+                dc.page = "home"
+        
+        elif dc.page == "pid send":
+
+            # completely hijack thead while sending
+
+            # Pre-compiled PID settings payload, with the following settings:
+            # pitch_kp = 4371
+            # pitch_ki = 102
+            # pitch_kd = 64286
+            # roll_kp = 4371
+            # roll_ki = 102
+            # roll_kd = 64286
+            # yaw_kp = 17143
+            # yaw_ki = 137
+            # yaw_kd = 0
+            # i_limit = 350000
+            # Use "pack_settings_update" function in the PC's utils.py module to pre-compile with other settings if you want to change
+            pid_settings_payload:bytes = b'\x01\x11\x13\x00f\xfb\x1e\x11\x13\x00f\xfb\x1eB\xf7\x00\x89\x00\x00\x01^b\r\n'
+
+            # attempt!
+            UpdateSuccessful:bool = False
+            for attempt in range(0, 5):
+                send_attempt:int = attempt + 1
+
+                # update the display
+                dc.send_pid_attempt = send_attempt
+                dc.send_pid_status = "Sending..."
+                dc.display()
+
+                # send it!
+                uart_hc12.write(pid_settings_payload)
+                time.sleep(0.25)
+
+                # Update the dispaly
+                dc.send_pid_status = "Listening..."
+                dc.display()
+
+                # wait for a moment for a response to be received
+                time.sleep(1.5)
+
+                # check - did we receive the confirmation?
+                nb:int = uart_hc12.any()
+                if nb > 0:
+                    newdata:bytes = uart_hc12.read(nb)
+                    if "SETUPOK".encode() in newdata:
+                        UpdateSuccessful = True
+                        break
+                    else:
+                        dc.send_pid_status = "No Response"
+                        dc.display()
+                        time.sleep(1.0)
+
+            # did it work? Show success/error message?
+            if UpdateSuccessful:
+                dc.send_pid_status = "Confirmed!"
+                dc.display()
+                time.sleep(2.0)
+            else:
+                dc.send_pid_attempt = "FAILED!"
+                dc.display()
+                time.sleep(3.0)
+
+            dc.page = "home"
+
 
         # Standard wait time
         time.sleep(0.01)
