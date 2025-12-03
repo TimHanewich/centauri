@@ -33,7 +33,10 @@ def FATAL_ERROR() -> None:
     oled.text("FATAL ERROR!", 0, 0)
     oled.show()
 
-
+def boot_update(status:str) -> None:
+    dc.page = "boot"
+    dc.boot_status = status
+    dc.display()
 
 
 
@@ -47,11 +50,13 @@ def FATAL_ERROR() -> None:
 
 # set up UART interface for radio communications via HC-12
 print("Setting up HC-12 via uart_ci...")
+boot_update("HC-12")
 hc12_set = machine.Pin(6, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
 uart_hc12 = machine.UART(1, tx=machine.Pin(4), rx=machine.Pin(5), baudrate=9600)
 uart_hc12.read(uart_hc12.any()) # clear out any RX buffer that may exist
 
 # pulse HC-12
+boot_update("HC-12 Pulse")
 hc12_set.low() # pull it LOW to enter AT command mode
 time.sleep(0.2) # wait a moment for AT mode to be entered
 hc12_pulsed:bool = False
@@ -86,6 +91,7 @@ else:
     FATAL_ERROR()
 
 # Configure HC-12 while still in AT mode: mode = FU3
+boot_update("HC-12 Mode")
 print("Setting HC-12 mode to FU3...")
 uart_hc12.write("AT+FU3\r\n".encode()) # go into mode FU3 (normal mode)
 time.sleep(0.2) # wait a moment
@@ -97,6 +103,7 @@ else:
     FATAL_ERROR()
 
 # Configure HC-12 while still in AT mode: channel = 2
+boot_update("HC-12 Channel")
 print("Setting HC-12 channel to 2...")
 uart_hc12.write("AT+C002\r\n".encode())
 time.sleep(0.2) # wait a moment
@@ -108,6 +115,7 @@ else:
     FATAL_ERROR()
 
 # Configure HC-12 while still in AT mode: power
+boot_update("HC-12 Power")
 print("Setting HC-12 power to maximum level of 8...")
 uart_hc12.write("AT+P8\r\n".encode())
 time.sleep(0.2) # wait a moment
@@ -119,6 +127,7 @@ else:
     FATAL_ERROR()
 
 # now that the HC-12 is set up and configured, close out of AT mode by setting the SET pin back to HIGH
+boot_update("HC-12 Ready")
 print("Returning HC-12 SET pin to HIGH (exiting AT mode)...")
 hc12_set.high()
 time.sleep(0.5) # wait a moment for the HC-12 to successfully get out of AT mode before proceeding with sending any messages
@@ -136,6 +145,7 @@ time.sleep(0.5) # wait a moment for the HC-12 to successfully get out of AT mode
 #################################################################
 
 # Set up UART to receive controller input data from the RPi
+boot_update("Control Input")
 print("Setting up uart_ci...")
 uart_ci = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
 print("Clearing out uart_ci...")
@@ -186,10 +196,6 @@ nlt_yaw:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.10) # my 
 ##### FINAL START UP STUFF #####
 ################################
 
-# start on awaiting_ci page as that is what we do first: verify telemetry comes in
-started_waiting_ticks_ms:int = time.ticks_ms()
-dc.page = "awaiting_ci"
-
 # Timestamps, in ticks_us, for each primary function
 last_ci_check:int = time.ticks_us()            # the last time we checked for controller input via UART (received from RPi)
 last_display_update:int = time.ticks_us()      # the last time we updated the SSD-1306 display
@@ -201,7 +207,11 @@ last_display_update:int = time.ticks_us()      # the last time we updated the SS
 ##############################
 ##### NOW INFINITE LOOP! #####
 ##############################
+boot_update("Ready!")
+time.sleep(1.0)
+dc.page = "awaiting_ci"
 print("Beginning infinite control loop!")
+started_waiting_ticks_ms:int = time.ticks_ms()
 try:
     while True:
 
