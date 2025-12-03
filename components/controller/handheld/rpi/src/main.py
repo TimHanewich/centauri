@@ -44,7 +44,7 @@ ToSend:bytearray = bytearray()
 
 # Just before starting, transmit "HELLO\r\n" to confirm we are online and ready to go
 print("Transmitting 'HELLO' online message...")
-ser.write("HELLO\r\n".encode())
+ser.write(b"HELLO\r\n")
 
 # start reading from it!
 try:
