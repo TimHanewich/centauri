@@ -188,6 +188,31 @@ try:
                     input_dpad_down = False
                     input_dpad_up = False
 
+        # print (change to True for debugging purposes)
+        if True:
+            ToPrint:dict = {}
+            ToPrint["ls"] = input_left_stick_click
+            ToPrint["rs"] = input_right_stick_click
+            ToPrint["back"] = input_back
+            ToPrint["start"] = input_start
+            ToPrint["a"] = input_a
+            ToPrint["b"] = input_b
+            ToPrint["x"] = input_x
+            ToPrint["y"] = input_y
+            ToPrint["up"] = input_dpad_up
+            ToPrint["right"] = input_dpad_right
+            ToPrint["down"] = input_dpad_down
+            ToPrint["left"] = input_dpad_left
+            ToPrint["lb"] = input_left_bumper
+            ToPrint["rb"] = input_right_bumper
+            ToPrint["lt"] = input_left_trigger
+            ToPrint["rt"] = input_right_trigger
+            ToPrint["left_x"] = input_left_stick_x
+            ToPrint["left_y"] = input_left_stick_y
+            ToPrint["right_x"] = input_right_stick_x
+            ToPrint["right_y"] = input_right_stick_y
+            print(str(ToPrint))
+
         # pack
         packed:bytes = pack_controls(input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
         
