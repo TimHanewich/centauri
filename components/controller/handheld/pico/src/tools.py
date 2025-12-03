@@ -1,6 +1,6 @@
 import math
 
-def unpack_button_input(packed:bytes) -> int: # returns the int that corresponds to the Button - see the "Button" Enum in the RPi's tools.py (MicroPython doesn't support Enum)
+def unpack_button_input(packed:bytes) -> tuple[int, bool]: # returns the int that corresponds to the Button - see the "Button" Enum in the RPi's tools.py (MicroPython doesn't support Enum), and then the status (True = pressed, False = depressed)
 
     if len(packed) == 0:
         return None
@@ -16,7 +16,11 @@ def unpack_button_input(packed:bytes) -> int: # returns the int that corresponds
     # since we set bit 4-7 to 0, it will be impossible for those to come out as 1
     btn_id:int = packed[0] & mask
 
-    return btn_id
+    # Now determine the status (pressed or depressed)
+    # if bit 5 is 1, it is pressed. Otherwise, it is not
+    pressed:bool = packed[0] & 0b00100000 > 0
+
+    return (btn_id, pressed)
 
 def unpack_joystick_input(packed:bytes) -> tuple[int, float]: # unpacks as the ID of the joystick (see 'Joystick' Enum of the RPi's tools.py) and then the value as a floating point number
 
