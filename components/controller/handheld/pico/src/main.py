@@ -132,9 +132,17 @@ print("Returning HC-12 SET pin to HIGH (exiting AT mode)...")
 hc12_set.high()
 time.sleep(0.5) # wait a moment for the HC-12 to successfully get out of AT mode before proceeding with sending any messages
 
+# Set up a rxBuffer for future HC-12 input
+rxBuffer_hc12:bytearray = bytearray()
 
-
-
+# Set up variables that will be received from the drone
+drone_telemetry_last_received_ticks_ms:int = time.ticks_ms() # init with some value
+vbat_drone:float = 0.0
+pitch_rate:int = 0
+roll_rate:int = 0
+yaw_rate:int = 0
+pitch_angle:int = 0
+roll_angle:int = 0
 
 
 
@@ -310,7 +318,31 @@ try:
         # check for any received telemetery from the drone
         nb:int = uart_hc12.any()
         if nb > 0:
-            pass
+            newdata:bytes = uart_hc12.read(nb)
+            rxBuffer_hc12.extend(newdata)
+
+        # Handle telemetry received from the drone
+        while True:
+            term_loc:int = rxBuffer_hc12.find("\r\n".encode())
+            if term_loc == -1:
+                break
+            else:
+
+                # extract the line                    
+                ThisLine:bytes = rxBuffer_hc12[0:term_loc+2] # include the \r\n at the end
+                rxBuffer_hc12 = rxBuffer_hc12[len(ThisLine):] # keep the rest, trim out that line
+
+                # handle the line
+                if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a telemetry packet
+                    TelemetryData:dict = tools.unpack_telemetry(ThisLine)
+                    if TelemetryData != None: # it returns None if there was an issue like it wasn't long enough
+                        drone_telemetry_last_received_ticks_ms = time.ticks_ms()
+                        vbat_drone = TelemetryData["vbat"]
+                        pitch_rate = TelemetryData["pitch_rate"]
+                        roll_rate = TelemetryData["roll_rate"]
+                        yaw_rate = TelemetryData["yaw_rate"]
+                        pitch_angle = TelemetryData["pitch_angle"]
+                        roll_angle = TelemetryData["roll_angle"]
 
         # handle what to do based on what page we are on
         if dc.page == "awaiting_ci":
@@ -339,6 +371,9 @@ try:
             dc.pitch = pitch
             dc.roll = roll
             dc.yaw = yaw
+            dc.last_recv = int((time.ticks_ms() - drone_telemetry_last_received_ticks_ms) / 1000)
+            dc.vbat_drone = vbat_drone
+
 
             # "back" button means they want to go to PID-sending area
             if ci_back:
