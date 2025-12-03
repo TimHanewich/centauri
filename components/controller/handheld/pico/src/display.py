@@ -133,7 +133,7 @@ class Display:
             self._oled.text("Input", 44, 20)
             self._oled.text("Problem!", 32, 30)
         elif self.page == "boot":
-            self._oled.text("Booting...", 64, 20)
+            self._oled.text("Booting...", 32, 20)
             txt:str = self.boot_status
             xpos:int = int((128 - (len(txt) * 8)) / 2)
             self._oled.text(txt, xpos, 34)
