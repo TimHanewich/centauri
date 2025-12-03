@@ -65,6 +65,7 @@ A total of **16 bytes**. So at 30 packets per second, that is 480 bytes per seco
         - Bit 1: *reserved*
         - Bit 0: *reserved*
     - \r\n (2 bytes)
+- Just to say "Hi, I'm online!", it can transmit "HELLO\n\" (72,69,76,76,79,13,10)
 
 ### Button to Corresponding ID
 |Number|Binary(8-bit)|Controller Button|
