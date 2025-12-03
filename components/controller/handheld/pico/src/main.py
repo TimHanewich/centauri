@@ -81,7 +81,7 @@ try:
         ### PERIODIC TIMESTAMP BASED THINGS BELOW ###
 
         # Check for control input via UART from the RPi with the controller?
-        if time.ticks_diff(time.ticks_us(), last_ci_check) > 25_000:
+        if time.ticks_diff(time.ticks_us(), last_ci_check) > 5_000:
 
             # check if we have any input data to receive from the xbox controller
             ba:int = uart.any()
