@@ -164,7 +164,6 @@ try:
 
             # Something to send?
             if len(ToSend) > 0:
-                print("Sending: " + str(ToSend))
                 ser.write(ToSend)  # send
                 ToSend.clear()     # clear
 
