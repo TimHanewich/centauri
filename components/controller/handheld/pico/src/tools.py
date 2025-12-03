@@ -1,5 +1,22 @@
 import math
 
+def unpack_button_input(packed:bytes) -> int: # returns the int that corresponds to the Button - see the "Button" Enum in the RPi's tools.py (MicroPython doesn't support Enum)
+
+    if len(packed) == 0:
+        return None
+
+    # define a binary mask of the bit positions we ONLY want
+    # we only want bits 0, 1, 2, and 3. Those represent the numeric value
+    # bits 4, 5, 6, and 7 are bits that contain other info
+    # We will isolate bits 0,1,2,3 and thus get the numeric value of the button, unaffected by those other info header bits
+    mask:int = 0b00001111
+
+    # Determine what button was pressed
+    # this AND operation will only allow the bits that match up to be 1
+    # since we set bit 4-7 to 0, it will be impossible for those to come out as 1
+    btn_id:int = packed[0] & mask
+
+    return btn_id
 
 
 # Lifted from the Scout Flight Controller, my previous work: https://github.com/TimHanewich/scout/blob/master/src/toolkit.py
@@ -45,3 +62,7 @@ class NonlinearTransformer:
             return self._transform(percent)
         else:
             return (self._transform(abs(percent)) * -1)
+        
+data = b'\t\r\n'
+btn = unpack_button_input(data)
+print(str(btn))
