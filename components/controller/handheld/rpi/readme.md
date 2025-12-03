@@ -34,7 +34,7 @@ A total of **16 bytes**. So at 30 packets per second, that is 480 bytes per seco
     - Data byte (1 byte)
         - Bit 7: `0` (problem flag)
         - Bit 6: `0` (message type flag)
-        - Bit 5: *reserved*
+        - Bit 5: `0` = button now depressed (not pressed), `1` = button now pressed
         - Bit 4: *reserved*
         - Bit 3: **numeric with bit 3-0** (indicates what button was pressed)
         - Bit 2: **numeric with bit 3-0** (indicates what button was pressed)
