@@ -431,6 +431,7 @@ try:
                             input_pitch_int16 = control_input[1]
                             input_roll_int16 = control_input[2]
                             input_yaw_int16 = control_input[3]
+                            #print("Throttle: " + str(input_throttle_uint16) + ", Pitch: " + str(input_pitch_int16) + ", Roll: " + str(input_roll_int16) + ", Yaw: " + str(input_yaw_int16))
                             control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
                     elif ProcessBuffer[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
                         settings:dict = tools.unpack_settings_update(ProcessBuffer)
