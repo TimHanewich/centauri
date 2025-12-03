@@ -136,10 +136,10 @@ try:
                 elif event.value[1] == 1:
                     EventEncoded = pack_button_input_event(Button.Up)
 
-        # Something to send?
-        if EventEncoded != None:
-            ser.write(EventEncoded) # yes, it will already contain \r\n
-            print(str(EventEncoded))
+            # Something to send?
+            if EventEncoded != None:
+                ser.write(EventEncoded) # yes, it will already contain \r\n
+                print(str(EventEncoded))
 
         # wait a moment
         time.sleep(0.01)
