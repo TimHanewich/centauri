@@ -102,7 +102,7 @@ try:
                 elif event.button == 1:
                     EventEncoded = pack_button_input_event(Button.B)
                 elif event.button == 2:
-                    iEventEncoded = pack_button_input_event(Button.X)
+                    EventEncoded = pack_button_input_event(Button.X)
                 elif event.button == 3:
                     EventEncoded = pack_button_input_event(Button.Y)
                 elif event.button == 4:
@@ -143,7 +143,7 @@ try:
 
         # wait a moment
         time.sleep(0.01)
-        
+
 except Exception as ex:
     print("FATAL ERROR: " + str(ex))
     raise ex
