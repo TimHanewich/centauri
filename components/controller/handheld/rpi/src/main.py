@@ -163,6 +163,7 @@ try:
         # Something to send?
         if EventEncoded != None:
             ser.write(EventEncoded) # yes, it will already contain \r\n
+            print(str(EventEncoded))
 
         # wait a moment
         time.sleep(0.01)
