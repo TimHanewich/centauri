@@ -28,3 +28,4 @@
 - `f5d5ee41b780a90d643e48387e8cea1f385519a7` - final commit before introducing new HC-12 rx method *and* changing calculation of mean_pwm to avoid big ints
 - `273427cc2d9437f5790862fe962c95087a1ab306` - final commit before introducing calculation of pitch and roll angles again (this time, more efficiently) and also raising the gyro and accelerometer full scale range.
 - `e140443426f1081ec52c54a0bde12edd5efb6aa1` - final commit before the handheld RPi converts to event-driven telemetry (away from regular packet-driven)
+- `0e39ab9c6f7535b9b8dad39d55be70867498bd2e` - final commit before the handheld RPi converts BACK to snapshot-driven telemetry
