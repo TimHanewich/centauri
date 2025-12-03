@@ -60,6 +60,11 @@ pitch:float = 0.0         # between -1.0 and 1.0
 roll:float = 0.0          # between -1.0 and 1.0
 yaw:float = 0.0           # between -1.0 and 1.0
 
+# Declare NonlinearTransformers for Pitch, Roll, and Yaw
+nlt_pitch:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
+nlt_roll:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.05)
+nlt_yaw:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.10) # my deadzone is higher than the others because I have a broken right stick on my controller that often rests at around 8% in either direction
+
 # start on awaiting_ci page as that is what we do first: verify telemetry comes in
 started_waiting_ticks_ms:int = time.ticks_ms()
 dc.page = "awaiting_ci"
@@ -182,9 +187,9 @@ try:
 
             # other inputs
             throttle = ci_rt
-            pitch = ci_left_y
-            roll = ci_left_x
-            yaw = ci_right_x
+            pitch = nlt_pitch.transform(ci_left_y)
+            roll = nlt_roll.transform(ci_left_x)
+            yaw = nlt_yaw.transform(ci_right_x)
 
             # plug into display controller
             dc.armed = armed
