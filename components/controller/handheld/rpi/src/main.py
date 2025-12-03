@@ -218,6 +218,7 @@ try:
         
         # transmit via serial (UART)
         ser.write(packed)
+        print(str(time.time()) + ": " + str(packed))
 
         # wait a moment
         time.sleep(0.025) # 40 hz
