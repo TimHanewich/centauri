@@ -97,41 +97,52 @@ async def main() -> None:
                     if ThisLine == b'@\r\n': # this is 0b01000000 followed by \r\n (3 bytes), indicating there is a problem
                         print("Problem flag received from RPi! Issue with controller telemetry.")
                         dc.page = "ci_problem" # change the display controller to ci_problem for it to be displayed there is a problem
-                    else: # it is good control data!
+                    else: # it is good control data! So just update the control input states...
 
                         if ThisLine[0] & 0b01000000 > 0: # if bit 6 is a 1, that means it is a joystick (variable) input, i.e. LT/RT or joystick X/Y axes
-                            pass
+                            id,value = tools.unpack_joystick_input(ThisLine)
+                            if id == 0:
+                                ci_left_x = value
+                            elif id == 1:
+                                ci_left_y = value
+                            elif id == 2:
+                                ci_right_x = value
+                            elif id == 3:
+                                ci_right_y = value
+                            elif id == 4:
+                                ci_lt = value
+                            elif id == 5:
+                                ci_rt = value
                         else: # if bit 6 is 0, it is a button press down
-                            # below we unpack it and then simply raise the "this button is pressed" bool. Which will be handled and lowered later by the main program
-                            btn:int = tools.unpack_button_input(ThisLine)
+                            btn,status = tools.unpack_button_input(ThisLine)
                             if btn == 0:
-                                ci_a = True
+                                ci_a = status
                             elif btn == 1:
-                                ci_b = True
+                                ci_b = status
                             elif btn == 2:
-                                ci_x = True
+                                ci_x = status
                             elif btn == 3:
-                                ci_y = True
+                                ci_y = status
                             elif btn == 4:
-                                ci_up = True
+                                ci_up = status
                             elif btn == 5:
-                                ci_right = True
+                                ci_right = status
                             elif btn == 6:
-                                ci_down = True
+                                ci_down = status
                             elif btn == 7:
-                                ci_left = True
+                                ci_left = status
                             elif btn == 8:
-                                ci_lb = True
+                                ci_lb = status
                             elif btn == 9:
-                                ci_rb = True
+                                ci_rb = status
                             elif btn == 10:
-                                ci_ls = True
+                                ci_ls = status
                             elif btn == 11:
-                                ci_rs = True
+                                ci_rs = status
                             elif btn == 12:
-                                ci_back = True
+                                ci_back = status
                             elif btn == 13:
-                                ci_start = True
+                                ci_start = status
                 else:
                     break
                 
