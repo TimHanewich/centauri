@@ -16,6 +16,7 @@ oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 dc:Display = Display(oled)
 
 # display the centauri graphic during loading
+print("Displaying logo...")
 dc.page = "logo"
 dc.display()
 time.sleep(2.0) # wait for 2 seconds
@@ -45,7 +46,9 @@ ci_lt:float = 0.0                        # Left Trigger = 0.0 to 1.0
 ci_rt:float = 0.0                        # Right Trigger = 0.0 to 1.0
 
 # Set up UART to receive controller input data from the RPi
+print("Setting up UART...")
 uart = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
+print("Clearing out UART...")
 if uart.any(): # clear out the rxbuffer
     uart.read(uart.any())
 rxBuffer:bytearray = bytearray()
@@ -62,11 +65,11 @@ started_waiting_ticks_ms:int = time.ticks_ms()
 dc.page = "awaiting_ci"
 
 # Timestamps, in ticks_us, for each primary function
-last_ci_check:int = 0           # the last time we checked for controller input via UART (received from RPi)
-last_display_update:int = 0     # the last time we updated the SSD-1306 display
-
+last_ci_check:int = time.ticks_us()            # the last time we checked for controller input via UART (received from RPi)
+last_display_update:int = time.ticks_us()      # the last time we updated the SSD-1306 display
 
 # INFINITE LOOP FOR ALL!
+print("Beginning infinite control loop!")
 try:
     while True:
 
@@ -153,6 +156,7 @@ try:
 
         # Update display?
         if time.ticks_diff(time.ticks_us(), last_display_update) > 100_000:
+            print("Updating display: " + str(dc.page))
             dc.display()
             last_display_update = time.ticks_us()
 
