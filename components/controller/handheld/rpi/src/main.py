@@ -39,6 +39,9 @@ controller = pygame.joystick.Joystick(0)
 controller.init()
 print("Controller #0, '" + controller.get_name() + "' will be used.")
 
+# declare a bytearray we will append stuff to send to and then clear
+ToSend:bytearray = bytearray()
+
 # start reading from it!
 try:
     print("NOW READING FROM XBOX CONTROLLER!")
@@ -46,9 +49,6 @@ try:
 
         # Read the raw data and update the variables we are using to track
         for event in pygame.event.get():
-
-            # declare a binary message we will encode and then send to the attached pico via UART
-            EventEncoded:bytes = None
 
             if event.type == pygame.JOYAXISMOTION: # it has to do with a variable input, like a joystick or trigger
 
@@ -62,22 +62,22 @@ try:
 
                 if event.axis == 0: # Left Stick X axis (left/right)
                     value:float = min(max(event.value, -1.0), 1.0)
-                    EventEncoded = pack_joystick_input_event(Joystick.LS_X, value)
+                    ToSend.extend(pack_joystick_input_event(Joystick.LS_X, value))
                 elif event.axis == 1: # Left Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
                     value:float = min(max(event.value, -1.0), 1.0)
-                    EventEncoded = pack_joystick_input_event(Joystick.LS_Y, value)
+                    ToSend.extend(pack_joystick_input_event(Joystick.LS_Y, value))
                 elif event.axis == 3: # Right Stick X axis
                     value:float = min(max(event.value, -1.0), 1.0)
-                    EventEncoded = pack_joystick_input_event(Joystick.RS_X, value)
+                    ToSend.extend(pack_joystick_input_event(Joystick.RS_X, value))
                 elif event.axis == 4: # Right Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
                     value:float = min(max(event.value, -1.0), 1.0)
-                    EventEncoded = pack_joystick_input_event(Joystick.RS_Y, value)
+                    ToSend.extend(pack_joystick_input_event(Joystick.RS_Y, value))
                 elif event.axis == 2: # left trigger
                     value:float = min(max((event.value + 1.0) / 2.0, 0.0), 1.0) # gets it to between 0.0 and 1.0
-                    EventEncoded = pack_joystick_input_event(Joystick.LT, value)
+                    ToSend.extend(pack_joystick_input_event(Joystick.LT, value))
                 elif event.axis == 5: # right trigger
                     value:float = min(max((event.value + 1.0) / 2.0, 0.0), 1.0) # gets it to between 0.0 and 1.0
-                    EventEncoded = pack_joystick_input_event(Joystick.RT, value)
+                    ToSend.extend(pack_joystick_input_event(Joystick.RT, value))
 
             elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed down
                 
@@ -95,25 +95,47 @@ try:
                 # Share button (on Xbox Series S/X controllers only) = 11
 
                 if event.button == 0:
-                    EventEncoded = pack_button_input_event(Button.A)
+                    ToSend.extend(pack_button_input_event(Button.A, True))
                 elif event.button == 1:
-                    EventEncoded = pack_button_input_event(Button.B)
+                    ToSend.extend(pack_button_input_event(Button.B, True))
                 elif event.button == 2:
-                    EventEncoded = pack_button_input_event(Button.X)
+                    ToSend.extend(pack_button_input_event(Button.X, True))
                 elif event.button == 3:
-                    EventEncoded = pack_button_input_event(Button.Y)
+                    ToSend.extend(pack_button_input_event(Button.Y, True))
                 elif event.button == 4:
-                    EventEncoded = pack_button_input_event(Button.LB)
+                    ToSend.extend(pack_button_input_event(Button.LB, True))
                 elif event.button == 5:
-                    EventEncoded = pack_button_input_event(Button.RB)
+                    ToSend.extend(pack_button_input_event(Button.RB, True))
                 elif event.button == 9:
-                    EventEncoded = pack_button_input_event(Button.LS)
+                    ToSend.extend(pack_button_input_event(Button.LS, True))
                 elif event.button == 10:
-                    EventEncoded = pack_button_input_event(Button.RS)
+                    ToSend.extend(pack_button_input_event(Button.RS, True))
                 elif event.button == 6:
-                    EventEncoded = pack_button_input_event(Button.Back)
+                    ToSend.extend(pack_button_input_event(Button.Back, True))
                 elif event.button == 7:
-                    EventEncoded = pack_button_input_event(Button.Start)
+                    ToSend.extend(pack_button_input_event(Button.Start, True))
+
+            elif event.type == pygame.JOYBUTTONUP:
+                if event.button == 0:
+                    ToSend.extend(pack_button_input_event(Button.A, False))
+                elif event.button == 1:
+                    ToSend.extend(pack_button_input_event(Button.B, False))
+                elif event.button == 2:
+                    ToSend.extend(pack_button_input_event(Button.X, False))
+                elif event.button == 3:
+                    ToSend.extend(pack_button_input_event(Button.Y, False))
+                elif event.button == 4:
+                    ToSend.extend(pack_button_input_event(Button.LB, False))
+                elif event.button == 5:
+                    ToSend.extend(pack_button_input_event(Button.RB, False))
+                elif event.button == 9:
+                    ToSend.extend(pack_button_input_event(Button.LS, False))
+                elif event.button == 10:
+                    ToSend.extend(pack_button_input_event(Button.RS, False))
+                elif event.button == 6:
+                    ToSend.extend(pack_button_input_event(Button.Back, False))
+                elif event.button == 7:
+                    ToSend.extend(pack_button_input_event(Button.Start, False))
 
             elif event.type == pygame.JOYHATMOTION: # D-Pad
 
@@ -123,20 +145,26 @@ try:
                 
                 # Check left/right
                 if event.value[0] == -1:
-                    EventEncoded = pack_button_input_event(Button.Left)
+                    ToSend.extend(pack_button_input_event(Button.Left, True))
                 elif event.value[0] == 1:
-                    EventEncoded = pack_button_input_event(Button.Right)
+                    ToSend.extend(pack_button_input_event(Button.Right, True))
+                else: # they are both now NOT pressed
+                    ToSend.extend(pack_button_input_event(Button.Left, False))
+                    ToSend.extend(pack_button_input_event(Button.Right, False))
 
                 # Check Up/Down
                 if event.value[1] == -1:
-                    EventEncoded = pack_button_input_event(Button.Down)
+                    ToSend.extend(pack_button_input_event(Button.Down, True))
                 elif event.value[1] == 1:
-                    EventEncoded = pack_button_input_event(Button.Up)
+                    ToSend.extend(pack_button_input_event(Button.Up, True))
+                else: # they are both now NOT pressed
+                    ToSend.extend(pack_button_input_event(Button.Down, False))
+                    ToSend.extend(pack_button_input_event(Button.Up, False))
 
             # Something to send?
-            if EventEncoded != None:
-                ser.write(EventEncoded) # yes, it will already contain \r\n
-                #print(str(EventEncoded))
+            if len(ToSend) > 0:
+                ser.write(ToSend)  # send
+                ToSend.clear()     # clear
 
         # wait a moment
         time.sleep(0.01)
