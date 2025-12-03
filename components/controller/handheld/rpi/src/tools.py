@@ -24,9 +24,16 @@ class Joystick(Enum):
     LT = 4      # Left trigger
     RT = 5      # Right trigger
 
-def pack_button_input_event(btn:Button) -> bytes:
+def pack_button_input_event(btn:Button, status:bool) -> bytes:
+
+    # prepare byte 1, the data byte
     data_byte:int = btn.value # start with the actual value (i.e. 0b00001101 for select)
-    # If we needed to change bit 7, 6, 5, or 4 to a 1, we could do it... but we don't have to. The "correct" state for those is 0!
+    
+    # if it is now pressed down (TRUE), flip bit 5 to 1
+    if status:
+        data_byte = data_byte | 0b00100000 # do OR operation to flip bit 5 to 1
+    
+    # add and return
     ToReturn:bytearray = bytearray()
     ToReturn.append(data_byte)
     ToReturn.extend("\r\n".encode())
