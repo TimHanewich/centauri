@@ -47,8 +47,6 @@ try:
         # Read the raw data and update the variables we are using to track
         for event in pygame.event.get():
 
-            print(str(event))
-
             # declare a binary message we will encode and then send to the attached pico via UART
             EventEncoded:bytes = None
 
