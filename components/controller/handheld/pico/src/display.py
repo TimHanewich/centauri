@@ -9,6 +9,7 @@ class Display:
         # unique identifier for the "page" we are on right now
         # Could be: 
         # "awaiting_ci" = awaiting controller input
+        # "awaiting_start" = press start button to begin (just after CI received)
         # "home" = main home screen
         # "pid confirm" = confirm they want to send over pre-flashed PID settings
         # "send pid" = currently sending pid (or waiting for confirmation)
@@ -137,6 +138,9 @@ class Display:
             txt:str = self.boot_status
             xpos:int = int((128 - (len(txt) * 8)) / 2)
             self._oled.text(txt, xpos, 34)
+        elif self.page == "awaiting_start":
+            self._oled.text("Ready!", 40, 22)
+            self._oled.text("Press START", 20, 34)
         else:
             self._oled.text("UNKNOWN PAGE", 0, 0)
 

@@ -347,9 +347,13 @@ try:
         # handle what to do based on what page we are on
         if dc.page == "awaiting_ci":
             if ci_last_received_ticks_us != None: # if we finally got some telemetry from the RPi with the controller via UART to confirm it is working...
-                dc.page = "home" # move on!
+                dc.page = "awaiting_start" # move on!
             else: # if we haven't gotten any good telemetry yet...
                 dc.seconds_waiting = int((time.ticks_ms() - started_waiting_ticks_ms)/1000) # update the seconds we have been waiting
+
+        elif dc.page == "awaiting_start":
+            if ci_start == True and ci_a == False: # they pressed start and are NOT pressing A for safety reasons (so it doesnt arm right away!)
+                dc.page = "home"
 
         elif dc.page == "home": # we are on the home page
             
