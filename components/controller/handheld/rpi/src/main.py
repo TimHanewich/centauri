@@ -100,7 +100,7 @@ try:
                     input_left_trigger = value
                 elif event.axis == 5: # right trigger
                     value:float = min(max((event.value + 1.0) / 2.0, 0.0), 1.0) # gets it to between 0.0 and 1.0
-                    input_right_trigger
+                    input_right_trigger = value
 
             elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed down
                 
