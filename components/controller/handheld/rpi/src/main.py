@@ -136,12 +136,11 @@ try:
             # Something to send?
             if EventEncoded != None:
                 ser.write(EventEncoded) # yes, it will already contain \r\n
-                print(str(EventEncoded))
+                #print(str(EventEncoded))
 
         # wait a moment
         time.sleep(0.01)
 
 except Exception as ex:
     print("FATAL ERROR: " + str(ex))
-    raise ex
     FOREVER_BROADCAST_PROBLEM_FLAG()
