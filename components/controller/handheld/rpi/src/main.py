@@ -98,6 +98,7 @@ try:
 
                 if event.button == 0:
                     EventEncoded = pack_button_input_event(Button.A)
+                    print("Got an A press event!")
                 elif event.button == 1:
                     EventEncoded = pack_button_input_event(Button.B)
                 elif event.button == 2:
