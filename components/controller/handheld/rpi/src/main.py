@@ -218,13 +218,9 @@ try:
         
         # transmit via serial (UART)
         ser.write(packed)
-        print(str(packed))
 
         # wait a moment
-        time.sleep(0.05)
-
-        # wait a moment
-        time.sleep(0.01)
+        time.sleep(0.025) # 40 hz
 
 except Exception as ex:
     print("FATAL ERROR: " + str(ex))
