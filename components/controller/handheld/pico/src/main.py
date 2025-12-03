@@ -98,6 +98,7 @@ async def main() -> None:
                         print("Problem flag received from RPi! Issue with controller telemetry.")
                         dc.page = "ci_problem" # change the display controller to ci_problem for it to be displayed there is a problem
                     else: # it is good control data! So just update the control input states...
+                        ci_last_received_ticks_us = time.ticks_us() # update last received time
 
                         if ThisLine[0] & 0b01000000 > 0: # if bit 6 is a 1, that means it is a joystick (variable) input, i.e. LT/RT or joystick X/Y axes
                             id,value = tools.unpack_joystick_input(ThisLine)
