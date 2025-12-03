@@ -142,7 +142,8 @@ try:
                 # "value" looks something like (-1, 1)
                 # first value in the tuple represents Left/Right Dpad. -1 would mean left down, 1 mean right down, 0 mean neither down
                 # second value in the tuple represents up/down Dpad. -1 would mean down is down, 1 mean up is down.
-                
+                # yes, due to the way this works, D-pad is technically the most bandwidth-intensive thing... I wish it was just the normal button up/down!
+
                 # Check left/right
                 if event.value[0] == -1:
                     ToSend.extend(pack_button_input_event(Button.Left, True))
