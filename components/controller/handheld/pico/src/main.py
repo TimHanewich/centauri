@@ -72,7 +72,7 @@ try:
 
         ### PERIODIC TIMESTAMP BASED THINGS BELOW ###
 
-        # Check for UART?
+        # Check for control input via UART from the RPi with the controller?
         if time.ticks_diff(time.ticks_us(), last_ci_check) > 25_000:
 
             # check if we have any input data to receive from the xbox controller
@@ -85,6 +85,11 @@ try:
                 term_loc:int = rxBuffer.find("\r\n".encode())
                 if term_loc != -1:
 
+                    # update the last time we received control input from the RPi 
+                    # doesn't necessarily have to be actual control input (i.e. an event happening...)
+                    # can also be the "HELLO" message or a problem flag
+                    ci_last_received_ticks_us = time.ticks_us() # update last received time
+
                     # extract the line                    
                     ThisLine:bytes = rxBuffer[0:term_loc+2] # include the \r\n at the end
                     rxBuffer = rxBuffer[len(ThisLine):] # keep the rest, trim out that line
@@ -94,8 +99,6 @@ try:
                         print("Problem flag received from RPi! Issue with controller telemetry.")
                         dc.page = "ci_problem" # change the display controller to ci_problem for it to be displayed there is a problem
                     else: # it is good control data! So just update the control input states...
-                        ci_last_received_ticks_us = time.ticks_us() # update last received time
-
                         if ThisLine[0] & 0b01000000 > 0: # if bit 6 is a 1, that means it is a joystick (variable) input, i.e. LT/RT or joystick X/Y axes
                             id,value = tools.unpack_joystick_input(ThisLine)
                             if id == 0:
@@ -160,7 +163,7 @@ try:
 
         # handle what to do based on what page we are on
         if dc.page == "awaiting_ci":
-            if ci_last_received_ticks_us != None: # if we finally go telemetry from the controller...
+            if ci_last_received_ticks_us != None: # if we finally got some telemetry from the RPi with the controller via UART to confirm it is working...
                 dc.page = "home" # move on!
             else: # if we haven't gotten any good telemetry yet...
                 dc.seconds_waiting = int((time.ticks_ms() - started_waiting_ticks_ms)/1000) # update the seconds we have been waiting
