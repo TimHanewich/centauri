@@ -6,7 +6,7 @@ from tools import pack_controls
 # Set up serial communication that will later be used to send data to the connected device via UART
 serport:str = "/dev/ttyS0"
 print("Opening serial port on '" + serport + "'...")
-ser = serial.Serial(serport, 9600)
+ser = serial.Serial(serport, 115200)
 print("Serial port opened!")
 
 def FOREVER_BROADCAST_PROBLEM_FLAG() -> None:

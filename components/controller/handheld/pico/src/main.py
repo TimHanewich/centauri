@@ -52,7 +52,7 @@ def boot_update(status:str) -> None:
 print("Setting up HC-12 via uart_ci...")
 boot_update("HC-12")
 hc12_set = machine.Pin(6, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
-uart_hc12 = machine.UART(1, tx=machine.Pin(4), rx=machine.Pin(5), baudrate=9600)
+uart_hc12 = machine.UART(1, tx=machine.Pin(4), rx=machine.Pin(5), baudrate=115200)
 uart_hc12.read(uart_hc12.any()) # clear out any RX buffer that may exist
 
 # pulse HC-12
@@ -236,6 +236,7 @@ try:
             ba:int = uart_ci.any()
             if ba > 0:
                 newdata:bytes = uart_ci.read(ba)
+                print("Received new data: " + str(newdata))
                 rxBuffer_ci.extend(newdata)
             
             # Do we have a line?
@@ -251,6 +252,7 @@ try:
                     # extract the line                    
                     ThisLine:bytes = rxBuffer_ci[0:term_loc+2] # include the \r\n at the end
                     rxBuffer_ci = rxBuffer_ci[len(ThisLine):] # keep the rest, trim out that line
+                    print("Got This line: " + str(ThisLine))
 
                     # is it a problem?
                     if ThisLine == b'@\r\n': # this is 0b01000000 followed by \r\n (3 bytes), indicating there is a problem
