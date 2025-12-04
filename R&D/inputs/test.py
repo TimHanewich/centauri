@@ -62,12 +62,16 @@ while True:
                 else:
                     print("Guide Button Up")
 
-        elif event.ev_type == "Absolute": # Variable input (i.e. triggers, joysticks X/Y axis) or D-Pad
+        elif event.ev_type == "Absolute": # Variable input (i.e. triggers, joysticks X/Y axis) or D-Pad. See event code + value range map here: https://i.imgur.com/ql8nDnc.png
             if event.code == "ABS_X":
-                print("Left Stick X: " + str(event.state))
+                value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
+                print("Left Stick X: " + str(value))
             elif event.code == "ABS_Y":
-                print("Left Stick Y: " + str(event.state))
+                value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
+                print("Left Stick Y: " + str(value))
             elif event.code == "ABS_RX":
-                print("Right Stick X: " + str(event.state))
+                value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
+                print("Right Stick X: " + str(value))
             elif event.code == "ABS_RY":
-                print("Right Stick Y:" + str(event.state))
+                value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
+                print("Right Stick Y:" + str(value))
