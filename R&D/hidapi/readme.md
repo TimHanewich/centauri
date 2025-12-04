@@ -1,0 +1,1 @@
+Testing the [hidapi](https://pypi.org/project/hidapi/) after reading [here](https://blog.thea.codes/talking-to-gamepads-without-pygame/) it support non-blocking.
