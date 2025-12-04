@@ -38,6 +38,9 @@ input_right_stick_y:float = 0.0     # -1.0 to 1.0 for right stick up/down
 input_right_trigger:float = 0.0     # 0.0 to 1.0 for right trigger
 input_left_trigger:float = 0.0      # 0.0 to 1.0 for left trigger
 
+# Timestamps
+snapshot_last_sent:float = 0.0 # time.time() timestamp of when a snapshot was last sent. We will use this to send it every so many seconds (or milliseconds)
+
 # Just before starting, transmit "HELLO\r\n" to confirm we are online and ready to go
 print("Transmitting 'HELLO' online message...")
 ser.write(b"HELLO\r\n")
@@ -168,8 +171,10 @@ try:
             ToPrint["right_y"] = input_right_stick_y
             print(str(ToPrint))
 
-        # pack
-        packed:bytes = pack_controls(input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
+        # time to send?
+        if (time.time() - snapshot_last_sent) >= 0.025: # send every 25 ms = 40 Hz
+            packed:bytes = pack_controls(input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
+            snapshot_last_sent = time.time()
         
         # transmit via serial (UART)
         ser.write(packed)
