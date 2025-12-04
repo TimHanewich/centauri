@@ -205,8 +205,6 @@ try:
 
         # pack
         packed:bytes = pack_controls(PROBLEM_FLAG, input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
-        print("Just sent: " + str(packed))
-        print("Problem flag: " + str(PROBLEM_FLAG))
 
         # transmit via serial (UART)
         ser.write(packed)
