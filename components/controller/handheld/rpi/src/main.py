@@ -6,8 +6,9 @@ import threading
 
 # Set up serial communication that will later be used to send data to the connected device via UART
 serport:str = "/dev/ttyS0"
-print("Opening serial port on '" + serport + "'...")
-ser = serial.Serial(serport, 115200)
+baudrate:int = 9600
+print("Opening serial port on '" + serport + "' at baudrate " + str(baudrate) + "...")
+ser = serial.Serial(serport, baudrate)
 print("Serial port opened!")
 
 def FOREVER_BROADCAST_PROBLEM_FLAG() -> None:
@@ -208,7 +209,6 @@ try:
 
         # transmit via serial (UART)
         ser.write(packed)
-        print("Just wrote: " + str(packed))
 
         # wait a moment
         time.sleep(0.025) # 40 hz = every 25 ms
