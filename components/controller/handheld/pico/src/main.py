@@ -205,9 +205,10 @@ nlt_yaw:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.10) # my 
 ################################
 
 # Timestamps, in ticks_us, for each primary function
-last_ci_check:int = time.ticks_us()                              # the last time we checked for controller input via UART (received from RPi)
-last_display_update:int = time.ticks_us()                        # the last time we updated the SSD-1306 display
-last_control_packet_sent_ticks_ms:int = time.ticks_ms()          # the last time we sent a control packet to the drone
+last_ci_check:int = time.ticks_us()                                    # the last time we checked for controller input via UART (received from RPi)
+last_display_update:int = time.ticks_us()                              # the last time we updated the SSD-1306 display
+last_armed_control_packet_sent_ticks_ms:int = time.ticks_ms()          # the last time we sent a ARMED control packet to the drone (flying, with non-zero throttle and normal inputs)
+last_disarmed_control_packet_sent_ticks_ms:int = time.ticks_ms()       # the last time we sent a DISARMED control packet to the drone (with 0 throttle, to disarm the motors)
 
 # Throttle idle/max range
 idle_throttle:float = 0.20
@@ -430,16 +431,16 @@ try:
         # Send control packet?
         # How often we should send the control packet differs based on whether we are armed or not
         if armed:
-            if time.ticks_diff(time.ticks_ms(), last_control_packet_sent_ticks_ms) > 50: # 20 ms = 20 hz
+            if time.ticks_diff(time.ticks_ms(), last_armed_control_packet_sent_ticks_ms) > 50: # 20 ms = 20 hz
                 throttle_to_send:float = idle_throttle + ((max_throttle - idle_throttle) * throttle)
                 ToSend:bytes = tools.pack_control_packet(throttle_to_send, pitch, roll, yaw)
                 uart_hc12.write(ToSend + "\r\n".encode())
-                last_control_packet_sent_ticks_ms = time.ticks_ms()
+                last_armed_control_packet_sent_ticks_ms = time.ticks_ms()
         else: # if not armed
-            if time.ticks_diff(time.ticks_ms(), last_control_packet_sent_ticks_ms) > 500: # 500 ms = 2 hz
+            if time.ticks_diff(time.ticks_ms(), last_disarmed_control_packet_sent_ticks_ms) > 500: # 500 ms = 2 hz
                 ToSend:bytes = tools.pack_control_packet(0.0, 0.0, 0.0, 0.0)
                 uart_hc12.write(ToSend + "\r\n".encode())
-                last_control_packet_sent_ticks_ms = time.ticks_ms()
+                last_disarmed_control_packet_sent_ticks_ms = time.ticks_ms()
 
         # Standard wait time
         time.sleep(0.01)
