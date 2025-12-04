@@ -81,3 +81,5 @@ while True:
             elif event.code == "ABS_RZ": # Right Trigger
                 value:float = event.state / 1023.0 # range is 0 to 1023
                 print("RT: " + str(value))
+            else:
+                print("Event Type: " + str(event.ev_type) + ", Event Code: " + str(event.code) + ", Event State: " + str(event.state))
