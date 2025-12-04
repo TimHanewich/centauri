@@ -168,7 +168,7 @@ threading.Thread(target=continuous_controller_read, daemon=True).start() # daemo
 print("Transmitting 'HELLO' online message...")
 ser.write(b"HELLO\r\n")
 
-# start sending regularly!
+# start sending regularly on the main thread!
 print("NOW OPERATING!")
 try:
     while True:
