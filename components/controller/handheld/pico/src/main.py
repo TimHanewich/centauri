@@ -164,6 +164,7 @@ rxBuffer_ci:bytearray = bytearray()
 # Set up variables to contain the most up to date controller input data
 # "ci" short for "controller input"
 ci_last_received_ticks_us:int = None     # The last time control input was received via UART
+ci_PROBLEM_FLAG:bool = False             # A Flag the RPi can flip to True if it encountered a fatal problem (indicates the control data should not be trusted!)
 ci_ls:bool = False                       # left stick clicked in
 ci_rs:bool = False                       # right stick clicked in
 ci_back:bool = False                     # back button currently pressed
@@ -214,6 +215,8 @@ last_disarmed_control_packet_sent_ticks_ms:int = time.ticks_ms()       # the las
 idle_throttle:float = 0.20
 max_throttle:float = 0.60
 
+# Reusable stuff
+disarm_packet_sample:bytes = tools.pack_control_packet(0.0, 0.0, 0.0, 0.0) + "\r\n".encode() # sample disarm packet
 
 
 ##############################
@@ -252,44 +255,36 @@ try:
                     ThisLine:bytes = rxBuffer_ci[0:term_loc+2] # include the \r\n at the end
                     rxBuffer_ci = rxBuffer_ci[len(ThisLine):] # keep the rest, trim out that line
 
-                    # is it a problem?
-                    if ThisLine == b'@\r\n': # this is 0b01000000 followed by \r\n (3 bytes), indicating there is a problem
-                        print("Problem flag received from RPi! Issue with controller telemetry.")
-                        dc.page = "ci_problem" # change the display controller to ci_problem for it to be displayed there is a problem
-                    else: # it is good control data! So just update the control input states...
-                        inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
-                        if inputs != None:
-                            ci_last_received_ticks_us = time.ticks_us()
-                            ci_ls = inputs["ls"]
-                            ci_rs = inputs["rs"]
-                            ci_back = inputs["back"]
-                            ci_start = inputs["start"]
-                            ci_a = inputs["a"]
-                            ci_b = inputs["b"]
-                            ci_x = inputs["x"]
-                            ci_y = inputs["y"]
-                            ci_up = inputs["up"]
-                            ci_right = inputs["right"]
-                            ci_down = inputs["down"]
-                            ci_left = inputs["left"]
-                            ci_lb = inputs["lb"]
-                            ci_rb = inputs["rb"]
-                            ci_left_x = inputs["left_x"]
-                            ci_left_y = inputs["left_y"]
-                            ci_right_x = inputs["right_x"]
-                            ci_right_y = inputs["right_y"]
-                            ci_lt = inputs["lt"]
-                            ci_rt = inputs["rt"]
+                    # Process the line
+                    inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
+                    if inputs != None:
+                        ci_last_received_ticks_us = time.ticks_us()
+                        ci_PROBLEM_FLAG = inputs["PROBLEM_FLAG"]
+                        ci_ls = inputs["ls"]
+                        ci_rs = inputs["rs"]
+                        ci_back = inputs["back"]
+                        ci_start = inputs["start"]
+                        ci_a = inputs["a"]
+                        ci_b = inputs["b"]
+                        ci_x = inputs["x"]
+                        ci_y = inputs["y"]
+                        ci_up = inputs["up"]
+                        ci_right = inputs["right"]
+                        ci_down = inputs["down"]
+                        ci_left = inputs["left"]
+                        ci_lb = inputs["lb"]
+                        ci_rb = inputs["rb"]
+                        ci_left_x = inputs["left_x"]
+                        ci_left_y = inputs["left_y"]
+                        ci_right_x = inputs["right_x"]
+                        ci_right_y = inputs["right_y"]
+                        ci_lt = inputs["lt"]
+                        ci_rt = inputs["rt"]
                 else:
                     break
 
             # update last time we checked
             last_ci_check = time.ticks_us()
-
-        # Update display?
-        if time.ticks_diff(time.ticks_us(), last_display_update) > 100_000:
-            dc.display()
-            last_display_update = time.ticks_us()
 
         # check for any received telemetery from the drone
         nb:int = uart_hc12.any()
@@ -319,6 +314,10 @@ try:
                             yaw_rate = TelemetryData["yaw_rate"]
                             pitch_angle = TelemetryData["pitch_angle"]
                             roll_angle = TelemetryData["roll_angle"]
+
+        # was there a Controller Input Problem Flag? If so, important to switch to problem mode
+        if ci_PROBLEM_FLAG:
+            dc.page = "ci_problem"
 
         # handle what to do based on what page we are on
         if dc.page == "awaiting_ci":
@@ -428,6 +427,13 @@ try:
 
             dc.page = "home"
 
+        elif dc.page == "ci_problem":
+            # just forever transmit disarm and notify user of issue
+            while True:
+                dc.display()
+                uart_hc12.write(disarm_packet_sample) 
+                time.sleep(0.25)
+
         # Send control packet?
         # How often we should send the control packet differs based on whether we are armed or not
         if armed:
@@ -438,13 +444,16 @@ try:
                 last_armed_control_packet_sent_ticks_ms = time.ticks_ms()
         else: # if not armed
             if time.ticks_diff(time.ticks_ms(), last_disarmed_control_packet_sent_ticks_ms) > 500: # 500 ms = 2 hz
-                ToSend:bytes = tools.pack_control_packet(0.0, 0.0, 0.0, 0.0)
-                uart_hc12.write(ToSend + "\r\n".encode())
+                uart_hc12.write(disarm_packet_sample)
                 last_disarmed_control_packet_sent_ticks_ms = time.ticks_ms()
+
+        # Update display?
+        if time.ticks_diff(time.ticks_us(), last_display_update) > 100_000:
+            dc.display()
+            last_display_update = time.ticks_us()
 
         # Standard wait time
         time.sleep(0.01)
-
 
 except Exception as ex:
     raise ex
