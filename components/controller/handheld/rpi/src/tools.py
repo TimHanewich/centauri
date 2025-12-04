@@ -7,7 +7,7 @@ def pack_controls(PROBLEM_FLAG:bool, left_stick:bool, right_stick:bool, back:boo
     ToReturn.append(0) # pre-load first byte
     ToReturn.append(0) # pre-load second byte
     if PROBLEM_FLAG: # if there is a problem
-        ToReturn[0] = ToReturn[0] | 0b1000000 # raise bit 7
+        ToReturn[0] = ToReturn[0] | 0b10000000 # raise bit 7
     if left_stick:
         ToReturn[0] = ToReturn[0] | 0b00100000
     if right_stick:
