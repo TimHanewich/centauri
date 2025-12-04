@@ -1,4 +1,4 @@
-import pygame
+from inputs import get_gamepad
 import time
 import serial
 from tools import pack_controls
@@ -15,29 +15,6 @@ def FOREVER_BROADCAST_PROBLEM_FLAG() -> None:
         print("Broadcasting problem error @ time " + str(int(time.time())) + "...")
         ser.write(PROBLEM_MSG)
         time.sleep(1.0)
-
-# Set up controller
-print("Initializing pygame module...")
-pygame.init()
-pygame.joystick.init()
-
-# count number of connected joysticks (gamepads)
-num_joysticks:int = pygame.joystick.get_count()
-print("Number of connected controllers: " + str(num_joysticks))
-if num_joysticks == 0:
-    print("No controller connected! Must connect a controller.")
-    FOREVER_BROADCAST_PROBLEM_FLAG()
-
-# loop through each connected controller
-for i in range(num_joysticks):
-    tjs = pygame.joystick.Joystick(i)
-    tjs.init()
-    print("Joystick " + str(i) + ": " + tjs.get_name())
-
-# select the controller that will be used (default to first, and probably only, one)
-controller = pygame.joystick.Joystick(0)
-controller.init()
-print("Controller #0, '" + controller.get_name() + "' will be used.")
 
 # Declare control input variables
 input_left_stick_click:bool = False
@@ -71,123 +48,99 @@ try:
     while True:
 
         # Read the raw data and update the variables we are using to track
-        for event in pygame.event.get():
-
-            if event.type == pygame.JOYAXISMOTION: # it has to do with a variable input, like a joystick or trigger
-
-                # Xbox Controller Axes (on linux)
-                # Left Stick X axis (left/right) = 0
-                # Left Stick Y axis (up/down) = 1
-                # Right Stick X axis (left/right) = 3
-                # Right Stick Y axis (up/down) = 4
-                # Right Trigger = 5
-                # Left Trigger = 2
-
-                if event.axis == 0: # Left Stick X axis (left/right)
-                    value:float = min(max(event.value, -1.0), 1.0)
+        events = get_gamepad()
+        for event in events:
+            if event.ev_type == "Key": # button press
+                if event.code == "BTN_SOUTH": # A
+                    if event.state == 1:
+                        input_a = True
+                    else:
+                        input_a = False
+                elif event.code == "BTN_EAST":  # B
+                    if event.state == 1:
+                        input_b = True
+                    else:
+                        input_b = False
+                elif event.code == "BTN_NORTH": # X (Yes, it should be Y, but on the Xbox Series X/S controller I am using, North and West are swapped for some reason...)
+                    if event.state == 1:
+                        input_x = True
+                    else:
+                        input_x = False
+                elif event.code == "BTN_WEST": # Y (Yes, it should be X, but on the Xbox Series X/S controller I am using, North and West are swapped for some reason...)
+                    if event.state == 1:
+                        input_y = True
+                    else:
+                        input_y = False
+                elif event.code == "BTN_TL":  # Left bumper (LB)
+                    if event.state == 1:
+                        input_left_bumper = True
+                    else:
+                        input_left_bumper = False
+                elif event.code == "BTN_TR":  # Right bumper (RB)
+                    if event.state == 1:
+                        input_right_bumper = True
+                    else:
+                        input_right_bumper = False
+                elif event.code == "BTN_SELECT":  # Back / View
+                    if event.state == 1:
+                        input_back = True
+                    else:
+                        input_back = False
+                elif event.code == "BTN_START":  # Start / Menu
+                    if event.state == 1:
+                        input_start = True
+                    else:
+                        input_start = False
+                elif event.code == "BTN_THUMBL":  # Left stick click
+                    if event.state == 1:
+                        input_left_stick_click = True
+                    else:
+                        input_left_stick_click = False
+                elif event.code == "BTN_THUMBR":  # Right stick click
+                    if event.state == 1:
+                        input_right_stick_click = True
+                    else:
+                        input_right_stick_click = False
+            elif event.ev_type == "Absolute": # Variable input (i.e. triggers, joysticks X/Y axis) or D-Pad. See event code + value range map here: https://i.imgur.com/ql8nDnc.png
+                if event.code == "ABS_X": # Left Stick X
+                    value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
                     input_left_stick_x = value
-                elif event.axis == 1: # Left Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
-                    value:float = min(max(event.value, -1.0), 1.0)
+                elif event.code == "ABS_Y": # Left Stick Y
+                    value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
                     input_left_stick_y = value
-                elif event.axis == 3: # Right Stick X axis
-                    value:float = min(max(event.value, -1.0), 1.0)
+                elif event.code == "ABS_RX": # Right Stick X
+                    value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
                     input_right_stick_x = value
-                elif event.axis == 4: # Right Stick Y axis (up/down)     IMPORTANT NOTE: y-axis all the way up is -1.0 and all the way down is 1.0. This may seem backwards, but for the sake of like pitch, pushing forward should mean negative pitch rate is wanted, so I am leaving it as is.
-                    value:float = min(max(event.value, -1.0), 1.0)
+                elif event.code == "ABS_RY": # Right Stick Y
+                    value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
                     input_right_stick_y = value
-                elif event.axis == 2: # left trigger
-                    value:float = min(max((event.value + 1.0) / 2.0, 0.0), 1.0) # gets it to between 0.0 and 1.0
+                elif event.code == "ABS_Z": # Left Trigger
+                    value:float = event.state / 1023.0 # range is 0 to 1023
                     input_left_trigger = value
-                elif event.axis == 5: # right trigger
-                    value:float = min(max((event.value + 1.0) / 2.0, 0.0), 1.0) # gets it to between 0.0 and 1.0
+                elif event.code == "ABS_RZ": # Right Trigger
+                    value:float = event.state / 1023.0 # range is 0 to 1023
                     input_right_trigger = value
-
-            elif event.type == pygame.JOYBUTTONDOWN: # a button was pressed down
-                
-                # PyGame's Button ID's below
-                # A = 0
-                # B = 1
-                # X = 2
-                # Y = 3 
-                # RB = 5 
-                # LB = 4
-                # Left Stick clicked down = 9
-                # Right stick clicked down = 10
-                # "Back" button ("select"?) = 6
-                # Start button = 7
-                # Share button (on Xbox Series S/X controllers only) = 11
-
-                if event.button == 0:
-                    input_a = True
-                elif event.button == 1:
-                    input_b = True
-                elif event.button == 2:
-                    input_x = True
-                elif event.button == 3:
-                    input_y = True
-                elif event.button == 4:
-                    input_left_bumper = True
-                elif event.button == 5:
-                    input_right_bumper = True
-                elif event.button == 9:
-                    input_left_stick_click = True
-                elif event.button == 10:
-                    input_right_stick_click = True
-                elif event.button == 6:
-                    input_back = True
-                elif event.button == 7:
-                    input_start = True
-
-            elif event.type == pygame.JOYBUTTONUP:
-                if event.button == 0:
-                    input_a = False
-                elif event.button == 1:
-                    input_b = False
-                elif event.button == 2:
-                    input_x = False
-                elif event.button == 3:
-                    input_y = False
-                elif event.button == 4:
-                    input_left_bumper = False
-                elif event.button == 5:
-                    input_right_bumper = False
-                elif event.button == 9:
-                    input_left_stick_click = False
-                elif event.button == 10:
-                    input_right_stick_click = False
-                elif event.button == 6:
-                    input_back = False
-                elif event.button == 7:
-                    input_start = False
-
-            elif event.type == pygame.JOYHATMOTION: # D-Pad
-
-                # "value" looks something like (-1, 1)
-                # first value in the tuple represents Left/Right Dpad. -1 would mean left down, 1 mean right down, 0 mean neither down
-                # second value in the tuple represents up/down Dpad. -1 would mean down is down, 1 mean up is down.
-
-                # Check left/right
-                if event.value[0] == -1:
-                    input_dpad_left = True
-                    input_dpad_right = False
-                elif event.value[0] == 1:
-                    input_dpad_left = False
-                    input_dpad_right = True
-                else: # neither are pressed (0)
-                    input_dpad_left = False
-                    input_dpad_right = False
-
-                # Check Up/Down
-                if event.value[1] == -1:
-                    input_dpad_down = True
-                    input_dpad_up = False
-                elif event.value[1] == 1:
-                    input_dpad_down = False
-                    input_dpad_up = True
-                else: # neither are pressed (0)
-                    input_dpad_down = False
-                    input_dpad_up = False
-
+                elif event.code == "ABS_HAT0X": # D-pad left and right
+                    if event.state == -1:
+                        input_dpad_left = True
+                        input_dpad_right = False
+                    elif event.state == 1:
+                        input_dpad_left = False
+                        input_dpad_right = True
+                    else: # 0 means both Left/Right are up (not pressed)
+                        input_dpad_left = False
+                        input_dpad_right = False
+                elif event.code == "ABS_HAT0Y": # D-pad up and down
+                    if event.state == -1:
+                        input_dpad_up = True
+                        input_dpad_down = False
+                    elif event.state == 1:
+                        input_dpad_up = False
+                        input_dpad_down = True
+                    else: # 0 means both Up/Down are up (not pressed)
+                        input_dpad_up = False
+                        input_dpad_down = False
+            
         # print (change to True for debugging purposes)
         if False:
             ToPrint:dict = {}
