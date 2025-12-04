@@ -95,5 +95,3 @@ while True:
                     print("Up D-Pad Up, Down D-Pad Down")
                 else: # 0 means both Up/Down are up (not pressed)
                     print("Up D-Pad Up, Down D-Pad Up")
-            else:
-                print("Event Type: " + str(event.ev_type) + ", Event Code: " + str(event.code) + ", Event State: " + str(event.state))
