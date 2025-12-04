@@ -8,6 +8,6 @@ gamepads = devices.gamepads
 my_controller = gamepads[0]
 
 while True:
-    events = my_controller.read()
+    events = my_controller.read(blocking=False)
     print("Events: " + str(events))
     time.sleep(0.25)
