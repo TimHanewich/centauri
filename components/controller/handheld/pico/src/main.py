@@ -155,7 +155,7 @@ roll_angle:int = 0
 # Set up UART to receive controller input data from the RPi
 boot_update("Control Input")
 print("Setting up uart_ci...")
-uart_ci = machine.UART(0, baudrate=9600, tx=machine.Pin(16), rx=machine.Pin(17))
+uart_ci = machine.UART(0, tx=machine.Pin(16), rx=machine.Pin(17), baudrate=115200)
 print("Clearing out uart_ci...")
 if uart_ci.any(): # clear out the rxBuffer
     uart_ci.read(uart_ci.any())
