@@ -290,7 +290,6 @@ try:
             dc.display()
             last_display_update = time.ticks_us()
 
-
         # check for any received telemetery from the drone
         nb:int = uart_hc12.any()
         if nb > 0:
