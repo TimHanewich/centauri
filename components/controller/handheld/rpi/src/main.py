@@ -175,6 +175,7 @@ try:
         if (time.time() - snapshot_last_sent) >= 0.025: # send every 25 ms = 40 Hz
             packed:bytes = pack_controls(input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
             snapshot_last_sent = time.time()
+            print(str(packed))
         
         # transmit via serial (UART)
         ser.write(packed)
