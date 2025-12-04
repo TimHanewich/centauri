@@ -1,14 +1,7 @@
-from inputs import devices
+from inputs import get_gamepad
 import time
 import serial
 from tools import pack_controls
-
-# Set the "inputs" library to nonblocking...
-gamepad = devices.gamepads[0]
-import fcntl
-import os
-fd = gamepad._fd
-fcntl.fcntl(fd, fcntl.F_SETFL, fcntl.fcntl(fd, fcntl.F_GETFL) | os.O_NONBLOCK)
 
 # Set up serial communication that will later be used to send data to the connected device via UART
 serport:str = "/dev/ttyS0"
@@ -58,7 +51,7 @@ try:
     while True:
 
         # Read the raw data and update the variables we are using to track
-        events = gamepad.read()
+        events = get_gamepad()
         for event in events:
             if event.ev_type == "Key": # button press
                 if event.code == "BTN_SOUTH": # A
