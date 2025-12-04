@@ -220,7 +220,7 @@ try:
         ser.write(packed)
 
         # wait a moment
-        time.sleep(0.025) # 40 hz
+        time.sleep(0.025) # 40 hz = every 25 ms
 
 except Exception as ex:
     print("FATAL ERROR: " + str(ex))
