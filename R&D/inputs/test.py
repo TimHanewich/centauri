@@ -81,5 +81,19 @@ while True:
             elif event.code == "ABS_RZ": # Right Trigger
                 value:float = event.state / 1023.0 # range is 0 to 1023
                 print("RT: " + str(value))
+            elif event.code == "ABS_HAT0X": # D-pad left and right
+                if event.state == -1:
+                    print("Left D-Pad Down, Right D-Pad Up")
+                elif event.state == 1:
+                    print("Left D-Pad Up, Right D-Pad Down")
+                else: # 0 means both Left/Right are up (not pressed)
+                    print("Left D-Pad Up, Right D-Pad Up")
+            elif event.code == "ABS_HAT0Y": # D-pad up and down
+                if event.state == -1:
+                    print("Up D-Pad Down, Down D-Pad Up")
+                elif event.state == 1:
+                    print("Up D-Pad Up, Down D-Pad Down")
+                else: # 0 means both Up/Down are up (not pressed)
+                    print("Up D-Pad Up, Down D-Pad Up")
             else:
                 print("Event Type: " + str(event.ev_type) + ", Event Code: " + str(event.code) + ", Event State: " + str(event.state))
