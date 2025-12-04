@@ -140,9 +140,11 @@ try:
                     else: # 0 means both Up/Down are up (not pressed)
                         input_dpad_up = False
                         input_dpad_down = False
+
+        print("RT: " + str(input_right_trigger))
             
         # print (change to True for debugging purposes)
-        if True:
+        if False:
             ToPrint:dict = {}
             ToPrint["ls"] = input_left_stick_click
             ToPrint["rs"] = input_right_stick_click
