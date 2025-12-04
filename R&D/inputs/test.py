@@ -63,4 +63,11 @@ while True:
                     print("Guide Button Up")
 
         elif event.ev_type == "Absolute": # Variable input (i.e. triggers, joysticks X/Y axis) or D-Pad
-            pass
+            if event.code == "ABS_X":
+                print("Left Stick X: " + str(event.state))
+            elif event.code == "ABS_Y":
+                print("Left Stick Y: " + str(event.state))
+            elif event.code == "ABS_RX":
+                print("Right Stick X: " + str(event.state))
+            elif event.code == "ABS_RY":
+                print("Right Stick Y:" + str(event.state))
