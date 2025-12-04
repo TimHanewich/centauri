@@ -16,7 +16,6 @@ class Display:
         # "logo" = Centauri logo
         # "ci_problem" = control input problem
         # "boot" = screen while loading
-        # "ci_problem" = a problem flag has been raised by the RPi
         self.page:str = "home"
 
         # for "home" screen
@@ -142,10 +141,6 @@ class Display:
         elif self.page == "awaiting_start":
             self._oled.text("Ready!", 40, 22)
             self._oled.text("Press START", 20, 34)
-        elif self.page == "ci_problem":
-            self._oled.text("Control", 36, 12)
-            self._oled.text("input", 44, 24)
-            self._oled.text("problem!", 32, 36)
         else:
             self._oled.text("UNKNOWN PAGE", 0, 0)
 
