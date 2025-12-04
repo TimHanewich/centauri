@@ -3,6 +3,7 @@ from inputs import get_gamepad
 while True:
     events = get_gamepad()
     for event in events:
+        print("Event Type: " + str(event.ev_type) + ", Event Code: " + str(event.code) + ", Event State: " + str(event.state))
         if event.ev_type == "Key": # button press
             if event.code == "BTN_SOUTH": # A
                 if event.state == 1:
@@ -62,4 +63,3 @@ while True:
 
         elif event.ev_type == "Absolute": # Variable input (i.e. triggers, joysticks X/Y axis) or D-Pad
             pass
-            print("Event Type: " + str(event.ev_type) + ", Event Code: " + str(event.code) + ", Event State: " + str(event.state))
