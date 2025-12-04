@@ -2,6 +2,7 @@ from inputs import get_gamepad
 import time
 import serial
 from tools import pack_controls
+import threading
 
 # Set up serial communication that will later be used to send data to the connected device via UART
 serport:str = "/dev/ttyS0"
@@ -41,13 +42,32 @@ input_left_trigger:float = 0.0      # 0.0 to 1.0 for left trigger
 # Timestamps
 snapshot_last_sent:float = 0.0 # time.time() timestamp of when a snapshot was last sent. We will use this to send it every so many seconds (or milliseconds)
 
-# Just before starting, transmit "HELLO\r\n" to confirm we are online and ready to go
-print("Transmitting 'HELLO' online message...")
-ser.write(b"HELLO\r\n")
+# define continuous reading thread
+def continuous_controller_read() -> None:
 
-# start reading from it!
-try:
-    print("NOW READING FROM XBOX CONTROLLER!")
+    # declare global vars
+    global input_left_stick_click
+    global input_right_stick_click
+    global input_back
+    global input_start
+    global input_a
+    global input_b
+    global input_y
+    global input_x
+    global input_dpad_up
+    global input_dpad_right
+    global input_dpad_down
+    global input_dpad_left
+    global input_right_bumper
+    global input_left_bumper
+    global input_left_stick_x
+    global input_left_stick_y
+    global input_right_stick_x
+    global input_right_stick_y
+    global input_right_trigger
+    global input_left_trigger
+
+    # continuously monitor and note controller events
     while True:
 
         # Read the raw data and update the variables we are using to track
@@ -144,6 +164,19 @@ try:
                         input_dpad_up = False
                         input_dpad_down = False
 
+# fire up the continuous read thread
+threading.Thread(target=continuous_controller_read, daemon=True).start() # daemon=True means it will also be killed when the main program terminates (i.e. keyboard interupt)
+
+# Just before starting, transmit "HELLO\r\n" to confirm we are online and ready to go
+print("Transmitting 'HELLO' online message...")
+ser.write(b"HELLO\r\n")
+
+# start reading from it!
+print("NOW OPERATING!")
+try:
+    while True:
+
+        
         print("RT: " + str(input_right_trigger))
             
         # print (change to True for debugging purposes)
