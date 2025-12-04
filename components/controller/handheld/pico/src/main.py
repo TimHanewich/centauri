@@ -52,7 +52,7 @@ def boot_update(status:str) -> None:
 print("Setting up HC-12 via uart_ci...")
 boot_update("HC-12")
 hc12_set = machine.Pin(6, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
-uart_hc12 = machine.UART(1, tx=machine.Pin(4), rx=machine.Pin(5), baudrate=115200)
+uart_hc12 = machine.UART(1, tx=machine.Pin(4), rx=machine.Pin(5), baudrate=9600)
 uart_hc12.read(uart_hc12.any()) # clear out any RX buffer that may exist
 
 # pulse HC-12
