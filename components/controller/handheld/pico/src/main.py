@@ -296,28 +296,28 @@ try:
             newdata:bytes = uart_hc12.read(nb)
             rxBuffer_hc12.extend(newdata)
 
-        # Handle telemetry received from the drone
-        while True:
-            term_loc:int = rxBuffer_hc12.find("\r\n".encode())
-            if term_loc == -1:
-                break
-            else:
+            # Handle telemetry received from the drone
+            while True:
+                term_loc:int = rxBuffer_hc12.find("\r\n".encode())
+                if term_loc == -1:
+                    break
+                else:
 
-                # extract the line                    
-                ThisLine:bytes = rxBuffer_hc12[0:term_loc+2] # include the \r\n at the end
-                rxBuffer_hc12 = rxBuffer_hc12[len(ThisLine):] # keep the rest, trim out that line
+                    # extract the line                    
+                    ThisLine:bytes = rxBuffer_hc12[0:term_loc+2] # include the \r\n at the end
+                    rxBuffer_hc12 = rxBuffer_hc12[len(ThisLine):] # keep the rest, trim out that line
 
-                # handle the line
-                if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a telemetry packet
-                    TelemetryData:dict = tools.unpack_telemetry(ThisLine)
-                    if TelemetryData != None: # it returns None if there was an issue like it wasn't long enough
-                        drone_telemetry_last_received_ticks_ms = time.ticks_ms()
-                        vbat_drone = TelemetryData["vbat"]
-                        pitch_rate = TelemetryData["pitch_rate"]
-                        roll_rate = TelemetryData["roll_rate"]
-                        yaw_rate = TelemetryData["yaw_rate"]
-                        pitch_angle = TelemetryData["pitch_angle"]
-                        roll_angle = TelemetryData["roll_angle"]
+                    # handle the line
+                    if ThisLine[0] & 0b00000001 == 0: # if bit 0 is 0, it is a telemetry packet
+                        TelemetryData:dict = tools.unpack_telemetry(ThisLine)
+                        if TelemetryData != None: # it returns None if there was an issue like it wasn't long enough
+                            drone_telemetry_last_received_ticks_ms = time.ticks_ms()
+                            vbat_drone = TelemetryData["vbat"]
+                            pitch_rate = TelemetryData["pitch_rate"]
+                            roll_rate = TelemetryData["roll_rate"]
+                            yaw_rate = TelemetryData["yaw_rate"]
+                            pitch_angle = TelemetryData["pitch_angle"]
+                            roll_angle = TelemetryData["roll_angle"]
 
         # handle what to do based on what page we are on
         if dc.page == "awaiting_ci":
