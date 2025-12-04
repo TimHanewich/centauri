@@ -15,16 +15,16 @@ while True:
                     print("B Button Down")
                 else:
                     print("B Button Up")
-            elif event.code == "BTN_NORTH":  # Y
-                if event.state == 1:
-                    print("Y Button Down")
-                else:
-                    print("Y Button Up")
-            elif event.code == "BTN_WEST":  # X
+            elif event.code == "BTN_NORTH": # X (Yes, it should be Y, but on the Xbox Series X/S controller I am using, North and West are swapped for some reason...)
                 if event.state == 1:
                     print("X Button Down")
                 else:
                     print("X Button Up")
+            elif event.code == "BTN_WEST": # Y (Yes, it should be X, but on the Xbox Series X/S controller I am using, North and West are swapped for some reason...)
+                if event.state == 1:
+                    print("Y Button Down")
+                else:
+                    print("Y Button Up")
             elif event.code == "BTN_TL":  # Left bumper (LB)
                 if event.state == 1:
                     print("Left Bumper Down")
