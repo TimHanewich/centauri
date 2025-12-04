@@ -207,8 +207,8 @@ nlt_yaw:tools.NonlinearTransformer = tools.NonlinearTransformer(2.0, 0.10) # my 
 # Timestamps, in ticks_us, for each primary function
 last_ci_check:int = time.ticks_us()                                    # the last time we checked for controller input via UART (received from RPi)
 last_display_update:int = time.ticks_us()                              # the last time we updated the SSD-1306 display
-last_armed_control_packet_sent_ticks_ms:int = time.ticks_ms()          # the last time we sent a ARMED control packet to the drone (flying, with non-zero throttle and normal inputs)
-last_disarmed_control_packet_sent_ticks_ms:int = time.ticks_ms()       # the last time we sent a DISARMED control packet to the drone (with 0 throttle, to disarm the motors)
+last_armed_control_packet_sent_ticks_ms:int = time.ticks_ms()          # the last time we sent a ARMED control packet to the drone (flying, with non-zero throttle and normal inputs). We track them separately here so that as soon as the "armed" bool turns to False, it immediately sends out a disarm command instead of waiting 500 ms!
+last_disarmed_control_packet_sent_ticks_ms:int = time.ticks_ms()       # the last time we sent a DISARMED control packet to the drone (with 0 throttle, to disarm the motors). We track them separately here so that as soon as the "armed" bool turns to False, it immediately sends out a disarm command instead of waiting 500 ms!
 
 # Throttle idle/max range
 idle_throttle:float = 0.20
