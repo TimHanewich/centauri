@@ -1,13 +1,24 @@
-from inputs import devices
+from inputs import get_gamepad
+import threading
 import time
 
-# Get list of gamepads
-gamepads = devices.gamepads
+a_btn:bool = False
 
-# select the controller we will use
-my_controller = gamepads[0]
+def continuous_read() -> None:
+    global a_btn
+    while True:
+        events = get_gamepad()
+        for event in events:
+            if event.code == "BTN_SOUTH": # A
+                if event.state == 1:
+                    a_btn = True
+                else:
+                    a_btn = False
 
+# start read thread
+threading.Thread(target=continuous_read, daemon=True).start()
+
+# print statuses
 while True:
-    events = my_controller.read(blocking=False)
-    print("Events: " + str(events))
-    time.sleep(0.25)
+    print("A Button: " + str(a_btn))
+    time.sleep(1.0)
