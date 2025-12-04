@@ -1,5 +1,6 @@
 from inputs import get_gamepad
 
+print("Not listening for events!")
 while True:
     events = get_gamepad()
     for event in events:
