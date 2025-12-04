@@ -142,7 +142,7 @@ try:
                         input_dpad_down = False
             
         # print (change to True for debugging purposes)
-        if False:
+        if True:
             ToPrint:dict = {}
             ToPrint["ls"] = input_left_stick_click
             ToPrint["rs"] = input_right_stick_click
