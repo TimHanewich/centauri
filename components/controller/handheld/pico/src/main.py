@@ -236,7 +236,6 @@ try:
             ba:int = uart_ci.any()
             if ba > 0:
                 newdata:bytes = uart_ci.read(ba)
-                print("Received new data: " + str(newdata))
                 rxBuffer_ci.extend(newdata)
             
             # Do we have a line?
@@ -252,7 +251,6 @@ try:
                     # extract the line                    
                     ThisLine:bytes = rxBuffer_ci[0:term_loc+2] # include the \r\n at the end
                     rxBuffer_ci = rxBuffer_ci[len(ThisLine):] # keep the rest, trim out that line
-                    print("Got This line: " + str(ThisLine))
 
                     # is it a problem?
                     if ThisLine == b'@\r\n': # this is 0b01000000 followed by \r\n (3 bytes), indicating there is a problem
