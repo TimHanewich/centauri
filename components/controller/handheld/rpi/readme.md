@@ -12,5 +12,5 @@ Below I have listed the steps to get a Raspberry Pi prepared to serve as the bro
 6. Run [main.py](./src/main.py) to validate it works as expected
 7. Set it up to run right on boot up
     1. `crontab -e` to edit crontab
-    2. Add a `@reboot` line: `@reboot /home/pi/myproject/venv/bin/python /home/pi/myproject/main.py`. NOTE: in this line, it is running the exact python executable in the venv - *that* is how to run it via a venv (no need to activate it necessarily). **So you will have to find the exact path to the python executable and in your venv and the exact path to main.py**
+    2. Add a `@reboot` line: `@reboot /home/tah/CENTAURI/centauri-venv/bin/python /home/tah/CENTAURI/centauri/components/controller/handheld/rpi/src/main.py`. NOTE: in this line, it is running the exact python executable in the venv - *that* is how to run it via a venv (no need to activate it necessarily). **So you will have to find the exact path to the python executable and in your venv and the exact path to main.py**
 8. Upon rebooting, if you want to see it working, run something like `ps aux | grep main.py`
