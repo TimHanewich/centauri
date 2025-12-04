@@ -203,7 +203,6 @@ try:
         
         # transmit via serial (UART)
         ser.write(packed)
-        print("Just sent: " + str(packed))
 
         # wait a moment
         time.sleep(0.025) # 40 hz = every 25 ms
