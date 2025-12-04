@@ -76,4 +76,8 @@ while True:
                 value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
                 #print("Right Stick Y:" + str(value))
             elif event.code == "ABS_Z": # Left Trigger
-                print("LT: " + str(event.state))
+                value:float = event.state / 1023.0 # range is 0 to 1023
+                print("LT: " + str(value))
+            elif event.code == "ABS_RZ": # Right Trigger
+                value:float = event.state / 1023.0 # range is 0 to 1023
+                print("RT: " + str(value))
