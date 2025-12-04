@@ -290,25 +290,6 @@ try:
             dc.display()
             last_display_update = time.ticks_us()
 
-        # Send control packet?
-        # How often we should send the control packet differs based on whether we are armed or not
-        if armed:
-            if time.ticks_diff(time.ticks_ms(), last_control_packet_sent_ticks_ms) > 50: # 20 ms = 20 hz
-                throttle_to_send:float = idle_throttle + ((max_throttle - idle_throttle) * throttle)
-                ToSend:bytes = tools.pack_control_packet(throttle_to_send, pitch, roll, yaw)
-                uart_hc12.write(ToSend + "\r\n".encode())
-                last_control_packet_sent_ticks_ms = time.ticks_ms()
-        else: # if not armed
-            if time.ticks_diff(time.ticks_ms(), last_control_packet_sent_ticks_ms) > 500: # 500 ms = 2 hz
-                ToSend:bytes = tools.pack_control_packet(0.0, 0.0, 0.0, 0.0)
-                uart_hc12.write(ToSend + "\r\n".encode())
-                last_control_packet_sent_ticks_ms = time.ticks_ms()
-
-
-
-
-
-        ### MAIN PROGRAM BELOW! ###
 
         # check for any received telemetery from the drone
         nb:int = uart_hc12.any()
@@ -447,6 +428,19 @@ try:
 
             dc.page = "home"
 
+        # Send control packet?
+        # How often we should send the control packet differs based on whether we are armed or not
+        if armed:
+            if time.ticks_diff(time.ticks_ms(), last_control_packet_sent_ticks_ms) > 50: # 20 ms = 20 hz
+                throttle_to_send:float = idle_throttle + ((max_throttle - idle_throttle) * throttle)
+                ToSend:bytes = tools.pack_control_packet(throttle_to_send, pitch, roll, yaw)
+                uart_hc12.write(ToSend + "\r\n".encode())
+                last_control_packet_sent_ticks_ms = time.ticks_ms()
+        else: # if not armed
+            if time.ticks_diff(time.ticks_ms(), last_control_packet_sent_ticks_ms) > 500: # 500 ms = 2 hz
+                ToSend:bytes = tools.pack_control_packet(0.0, 0.0, 0.0, 0.0)
+                uart_hc12.write(ToSend + "\r\n".encode())
+                last_control_packet_sent_ticks_ms = time.ticks_ms()
 
         # Standard wait time
         time.sleep(0.01)
