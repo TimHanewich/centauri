@@ -34,3 +34,6 @@ display.pixel(64, 16, 1)
 # Set a pixel in the opposite 127, 31 position.
 display.pixel(127, 31, 1)
 display.show()
+
+# Add text
+display.text("Hello", 0, 0, 1)
