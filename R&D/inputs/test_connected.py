@@ -3,6 +3,7 @@ import inputs
 
 while True:
     gamepads = inputs.devices.gamepads
+    print("----- " + str(time.time()) + " -----")
     if gamepads == None:
         print("No gamepads connected")
     else:
