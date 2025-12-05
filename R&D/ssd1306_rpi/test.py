@@ -35,6 +35,6 @@ display.pixel(64, 16, 1)
 display.pixel(127, 31, 1)
 
 # Add text
-display.text("Hello", 0, 0, 1, font_name='FreeMono.tff')
+display.text("Hello", 0, 0, 1, font_name='FreeMono.ttf')
 
 display.show()
