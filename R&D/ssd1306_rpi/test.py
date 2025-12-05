@@ -1,4 +1,4 @@
-import busio# Basic example of clearing and drawing pixels on a SSD1306 OLED display.
+# Basic example of clearing and drawing pixels on a SSD1306 OLED display.
 # This example and library is meant to work with Adafruit CircuitPython API.
 # Author: Tony DiCola
 # License: Public Domain
