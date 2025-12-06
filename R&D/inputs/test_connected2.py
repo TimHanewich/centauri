@@ -40,9 +40,6 @@ while True:
                 PROBLEM_FLAG = False # lower the problem flag
             else:
                 print("No controllers connected")
-        
-        # sleep
-        time.sleep(1.0)
 
     # Read inputs from it
     print("Now listening!")
