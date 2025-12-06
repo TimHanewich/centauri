@@ -12,6 +12,12 @@ while True:
     while gamepad == None:
         print("Problem Flag Raised")
 
+        # Wait a moment
+        print("Waiting a moment for things to settle...")
+        for i in range(0, 3):
+            print("Continuing in " + str(3 - i) + "...")
+            time.sleep(1.0)
+
         # declare DeviceManager
         # Yes, we have to do it in a Try bracket because it does fail if it is trying to initiate right after a previous DeviceManager was working just fine. Example: https://i.imgur.com/xOKxtjn.png
         print("Initiating DeviceManager...")
