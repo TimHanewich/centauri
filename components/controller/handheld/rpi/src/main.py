@@ -181,9 +181,9 @@ def continuous_controller_read() -> None:
 # fire up the continuous read thread
 threading.Thread(target=continuous_controller_read, daemon=True).start() # daemon=True means it will also be killed when the main program terminates (i.e. keyboard interupt)
 
-# Just before starting, transmit "HELLO\r\n" to confirm we are online and ready to go
-print("Transmitting 'HELLO' online message...")
-ser.write(b"HELLO\r\n")
+# Just before starting, transmit "Now Online" message to confirm we are ready to go
+print("Transmitting 'Now Online' message...")
+ser.write(tools.pack_message(tools.MessageType.NowOnline))
 
 # start sending regularly on the main thread!
 print("NOW OPERATING!")
