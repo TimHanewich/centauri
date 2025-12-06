@@ -6,5 +6,8 @@ def count_connected_gamepads() -> int:
     return len(dm.gamepads)
 
 while True:
-    print("Connected devices: " + str(count_connected_gamepads()))
+    t1 = time.time_ns()
+    concount:int = count_connected_gamepads()
+    t2 = time.time_ns()
+    print("Connected devices: " + str(count_connected_gamepads()) + " (took " + str(t2 - t1) + " ns to check)")
     time.sleep(1.0)
