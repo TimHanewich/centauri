@@ -5,7 +5,6 @@ from inputs import DeviceManager, GamePad
 PROBLEM_FLAG:bool = True # start assuming we have to check for available gamepads
 
 while True:
-        
 
     # Select a gamepad that will be used to read from
     gamepad:GamePad = None
