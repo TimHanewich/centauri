@@ -1,14 +1,14 @@
 import time
 from inputs import DeviceManager, GamePad
 
+# Problem flag
+PROBLEM_FLAG:bool = False
+
 while True:
 
     # declare global DeviceManager we will use throughout this script
     dm:DeviceManager = DeviceManager()
 
-    # Problem flag
-    PROBLEM_FLAG:bool = False
-    
     # Validate a controller is connected
     while len(dm.gamepads) == 0 or PROBLEM_FLAG:
         print("No gamepad connected!")
