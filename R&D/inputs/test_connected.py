@@ -5,8 +5,8 @@ while True:
     
     try:
         events = get_gamepad()
-        print(str(len(events)) + " received")
+        print(str(time.time()) + ": " + str(len(events)) + " received")
     except:
-        print("Failed!")
+        print(str(time.time()) + ": Failed!")
 
     time.sleep(0.5)
