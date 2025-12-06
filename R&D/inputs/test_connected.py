@@ -1,14 +1,12 @@
 import time
-import inputs
+from inputs import get_gamepad
 
 while True:
-    gamepads = inputs.devices.gamepads
-    print("----- " + str(time.time()) + " -----")
-    if gamepads == None:
-        print("No gamepads connected")
-    else:
-        print(str(len(gamepads)) + " gamepads connected: ")
-        for gp in gamepads:
-            print(gp.name)
-    print()
+    
+    try:
+        events = get_gamepad()
+        print(str(len(events)) + " received")
+    except:
+        print("Failed!")
+
     time.sleep(0.5)
