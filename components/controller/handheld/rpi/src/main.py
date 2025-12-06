@@ -174,42 +174,38 @@ ser.write(b"HELLO\r\n")
 
 # start sending regularly on the main thread!
 print("NOW OPERATING!")
-try:
-    while True:
-            
-        # print (change to True for debugging purposes)
-        if False:
-            ToPrint:dict = {}
-            ToPrint["ls"] = input_left_stick_click
-            ToPrint["rs"] = input_right_stick_click
-            ToPrint["back"] = input_back
-            ToPrint["start"] = input_start
-            ToPrint["a"] = input_a
-            ToPrint["b"] = input_b
-            ToPrint["x"] = input_x
-            ToPrint["y"] = input_y
-            ToPrint["up"] = input_dpad_up
-            ToPrint["right"] = input_dpad_right
-            ToPrint["down"] = input_dpad_down
-            ToPrint["left"] = input_dpad_left
-            ToPrint["lb"] = input_left_bumper
-            ToPrint["rb"] = input_right_bumper
-            ToPrint["lt"] = input_left_trigger
-            ToPrint["rt"] = input_right_trigger
-            ToPrint["left_x"] = input_left_stick_x
-            ToPrint["left_y"] = input_left_stick_y
-            ToPrint["right_x"] = input_right_stick_x
-            ToPrint["right_y"] = input_right_stick_y
-            print(str(ToPrint))
+while True:
+        
+    # print (change to True for debugging purposes)
+    if False:
+        ToPrint:dict = {}
+        ToPrint["ls"] = input_left_stick_click
+        ToPrint["rs"] = input_right_stick_click
+        ToPrint["back"] = input_back
+        ToPrint["start"] = input_start
+        ToPrint["a"] = input_a
+        ToPrint["b"] = input_b
+        ToPrint["x"] = input_x
+        ToPrint["y"] = input_y
+        ToPrint["up"] = input_dpad_up
+        ToPrint["right"] = input_dpad_right
+        ToPrint["down"] = input_dpad_down
+        ToPrint["left"] = input_dpad_left
+        ToPrint["lb"] = input_left_bumper
+        ToPrint["rb"] = input_right_bumper
+        ToPrint["lt"] = input_left_trigger
+        ToPrint["rt"] = input_right_trigger
+        ToPrint["left_x"] = input_left_stick_x
+        ToPrint["left_y"] = input_left_stick_y
+        ToPrint["right_x"] = input_right_stick_x
+        ToPrint["right_y"] = input_right_stick_y
+        print(str(ToPrint))
 
-        # pack
-        packed:bytes = tools.pack_controls_snapshot(PROBLEM_FLAG, input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
+    # pack
+    packed:bytes = tools.pack_controls_snapshot(PROBLEM_FLAG, input_left_stick_click, input_right_stick_click, input_back, input_start, input_a, input_b, input_x, input_y, input_dpad_up, input_dpad_right, input_dpad_down, input_dpad_left, input_left_bumper, input_right_bumper, input_left_stick_x, input_left_stick_y, input_right_stick_x, input_right_stick_y, input_left_trigger, input_right_trigger)
 
-        # transmit via serial (UART)
-        ser.write(packed)
+    # transmit via serial (UART)
+    ser.write(packed)
 
-        # wait a moment
-        time.sleep(0.025) # 40 hz = every 25 ms
-
-except Exception as ex:
-    print("FATAL ERROR: " + str(ex))
+    # wait a moment
+    time.sleep(0.025) # 40 hz = every 25 ms
