@@ -1,12 +1,10 @@
 import time
-from inputs import get_gamepad
+from inputs import DeviceManager
+
+def count_connected_gamepads() -> int:
+    dm:DeviceManager = DeviceManager() # creating a new one "refreshes" and updates connections
+    return len(dm.gamepads)
 
 while True:
-    
-    try:
-        events = get_gamepad()
-        print(str(time.time()) + ": " + str(len(events)) + " received")
-    except:
-        print(str(time.time()) + ": Failed!")
-
-    time.sleep(0.5)
+    print("Connected devices: " + str(count_connected_gamepads()))
+    time.sleep(1.0)
