@@ -1,3 +1,6 @@
+# While in the true loop below, if the Xbox controller is suddenly disconnected, it has this error: https://i.imgur.com/ETUIzDc.png
+# And if you try to run this without one ever being connected in the first place, it throws this error: https://i.imgur.com/rSDEZzz.png
+
 from inputs import get_gamepad
 
 print("Not listening for events!")
