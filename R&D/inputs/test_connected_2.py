@@ -1,32 +1,36 @@
 import time
 from inputs import DeviceManager, GamePad
+from typing import List
 
-# Problem flag
-PROBLEM_FLAG:bool = False
+PROBLEM_FLAG:bool = True # Start assuming we need to check for a connection
 
 while True:
-
-    # declare global DeviceManager we will use throughout this script
+    
+    # 1. Connection Monitoring Loop
     dm:DeviceManager = DeviceManager()
+    gamepads:List[GamePad] = dm.gamepads
 
-    # Validate a controller is connected
-    while len(dm.gamepads) == 0 or PROBLEM_FLAG:
-        print("No gamepad connected!")
-        dm = DeviceManager() # "refresh" the device manager so it gets a new read on connected devices
-        if len(dm.gamepads) > 0: # if there is at least one connected gamepad (controller)...
-            PROBLEM_FLAG = False # lower the problem flag
-        else:
-            time.sleep(1.0)
+    while len(gamepads) == 0:
+        print("No gamepad connected. Retrying in 1s...")
+        time.sleep(1.0)
+        # Re-instantiate the DeviceManager to refresh the connection list
+        dm = DeviceManager() 
+        gamepads = dm.gamepads
+        
+    # If we exit the inner loop, a gamepad is connected.
+    PROBLEM_FLAG = False
+    gamepad:GamePad = gamepads[0]
 
-    # select the gamepad we will use
-    gamepad:GamePad = dm.gamepads[0]
-
-    # Read inputs from it
-    print("Now listening!")
+    # 2. Input Reading Loop
+    print("Gamepad connected! Now listening...")
     try:
         while True:
+            # This read is blocking until an event occurs
             events = gamepad.read()
             for event in events:
                 print(str(event))
-    except:
-        PROBLEM_FLAG = True
+    
+    except Exception as e:
+        # Catch any exception (like controller unplugged)
+        print(f"Reading error caught: {e}. Reverting to connection check.")
+        PROBLEM_FLAG = True # Set flag to force the outer loop to re-scan
