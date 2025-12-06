@@ -65,105 +65,118 @@ def continuous_controller_read() -> None:
     global input_right_trigger
     global input_left_trigger
 
-    # continuously monitor and note controller events
-    try:
-        while True:
+    while True:
 
-            # Read the raw data and update the variables we are using to track
-            events = get_gamepad()
-            for event in events:
-                if event.ev_type == "Key": # button press
-                    if event.code == "BTN_SOUTH": # A
-                        if event.state == 1:
-                            input_a = True
-                        else:
-                            input_a = False
-                    elif event.code == "BTN_EAST":  # B
-                        if event.state == 1:
-                            input_b = True
-                        else:
-                            input_b = False
-                    elif event.code == "BTN_NORTH": # X (Yes, it should be Y, but on the Xbox Series X/S controller I am using, North and West are swapped for some reason...)
-                        if event.state == 1:
-                            input_x = True
-                        else:
-                            input_x = False
-                    elif event.code == "BTN_WEST": # Y (Yes, it should be X, but on the Xbox Series X/S controller I am using, North and West are swapped for some reason...)
-                        if event.state == 1:
-                            input_y = True
-                        else:
-                            input_y = False
-                    elif event.code == "BTN_TL":  # Left bumper (LB)
-                        if event.state == 1:
-                            input_left_bumper = True
-                        else:
-                            input_left_bumper = False
-                    elif event.code == "BTN_TR":  # Right bumper (RB)
-                        if event.state == 1:
-                            input_right_bumper = True
-                        else:
-                            input_right_bumper = False
-                    elif event.code == "BTN_SELECT":  # Back / View
-                        if event.state == 1:
-                            input_back = True
-                        else:
-                            input_back = False
-                    elif event.code == "BTN_START":  # Start / Menu
-                        if event.state == 1:
-                            input_start = True
-                        else:
-                            input_start = False
-                    elif event.code == "BTN_THUMBL":  # Left stick click
-                        if event.state == 1:
-                            input_left_stick_click = True
-                        else:
-                            input_left_stick_click = False
-                    elif event.code == "BTN_THUMBR":  # Right stick click
-                        if event.state == 1:
-                            input_right_stick_click = True
-                        else:
-                            input_right_stick_click = False
-                elif event.ev_type == "Absolute": # Variable input (i.e. triggers, joysticks X/Y axis) or D-Pad. See event code + value range map here: https://i.imgur.com/ql8nDnc.png
-                    if event.code == "ABS_X": # Left Stick X
-                        value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
-                        input_left_stick_x = value
-                    elif event.code == "ABS_Y": # Left Stick Y
-                        value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
-                        input_left_stick_y = value
-                    elif event.code == "ABS_RX": # Right Stick X
-                        value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
-                        input_right_stick_x = value
-                    elif event.code == "ABS_RY": # Right Stick Y
-                        value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
-                        input_right_stick_y = value
-                    elif event.code == "ABS_Z": # Left Trigger
-                        value:float = event.state / 1023.0 # range is 0 to 1023
-                        input_left_trigger = value
-                    elif event.code == "ABS_RZ": # Right Trigger
-                        value:float = event.state / 1023.0 # range is 0 to 1023
-                        input_right_trigger = value
-                    elif event.code == "ABS_HAT0X": # D-pad left and right
-                        if event.state == -1:
-                            input_dpad_left = True
-                            input_dpad_right = False
-                        elif event.state == 1:
-                            input_dpad_left = False
-                            input_dpad_right = True
-                        else: # 0 means both Left/Right are up (not pressed)
-                            input_dpad_left = False
-                            input_dpad_right = False
-                    elif event.code == "ABS_HAT0Y": # D-pad up and down
-                        if event.state == -1:
-                            input_dpad_up = True
-                            input_dpad_down = False
-                        elif event.state == 1:
-                            input_dpad_up = False
-                            input_dpad_down = True
-                        else: # 0 means both Up/Down are up (not pressed)
-                            input_dpad_up = False
-                            input_dpad_down = False
-    except:
-        PROBLEM_FLAG = True
+        # validate a controller is connected. Raise problem flag if not
+        gamepads_connected_count:int = count_connected_gamepads()
+        PROBLEM_FLAG = gamepads_connected_count == 0 # set problem flag to True if 0 gamepads are connected
+        time.sleep(1.0)
+
+        # as long as there isn't a problem, go ahead and start reading inputs from the controller
+        # continue to do this until there is an error. 
+        # Once there is an error, pass by, it will loop back around, check for connected gamepads, set the problem flag, and continue doing that until there is a connected controller
+        # Then, once a controller is connected, it will then resume with the reading
+        if PROBLEM_FLAG == False:
+
+            # continuously monitor and note controller events
+            try:
+                while True:
+
+                    # Read the raw data and update the variables we are using to track
+                    events = get_gamepad()
+                    for event in events:
+                        if event.ev_type == "Key": # button press
+                            if event.code == "BTN_SOUTH": # A
+                                if event.state == 1:
+                                    input_a = True
+                                else:
+                                    input_a = False
+                            elif event.code == "BTN_EAST":  # B
+                                if event.state == 1:
+                                    input_b = True
+                                else:
+                                    input_b = False
+                            elif event.code == "BTN_NORTH": # X (Yes, it should be Y, but on the Xbox Series X/S controller I am using, North and West are swapped for some reason...)
+                                if event.state == 1:
+                                    input_x = True
+                                else:
+                                    input_x = False
+                            elif event.code == "BTN_WEST": # Y (Yes, it should be X, but on the Xbox Series X/S controller I am using, North and West are swapped for some reason...)
+                                if event.state == 1:
+                                    input_y = True
+                                else:
+                                    input_y = False
+                            elif event.code == "BTN_TL":  # Left bumper (LB)
+                                if event.state == 1:
+                                    input_left_bumper = True
+                                else:
+                                    input_left_bumper = False
+                            elif event.code == "BTN_TR":  # Right bumper (RB)
+                                if event.state == 1:
+                                    input_right_bumper = True
+                                else:
+                                    input_right_bumper = False
+                            elif event.code == "BTN_SELECT":  # Back / View
+                                if event.state == 1:
+                                    input_back = True
+                                else:
+                                    input_back = False
+                            elif event.code == "BTN_START":  # Start / Menu
+                                if event.state == 1:
+                                    input_start = True
+                                else:
+                                    input_start = False
+                            elif event.code == "BTN_THUMBL":  # Left stick click
+                                if event.state == 1:
+                                    input_left_stick_click = True
+                                else:
+                                    input_left_stick_click = False
+                            elif event.code == "BTN_THUMBR":  # Right stick click
+                                if event.state == 1:
+                                    input_right_stick_click = True
+                                else:
+                                    input_right_stick_click = False
+                        elif event.ev_type == "Absolute": # Variable input (i.e. triggers, joysticks X/Y axis) or D-Pad. See event code + value range map here: https://i.imgur.com/ql8nDnc.png
+                            if event.code == "ABS_X": # Left Stick X
+                                value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
+                                input_left_stick_x = value
+                            elif event.code == "ABS_Y": # Left Stick Y
+                                value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
+                                input_left_stick_y = value
+                            elif event.code == "ABS_RX": # Right Stick X
+                                value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
+                                input_right_stick_x = value
+                            elif event.code == "ABS_RY": # Right Stick Y
+                                value:float = min(max(event.state / 32767.0, -1.0), 1.0) # normalize to between -1.0 and 1.0. Must do min/max in case -32768 (int16 min value) is the value
+                                input_right_stick_y = value
+                            elif event.code == "ABS_Z": # Left Trigger
+                                value:float = event.state / 1023.0 # range is 0 to 1023
+                                input_left_trigger = value
+                            elif event.code == "ABS_RZ": # Right Trigger
+                                value:float = event.state / 1023.0 # range is 0 to 1023
+                                input_right_trigger = value
+                            elif event.code == "ABS_HAT0X": # D-pad left and right
+                                if event.state == -1:
+                                    input_dpad_left = True
+                                    input_dpad_right = False
+                                elif event.state == 1:
+                                    input_dpad_left = False
+                                    input_dpad_right = True
+                                else: # 0 means both Left/Right are up (not pressed)
+                                    input_dpad_left = False
+                                    input_dpad_right = False
+                            elif event.code == "ABS_HAT0Y": # D-pad up and down
+                                if event.state == -1:
+                                    input_dpad_up = True
+                                    input_dpad_down = False
+                                elif event.state == 1:
+                                    input_dpad_up = False
+                                    input_dpad_down = True
+                                else: # 0 means both Up/Down are up (not pressed)
+                                    input_dpad_up = False
+                                    input_dpad_down = False
+            except:
+                pass
 
 # fire up the continuous read thread
 threading.Thread(target=continuous_controller_read, daemon=True).start() # daemon=True means it will also be killed when the main program terminates (i.e. keyboard interupt)
