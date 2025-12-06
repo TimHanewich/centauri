@@ -83,9 +83,9 @@ def pack_message(msg:MessageType) -> bytes:
     # info byte
     ToReturn.append(0b10000000) # start with blank header byte
     if msg == MessageType.NowOnline:
-        ToReturn[0] = ToReturn | 0b00000001
+        ToReturn[0] = ToReturn[0] | 0b00000001
     elif msg == MessageType.ControllerDisconnected:
-        ToReturn[0] = ToReturn | 0b00000010
+        ToReturn[0] = ToReturn[0] | 0b00000010
 
     # Terminator
     ToReturn.extend("\r\n".encode())
