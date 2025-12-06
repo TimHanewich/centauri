@@ -14,6 +14,7 @@ while True:
 
         # declare DeviceManager
         print("Declaring DeviceManager...")
+        dm:DeviceManager = None
         try:
             dm = DeviceManager()
             print("DeviceManager declared successfully")
