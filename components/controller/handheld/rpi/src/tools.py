@@ -1,3 +1,5 @@
+from enum import Enum
+
 def pack_controls_snapshot(PROBLEM_FLAG:bool, left_stick:bool, right_stick:bool, back:bool, start:bool, a:bool, b:bool, x:bool, y:bool, up:bool, right:bool, down:bool, left:bool, lb:bool, rb:bool, left_x:float, left_y:float, right_x:float, right_y:float, lt:float, rt:float) -> bytes:
     """Packs control inputs into a bytearray."""
 
@@ -66,6 +68,26 @@ def pack_controls_snapshot(PROBLEM_FLAG:bool, left_stick:bool, right_stick:bool,
     ToReturn.extend(asint16.to_bytes(2, "big"))
 
     # add terminator
+    ToReturn.extend("\r\n".encode())
+
+    return bytes(ToReturn)
+
+class MessageType(Enum):
+    NowOnline = 0
+    ControllerDisconnected = 1
+
+def pack_message(msg:MessageType) -> bytes:
+
+    ToReturn:bytearray = bytearray()
+
+    # info byte
+    ToReturn.append(0b10000000) # start with blank header byte
+    if msg == MessageType.NowOnline:
+        ToReturn[0] = ToReturn | 0b00000001
+    elif msg == MessageType.ControllerDisconnected:
+        ToReturn[0] = ToReturn | 0b00000010
+
+    # Terminator
     ToReturn.extend("\r\n".encode())
 
     return bytes(ToReturn)
