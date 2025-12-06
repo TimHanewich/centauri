@@ -13,6 +13,7 @@ while True:
         print("Problem Flag Raised")
 
         # declare DeviceManager
+        # Yes, we have to do it in a Try bracket because it does fail if it is trying to initiate right after a previous DeviceManager was working just fine. Example: https://i.imgur.com/xOKxtjn.png
         print("Initiating DeviceManager...")
         dm:DeviceManager = None
         try:
