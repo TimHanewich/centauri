@@ -1,6 +1,6 @@
 from enum import Enum
 
-def pack_controls_snapshot(PROBLEM_FLAG:bool, left_stick:bool, right_stick:bool, back:bool, start:bool, a:bool, b:bool, x:bool, y:bool, up:bool, right:bool, down:bool, left:bool, lb:bool, rb:bool, left_x:float, left_y:float, right_x:float, right_y:float, lt:float, rt:float) -> bytes:
+def pack_controls_snapshot(left_stick:bool, right_stick:bool, back:bool, start:bool, a:bool, b:bool, x:bool, y:bool, up:bool, right:bool, down:bool, left:bool, lb:bool, rb:bool, left_x:float, left_y:float, right_x:float, right_y:float, lt:float, rt:float) -> bytes:
     """Packs control inputs into a bytearray."""
 
     ToReturn:bytearray = bytearray()
@@ -8,8 +8,6 @@ def pack_controls_snapshot(PROBLEM_FLAG:bool, left_stick:bool, right_stick:bool,
     # buttons (byte 0 and byte 1)
     ToReturn.append(0) # pre-load first byte
     ToReturn.append(0) # pre-load second byte
-    if PROBLEM_FLAG: # if there is a problem
-        ToReturn[0] = ToReturn[0] | 0b10000000 # raise bit 7
     if left_stick:
         ToReturn[0] = ToReturn[0] | 0b00100000
     if right_stick:
