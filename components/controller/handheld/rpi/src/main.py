@@ -10,13 +10,6 @@ baudrate:int = 9600
 print("Opening serial port on '" + serport + "' at baudrate " + str(baudrate) + "...")
 ser = serial.Serial(serport, baudrate)
 print("Serial port opened!")
-
-def FOREVER_BROADCAST_PROBLEM_FLAG() -> None:
-    PROBLEM_MSG:bytes = b'@\r\n' # this is 0b01000000 followed by \r\n (3 bytes). What we will transmit to indicate a problem encountered
-    while True:
-        print("Broadcasting problem error @ time " + str(int(time.time())) + "...")
-        ser.write(PROBLEM_MSG)
-        time.sleep(1.0)
     
 # Set up method to check number of controllers (to validate controller is connected)
 def count_connected_gamepads() -> int:
@@ -220,4 +213,3 @@ try:
 
 except Exception as ex:
     print("FATAL ERROR: " + str(ex))
-    FOREVER_BROADCAST_PROBLEM_FLAG()
