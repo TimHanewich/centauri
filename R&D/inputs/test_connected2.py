@@ -20,6 +20,7 @@ while True:
 
         # declare DeviceManager
         # Yes, we have to do it in a Try bracket because it does fail if it is trying to initiate right after a previous DeviceManager was working just fine. Example: https://i.imgur.com/xOKxtjn.png
+        # Note - I discovered that it will only throw the try exception because it can't access a inputs file/folder that exists in the OS. But that folder/file is cleaned up shortly after unplugged. So building in the wait above waits for it to leave so the DeviceManger does not try to access it. So the wait alleviates the need for the Try around DeviceManager()... but leaving it in anyway
         print("Initiating DeviceManager...")
         dm:DeviceManager = None
         try:
