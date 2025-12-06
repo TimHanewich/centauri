@@ -2,21 +2,33 @@ import time
 from inputs import DeviceManager, GamePad
 
 # Problem flag
-PROBLEM_FLAG:bool = False
+PROBLEM_FLAG:bool = True # start assuming we have to check for available controllers
+
+# declare global DeviceManager up front
+dm:DeviceManager = None
 
 while True:
-
-    # declare global DeviceManager we will use throughout this script
-    dm:DeviceManager = DeviceManager()
+        
 
     # Validate a controller is connected
-    while len(dm.gamepads) == 0 or PROBLEM_FLAG:
-        print("No gamepad connected!")
-        dm = DeviceManager() # "refresh" the device manager so it gets a new read on connected devices
-        if len(dm.gamepads) > 0: # if there is at least one connected gamepad (controller)...
-            PROBLEM_FLAG = False # lower the problem flag
-        else:
-            time.sleep(1.0)
+    while PROBLEM_FLAG:
+        print("Problem Flag Raised")
+
+        # declare DeviceManager
+        print("Declaring DeviceManager...")
+        try:
+            dm = DeviceManager()
+        except:
+            print("Declaring DeviceManager failed.")
+
+        # Scan for new controller?
+        if dm != None:
+            if len(dm.gamepads) > 0: # if there is at least one connected gamepad (controller)...
+                print("Controller connected!")
+                PROBLEM_FLAG = False # lower the problem flag
+        
+        # sleep
+        time.sleep(1.0)
 
     # select the gamepad we will use
     gamepad:GamePad = dm.gamepads[0]
