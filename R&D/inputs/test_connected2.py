@@ -13,18 +13,21 @@ while True:
         print("Problem Flag Raised")
 
         # declare DeviceManager
-        print("Declaring DeviceManager...")
+        print("Initiating DeviceManager...")
         dm:DeviceManager = None
         try:
             dm = DeviceManager()
-            print("DeviceManager declared successfully")
+            print("DeviceManager initiating successfully")
         except:
-            print("Declaring DeviceManager failed.")
+            print("Initiating new DeviceManager failed.")
 
         # Scan for new controller?
-        if dm != None:
+        if dm == None:
+            print("DeviceManager did not initiate correctly, so skipping checking for gamepads.")
+        else:
+            print("Checking for connected gamepads...")
             if len(dm.gamepads) > 0: # if there is at least one connected gamepad (controller)...
-                print("Controller connected!")
+                print("At least one gamepad is connected! Setting up and lowering problem flag!")
                 gamepad = dm.gamepads[0] # plug in what gamepad we will use
                 PROBLEM_FLAG = False # lower the problem flag
             else:
@@ -41,4 +44,4 @@ while True:
             for event in events:
                 print(str(event))
     except:
-        pass
+        print("Error encountered while reading inputs from gamepad!")
