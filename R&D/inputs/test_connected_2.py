@@ -18,6 +18,7 @@ while True:
         print("Declaring DeviceManager...")
         try:
             dm = DeviceManager()
+            print("DeviceManager declared successfully")
         except:
             print("Declaring DeviceManager failed.")
 
@@ -26,6 +27,8 @@ while True:
             if len(dm.gamepads) > 0: # if there is at least one connected gamepad (controller)...
                 print("Controller connected!")
                 PROBLEM_FLAG = False # lower the problem flag
+            else:
+                print("No controllers connected")
         
         # sleep
         time.sleep(1.0)
