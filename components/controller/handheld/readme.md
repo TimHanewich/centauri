@@ -4,7 +4,7 @@ The mobile system has two source code repos:
 2. Microcontroller code that runs on a Raspberry Pi Pico, accepts the controller input from the RPi, displays data on a SSD1306, and handles communication with the drone.
 
 ## Pi --> Pico Control Input Communication Protocol
-- "Normal operations" packet (working correctly) - A total of **16 bytes**. So at 30 packets per second, that is 480 bytes per second.
+- Control Snapshots packet (working correctly) - A total of **16 bytes**. So at 30 packets per second, that is 480 bytes per second.
     - Button Byte (1 byte)
         - Bit 7: `0` (packet identifier)
         - Bit 6: *reserved*
