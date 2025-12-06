@@ -1,4 +1,4 @@
-from inputs import get_gamepad
+from inputs import get_gamepad, DeviceManager
 import time
 import serial
 import tools
@@ -17,6 +17,11 @@ def FOREVER_BROADCAST_PROBLEM_FLAG() -> None:
         print("Broadcasting problem error @ time " + str(int(time.time())) + "...")
         ser.write(PROBLEM_MSG)
         time.sleep(1.0)
+    
+# Set up method to check number of controllers (to validate controller is connected)
+def count_connected_gamepads() -> int:
+    dm:DeviceManager = DeviceManager() # creating a new one "refreshes" and updates connections
+    return len(dm.gamepads)
 
 # Declare control input variables
 PROBLEM_FLAG:bool = False # raise if there was a critical problem while collecting Controller input
