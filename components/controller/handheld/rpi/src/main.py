@@ -17,7 +17,7 @@ def count_connected_gamepads() -> int:
     return len(dm.gamepads)
 
 # Declare control input variables
-PROBLEM_FLAG:bool = False # raise if there was a critical problem while collecting Controller input
+PROBLEM_FLAG:bool = False # raised by the controller input read thread if there was a critical problem while collecting Controller input
 input_left_stick_click:bool = False
 input_right_stick_click:bool = False
 input_back:bool = False # the "back" button (or is it called "select"?)... to the left of the Xbox logo
