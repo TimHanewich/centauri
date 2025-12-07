@@ -35,7 +35,7 @@ class HC12:
         if bytes_available > 0: # if there is data to receive
             new_data:bytes = self._uart.read(bytes_available)
             self._rx_buffer.extend(new_data)
-        return len(bytes_available)
+        return bytes_available # return the number of new bytes we read and collected (or didn't - it could be 0 as well!)
 
     def receive(self) -> bytes:
         """Returns any bytes that have been received (intentionally excludes any AT command responses)."""
