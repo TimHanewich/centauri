@@ -246,14 +246,3 @@ class HC12:
         self._set_pin.high()
 
         return response
-
-import machine
-import time
-
-uart_hc12 = machine.UART(1, tx=machine.Pin(4), rx=machine.Pin(5), baudrate=9600)
-hc12 = HC12(uart_hc12, 6)
-
-while True:
-    data = hc12.receive()
-    print(str(data))
-    time.sleep(1.0)
