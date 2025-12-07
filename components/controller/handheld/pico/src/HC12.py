@@ -42,9 +42,12 @@ class HC12:
     def receive(self) -> bytes:
         """Returns any bytes that have been received (intentionally excludes any AT command responses)."""
         self._flush_rx() # read anything else awaiting on the UART RX buffer
-        ToReturn:bytes = bytes(self._rx_buffer) # prepare to return
-        self._rx_buffer = bytearray() # clear the internal RX buffer
-        return ToReturn
+        if len(self._rx_buffer) > 0:
+            ToReturn:bytes = bytes(self._rx_buffer) # prepare to return
+            self._rx_buffer = bytearray() # clear the internal RX buffer
+            return ToReturn
+        else:
+            return None
     
     def send(self, data:bytes) -> None:
         """Sends data via the HC-12."""
@@ -245,3 +248,14 @@ class HC12:
         self._set_pin.high()
 
         return response
+
+import machine
+import time
+
+uart_hc12 = machine.UART(1, tx=machine.Pin(4), rx=machine.Pin(5), baudrate=9600)
+hc12 = HC12(uart_hc12, 6)
+
+while True:
+    data = hc12.receive()
+    print(str(data))
+    time.sleep(1.0)
