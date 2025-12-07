@@ -196,21 +196,32 @@ try:
                 newdata:bytes = uart_ci.read(ba)
                 rxBuffer_ci.extend(newdata)
             
-            # Do we have a line?
+            # Do we have a line? If so, process it
             while True:
                 term_loc:int = rxBuffer_ci.find("\r\n".encode())
-                if term_loc != -1:
 
-                    # update the last time we received control input from the RPi 
-                    # doesn't necessarily have to be actual control input (i.e. an event happening...)
-                    # can also be the "HELLO" message or a problem flag
-                    ci_last_received_ticks_us = time.ticks_us() # update last received time
+                # if no terminator found, we don't have a full line yet... so break.
+                if term_loc == -1:
+                    break
 
-                    # extract the line                    
-                    ThisLine:bytes = rxBuffer_ci[0:term_loc+2] # include the \r\n at the end
-                    rxBuffer_ci = rxBuffer_ci[len(ThisLine):] # keep the rest, trim out that line
+                # update the last time we received control input from the RPi 
+                # doesn't necessarily have to be actual control input (i.e. an event happening...)
+                # can also be the "HELLO" message or a problem flag
+                ci_last_received_ticks_us = time.ticks_us() # update last received time
 
-                    # Process the line
+                # extract the line                    
+                ThisLine:bytes = rxBuffer_ci[0:term_loc+2] # include the \r\n at the end
+                rxBuffer_ci = rxBuffer_ci[len(ThisLine):] # keep the rest, trim out that line
+
+                # Handle this line based on what it is (message type header)
+                if ThisLine[0] & 0b10000000 > 0: # if bit 7 is set to "1", it is a message packet
+                    msg_type:int = tools.unpack_message(ThisLine)
+                    if msg_type == 0: # "Now Online" message
+                        print("RPi streaming controller input now online!")
+                    elif msg_type == 1: # problem (i.e. controller disconnected)
+                        print("Problem Flag Received from RPi streaming controller input.")
+                        ci_PROBLEM_FLAG = True
+                else: # if bit 7 was set to 0, that means it was a control snapshot packet (normal operations)
                     inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
                     if inputs != None:
                         ci_last_received_ticks_us = time.ticks_us()
@@ -235,8 +246,6 @@ try:
                         ci_right_y = inputs["right_y"]
                         ci_lt = inputs["lt"]
                         ci_rt = inputs["rt"]
-                else:
-                    break
 
             # update last time we checked
             last_ci_check = time.ticks_us()
