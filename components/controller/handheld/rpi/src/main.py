@@ -71,6 +71,7 @@ def continuous_controller_read() -> None:
         gamepad:GamePad = None
         while gamepad == None:
             print("Gamepad is None. Going to try to find a connected gamepad...")
+            PROBLEM_FLAG = True # if there isn't a gamepad, that means there is a problem. So the input data isn't reliable. So raise the problem flag so the thread transmitting the control data via UART knows!
 
             # Wait a moment
             print("Waiting a moment for things to settle...")
