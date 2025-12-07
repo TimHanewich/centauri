@@ -347,7 +347,7 @@ try:
                 dc.display()
 
                 # send it!
-                uart_hc12.write(pid_settings_payload)
+                hc12.send(pid_settings_payload)
                 time.sleep(0.25)
 
                 # Update the dispaly
@@ -358,9 +358,8 @@ try:
                 time.sleep(3.0)
 
                 # check - did we receive the confirmation?
-                nb:int = uart_hc12.any()
-                if nb > 0:
-                    newdata:bytes = uart_hc12.read(nb)
+                newdata:bytes = hc12.receive()
+                if newdata != None:
                     if "SETUPOK".encode() in newdata:
                         UpdateSuccessful = True
                         break
@@ -385,7 +384,7 @@ try:
             # just forever transmit disarm and notify user of issue
             while True:
                 dc.display()
-                uart_hc12.write(disarm_packet_sample) 
+                hc12.send(disarm_packet_sample) 
                 time.sleep(0.25)
 
         # Send control packet?
@@ -394,11 +393,11 @@ try:
             if time.ticks_diff(time.ticks_ms(), last_armed_control_packet_sent_ticks_ms) > 50: # 20 ms = 20 hz
                 throttle_to_send:float = idle_throttle + ((max_throttle - idle_throttle) * throttle)
                 ToSend:bytes = tools.pack_control_packet(throttle_to_send, pitch, roll, yaw)
-                uart_hc12.write(ToSend + "\r\n".encode())
+                hc12.send(ToSend + "\r\n".encode())
                 last_armed_control_packet_sent_ticks_ms = time.ticks_ms()
         else: # if not armed
             if time.ticks_diff(time.ticks_ms(), last_disarmed_control_packet_sent_ticks_ms) > 500: # 500 ms = 2 hz
-                uart_hc12.write(disarm_packet_sample)
+                hc12.send(disarm_packet_sample)
                 last_disarmed_control_packet_sent_ticks_ms = time.ticks_ms()
 
         # Update display?
