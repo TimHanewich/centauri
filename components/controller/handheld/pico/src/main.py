@@ -220,12 +220,13 @@ try:
                         print("RPi streaming controller input now online!")
                     elif msg_type == 1: # problem (i.e. controller disconnected)
                         print("Problem Flag Received from RPi streaming controller input.")
-                        ci_PROBLEM_FLAG = True
+                        ci_PROBLEM_FLAG = True # raise problem flag
+                        armed = False # disarm
                 else: # if bit 7 was set to 0, that means it was a control snapshot packet (normal operations)
                     inputs:dict = tools.unpack_controls(ThisLine) # will return None if there was a problem
                     if inputs != None:
                         ci_last_received_ticks_us = time.ticks_us()
-                        ci_PROBLEM_FLAG = inputs["PROBLEM_FLAG"]
+                        ci_PROBLEM_FLAG = False # lower problem flag since we just got good data!
                         ci_ls = inputs["ls"]
                         ci_rs = inputs["rs"]
                         ci_back = inputs["back"]
@@ -390,11 +391,9 @@ try:
             dc.page = "home"
 
         elif dc.page == "ci_problem":
-            # just forever transmit disarm and notify user of issue
-            while True:
-                dc.display()
-                hc12.send(disarm_packet_sample) 
-                time.sleep(0.25)
+            # give it a chance to come back - if the problem flag eventually goes away (we receive good data), go back to home
+            if ci_PROBLEM_FLAG == False: 
+                dc.page = "home"
 
         # Send control packet?
         # How often we should send the control packet differs based on whether we are armed or not
