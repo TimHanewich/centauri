@@ -236,6 +236,8 @@ while True:
         ToPrint["right_y"] = input_right_stick_y
         print(str(ToPrint))
 
+    print("RT: " + str(input_right_trigger))
+
     # pack based on if we are operating normally or if there is a problem
     packed:bytes = None
     if PROBLEM_FLAG:
