@@ -3,6 +3,7 @@ import machine
 import ssd1306
 import tools
 from display import Display
+from HC12 import HC12
 
 
 
@@ -51,36 +52,17 @@ def boot_update(status:str) -> None:
 # set up UART interface for radio communications via HC-12
 print("Setting up HC-12 via uart_ci...")
 boot_update("HC-12")
-hc12_set = machine.Pin(6, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
+hc12_set_pin:int = 6 # the SET pin, used for going into and out of AT mode
 uart_hc12 = machine.UART(1, tx=machine.Pin(4), rx=machine.Pin(5), baudrate=9600)
-uart_hc12.read(uart_hc12.any()) # clear out any RX buffer that may exist
+hc12 = HC12(uart_hc12, hc12_set_pin)
 
 # pulse HC-12
 boot_update("HC-12 Pulse")
-hc12_set.low() # pull it LOW to enter AT command mode
-time.sleep(0.2) # wait a moment for AT mode to be entered
 hc12_pulsed:bool = False
 hc12_pulse_attempts:int = 0
-hc12_pulse_rx_buffer:bytearray = bytearray()
 while hc12_pulsed == False and hc12_pulse_attempts < 3:
     print("Sending pulse attempt # " + str(hc12_pulse_attempts + 1) + "...")
-    uart_hc12.write("AT\r\n".encode()) # send AT command
-    hc12_pulse_attempts = hc12_pulse_attempts + 1
-    time.sleep(0.2) # wait a moment for it to be responded to
-
-    # if there is data
-    if uart_hc12.any():
-        hc12_pulse_rx_buffer.extend(uart_hc12.read(uart_hc12.any())) # append
-        if "OK\r\n".encode() in hc12_pulse_rx_buffer:
-            hc12_pulsed = True
-            print("Pulse received!")
-            break
-        else:
-            print("Data received back from HC-12 but it wasn't an OK (pulse)")
-    else:
-        print("No data received from HC-12.")
-
-    # wait
+    hc12_pulsed = hc12.pulse
     time.sleep(1.0)
 
 # handle results of HC-12 pulse attempt
@@ -93,44 +75,17 @@ else:
 # Configure HC-12 while still in AT mode: mode = FU3
 boot_update("HC-12 Mode")
 print("Setting HC-12 mode to FU3...")
-uart_hc12.write("AT+FU3\r\n".encode()) # go into mode FU3 (normal mode)
-time.sleep(0.2) # wait a moment
-response:bytes = uart_hc12.read(uart_hc12.any())
-if "OK+FU3\r\n".encode() in response:
-    print("HC-12 in FU3 mode successful!")
-else:
-    print("HC-12 not confirmed to be in HC-12 mode!")
-    FATAL_ERROR()
+hc12.mode = 3
 
 # Configure HC-12 while still in AT mode: channel = 2
 boot_update("HC-12 Channel")
 print("Setting HC-12 channel to 2...")
-uart_hc12.write("AT+C002\r\n".encode())
-time.sleep(0.2) # wait a moment
-response:bytes = uart_hc12.read(uart_hc12.any())
-if "OK+C002\r\n".encode() in response:
-    print("HC-12 set to channel 2!")
-else:
-    print("HC-12 not confirmed to be in channel 2.")
-    FATAL_ERROR()
+hc12.channel = 2
 
 # Configure HC-12 while still in AT mode: power
 boot_update("HC-12 Power")
 print("Setting HC-12 power to maximum level of 8...")
-uart_hc12.write("AT+P8\r\n".encode())
-time.sleep(0.2) # wait a moment
-response:bytes = uart_hc12.read(uart_hc12.any())
-if "OK+P8\r\n".encode() in response:
-    print("HC-12 power set to level 8 (20 dBM)")
-else:
-    print("Unsuccessful in setting HC-12 power level to 8.")
-    FATAL_ERROR()
-
-# now that the HC-12 is set up and configured, close out of AT mode by setting the SET pin back to HIGH
-boot_update("HC-12 Ready")
-print("Returning HC-12 SET pin to HIGH (exiting AT mode)...")
-hc12_set.high()
-time.sleep(0.5) # wait a moment for the HC-12 to successfully get out of AT mode before proceeding with sending any messages
+hc12.power = 8
 
 # Set up a rxBuffer for future HC-12 input
 rxBuffer_hc12:bytearray = bytearray()
@@ -286,7 +241,7 @@ try:
             # update last time we checked
             last_ci_check = time.ticks_us()
 
-        # check for any received telemetery from the drone
+        # check for any received telemetery from the drone (via HC-12)
         nb:int = uart_hc12.any()
         if nb > 0:
             newdata:bytes = uart_hc12.read(nb)
