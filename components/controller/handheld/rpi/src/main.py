@@ -248,5 +248,4 @@ while True:
     print("Just transmitted: " + str(packed))
 
     # wait a moment
-    #time.sleep(0.025) # 40 hz = every 25 ms
-    time.sleep(2.0)
+    time.sleep(0.025) # 40 hz = every 25 ms
