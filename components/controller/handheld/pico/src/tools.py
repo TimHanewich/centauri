@@ -8,12 +8,6 @@ def unpack_controls(data:bytes) -> dict:
 
     ToReturn:dict = {}
 
-    # problem flag?
-    if data[0] & 0b10000000 > 0:
-        ToReturn["PROBLEM_FLAG"] = True
-    else:
-        ToReturn["PROBLEM_FLAG"] = False
-
     # left stick pressed? (clicked down)
     if data[0] & 0b00100000 > 0:
         ToReturn["ls"] = True
