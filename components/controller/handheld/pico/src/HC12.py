@@ -34,7 +34,7 @@ class HC12:
         bytes_available:int = self._uart.any()
         if bytes_available > 0: # if there is data to receive
             new_data:bytes = self._uart.read(bytes_available)
-            self._rx_buffer = self._rx_buffer + new_data
+            self._rx_buffer.extend(new_data)
             return len(new_data)
         else:
             return 0
