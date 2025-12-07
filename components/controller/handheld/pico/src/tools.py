@@ -102,7 +102,15 @@ def unpack_controls(data:bytes) -> dict:
 
     return ToReturn
 
-
+def unpack_message(data:bytes) -> int:
+    if len(data) == 0:
+        return None
+    if data[0] & 0b00000001 > 0: # If bit 0 is set to "1"
+        return 0 # 0 = "Now Online" message
+    elif data[0] & 0b00000010 > 0: # if bit 1 is set to "1"
+        return 1 # 1 = "ControllerDisconnected" (problem collecting controller input)
+    else:
+        return None
 
 
 
