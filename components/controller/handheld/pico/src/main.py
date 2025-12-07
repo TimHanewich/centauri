@@ -242,10 +242,9 @@ try:
             last_ci_check = time.ticks_us()
 
         # check for any received telemetery from the drone (via HC-12)
-        nb:int = uart_hc12.any()
-        if nb > 0:
-            newdata:bytes = uart_hc12.read(nb)
-            rxBuffer_hc12.extend(newdata)
+        new_drone_data:bytes = hc12.receive()
+        if new_drone_data != None:
+            rxBuffer_hc12.extend(new_drone_data)
 
             # Handle telemetry received from the drone
             while True:
