@@ -1,2 +1,0 @@
-pyserial==3.5
-inputs==0.5
