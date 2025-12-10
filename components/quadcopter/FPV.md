@@ -1,5 +1,5 @@
 # Attaching an FPV Camera to Centauri
-Just saving some notes about my attempt to attach an FPV camera to Centauri. And leaving them here for all to see in case you'd like to do the same!
+I attached a FPV Camera, VTX, and Antenna combo to Centauri for FPV Flying!
 
 ## Camera, Transmitter, and Antenna Combo: AKK BA3
 I purchased [the AKK BA3 Camera, Transmitter, and Antenna Combo](https://a.co/d/6bDJUDt):
