@@ -1,15 +1,27 @@
 # Attaching an FPV Camera to Centauri
 Just saving some notes about my attempt to attach an FPV camera to Centauri. And leavign them here for all to see in case you'd like to do the same!
 
+
+## Camera, Transmitter, and Antenna Combo: AKK BA3
 I purchased [the AKK BA3 Camera, Transmitter, and Antenna Combo](https://a.co/d/6bDJUDt):
 - 5.8 GHz
 - 40 Channels
 - 3.3 to 5.5 volt supply
+- [UserManual](https://imgur.com/a/zSuvYDs)
 - Reviews
     - [Great comprehensive review](https://www.youtube.com/watch?v=0P_iWBGYlQ0)
     - [Shows great range strapping it to a Buggs](https://youtu.be/4SYWQbyu9wE?si=CxPixtjZto4kn8wo)
     - [This may be it, or a variant of it](https://www.youtube.com/watch?v=-bGH_7yMQxw)
 
+Manual, page 1:
+
+![page 1](https://i.imgur.com/Tnuzo3K.jpeg)
+
+Manual, page 2:
+
+![page 2](https://i.imgur.com/a82Bt0h.jpeg)
+
+## FPV Monitor: SoloGood
 I purchased [the SoloGood FPV Monitor](https://a.co/d/dc8PKzo) to watch the video:
 - 4.3 inch screen size (16x9) - 800x480
 - 5.8 Ghz
