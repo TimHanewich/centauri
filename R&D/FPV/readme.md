@@ -37,4 +37,8 @@ I purchased [the SoloGood FPV Monitor](https://a.co/d/dc8PKzo) to watch the vide
     - I guess you can also put it in a goggle headset they sell: [in goggles](https://www.youtube.com/watch?v=ZwvF-kibTNU)
 
 ## 3D-Printed Mount for Centauri
-I found [this AKK BA3 AI0 mount](https://www.thingiverse.com/thing:4207871) file on Thingiverse.
+I found [this AKK BA3 AI0 mount](https://www.thingiverse.com/thing:4207871) file on Thingiverse. I remixed this design into a complete base with a 3-prong mount that can be mounted to the front of Centauri, similarly to how a GoPro would: [AKK BA3 Mount with 3-Prong Base on Thingiverse](https://www.thingiverse.com/thing:7229291).
+
+At 30% infill, it take approx. 1.5 hours to print (that is being relatively slow).
+
+I designed it in Blender; you can find all iterative design files [here](https://github.com/TimHanewich/centauri/releases/download/15/FPV.Mount.zip) in case you wanted to modify it by visiting an earlier version of it.
