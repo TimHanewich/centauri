@@ -1,3 +1,20 @@
+## Pre-Flight Packing List
+- Quadcopter
+- FPV Monitor
+- Spare phone battery for charging FPV monitor (w/ micro USB cable!)
+- Laptop
+- Transceiver platform
+- Xbox controller w/ USB C cable
+- 3D-printed phone holder (to place FPV monitor in)
+- Two charged 4S LiPo batteries
+- Blue tape
+- Pliers
+- M3 allen wrench (for mount screw)
+- GoPro?
+    - GoPro
+    - Charged GoPro batteries
+    - Tripod
+
 ## Future Improvements to Make
 - Physical design
     - Clean up wires
