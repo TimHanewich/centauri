@@ -6,7 +6,7 @@ I purchased [the AKK BA3 Camera, Transmitter, and Antenna Combo](https://a.co/d/
 - 5.8 GHz
 - 40 Channels
 - 3.3 to 5.5 volt supply
-- [UserManual](https://imgur.com/a/zSuvYDs)
+- [User Manual](https://imgur.com/a/zSuvYDs)
 - Reviews
     - [Great comprehensive review](https://www.youtube.com/watch?v=0P_iWBGYlQ0)
     - [Shows great range strapping it to a Buggs](https://youtu.be/4SYWQbyu9wE?si=CxPixtjZto4kn8wo)
@@ -27,6 +27,7 @@ I purchased [the SoloGood FPV Monitor](https://a.co/d/dc8PKzo) to watch the vide
 - 40 channels
 - Supports recording on a micro SD card (**32 GB max size!**)
 - I think this is a generic unit dropship businesses rebrand (found it under "FYS" brand as well)
+- [User Manual](https://imgur.com/a/1MmtubH)
 - Reviews:
     - [SoloGood review](https://www.youtube.com/watch?v=yL9M5eo47M0)
     - [Trying SoloGood outside](https://www.youtube.com/watch?v=5G-K0p_9W_Q)
@@ -34,6 +35,14 @@ I purchased [the SoloGood FPV Monitor](https://a.co/d/dc8PKzo) to watch the vide
     - [FYS FPV Monitor Review](https://www.youtube.com/watch?v=JTvScATIbLU)
     - [This video](https://www.youtube.com/watch?v=qgaBu7P_LjA) shows it is eveen better than some Goggles
     - I guess you can also put it in a goggle headset they sell: [in goggles](https://www.youtube.com/watch?v=ZwvF-kibTNU)
+
+![manual page 1](https://i.imgur.com/jef77KI.jpeg)
+
+![manual page 2](https://i.imgur.com/Ef3VtZ5.jpeg)
+
+![manual page 3](https://i.imgur.com/bHMWtFL.jpeg)
+
+![manual page 4](https://i.imgur.com/Yzgp6mm.jpeg)
 
 ## 3D-Printed Mount for Centauri
 I found [this AKK BA3 AI0 mount](https://www.thingiverse.com/thing:4207871) file on Thingiverse. I remixed this design into a complete base with a 3-prong mount that can be mounted to the front of Centauri, similarly to how a GoPro would: [AKK BA3 Mount with 3-Prong Base on Thingiverse](https://www.thingiverse.com/thing:7229291).
