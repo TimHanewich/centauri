@@ -64,11 +64,14 @@ The flight controller code can be found [here](./src/). It is only two `.py` fil
 With your quadcopter fully assembled and wired up, all you need to do is flash these two files to the root directory of the Raspberry Pi Pico acting as the MCU. Assuming you wired each component to the Pico's GP pins as depicted in the wiring diagram, it will work without further configuration. Alternatively, you may need to make minor tweaks to the pin mappings.
 
 ## Weight
-- Quadcopter fully assembled, without battery and gopro: 427 grams
-- The 4S 3,300 mAh LiPo battery I use is 347 grams.
-- With FPV camera attached: [790 grams](https://i.imgur.com/AakQhmH.jpeg)
-- With GoPro attached: [920 grams](https://i.imgur.com/8M9BNGq.jpeg)
-    - GoPro, GoPro frame, and M4 screw + nut for attaching: [146 grams](https://i.imgur.com/HSME9m7.jpeg)
+- Component weights
+    - Quadcopter fully assembled, without battery, FPV camera, or GoPro: 427 grams
+    - The 4S 3,300 mAh LiPo battery I use is 347 grams.
+- Asembled Operating Weights
+    - By itself, with 4S battery: ~774 grams
+    - With FPV camera attached: [790 grams](https://i.imgur.com/AakQhmH.jpeg)
+    - With GoPro attached: [920 grams](https://i.imgur.com/8M9BNGq.jpeg)
+        - GoPro, GoPro frame, and M4 screw + nut for attaching: [146 grams](https://i.imgur.com/HSME9m7.jpeg)
 
 ## FPV Flying
 You can also fly Centauri as an FPV quadcopter just by fastening a FPV camera/VTX/antenna to it! I did this, read more about it [here](./FPV.md)!
