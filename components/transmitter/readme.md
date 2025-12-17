@@ -1,9 +1,9 @@
-# The Pilot's Controller
-![controller](https://i.imgur.com/KFdf4A0.png)
+# The Pilot's Transmitter
+![transmitter](https://i.imgur.com/6v91FmT.jpeg)
 
 Flying the Centauri quadcopter requires a dedicated control interface - and just like the frame itself, the controller system is fully custom‑built. It combines familiar hardware with bespoke software and radio communication to deliver real‑time responsiveness.
 
-The controller is composed of three key components working together to transmit and receive flight data:
+The all-up transmitter is composed of three key components working together to transmit and receive flight data:
 - **Xbox Controller**: An Xbox Series X/S controller (connected via USB to a PC) provides the pilot's input.  
   - Throttle → Right Trigger  
   - Pitch & Roll → Left Stick  
@@ -11,8 +11,12 @@ The controller is composed of three key components working together to transmit 
 - **Python Program**: Running on the PC, this program reads the controller inputs, converts them into structured data packets, and transmits them to the quadcopter. It also performs additional tasks, which are explained in later sections.  
 - **Transceiver Platform**: A USB‑connected microcontroller paired with an HC‑12 radio module acts as the communication bridge between the PC and the quadcopter, enabling bidirectional data exchange over wireless signals.  
 
-## Controller Program
-The controller software, [main.py](./src/PC/main.py), serves as the communication hub between the pilot and the quadcopter. It continuously processes inputs from the Xbox controller, encodes them into compact data packets, and relays them to the drone via the transceiver.
+All three components are depicted below:
+
+![controller](https://i.imgur.com/KFdf4A0.png)
+
+## Transmitter Program
+The transmitter software, [main.py](./src/PC/main.py), serves as the communication hub between the pilot and the quadcopter. It continuously processes inputs from the Xbox controller, encodes them into compact data packets, and relays them to the drone via the transceiver.
 
 At its core, the program runs an infinite loop with three main steps:
 1. **Read inputs** from the Xbox controller  
@@ -30,7 +34,7 @@ Key libraries used:
 ## Transceiver Platform
 ![transceiver](https://i.imgur.com/zod1oGl.png)
 
-The transceiver platform is a USB‑connected support device that bridges the PC running the controller program with the quadcopter. Since the PC itself does not include an HC‑12 radio transceiver, this external module provides the necessary hardware to transmit and receive flight data. Communication flows through USB to the platform, which then interfaces with the HC‑12 for wireless exchange with the drone.
+The transceiver platform is a USB‑connected support device that bridges the PC running the transmitter program with the quadcopter. Since the PC itself does not include an HC‑12 radio transceiver, this external module provides the necessary hardware to transmit and receive flight data. Communication flows through USB to the platform, which then interfaces with the HC‑12 for wireless exchange with the drone.
 
 The platform is intentionally simple, consisting of three main components:
 - **HC‑12 radio transceiver** - handles wireless communication, sending commands to the quadcopter and receiving telemetry back.  
