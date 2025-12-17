@@ -65,9 +65,10 @@ With your quadcopter fully assembled and wired up, all you need to do is flash t
 
 ## Weight
 - Quadcopter fully assembled, without battery and gopro: 427 grams
-- 4S LiPo 3,300 mAh battery: 347 grams
-- GoPro, GoPro frame, and M4 screw + nut for attaching: [146 grams](https://i.imgur.com/HSME9m7.jpeg)
-- **TOTAL, FULLY-LOADED WEIGHT: [920 grams](https://i.imgur.com/8M9BNGq.jpeg)**
+- The 4S 3,300 mAh LiPo battery I use is 347 grams.
+- With FPV camera attached: [790 grams](https://i.imgur.com/AakQhmH.jpeg)
+- With GoPro attached: [920 grams](https://i.imgur.com/8M9BNGq.jpeg)
+    - GoPro, GoPro frame, and M4 screw + nut for attaching: [146 grams](https://i.imgur.com/HSME9m7.jpeg)
 
 ## FPV Flying
 You can also fly Centauri as an FPV quadcopter just by fastening a FPV camera/VTX/antenna to it! I did this, read more about it [here](./FPV.md)!
