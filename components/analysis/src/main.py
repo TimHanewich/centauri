@@ -18,8 +18,11 @@ print(str(len(lines)) + " frames in log file.")
 packets:list[dict] = []
 for p in lines:
     if len(p) > 0:
-        unpacked:dict = tools.unpack_packet(p)
-        packets.append(unpacked)
+        try:
+            unpacked:dict = tools.unpack_packet(p)
+            packets.append(unpacked)
+        except Exception as ex:
+            print("Unpacking a frame failed. Skipping. Err: " + str(ex))
 print(str(len(packets)) + " packets unpacked")  
 
 # construct into a CSV file
