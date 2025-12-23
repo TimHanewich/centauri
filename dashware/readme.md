@@ -17,3 +17,14 @@ So, in this scenario, the solution I used was to *slow down* the video just a ta
 To do this, I calculated what the *correct* duration of the total clip should be, in seconds. Then, with that in mind, I calculated what the Minutes:Seconds:Frames timestamp should be in premiere pro (i.e. at 30 FPS). I calculated that, placed my sequence time there, and then used Premiere Pro's **Rate Stretch Tool** to "stretch" the video to end at that time exactly, with the difference being sped up/slowed down automatically!
 
 ![stretch](https://i.imgur.com/Kuu30Fc.png)
+
+## Having an issue with syncing up telemetry over a FPV Monitor/Goggle DVR Footage? Here is the fix!
+Using FFMPEG, "trim out" a clip of the flight you want to use. This will trim out the video, set it to a constant frame rate and do so in lossless quality:
+
+```
+ffmpeg -i onboard.AVI -ss 00:07:20 -to 00:11:00 -vf "fps=30" -q:v 1 flight6.avi
+```
+
+After this, in Premiere Pro, compare the total flight duration (duration while "armed") between the telemetry (recorded by Microcontroller) and the FPV video. More likely than not, the FPV video will be *longer* than the telemetry. I believe this is because the video recording is slow.
+
+Calculate the time the video *should end* by doing some math (seen above). Use the rate tool in Premiere Pro (**on the constant frame rate export!**) to adjust the time length of the video to the target duration (to match the telemetry) and then position it in a widescreen format.
