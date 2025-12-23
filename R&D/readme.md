@@ -11,7 +11,7 @@
 - Pliers
 - M3 allen wrench (for mount screw)
 - Wrench (for taking off/on propellers)
-- Hat
+- Hat & Gloves
 - GoPro?
     - GoPro
     - Charged GoPro batteries
