@@ -4,10 +4,11 @@
 
 ## Videos
 - [Onboard video, raw](https://youtu.be/c6NJyDcFudY)
+    - [Flight 6 onboard with telemetry](https://youtu.be/j7pskzammZ4)
+    - [This version](https://youtu.be/V-1pPuyf5dw) has the angles in it as well, but I don't believe they are reliable.
 - [Ground video (recorded on GoPro), raw](https://youtu.be/XuQiWvqS8bc)
     - [Short clip of it flying around, stabilized](https://youtu.be/LzWieMo0hrw)
-- [Flight 6 onboard with telemetry](https://youtu.be/j7pskzammZ4)
-    - [This version](https://youtu.be/V-1pPuyf5dw) has the angles in it as well, but I don't believe they are reliable.
+    - [Flight 6 perspective from ground, stabilized](https://youtu.be/_CyzsO6kl-w)
 
 ## Files
 - [Raw telemetry log file](https://github.com/TimHanewich/centauri/releases/download/17/log)
