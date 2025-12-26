@@ -13,6 +13,7 @@
 - [Raw telemetry log](https://github.com/TimHanewich/centauri/releases/download/18/log)
 - [Telemetry log, unpacked as .csv file](https://github.com/TimHanewich/centauri/releases/download/18/log.csv)
 - [Telemetry log as .xlsx, with notes on flights](https://github.com/TimHanewich/centauri/releases/download/18/log.xlsx)
+    - Note: Flight #4 telemetry cuts off early, I believe because the telemetry collected filled the buffer!
 
 ## Battery Depletion
 - Battery 1 was flown down to ~15.0 volts. Consumed ~2,649 mAh (what it charged to later).
