@@ -19,6 +19,9 @@
 
 ## Future Improvements to Make
 - Physical design
+    - Antenna position!
+        - Maybe this one: https://a.co/d/hyoroY7
+        - Or Maybe this one: https://www.amazon.com/dp/B0C1FCZM94
     - Clean up wires
     - Female plug for battery needs to be pulled in closer
     - Fix orientation of holes on arm so wires face ESC directly
@@ -26,6 +29,8 @@
     - A better way to secure the battery
     - Option to use LiIon batteries instead (18650 or 21700)
 - Software
+    - Reduce baudrate of telemetry to make it more resilient?
+    - "Dump telemetry log" command to delete onboard telemetry + restart
     - Detailed telemetry recording to local storage
     - Minimize ongoing telemetry screening?
 
