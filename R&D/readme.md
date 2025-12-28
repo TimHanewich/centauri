@@ -33,6 +33,7 @@
     - "Dump telemetry log" command to delete onboard telemetry + restart
     - Detailed telemetry recording to local storage
     - Minimize ongoing telemetry screening?
+    - Increase telemetry buffer size to allow for longer flights
 
 ## Notable Commits
 - `b1a1ab5dbd9689bbb8738018d4c9fa073f36ae01` - last commit with asynchronous design for LL-MCU before going to a single, synchronous loop
