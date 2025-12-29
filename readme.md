@@ -7,7 +7,7 @@ Centauri builds on my earlier [Scout flight controller](https://github.com/TimHa
 
 ![preview_gif](https://i.imgur.com/mqoN9kG.gif)
 
-To see how *Centauri* was made and watch it in action,, click below:  
+To see how *Centauri* was made and watch it in action, click below:  
 [![demo video](https://i.imgur.com/Hi0yzIR.png)](https://www.youtube.com/watch?v=4ocy2szvcbM)
 
 ## In This Project
