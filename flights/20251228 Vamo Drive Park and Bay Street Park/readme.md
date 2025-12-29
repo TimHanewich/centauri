@@ -13,6 +13,9 @@ I flew in both [Vamo Drive Park](https://maps.app.goo.gl/5sxLHPCa2zMVefum8) and 
 - [Raw telemetry log](https://github.com/TimHanewich/centauri/releases/download/19/log)
 - [Telemetry log, unpacked as .csv file](https://github.com/TimHanewich/centauri/releases/download/19/log.csv)
 - [Telemetry log as .xlsx, with notes on flights](https://github.com/TimHanewich/centauri/releases/download/19/log.xlsx)
+- [Pictures from the day](https://imgur.com/a/rz63IIc)
+    - [At Vamo Drive Park](https://i.imgur.com/mTkFzfr.jpeg)
+    - [At Bay Street Park](https://i.imgur.com/tjubIXg.jpeg)
 
 ## Batteries
 - Battery 1 was flown down to 14.8v (resting) and absored 2,935 mAh to fully charge afterwards
