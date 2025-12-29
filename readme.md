@@ -5,7 +5,7 @@
 
 Centauri builds on my earlier [Scout flight controller](https://github.com/TimHanewich/scout), representing a major leap forward in capability, performance, and system integration.
 
-![preview_gif](https://i.imgur.com/mqoN9kG.gif)
+<video src="https://i.imgur.com/A9mO0fq.mp4" autoplay loop muted playsinline width="600"></video>
 
 To see how *Centauri* was made and watch it in action, click below:  
 [![demo video](https://i.imgur.com/Hi0yzIR.png)](https://www.youtube.com/watch?v=4ocy2szvcbM)
