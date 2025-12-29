@@ -18,3 +18,15 @@ After:
 
 With the blue wire coating off:
 ![after, without coating](https://i.imgur.com/v5z3yrz.jpeg)
+
+## Testing with Camera Transmitter On
+In each of these tests, I recorded a sample of the incoming video on my FPV monitor. The camera, transmitter, antenna combo rested on my office desk while I stood at the far end of my master bedroom with the door closed.
+
+- [Clip 1 = no antenna](https://youtu.be/LvASk7sfPbM)
+- [Clip 2 = with antenna soldered on](https://youtu.be/xAKk46w5mJc)
+- [Clip 3 = with brand new module, but this one with cloverleaf antenna](https://youtu.be/ils50NFzJhw)
+- [Clip 4 = same as clip 2, trying the old one again with it soldered on](https://youtu.be/YAuvWpPODuc)
+- [Clip 5 = trying again after resoldering antenna on again](https://youtu.be/BDguyYxqvoY)
+- [Clip 6 = trying with new module w/ cloverleaf antenna (works so well)!](https://youtu.be/aUb_7dJRKYM)
+
+So, clip 1, 2, 4, and 5 were with the module I am working on. Clip 3 and 6 is the first I tried the new one with (it worked so well).
