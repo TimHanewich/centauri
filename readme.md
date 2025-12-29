@@ -11,9 +11,9 @@ To see how *Centauri* was made and watch it in action, click below:
 [![demo video](https://i.imgur.com/Hi0yzIR.png)](https://www.youtube.com/watch?v=4ocy2szvcbM)
 
 ## In This Project
-![anatomy](https://i.imgur.com/6TYY0Nv.png)
-
 This repository provides *everything* you need to build your own Centauri quadcopter and take flight. This includes:
+
+![anatomy](https://i.imgur.com/6TYY0Nv.png)
 
 |Project Component|Thumbnail|Description|
 |-|-|-|
