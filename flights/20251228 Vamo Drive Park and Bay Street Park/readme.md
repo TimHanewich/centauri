@@ -7,6 +7,9 @@ I flew in both [Vamo Drive Park](https://maps.app.goo.gl/5sxLHPCa2zMVefum8) and 
 - [All video from ground (on GoPro), raw, concatenated](https://youtu.be/PpSTQVRufBo)
 - [All video from onboard, concatenated raw](https://youtu.be/ZRmKvO1-QWs) - *recorded in variable frame rate by the FPV monitor, so beware of timing issues*
 - [All video from onboard, concatenated,  re-encoded as 30 fps constant frame rate](https://youtu.be/ZYWoqG6bNVE)
+    - I noticed youtube severely degrades quality compared to this video, so ran this file through an upscale to 2k and tried uploading that in hopes it will use a different codec that will preserve quality: 
+        - [video](https://youtu.be/2HPtsHp-LNo)
+        - Command I used: `ffmpeg -i input.avi -vf "scale=2560:1440:force_original_aspect_ratio=decrease,pad=2560:1440:(ow-iw)/2:(oh-ih)/2" -c:v libx264 -crf 18 -preset slow -c:a aac -b:a 320k output_1440p.mp4`
 - [Flight 6 with Telemetry overlay](https://youtu.be/cTK0w3Zb9RU)
 
 ## Files
