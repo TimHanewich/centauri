@@ -1,6 +1,17 @@
-# Video Series
+## Centauri "How it started, how it's going" video
+- Started 
+    - 3:25 of this video (crash out): https://www.youtube.com/watch?v=Bj0aN_1-mIM
+    - 5:55:55 of this video (throwing goggles): https://www.youtube.com/watch?v=W7-yFK6OCB0
+    - 5:53:30 of this video (shaking head): https://www.youtube.com/watch?v=W7-yFK6OCB0
+    - 7:16 in this video (spazzing out inside): https://www.youtube.com/watch?v=44tEmUwnbl4
+    - 8:51 in this video (falls and burns): https://www.youtube.com/watch?v=PfZOqbugjq8
+- Going
+    - 0:46 of this video (dad flyby at OJT): https://www.youtube.com/watch?v=LzWieMo0hrw
+    - 3:23 of this video (flying above townhome roof, reverse): https://www.youtube.com/watch?v=xKoLI-wi2mM
+    - 5:14 of this video (steep bank): https://www.youtube.com/watch?v=xKoLI-wi2mM
+    - 0:48 of this video (bay street park fly by): https://www.youtube.com/watch?v=cTK0w3Zb9RU
 
-
+## Video Series
 - **Chapter 1**: Introduction
     - The components
     - How the data flows
