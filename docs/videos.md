@@ -1,10 +1,17 @@
 ## Centauri "How it started, how it's going" video
-- Started 
+- Started
+    - 0:16 of this video (showing Scout): https://www.youtube.com/watch?v=W7-yFK6OCB0
+    - 0:45 of this video (toppling over): https://www.youtube.com/watch?v=W7-yFK6OCB0
     - 3:25 of this video (crash out): https://www.youtube.com/watch?v=Bj0aN_1-mIM
     - 5:55:55 of this video (throwing goggles): https://www.youtube.com/watch?v=W7-yFK6OCB0
     - 5:53:30 of this video (shaking head): https://www.youtube.com/watch?v=W7-yFK6OCB0
     - 7:16 in this video (spazzing out inside): https://www.youtube.com/watch?v=44tEmUwnbl4
     - 8:51 in this video (falls and burns): https://www.youtube.com/watch?v=PfZOqbugjq8
+    - 0:00 in this video (Scout flipping out): https://www.youtube.com/watch?v=ziMcRW0sNCE
+    - 4:08:12 in this video (staring at Scout frusturated): https://www.youtube.com/watch?v=W7-yFK6OCB0
+    - 5:28:09 in this video (balancing on hands): https://www.youtube.com/watch?v=W7-yFK6OCB0
+    - 11:06 of this video (propeller pops off inside): https://www.youtube.com/watch?v=yjyKg9pMgkc
+    - 27:37 in this video (Centauri crashing and breaking arm at Nokomis Park): https://www.youtube.com/watch?v=I0SOVnilZ6g
 - Going
     - 0:46 of this video (dad flyby at OJT): https://www.youtube.com/watch?v=LzWieMo0hrw
     - 3:23 of this video (flying above townhome roof onboard, reverse): https://www.youtube.com/watch?v=xKoLI-wi2mM
