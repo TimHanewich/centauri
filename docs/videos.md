@@ -7,9 +7,17 @@
     - 8:51 in this video (falls and burns): https://www.youtube.com/watch?v=PfZOqbugjq8
 - Going
     - 0:46 of this video (dad flyby at OJT): https://www.youtube.com/watch?v=LzWieMo0hrw
-    - 3:23 of this video (flying above townhome roof, reverse): https://www.youtube.com/watch?v=xKoLI-wi2mM
-    - 5:14 of this video (steep bank): https://www.youtube.com/watch?v=xKoLI-wi2mM
+    - 3:23 of this video (flying above townhome roof onboard, reverse): https://www.youtube.com/watch?v=xKoLI-wi2mM
+    - 5:14 of this video (steep bank onboard): https://www.youtube.com/watch?v=xKoLI-wi2mM
     - 0:48 of this video (bay street park fly by): https://www.youtube.com/watch?v=cTK0w3Zb9RU
+    - 1:28 of this video (flying over trees to see water @ Vamo Park): https://www.youtube.com/watch?v=ZYWoqG6bNVE
+    - 3:50 of this video (acceleration and asending in field): https://www.youtube.com/watch?v=oEOU1fnXip0
+    - 5:16 of this video (quick fly by in field): https://www.youtube.com/watch?v=oEOU1fnXip0
+    - 5:57 of this video (up close): https://www.youtube.com/watch?v=oEOU1fnXip0
+    - 17:45 of this video (up close then pivot away): https://www.youtube.com/watch?v=mi2_N91XVpg
+    - 13:45 of this video (launch away and fly to the right): https://www.youtube.com/watch?v=mi2_N91XVpg
+    - 12:10 of this video (shoot off overhead): https://www.youtube.com/watch?v=mi2_N91XVpg
+    - 12:20 of this video (airbrake): https://www.youtube.com/watch?v=mi2_N91XVpg
 
 ## Video Series
 - **Chapter 1**: Introduction
