@@ -13,7 +13,7 @@
     - **clip_9** - 4:08:12 in this video (staring at Scout frusturated): https://www.youtube.com/watch?v=W7-yFK6OCB0
     - **clip_10** - 5:28:09 in this video (balancing on hands): https://www.youtube.com/watch?v=W7-yFK6OCB0
     - **clip_11** - 11:06 of this video (propeller pops off inside): https://www.youtube.com/watch?v=yjyKg9pMgkc
-    - **clip_l2** - 27:37 in this video (Centauri crashing and breaking arm at Nokomis Park): https://www.youtube.com/watch?v=I0SOVnilZ6g
+    - **clip_12** - 27:37 in this video (Centauri crashing and breaking arm at Nokomis Park): https://www.youtube.com/watch?v=I0SOVnilZ6g
 - Going
     - **clip_13** - 0:46 of this video (dad flyby at OJT): https://www.youtube.com/watch?v=LzWieMo0hrw
     - **clip_14** - 3:23 of this video (flying above townhome roof onboard, reverse): https://www.youtube.com/watch?v=xKoLI-wi2mM
