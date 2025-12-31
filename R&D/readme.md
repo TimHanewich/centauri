@@ -18,6 +18,11 @@
     - Tripod
 
 ## Future Improvements to Make
+- Analysis
+    - Show list of sessions
+    - Show statistics (i.e. total "armed" time)
+- Transmitter
+    - Auto-scan for the port the transceiver platform may be plugged into and suggest it (prevent user from having to type it in every time)
 - Quadcopter
     - Physical design
         - Command Control Antenna position! (HC-12)
@@ -38,6 +43,7 @@
         - Increase telemetry buffer size to allow for longer flights
         - Recording of flight statistics after each armed: max G-Force, start + stop battery voltage, etc.
         - Add "last received" (in miliseconds) to telemetry, tracking how long it has been since a control command (or anything from transmitter) has been received
+        - Save PID settings to local storage when receiving it. And then check for them and auto-load on boot. Make sure to send msg about this to transmitter so it knows it pre-loaded PIDs from memory
 
 ## Notable Commits
 - `b1a1ab5dbd9689bbb8738018d4c9fa073f36ae01` - last commit with asynchronous design for LL-MCU before going to a single, synchronous loop
