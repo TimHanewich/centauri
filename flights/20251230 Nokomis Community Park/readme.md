@@ -16,7 +16,7 @@
 - [Ground perspective (recorded on GoPro)](https://youtu.be/TPSHuW9jbeE) - *raw, concatenated*
 - [Onboard Video](https://youtu.be/AnBjH0N_Z58) - *raw, concatenated (left at variable frame rate)*
     - Used command `ffmpeg -f concat -i files.txt -c copy all.avi` to concatenate
-    - Also backed up raw on github here (no compression!): 
+    - Also backed up raw on github here (no compression!): [onboard.avi](https://github.com/TimHanewich/centauri/releases/download/20/onboard.avi)
     - Important timestamps
         - 0:00 to 0:07 - testing new VTX AIO far away (recording at about 90 meters out - looks great!)
         - 1:03 to 1:10 - video feed looked great but control connection was not reaching. Packets were for sure dropping, but I fought it back.
