@@ -1,4 +1,7 @@
 # Centauri "How it started, how it's going" video
+- Published, here: https://youtube.com/shorts/Ck7w3twE6Eg
+- [The premiere pro project](https://github.com/TimHanewich/centauri/releases/download/21/Started-Going.zip)
+- [The end screen it finished with (ppt slide)](https://github.com/TimHanewich/centauri/releases/download/21/end.pptx)
 
 ## Clips
 - Started
