@@ -25,6 +25,8 @@
     - 13:45 of this video (launch away and fly to the right): https://www.youtube.com/watch?v=mi2_N91XVpg
     - 12:10 of this video (shoot off overhead): https://www.youtube.com/watch?v=mi2_N91XVpg
     - 12:20 of this video (airbrake): https://www.youtube.com/watch?v=mi2_N91XVpg
+    - 12:03 of this video (flying into distance on Michelle iPhone): https://www.youtube.com/watch?v=oEOU1fnXip0
+    - 16:45 of this vidoe (flying by Michelle in curve): https://www.youtube.com/watch?v=oEOU1fnXip0
 
 ## Video Series
 - **Chapter 1**: Introduction
