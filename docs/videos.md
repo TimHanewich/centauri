@@ -33,7 +33,7 @@ To download portions of video with yt-dlp:
 - Downloads best quality `.mp4` with best quality audio
 - Outputs to `clip_a.mp4`
 ```
-yt-dlp --download-sections "*00:15:15-00:16:15" -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" https://www.youtube.com/watch?v=W7-yFK6OCB0 -o clip_a.mp4
+yt-dlp --download-sections "*00:15:15-00:16:15" -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" https://www.youtube.com/watch?v=oEOU1fnXip0 -o clip_a.mp4
 ```
 
 ## Video Series
