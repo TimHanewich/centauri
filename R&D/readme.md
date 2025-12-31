@@ -36,7 +36,7 @@
         - A better way to secure the battery
         - Option to use LiIon batteries instead (18650 or 21700)
     - Software
-        - Reduce baudrate of telemetry to make it more resilient?
+        - Reduce baudrate of HC-12 to make it more resilient?
         - "Dump telemetry log" command to delete onboard telemetry + restart
         - Detailed telemetry recording to local storage
         - Minimize ongoing telemetry screening?
