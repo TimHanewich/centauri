@@ -38,8 +38,6 @@
     - Software
         - Reduce baudrate of HC-12 to make it more resilient?
         - "Dump telemetry log" command to delete onboard telemetry + restart
-        - Detailed telemetry recording to local storage
-        - Minimize ongoing telemetry screening?
         - Increase telemetry buffer size to allow for longer flights
         - Recording of flight statistics after each armed: max G-Force, start + stop battery voltage, etc.
         - Add "last received" (in miliseconds) to telemetry, tracking how long it has been since a control command (or anything from transmitter) has been received
