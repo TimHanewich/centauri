@@ -18,24 +18,26 @@
     - Tripod
 
 ## Future Improvements to Make
-- Physical design
-    - Command Control Antenna position! (HC-12)
-        - Maybe this one: https://a.co/d/hyoroY7
-        - Or Maybe this one: https://www.amazon.com/dp/B0C1FCZM94
-    - Better VTX, camera, antenna (and good position for antenna!)
-    - Clean up wires
-    - Female plug for battery needs to be pulled in closer
-    - Fix orientation of holes on arm so wires face ESC directly
-    - "Slot" (holder) for ESCs on each arm
-    - A better way to secure the battery
-    - Option to use LiIon batteries instead (18650 or 21700)
-- Software
-    - Reduce baudrate of telemetry to make it more resilient?
-    - "Dump telemetry log" command to delete onboard telemetry + restart
-    - Detailed telemetry recording to local storage
-    - Minimize ongoing telemetry screening?
-    - Increase telemetry buffer size to allow for longer flights
-    - Recording of flight statistics after each armed: max G-Force, start + stop battery voltage, etc.
+- Quadcopter
+    - Physical design
+        - Command Control Antenna position! (HC-12)
+            - Maybe this one: https://a.co/d/hyoroY7
+            - Or Maybe this one: https://www.amazon.com/dp/B0C1FCZM94
+        - Better VTX, camera, antenna (and good position for antenna!)
+        - Clean up wires
+        - Female plug for battery needs to be pulled in closer
+        - Fix orientation of holes on arm so wires face ESC directly
+        - "Slot" (holder) for ESCs on each arm
+        - A better way to secure the battery
+        - Option to use LiIon batteries instead (18650 or 21700)
+    - Software
+        - Reduce baudrate of telemetry to make it more resilient?
+        - "Dump telemetry log" command to delete onboard telemetry + restart
+        - Detailed telemetry recording to local storage
+        - Minimize ongoing telemetry screening?
+        - Increase telemetry buffer size to allow for longer flights
+        - Recording of flight statistics after each armed: max G-Force, start + stop battery voltage, etc.
+        - Add "last received" (in miliseconds) to telemetry, tracking how long it has been since a control command (or anything from transmitter) has been received
 
 ## Notable Commits
 - `b1a1ab5dbd9689bbb8738018d4c9fa073f36ae01` - last commit with asynchronous design for LL-MCU before going to a single, synchronous loop
