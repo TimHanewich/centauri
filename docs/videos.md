@@ -28,6 +28,14 @@
     - 12:03 of this video (flying into distance on Michelle iPhone): https://www.youtube.com/watch?v=oEOU1fnXip0
     - 16:45 of this vidoe (flying by Michelle in curve): https://www.youtube.com/watch?v=oEOU1fnXip0
 
+To download portions of video with yt-dlp: 
+- Downloads between 15:15 and 16:15 (1 minute)
+- Downloads best quality `.mp4` with best quality audio
+- Outputs to `clip_a.mp4`
+```
+yt-dlp --download-sections "*00:15:15-00:16:15" -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" https://www.youtube.com/watch?v=W7-yFK6OCB0 -o clip_a.mp4
+```
+
 ## Video Series
 - **Chapter 1**: Introduction
     - The components
