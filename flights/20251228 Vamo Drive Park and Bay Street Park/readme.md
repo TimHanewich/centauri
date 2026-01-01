@@ -35,3 +35,5 @@ Note: this calculation assumes current consumption is very low while powered on 
 At one point while flying, just after a high-throttle punch out, I noticed horizontal lines appearing on the FPV monitor. These *did not* end up in the recording I don't believe (not sure why not), but they lasted until I turned the FPV monitor off and then on again, then at which they stopped.
 
 According to AI, electrical noise from the motors/ESCs could be the problem... voltage spikes (back EMF) caused that travel back through the power wires into the VTX. Aparently a capacitor could help. See the response [here](https://i.imgur.com/LI3OdGy.png).
+
+Note: those horizontal lines were not like traditional static. It was more like magnification. So not sure if the AI is talking about the same thing here.
