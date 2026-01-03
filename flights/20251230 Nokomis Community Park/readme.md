@@ -10,7 +10,6 @@
     - But for some reason when *flying* not as good range. Better than the last AIO I was using for sure (the one without the antenna), but gets mildly staticy at like 40 meters.
         - **MAYBE THIS IS THE REASON**: according to AI, because this was my first fliht with the new cloverleaf antenna, I am not use to a strong antenna cranking out a signal. That signal could interfere with the HC-12.
     - **The first 7 seconds of the onboard video is me recording on the FPV monitor at that range just to show it!**. The last few seconds of it recording I begin walking back towards.
-- I only used a single battery.
 
 ## Videos
 - [Ground perspective (recorded on GoPro)](https://youtu.be/TPSHuW9jbeE) - *raw, concatenated*
@@ -35,3 +34,6 @@
 - [Telemetry log as .xlsx, with notes on flights](https://github.com/TimHanewich/centauri/releases/download/20/log.xlsx)
 - [Pictures from the day](https://imgur.com/a/0CBYwoW)
     - [This](https://i.imgur.com/g3udS8a.jpeg) was the position of the HC-12's spring antenna that day. Maybe this position had something to do with the poor command range.
+
+## Battery
+I only used a single battery as the quadcopter broke an arm before I had a chance to use the second battery. The battery I used was flown down to 15.4v and consumed 1,505 mAh (that is what it absorbed while charging after).
