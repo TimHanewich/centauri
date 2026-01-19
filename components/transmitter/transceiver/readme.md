@@ -10,8 +10,8 @@ The platform is intentionally simple, consisting of three main components:
 
 ## 3D-Printed Base
 To make assembly easier, I designed a compact 3D‑printed mount that secures the Raspberry Pi Pico and HC‑12 together. You can download the design below:
-- [**V1** (use the HC-12's spring antenna)](https://github.com/TimHanewich/centauri/releases/download/2/transceiver_platform.stl)
-- **V2**, use a separate 433 MHz antenna
+- [**V1** (uses the HC-12's spring antenna)](https://github.com/TimHanewich/centauri/releases/download/2/transceiver_platform.stl)
+- **V2** (uses a separate 433 MHz antenna)
     - [Platform base](https://github.com/TimHanewich/centauri/releases/download/23/transceiver_plattform_v2.stl)
     - [Antenna base](https://github.com/TimHanewich/centauri/releases/download/23/antenna_base.stl)
     - You can also download the raw blender iterative files as I designed this [here](https://github.com/TimHanewich/centauri/releases/download/24/transceiver_platform_v2.zip).
