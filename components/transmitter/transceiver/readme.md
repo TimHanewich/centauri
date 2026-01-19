@@ -16,4 +16,4 @@ To make assembly easier, I designed a compact 3D‑printed mount that secures th
     - [Antenna base](https://github.com/TimHanewich/centauri/releases/download/23/antenna_base.stl)
     - You can also download the raw blender iterative files as I designed this [here](https://github.com/TimHanewich/centauri/releases/download/24/transceiver_platform_v2.zip).
 
-Once the platform is assembled, flash the required firmware files from [./src/transceiver/](./src/transceiver/) onto the Pico to complete setup.
+Once the platform is assembled, flash the required firmware files from [./src/](./src/) onto the Pico to complete setup.
