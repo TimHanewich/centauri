@@ -56,4 +56,4 @@
 - `441092dd6d612117bf2bb693eeb86aabf4128330` - final commit that contains the handheld transmitter code and data (later removed due to giving up on this effort for now)
 
 ## Misc. Tips
-- [How to concatenate video with ffmpeg](https://copilot.microsoft.com/shares/KxoXheL2Kgo7QkC75ZyW9)
+- [How to concatenate video with ffmpeg](https://copilot.microsoft.com/shares/KxoXheL2Kgo7QkC75ZyW9) (`ffmpeg -f concat -i files.txt -c copy all.mp`)
