@@ -3,9 +3,11 @@ import csv
 
 # get the path of the log file
 path_log:str = input("Path of log file? ")
+path_log = path_log.replace("\"", "")
 
 # get the path of the output file (csv)
 path_csv:str = input("Path of output CSV file? ")
+path_csv = path_csv.replace("\"", "")
 
 # extract data from the file
 f = open(path_log, "rb")
