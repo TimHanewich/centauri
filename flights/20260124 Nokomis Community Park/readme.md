@@ -49,3 +49,27 @@ If I had to guess on the true cause, I would guess it is a combination of all th
 
 ## Files
 - [Raw telemetry log](https://github.com/TimHanewich/centauri/releases/download/28/log) (contains other flights from previous too)
+
+## Fresnel Zone Calculations
+
+### At Point of Crash at 2:48 in Telemetry
+![crash location](https://i.imgur.com/iKJkKpb.png)
+
+Crash was probably about 31 meters out.
+
+Radius of the fresnel zone at center is ~7.6 ft at this distance
+
+![fresnel calc](https://i.imgur.com/H4xMi9o.png)
+
+Recommendation I have seen calculated by AI is the receiver needs to be at least 1.4 meters (4.6 ft) off the ground at this distnace
+
+### At Max Distance in Field (walking test I did)
+![distance](https://i.imgur.com/TwDHx3g.png)
+
+About 100 meters out.
+
+Radius of fresnel zone at center is ~13.6 ft at this distance.
+
+![freshnel calc](https://i.imgur.com/XuDZiL5.png)
+
+[Recommendation from AI based on calculations](https://gemini.google.com/share/849f778bb79a) is, at 100 meters away and on the 433 MHz band, receiver + transmitter need to be **2.5 meters** (**8.2 feet**) above the ground at least! During my walking test (see [this video at 2:54](https://youtu.be/ar4hZ_MQKu0?t=174)) I was holding it chest height, so maybe ~4 ft. Which explains why it was cutting in and out.
