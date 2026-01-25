@@ -33,7 +33,7 @@ If I had to guess on the true cause, I would guess it is a combination of all th
 ## Next Steps:
 - **For debugging purposes**: Add "last received (ms)" property into telemetry to track how recently a valid control packet was received. This will important to look back at to see how much were dropping when.
 - **For debugging purposes**: MAYBE build in like "range test" mode on drone... where the onboard LED instead blinks based on good command receive rate (i.e. > 15 Hz), so it is easier to tell when it cuts out
-- **To fix this**: Buy better quality 433 MHz radio antennas. Perhaps these ones aren't resonant at 433 MHz
+- **To fix this**: Buy better quality 433 MHz radio antennas. Perhaps the rubber ducky ones I was using aren't resonant at 433 MHz
     - https://a.co/d/g7YIyoq
     - https://a.co/d/4ahDuLe
     - https://a.co/d/97MMvc5
