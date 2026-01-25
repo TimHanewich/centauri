@@ -61,7 +61,7 @@ Radius of the fresnel zone at center is ~7.6 ft at this distance
 
 ![fresnel calc](https://i.imgur.com/H4xMi9o.png)
 
-Recommendation I have seen calculated by AI is the receiver needs to be at least 1.4 meters (4.6 ft) off the ground at this distnace
+Recommendation I have seen calculated by AI is the receiver needs to be at least **1.4 meters** (**4.6 ft**) off the ground at this distnace
 
 ### At Max Distance in Field (walking test I did)
 ![distance](https://i.imgur.com/TwDHx3g.png)
