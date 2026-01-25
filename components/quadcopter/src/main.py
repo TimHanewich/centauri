@@ -316,7 +316,7 @@ yaw_last_i:int = 0
 yaw_last_error:int = 0
 
 # declare variables that serve for storing telemetry
-telemetry_packet_store:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\n')      # array that we will repopulate with telemetry data (while in flight) intended to be stored to local flash storage later, once disarmed
+telemetry_packet_store:bytearray = bytearray(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\r\n')          # array that we will repopulate with telemetry data (while in flight) intended to be stored to local flash storage later, once disarmed
 temp_telemetry_storage_len:int = 25000                                                                                                     # declare length of the temporary storage
 temp_telemetry_storage:bytearray = bytearray(temp_telemetry_storage_len)                                                                   # create the fixed-length bytearray for storing telemetry while in flight (fast)
 temp_telemetry_storage_mv:memoryview = memoryview(temp_telemetry_storage)                                                                  # create a memoryview of that temp storage array for faster copying into later on
@@ -730,7 +730,7 @@ try:
             # pack it
             # takes ~460 us, uses 0 bytes of new memory
             # note: while calling this function below takes > 400 us, it takes only around 200 within the function. Maybe 200 us wasted by calling a function. Can save time running it inline below.
-            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_gforce, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, telemetry_packet_store)
+            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_gforce, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, control_input_last_received_ticks_ms, telemetry_packet_store)
 
             # Record it by adding it to the temporary memory buffer we have going while in flight
             # takes ~490 us, uses 0 bytes of new memory. I tried slicing via memoryview and array itself and that takes much longer - like 2,000 us! I also tried storing the len(telemetry_packet_store) and reusing it... doesnt do anything.
