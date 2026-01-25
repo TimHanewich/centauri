@@ -80,7 +80,7 @@ def unpack_settings_update(data:bytes) -> dict:
 
 ##### PACKING DATA TO BE SENT TO THE CONTROLLER #####
 
-def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, gforce:int, input_throttle:int, input_pitch:int, input_roll:int, input_yaw:int, m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, lrecv_ms:int, into:bytearray) -> None:
+def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_rate:int, pitch_angle:int, roll_angle:int, gforce:int, input_throttle:int, input_pitch:int, input_roll:int, input_yaw:int, m1_throttle:int, m2_throttle:int, m3_throttle:int, m4_throttle:int, lrecv_ago_ms:int, into:bytearray) -> None:
     """
     Packs telemetry into an existing bytearray.
 
@@ -105,7 +105,7 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     m2_throttle between 0 and 100
     m3_throttle between 0 and 100
     m4_throttle between 0 and 100
-    lrecv_ms between 0 and 2,550 (max is 2,550 ms) - this is meant to track how long ago, in ms, a command packet was recevied
+    lrecv_ago_ms between 0 and 2,550 (max is 2,550 ms) - this is meant to track how long ago, in ms, a command packet was recevied
     """
 
     # ensure the provided bytearray is big enough
@@ -157,11 +157,11 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     # but we will "encode" it as ms, in units of 10. 
     # so a value of 1 would be 10 ms, a value of 8 would be 80 ms, a value of 123 would be 1,230 ms, etc.
     # by doing this, this enables us to express 2,550 ms (over two seconds)
-    if lrecv_ms < 0:
-        lrecv_ms = 0
-    elif lrecv_ms > 2550:
-        lrecv_ms = 2550
-    lrecv_byte:int = (lrecv_ms + 5) // 10       # add 5 so the integer divison will round up if needed
+    if lrecv_ago_ms < 0:
+        lrecv_ago_ms = 0
+    elif lrecv_ago_ms > 2550:
+        lrecv_ago_ms = 2550
+    lrecv_ago_byte:int = (lrecv_ago_ms + 5) // 10       # add 5 so the integer divison will round up if needed
 
     # now, assign values to their positions
 
@@ -198,7 +198,7 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
     into[17] = m4_throttle
 
     # last recv
-    into[18] = lrecv_byte
+    into[18] = lrecv_ago_byte
 
     # no need to do \r\n at the end as we assume that is already set as the last two bytes of the into byte array
 
