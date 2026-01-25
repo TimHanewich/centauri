@@ -727,10 +727,13 @@ try:
             packable_m3_throttle:int = (m3_pwm_pw - 1000000) // 10000                 # express between 0 and 100
             packable_m4_throttle:int = (m4_pwm_pw - 1000000) // 10000                 # express between 0 and 100
 
+            # prepare packet last received ago
+            lrecv_ago_ms:int = time.ticks_diff(time.ticks_ms(), control_input_last_received_ticks_ms)
+
             # pack it
             # takes ~460 us, uses 0 bytes of new memory
             # note: while calling this function below takes > 400 us, it takes only around 200 within the function. Maybe 200 us wasted by calling a function. Can save time running it inline below.
-            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_gforce, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, control_input_last_received_ticks_ms, telemetry_packet_store)
+            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_gforce, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, lrecv_ago_ms, telemetry_packet_store)
 
             # Record it by adding it to the temporary memory buffer we have going while in flight
             # takes ~490 us, uses 0 bytes of new memory. I tried slicing via memoryview and array itself and that takes much longer - like 2,000 us! I also tried storing the len(telemetry_packet_store) and reusing it... doesnt do anything.
