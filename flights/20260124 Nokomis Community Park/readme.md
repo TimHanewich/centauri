@@ -36,7 +36,7 @@ If I had to guess on the true cause, I would guess it is a combination of all th
 - **To fix this**: Buy better quality 433 MHz radio antennas. Perhaps these ones aren't resonant at 433 MHz
 - **To fix this**: Investigate dropping over-the-air baudrate on HC-12s to minimum needed to support 20 Hz command control refresh rate
     - This won't be possible. See [this research](https://x.com/TimHanewich/status/2015243980959588374)
-- **To fix this**: ensure the HC-12 being used by the PC transmitter (attache to transceiver platform) is still on correct channel, full power, FU3 mode.
+- **To fix this**: ensure the HC-12 being used by the PC transmitter (attache to transceiver platform) is still on correct channel, full power, FU3 mode, AND the transmission power isn't reduced due to wear and tear on it (compare to another?)
 
 ## Videos
 - [GoPro](https://youtu.be/ar4hZ_MQKu0) (raw concatenated)
