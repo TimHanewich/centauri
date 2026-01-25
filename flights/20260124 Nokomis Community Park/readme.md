@@ -46,3 +46,6 @@ If I had to guess on the true cause, I would guess it is a combination of all th
 - Onboard (raw concatenated)
     - [On YouTube](https://youtu.be/pzK3nCJYQHY)
     - [Raw download](https://github.com/TimHanewich/centauri/releases/download/27/all.avi)
+
+## Files
+- [Raw telemetry log](https://github.com/TimHanewich/centauri/releases/download/28/log) (contains other flights from previous too)
