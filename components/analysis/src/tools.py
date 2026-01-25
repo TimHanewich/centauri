@@ -32,4 +32,8 @@ def unpack_packet(data:bytes) -> dict:
     m3_throttle:int = data[16]
     m4_throttle:int = data[17]
 
-    return {"ticks_ms": ticks_ms, "vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle, "gforce": gforce, "input_throttle": input_throttle, "input_pitch": input_pitch, "input_roll": input_roll, "input_yaw": input_yaw, "m1_throttle": m1_throttle, "m2_throttle": m2_throttle, "m3_throttle": m3_throttle, "m4_throttle": m4_throttle}
+    # last received command control pack, in ms ago
+    # it is encoded in increments of 10, so multiply by 10!
+    lrecv_ms:int = data[18] * 10
+
+    return {"ticks_ms": ticks_ms, "vbat": vbat, "pitch_rate": pitch_rate, "roll_rate": roll_rate, "yaw_rate": yaw_rate, "pitch_angle": pitch_angle, "roll_angle": roll_angle, "gforce": gforce, "input_throttle": input_throttle, "input_pitch": input_pitch, "input_roll": input_roll, "input_yaw": input_yaw, "m1_throttle": m1_throttle, "m2_throttle": m2_throttle, "m3_throttle": m3_throttle, "m4_throttle": m4_throttle, "lrecv_ms": lrecv_ms}

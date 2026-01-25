@@ -28,7 +28,7 @@ print(str(len(packets)) + " packets unpacked")
 # construct into a CSV file
 print("Preparing CSV...")
 rows:list[list] = []
-rows.append(["Seconds", "Battery Voltage", "Pitch Rate", "Roll Rate", "Yaw Rate", "Pitch Angle", "Roll Angle", "G-Force", "Input Throttle", "Input Pitch", "Input Roll", "Input Yaw", "M1 Throttle", "M2 Throttle", "M3 Throttle", "M4 Throttle"]) # append headers
+rows.append(["Seconds", "Battery Voltage", "Pitch Rate", "Roll Rate", "Yaw Rate", "Pitch Angle", "Roll Angle", "G-Force", "Input Throttle", "Input Pitch", "Input Roll", "Input Yaw", "M1 Throttle", "M2 Throttle", "M3 Throttle", "M4 Throttle", "lrecv_ms"]) # append headers
 for packet in packets:
 
     # construct this row
@@ -49,6 +49,7 @@ for packet in packets:
     newrow.append(packet["m2_throttle"])
     newrow.append(packet["m3_throttle"])
     newrow.append(packet["m4_throttle"])
+    newrow.append(packet["lrecv_ms"])
 
     # append to rows
     rows.append(newrow)
