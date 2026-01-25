@@ -49,6 +49,8 @@ If I had to guess on the true cause, I would guess it is a combination of all th
 
 ## Files
 - [Raw telemetry log](https://github.com/TimHanewich/centauri/releases/download/28/log) (contains other flights from previous too)
+- [Unpacked telemetry log, as CSV](https://github.com/TimHanewich/centauri/releases/download/29/log.csv)
+- [Telemetry log, as .xlsx, with some play-by-play commentary of crash](https://github.com/TimHanewich/centauri/releases/download/29/log.xlsx)
 
 ## Fresnel Zone Calculations
 
