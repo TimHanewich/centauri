@@ -34,6 +34,9 @@ If I had to guess on the true cause, I would guess it is a combination of all th
 - **For debugging purposes**: Add "last received (ms)" property into telemetry to track how recently a valid control packet was received. This will important to look back at to see how much were dropping when.
 - **For debugging purposes**: MAYBE build in like "range test" mode on drone... where the onboard LED instead blinks based on good command receive rate (i.e. > 15 Hz), so it is easier to tell when it cuts out
 - **To fix this**: Buy better quality 433 MHz radio antennas. Perhaps these ones aren't resonant at 433 MHz
+    - https://a.co/d/g7YIyoq
+    - https://a.co/d/4ahDuLe
+    - https://a.co/d/97MMvc5
 - **To fix this**: Investigate dropping over-the-air baudrate on HC-12s to minimum needed to support 20 Hz command control refresh rate
     - This won't be possible. See [this research](https://x.com/TimHanewich/status/2015243980959588374)
 - **To fix this**: ensure the HC-12 being used by the PC transmitter (attache to transceiver platform) is still on correct channel, full power, FU3 mode, AND the transmission power isn't reduced due to wear and tear on it (compare to another?)
