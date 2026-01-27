@@ -1,4 +1,5 @@
 # Antennas
+[This video](https://www.youtube.com/watch?v=cZ9BEub_OlI) is excellent in showing how to use [the NanoVNA I purchased](https://a.co/d/0T8NOmV)!
 
 ## Testing Rubber Ducky Antennas with NanoVNA on Jan 26, 2026
 Testing this [433 MHz antenna pair](https://a.co/d/9YqzHMi) I ordered on January 15, 2026.
