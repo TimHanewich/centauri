@@ -13,3 +13,16 @@ Testing this [433 MHz antenna pair](https://a.co/d/9YqzHMi) I ordered on January
     - 6.032 SWR @ 432 MHz (approx 433 MHz)
     - **This one is the problem!**
     - I *believe* this is the one I was using as the transmitter, though I'm not 100% sure (it is best to use the *good* one as the sender, *bad* one as the receiver)
+
+## Testing New Antennas on Jan 28, 2026
+- I purchased two more [433 MHz rubber ducky antennas](https://a.co/d/9YqzHMi). Both performed *terribly* out of the box:
+    - Antenna 3: 
+        - Peak resonance: 1.312 SWR @ 386 MHz
+        - 6.168 SWR @ 433 MHz
+    - Antenna 4:
+        - Peak resonance: 1.038 SWR @ 368 MHz
+        - 5.4 SWR @ 433 MHz
+- The [POBADY 433 MHz Atnenna](https://a.co/d/bQEKdQH)
+    - 1.144 SWR @ 433 MHz (*this is great!*)
+    - And low SWR across a wide spectrum (it is a broad band antenna)
+    - [Result images](https://imgur.com/a/eYd0mdL)
