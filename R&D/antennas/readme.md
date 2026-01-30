@@ -26,3 +26,7 @@ Testing this [433 MHz antenna pair](https://a.co/d/9YqzHMi) I ordered on January
     - 1.144 SWR @ 433 MHz (*this is great!*)
     - And low SWR across a wide spectrum (it is a broad band antenna)
     - [Result images](https://imgur.com/a/eYd0mdL)
+
+
+## Antennas Considering Buying
+- [ANT-4HEL2-SMA](https://www.digikey.com/en/products/detail/rf-solutions/ANT-4HEL2-SMA/5845733)
