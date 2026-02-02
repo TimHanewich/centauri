@@ -1,4 +1,4 @@
-# Flying at Nokokmis Community Park on January 31, 2026
+# NEXT FLIGHT at Nokokmis Community Park
 
 ## Changes in this flight from last time:
 - SWR-tested antennas (threw out a total dud I was previously using)
