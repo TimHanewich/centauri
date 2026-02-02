@@ -37,4 +37,10 @@ I purchased a two pack of [these antennas](https://a.co/d/i0L4Aux) on January 28
     - 433 MHz = 1.864 SWR
 
 ## Antennas Considering Buying
-- [ANT-4HEL2-SMA](https://www.digikey.com/en/products/detail/rf-solutions/ANT-4HEL2-SMA/5845733)
+- [ANT-4HEL2-SMA](https://www.digikey.com/en/products/detail/rf-solutions/ANT-4HEL2-SMA/5845733) - $5.16, < 2 SWR
+- [ANT-433-PW-QW-UFL](https://www.digikey.com/en/products/detail/te-connectivity-linx/ANT-433-PW-QW-UFL/4747971) - $11.79, 1.095 SWR
+- [ANT-433-CW-RH](https://www.digikey.com/en/products/detail/te-connectivity-linx/ANT-433-CW-RH/340117) - $8.02, 1.861 SWR
+- [FLEXI-SMA-433](https://www.digikey.com/en/products/detail/rf-solutions/FLEXI-SMA-433/2781767) - $5.34, 1.35 SWR
+- [TI.10.0111](https://www.digikey.com/en/products/detail/taoglas-limited/TI-10-0111/3131969) - $5.94 compact, 1.5 SWR, *excellent* data sheet
+- [ANT-433-MHW-SMA-S Dipole](https://www.digikey.com/en/products/detail/te-connectivity-linx/ANT-433-MHW-SMA-S/1964011) - $14.11, 1.18 SWR
+- [ANT-STUB-433SM](https://www.digikey.com/en/products/detail/rf-solutions/ANT-STUB-433SM/5845731) - $6.50 compact, 1.2 SWR 
