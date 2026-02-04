@@ -11,7 +11,8 @@
     - 3D-Printed body
     - Components used
     - Wiring diagram
-- *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 2: Introduction to Ecosystem Components* (introduce transmitter, quadcopter, analysis)
+- *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 2: Introduction to Ecosystem Components* 
+    - introduce transmitter, quadcopter, analysis
 - *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 3: Communication Protocol*
 - *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 4: Transmitter*
 - *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 5: Flight Controller*
