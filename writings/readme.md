@@ -16,6 +16,7 @@
 - *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 3: Communication Protocol*
 - *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 4: Transmitter*
 - *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 5: Flight Controller*
+    - Heavily resource-constrained environment (MicroPyton vs. C)
 - *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 6: Radio Antennas*
 - *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 7: Analysis Script*
 - *How I Built an Entire Quadcopter Ecosystem from Scratch, Chapter 8: A Lesson in Design Excellence*
