@@ -1,9 +1,9 @@
 # Flying at Nokokmis Community Park on February 7, 2026
 
 ## Changes in this flight from last time:
-- New Antennas from Digikey
-    - Tx Antenna ~1.5 SWR
-    - Rx Antenna ~1.1 SWR
+- First flight using new Antennas from Digikey
+    - Tx Antenna used by transmitter = [FLEXI-SMA-433](https://www.digikey.com/en/products/detail/rf-solutions/FLEXI-SMA-433/2781767), ~1.5 SWR in my NanoVNA tests.
+    - Rx Antenna on Drone = [TI.10.0111](https://www.digikey.com/en/products/detail/taoglas-limited/TI-10-0111/3131969), ~1.1 SWR in my NanoVNA tests.
 - Drone now has "Last Received" recording to telemetry
 - Going to fly higher to avoid fresnel zone obstruction
 
