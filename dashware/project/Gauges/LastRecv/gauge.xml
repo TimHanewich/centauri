@@ -1,0 +1,18 @@
+<Gauge version="3" x="0" y="0" readOnly="False" width="371.7462" height="371.7462" transparency="1" thumbnailBackgroundTransparency="1" thumbnailBackgroundRed="135" thumbnailBackgroundGreen="206" thumbnailBackgroundBlue="235">
+  <Components>
+    <Text x="0" y="0" text="LRECV, ms:" fontRectWidth="224.9065" fontRectHeight="68.77305" fontFace="Arial" fontSize="22.75087" fontBold="False" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255" />
+    <DynamicText x="169.1445" y="-1.858734" displayType="Decimal" decimalPrecision="0" showPlus="False" restrictRange="False" restrictedMinValue="-3.40282346638529E+38" restrictedMaxValue="3.40282346638529E+38" convertFromGMT="True" fontRectWidth="92.93655" fontRectHeight="46.46828" fontFace="Arial" fontSize="26.02224" fontBold="True" fontItalic="False" fontUnderline="False" fontDirection="horizontal" fontAlign="left" fontVAlign="top" fontTransparency="1" fontRed="255" fontGreen="255" fontBlue="255">
+      <Inputs>
+        <Input name="Value">LRECV_MS</Input>
+      </Inputs>
+    </DynamicText>
+    <Bar x="8" y="37" width="243" height="25" minValue="0" maxValue="2550" direction="LeftToRight" startTransparency="1" startRed="0" startGreen="255" startBlue="0" endTransparency="1" endRed="254" endGreen="1" endBlue="1">
+      <Inputs>
+        <Input name="Value">LRECV_MS</Input>
+      </Inputs>
+    </Bar>
+  </Components>
+  <Inputs>
+    <Input category="Generic" name="Other" fromFastestLapSamePos="False">LRECV_MS</Input>
+  </Inputs>
+</Gauge>

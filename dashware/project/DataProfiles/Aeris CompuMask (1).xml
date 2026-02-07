@@ -1,0 +1,102 @@
+<DataProfile version="2" readOnly="False" startFinishDistanceThreshold="40" showDistanceThreshold="True" ignoreFirstLap="True" ignoreLastLap="True" lapTimeHoldSecs="5" isChaseCamData="False" isAimData="False" isDriftBoxData="False" sortByTime="False" autoSync="False" autoSyncOffset="0">
+  <HeaderLines>
+    <HeaderLineIndex>36</HeaderLineIndex>
+  </HeaderLines>
+  <DataStartLineIndex>37</DataStartLineIndex>
+  <DataValueSeparators>,;	</DataValueSeparators>
+  <UseEuroDecimalFormat>False</UseEuroDecimalFormat>
+  <FileLineMatchers>
+    <FileLineMatcher dataLineIndex="0" matchText="Life Time Dive" matchMode="Contains" ignoreCase="True" />
+  </FileLineMatchers>
+  <Calculators>
+    <LapSummaryCalculator>
+      <InputColumns>
+        <InputColumn>Depth(FT)</InputColumn>
+      </InputColumns>
+      <OutputColumns>
+        <OutputColumn>Min Depth(FT)</OutputColumn>
+        <OutputColumn>Max Depth(FT)</OutputColumn>
+        <OutputColumn>Avg Depth(FT)</OutputColumn>
+      </OutputColumns>
+    </LapSummaryCalculator>
+    <DeltaValueCalculator>
+      <InputColumns>
+        <InputColumn>Elapsed Dive Time (hr:min)</InputColumn>
+      </InputColumns>
+      <OutputColumns>
+        <OutputColumn>Delta Time</OutputColumn>
+      </OutputColumns>
+    </DeltaValueCalculator>
+    <DeltaValueCalculator>
+      <InputColumns>
+        <InputColumn>Depth(FT)</InputColumn>
+      </InputColumns>
+      <OutputColumns>
+        <OutputColumn>Delta Depth(FT)</OutputColumn>
+      </OutputColumns>
+    </DeltaValueCalculator>
+    <MathCalculator mathOperation="Divide" parameter="0" useConstantParameter="False">
+      <InputColumns>
+        <InputColumn>Delta Depth(FT)</InputColumn>
+        <InputColumn>Delta Time</InputColumn>
+      </InputColumns>
+      <OutputColumns>
+        <OutputColumn>Calculated Ascent Rate (FPS)</OutputColumn>
+      </OutputColumns>
+    </MathCalculator>
+    <MathCalculator mathOperation="Multiply" parameter="60" useConstantParameter="True">
+      <InputColumns>
+        <InputColumn>Calculated Ascent Rate (FPS)</InputColumn>
+        <InputColumn>
+        </InputColumn>
+      </InputColumns>
+      <OutputColumns>
+        <OutputColumn>Calculated Ascent Rate (FPM)</OutputColumn>
+      </OutputColumns>
+    </MathCalculator>
+    <MathCalculator mathOperation="Divide" parameter="60" useConstantParameter="True">
+      <InputColumns>
+        <InputColumn>Air Time Remaining</InputColumn>
+        <InputColumn>
+        </InputColumn>
+      </InputColumns>
+      <OutputColumns>
+        <OutputColumn>Air Time Remaining (mins)</OutputColumn>
+      </OutputColumns>
+    </MathCalculator>
+    <MathCalculator mathOperation="Divide" parameter="60" useConstantParameter="True">
+      <InputColumns>
+        <InputColumn>Dive Time Remaining</InputColumn>
+        <InputColumn>
+        </InputColumn>
+      </InputColumns>
+      <OutputColumns>
+        <OutputColumn>Dive Time Remaining (mins)</OutputColumn>
+      </OutputColumns>
+    </MathCalculator>
+    <MathCalculator mathOperation="Divide" parameter="60" useConstantParameter="True">
+      <InputColumns>
+        <InputColumn>Deco Time (hr:min)</InputColumn>
+        <InputColumn>
+        </InputColumn>
+      </InputColumns>
+      <OutputColumns>
+        <OutputColumn>Deco Time (mins)</OutputColumn>
+      </OutputColumns>
+    </MathCalculator>
+  </Calculators>
+  <ColumnMappings>
+    <ColumnMapping inputColumnText="Elapsed Dive Time" inputColumnMatchMode="Contains" inputColumnIgnoreCase="True" dataCategory="&lt;Required&gt;" dataType="Data Running Time, Seconds" />
+    <ColumnMapping inputColumnText="Depth(FT)" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="True" dataCategory="SCUBA" dataType="Depth (Feet)" />
+    <ColumnMapping inputColumnText="Max Depth(FT)" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="SCUBA" dataType="Max Depth (Feet)" />
+    <ColumnMapping inputColumnText="Calculated Ascent Rate (FPM)" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="SCUBA" dataType="Ascent Rate (Feet / Min)" />
+    <ColumnMapping inputColumnText="Air Time Remaining (mins)" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="SCUBA" dataType="Air Time Remaining (Mins)" />
+    <ColumnMapping inputColumnText="Dive Time Remaining (mins)" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="SCUBA" dataType="Dive Time Remaining (Mins)" />
+    <ColumnMapping inputColumnText="Deco Time (mins)" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="False" dataCategory="SCUBA" dataType="Decompression Time (Mins)" />
+    <ColumnMapping inputColumnText="Stop Depth(FT)" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="True" dataCategory="SCUBA" dataType="Stop Depth (Feet)" />
+    <ColumnMapping inputColumnText="Temperature(F)" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="True" dataCategory="SCUBA" dataType="Water TEmperature (F)" />
+    <ColumnMapping inputColumnText="PO2" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="True" dataCategory="SCUBA" dataType="F02" />
+    <ColumnMapping inputColumnText="Tank" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="True" dataCategory="SCUBA" dataType="Tank Number" />
+    <ColumnMapping inputColumnText="Pressure Reading(PSI)" inputColumnMatchMode="ExactMatch" inputColumnIgnoreCase="True" dataCategory="SCUBA" dataType="Pressure Reading (psi)" />
+  </ColumnMappings>
+</DataProfile>
