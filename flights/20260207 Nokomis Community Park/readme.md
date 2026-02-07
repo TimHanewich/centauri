@@ -13,7 +13,9 @@
 - The new antenna I got, mounted on the drone, did not break at all. Durable in the position I have it in.
 
 ## The Bad
-- I think the position of the antenna on the drone (behind the battery) has something to do with why it crashed... battery got in between transmitter and antenna.
+I think the position of the antenna on the drone (behind the battery) has something to do with why it crashed... battery got in between transmitter and antenna.
+
+![img](https://i.imgur.com/etu9DVx.png)
 
 ## Files
 - Log Data
