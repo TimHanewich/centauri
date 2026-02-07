@@ -1,5 +1,9 @@
 # Flying at Nokokmis Community Park on February 7, 2026
 
+Max distance achieved = ~100 meters
+
+![distance](https://i.imgur.com/R0iFyR7.png)
+
 ## Changes in this flight from last time:
 - First flight using new Antennas from Digikey
     - Tx Antenna used by transmitter = [FLEXI-SMA-433](https://www.digikey.com/en/products/detail/rf-solutions/FLEXI-SMA-433/2781767), ~1.5 SWR in my NanoVNA tests.
