@@ -36,9 +36,15 @@ I purchased a two pack of [these antennas](https://a.co/d/i0L4Aux) on January 28
     - Peak resonance @ 445 MHZ = 1.007 SWR
     - 433 MHz = 1.864 SWR
 
-## Antennas Ordered on Feb 2, 2026
-- **For Transmitter**: [FLEXI-SMA-433](https://www.digikey.com/en/products/detail/rf-solutions/FLEXI-SMA-433/2781767) - $5.34, 1.35 SWR
-- **For Drone**: [TI.10.0111](https://www.digikey.com/en/products/detail/taoglas-limited/TI-10-0111/3131969) - $5.94 compact, 1.5 SWR, *excellent* data sheet
+## Antennas Ordered from DigiKey on Feb 2, 2026
+- 2 [FLEXI-SMA-433](https://www.digikey.com/en/products/detail/rf-solutions/FLEXI-SMA-433/2781767) for the Transmitter
+    - #1: [1.5 SWR @ 433 MHz](https://i.imgur.com/Ql5c4SC.jpeg)
+    - #2: 1.45 SWR @ 433 MHZ
+- 4 [TI.10.0111](https://www.digikey.com/en/products/detail/taoglas-limited/TI-10-0111/3131969) for the Receiver (drone)
+    - #1: [1.05 SWR @ 433 MHz](https://i.imgur.com/I65SBzN.jpeg)
+    - #2: 1.7 SWR @ 433 MHz
+    - #3: 2.0 SWR @ 433 MHz
+    - #4: 1.3 SWR @ 433 MHz
 
 ## Other Good Antennas
 - [ANT-4HEL2-SMA](https://www.digikey.com/en/products/detail/rf-solutions/ANT-4HEL2-SMA/5845733) - $5.16, < 2 SWR
