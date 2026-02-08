@@ -49,6 +49,7 @@ If you'd like to customize or experiment with the design, you can download a fol
 - [August 10, 2025 – original Centauri quadcopter design with two MCUs](https://github.com/TimHanewich/centauri/releases/download/1/design.zip)
 - [September 17, 2025 – streamlined Centauri design with a single MCU (Pico), sensors removed, and zip‑tie slots added for securing the battery adapter](https://github.com/TimHanewich/centauri/releases/download/3/centauri-mono.zip)
 - [January 18, 2026 - designing the arm with a port for an SMA mount for an antenna](https://github.com/TimHanewich/centauri/releases/download/22/arm-antenna.zip)
+- [February 7, 2026 - designed a new arm with a SMA port for an antenna on the OUTSIDE of the body (rear)](https://github.com/TimHanewich/centauri/releases/download/35/arm-antenna.zip)
 
 ## Wiring Diagram
 ![wiring](https://i.imgur.com/t5JQn0k.png)
