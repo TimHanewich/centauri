@@ -39,6 +39,7 @@ I think the position of the antenna on the drone (behind the battery) has someth
     - [Raw video file #2](https://github.com/TimHanewich/centauri/releases/download/30/gopro_2.MP4)
     - [Raw video file #3](https://github.com/TimHanewich/centauri/releases/download/30/gopro_3.MP4)
     - [Raw video file #4](https://github.com/TimHanewich/centauri/releases/download/30/gopro_4.MP4)
+    - Crash, zoomed in: [on YouTube](https://youtu.be/z0l4qu6nIvA), [direct download](https://github.com/TimHanewich/centauri/releases/download/36/crash2.mp4)
 - [Pictures from the day](https://imgur.com/a/suUgz3t)
 
 ## Battery Usage
