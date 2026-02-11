@@ -10,4 +10,9 @@
 - Transmitter side
     - Tx HC-12 has weakened
     - Tx HC-12 not configured to transmit at full power? (my fault not configuring it correctly)
-    - The HC-12 is not being fed with enough current (i.e. USB power supply or [CP2102 USB to UART module](https://a.co/d/4rJMLjy) is not supplying it with enough current to transmit at full power)
+    - Power Supply issues
+        - [CP2102 USB to UART module](https://a.co/d/4rJMLjy) is not supplying it with enough current to transmit at full power 
+        - the laptop's USB port is not supplying enough current at all (not 500 mA expected)
+        - The energy supply the laptop is supplying has interferance in it
+    - The ufl to SMA connector I am using to connect the antenna to the HC-12 is cheap and "leaking" energy
+    - The proximity of it to the laptop is causing interferance
