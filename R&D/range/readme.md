@@ -1,0 +1,13 @@
+## Possible Causes of Range Issues
+- Fresnel zone interferance
+- No ground planes used
+- Drone side
+    - LiPo battery blocking LoS
+    - LiPo battery proximity to antenna
+    - The [antennas proximity to the battery's wire leads](https://i.imgur.com/1P4goUB.jpeg) is causing interferance
+    - The HC-12 it getting a 5v supply with interferance from the ESCs (dirty) - maybe a capacitor would help? (perhaps this is unlikely as it isn't *sending* while flying, only passively *receiving*, which takes barely any current I think)
+- Transmitter side
+    - Are the HC-12's clones?
+    - Tx HC-12 has weakened
+    - Tx HC-12 not configured to transmit at full power? (my fault not configuring it correctly)
+    - The HC-12 is not being fed with enough current (i.e. USB power supply or [CP2102 USB to UART module](https://a.co/d/4rJMLjy) is not supplying it with enough current to transmit at full power)
