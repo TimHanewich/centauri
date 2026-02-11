@@ -5,10 +5,10 @@
 - Drone side
     - LiPo battery blocking LoS
     - LiPo battery proximity to antenna
-    - The [antennas proximity to the battery's wire leads](https://i.imgur.com/1P4goUB.jpeg) is causing interferance
+    - The [battery's wire leads touching the antenna](https://i.imgur.com/1P4goUB.jpeg) is causing interferance
     - The HC-12 it getting a 5v supply with interferance from the ESCs (dirty) - maybe a capacitor would help? (perhaps this is unlikely as it isn't *sending* while flying, only passively *receiving*, which takes barely any current I think)
 - Transmitter side
-    - Tx HC-12 has weakened
+    - Tx HC-12 has weakened (*can I use the RTL-SDR to compare Tx power to a new HC-12?*)
     - Tx HC-12 not configured to transmit at full power? (my fault not configuring it correctly?)
     - Power Supply issues
         - [CP2102 USB to UART module](https://a.co/d/4rJMLjy) is not supplying it with enough current to transmit at full power 
@@ -31,5 +31,15 @@ It is a completely open field with good line of sight.
 The Rx antenna has line of sight to the Tx antenna
 No intentional ground planes are used
 
+What do you expect the range to be in this scenario?
+
+I am only getting about 100 meters until the drone's receiving of the command data gets spotty and eventually cuts out entirely. Why would this be do you think?
+
+Here are some potential reasons I thought of. What do you think? What do you recommend I troubleshoot next to solve this problem?
+
+[COPY + PASTE IN LIST FROM ABOVE]
 
 ```
+
+- [Gemini Response](https://gemini.google.com/share/389ce79c14b3)
+- [Copilot Response](https://copilot.microsoft.com/shares/F1aJfBNsrYznqPRJXsSJq)
