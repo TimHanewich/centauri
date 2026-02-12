@@ -43,3 +43,6 @@ Here are some potential reasons I thought of. What do you think? What do you rec
 
 - [Gemini Response](https://gemini.google.com/share/389ce79c14b3)
 - [Copilot Response](https://copilot.microsoft.com/shares/F1aJfBNsrYznqPRJXsSJq)
+
+## Files
+- [Fresnel Zone Calculator `.xlsx`](https://github.com/TimHanewich/centauri/releases/download/43/fresnel_calculator.xlsx)
