@@ -36,7 +36,7 @@ So what gives? This is *possibly* because there is no load on the motors and thu
 
 ## Tests to Perform
 - Was it just a loose u.fl connection? Or the u.fl connector is not properly connected to the rest (i.e. broken)? Check!
-- Strap it down with props on. Run it at 60% throttle in another room. This is a load test. See if it works. (same pigtail)
+- Strap it down with props on. Run it at 60% throttle in another room. This is a high-current load test. See if it works. (same pigtail)
 - Still not working? **See if it was the POSITION of the antenna**: bring it lower (remove the mast). Put it where it was before. Do same test as above.
 - Still not working? **See if it is the u.fl to SMA connector**: replace with the old 6 inch one.
 
