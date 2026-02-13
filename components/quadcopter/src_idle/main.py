@@ -28,6 +28,9 @@ for _ in range(15):
     led.off()
     time.sleep(0.1)
 
+# LED on
+led.on()
+
 # idle motors
 M1.duty_ns(1_300_000)
 M2.duty_ns(1_300_000)
