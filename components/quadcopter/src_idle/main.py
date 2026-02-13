@@ -31,8 +31,21 @@ for _ in range(15):
 # LED on
 led.on()
 
-# idle motors
-M1.duty_ns(1_300_000)
-M2.duty_ns(1_300_000)
-M3.duty_ns(1_300_000)
-M4.duty_ns(1_300_000)
+# alternate continuously
+while True:
+
+    # idle motors @ 30%
+    M1.duty_ns(1_300_000)
+    M2.duty_ns(1_300_000)
+    M3.duty_ns(1_300_000)
+    M4.duty_ns(1_300_000)
+
+    time.sleep(5.0)
+
+    # turn off for 5 seconds
+    M1.duty_ns(1_000_000)
+    M2.duty_ns(1_000_000)
+    M3.duty_ns(1_000_000)
+    M4.duty_ns(1_000_000)
+
+    time.sleep(5.0)
