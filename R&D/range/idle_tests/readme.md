@@ -61,3 +61,6 @@ I just ran a test in which I monitored the 433 MHz band on a RTL-SDR with the dr
 ```
 
 - [Claude Sonnet 4.5 Extended response](https://claude.ai/share/86e45d70-5896-49d8-a60c-27ac2298a760)
+
+## Solutions
+- [These small ferrite beads](https://a.co/d/0iWIcgy0) are like resistors. Could be easy to use in on a perfboard!
