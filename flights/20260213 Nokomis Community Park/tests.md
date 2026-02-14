@@ -9,6 +9,7 @@
     - *Not needed: in the test above, it worked beautifully even in the mast position*
 - Still not working? **See if it is the u.fl to SMA connector**: replace with the old 6 inch one.
     - *Not needed: in the test above, it worked beautifully even with the new 12-inch u.fl to SMA*
+- Random "ghost" data appearing test: Make lightweight script to put motors at 30% and record all incoming HC-12 data to storage, for like 10 seconds. Then shut down. Just to see if there was "random data bytes" that appeared during this test (first do it without transmitter transmitting and then with it transmitting to see both).
  
 ## Testing at Home
 I brought it home, took props off, tried testing it here.
