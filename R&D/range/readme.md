@@ -18,6 +18,5 @@
     - The ufl to SMA connector I am using to connect the antenna to the HC-12 is cheap and "leaking" energy
     - The proximity of it to the laptop is causing interferance
 
-
 ## Files
 - [Fresnel Zone Calculator `.xlsx`](https://github.com/TimHanewich/centauri/releases/download/43/fresnel_calculator.xlsx)
