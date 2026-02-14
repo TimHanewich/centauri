@@ -27,18 +27,8 @@ This was NOT a case of the transmitter eroneously sending that to it. I had 20-6
 ## Trouble Receiving
 As seen in the data above, it was clear the drone had a very hard time getting clean packets. Even only being ~10 feet away from me on the ground, it struggled so much. So much noise. Again, what was the noise caused by (length of new pigtail vs quality of new pigtail), I don't know, but it is really struggling here to get clean data.
 
-## Testing at Home
-I brought it home, took props off, tried testing it here.
-
-It did very well. With the antenna on the mast, laying on its side. I put it in several rooms away and would throttle up, then down, then up, then down. Never missed a beat.
-
-So what gives? This is *possibly* because there is no load on the motors and thus a minimal amount of current is going through them. But when there is **a lot of current** (during takeoff), that is when the EMI gets too strong and "chokes up" the HC-12 receiving antenna/pigtail.
-
-## Tests to Perform
-- Was it just a loose u.fl connection? Or the u.fl connector is not properly connected to the rest (i.e. broken)? Check!
-- Strap it down with props on. Run it at 60% throttle in another room. This is a high-current load test. See if it works. (same pigtail)
-- Still not working? **See if it was the POSITION of the antenna**: bring it lower (remove the mast). Put it where it was before. Do same test as above.
-- Still not working? **See if it is the u.fl to SMA connector**: replace with the old 6 inch one.
+## DIAGNOSTIC TESTING
+See [here](./tests.md) for some tests I carried out to try to figure out why this happened!
 
 ## Misc. Resouces
 - [Claude chat about this](https://claude.ai/share/24a049b8-586d-4376-b264-95d6991e2178)
