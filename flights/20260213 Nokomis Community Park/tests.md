@@ -17,7 +17,7 @@ It did very well. With the antenna on the mast, laying on its side. I put it in 
 
 So what gives? This is *possibly* because there is no load on the motors and thus a minimal amount of current is going through them. But when there is **a lot of current** (during takeoff), that is when the EMI gets too strong and "chokes up" the HC-12 receiving antenna/pigtail.
 
-## Props-On Punch Out (High Current) Tests on February 13, 2026
+## Props-On Tethered Punch Out (High Current) Tests on February 13, 2026
 Following the [this 99% anamoly](https://youtu.be/4SKdvdp2M-Y?t=422), I performed a test in which I zip-tied down the drone to something heavy to hold it down, with props on (to ensure there is a load and a lot of current being drawn).
 
 I did this to see if there was an issue the drone has in *receiving* new command data while in heavy load. (i.e. does the noise become so great that it can't get a "lower throttle!" update).
