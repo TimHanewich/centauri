@@ -23,10 +23,13 @@ Following the [this 99% anamoly](https://youtu.be/4SKdvdp2M-Y?t=422), I performe
 I did this to see if there was an issue the drone has in *receiving* new command data while in heavy load. (i.e. does the noise become so great that it can't get a "lower throttle!" update).
 
 Here are the telemetry logs from that test:
-- [Raw Log]()
+- [Raw Log](https://github.com/TimHanewich/centauri/releases/download/46/log)
+- [As .xlsx file](https://github.com/TimHanewich/centauri/releases/download/46/punch_out_tests_log.xlsx)
 
 There was absolutely no problem. I had the transmitter in my office and the drone in my bedroom, further than it was in the anomaly mentioned above. I had the max at 60% throttle, then 80%, then 100%. All with PID values on! Not once did it "choke up" and not be able to receive more telemetry. Even when punching out 100% continuously for seconds. From an Rx perspective, it seems to have passed with flying colors....
 
 I did this for a few minutes. It did quite well. But because of how much current was passing through the leads, it did eventually melt. Photos [here](https://imgur.com/a/usOLZZ0).
 
-So I'm somewhat bewildered in what happened today at the park. Bizarre how it glitched to 99% and then didn't receive input for several seconds. Could it have been a hiccup on the transmitter side? Doubt it...
+So I'm bewildered in what happened today at the park. Bizarre how it glitched to 99% and then didn't receive input for several seconds. Could it have been a hiccup on the transmitter side? Doubt it...
+
+Look at how good the data is in the log! Even in high-load punchouts (props on, full 100% throttle), it only had minor issues receiving command data. Several bedrooms away! Today it had an issue several feet away!
