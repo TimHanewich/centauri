@@ -16,6 +16,7 @@ The air was also quite foggy that day. ~83% humidity.
     - [As .xlsx file with notes](https://github.com/TimHanewich/centauri/releases/download/45/log.xlsx)
 - [Onboard video](https://github.com/TimHanewich/centauri/releases/download/45/onboard.AVI)
 - [GoPro video](https://youtu.be/4SKdvdp2M-Y)
+- [Photos](https://imgur.com/a/QtNrTUH)
 
 ## Throttle Spike!
 As seen in the data below, somehow there was a 99% throttle spike:
