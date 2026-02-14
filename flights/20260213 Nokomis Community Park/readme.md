@@ -31,5 +31,8 @@ As seen in the data above, it was clear the drone had a very hard time getting c
 ## DIAGNOSTIC TESTING
 See [here](./tests.md) for some tests I carried out to try to figure out why this happened!
 
+## Humidity Short Theory
+See [here](./humidity-short-theory.md) on my humidity short theory on why this happened.
+
 ## Misc. Resouces
 - [Claude chat about this](https://claude.ai/share/24a049b8-586d-4376-b264-95d6991e2178)
