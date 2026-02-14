@@ -12,3 +12,10 @@ Look closely at how the drone's Rx code works, particularly the "conveyer belt" 
 So how did the erroneous 99% packet happen? It is possible some garbage data got in front of an actual \r\n terminator and the XOR *happened* to match (1/256 random chance?) that whacko 99% throttle and -32% pitch and 0% roll and 0% yaw.
 
 [This Claude chat](https://claude.ai/share/04fde4ac-4f0f-4162-bd11-726f4a050fc60) was helpful in validating this theory.
+
+## Improvements to make if really believe this to be true
+Must be a "flushing" of the RxBuffer/ProcessBuffer if it gets too big. i.e. if 80% of it is filled, dump it! (probably nothing important in it anyway) There is a risk that it fills entirely and thus stops listening for new packets entirely.
+
+A single-byte XOR checksum may be too simple. Maybe implement another byte, doing the XOR in reverse?
+
+Maybe telemetry recording of how big that process buffer is, or better yet, how many actual BYTES have been received in total... that would be helpful.
