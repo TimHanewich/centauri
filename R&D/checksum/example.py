@@ -14,13 +14,14 @@ data.append(0) # yaw byte 2
 
 
 # dual checksum
-t1 = time.ticks_us()
-checksum1:int = 0b00000000 # start with 0
-checksum2:int = 0b00000000 # start with 0
-for byte in data:
-    checksum1 = checksum1 ^ byte
-    checksum2 = checksum2 ^ checksum1
-t2 = time.ticks_us()
-print("Time, ticks us: " + str(t2 - t1))
-print("Checksum1: " + str(checksum1))
-print("Checksum2: " + str(checksum2))
+for _ in range(10):
+    t1 = time.ticks_us()
+    checksum1:int = 0b00000000 # start with 0
+    checksum2:int = 0b00000000 # start with 0
+    for byte in data:
+        checksum1 = checksum1 ^ byte
+        checksum2 = checksum2 ^ checksum1
+    t2 = time.ticks_us()
+    print("Time, ticks us: " + str(t2 - t1))
+    print("Checksum1: " + str(checksum1))
+    print("Checksum2: " + str(checksum2))
