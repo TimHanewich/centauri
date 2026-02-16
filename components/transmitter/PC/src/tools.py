@@ -37,11 +37,14 @@ def pack_control_packet(throttle:float, pitch:float, roll:float, yaw:float) -> b
     asint16:int = min(max(int(round(aspop * 65535, 0)), 0), 65535) # convert the range from a number between 0 and 65535 (uint16)
     ToReturn.extend(asint16.to_bytes(2, "big")) # pack as 2-bytes using big endian
 
-    # Add XOR-chain-based checksum
-    checksum:int = 0x00 # start with 0
+    # Add 2-byte XOR-chain-based checksum
+    checksum1:int = 0x00 # start with 0
+    checksum2:int = 0x00 # start with 0
     for byte in ToReturn: # for each byte added so far
-        checksum = checksum ^ byte # XOR operation
-    ToReturn.append(checksum)
+        checksum1 = checksum1 ^ byte         # XOR operation on byte
+        checksum2 = checksum2 ^ checksum1    # XOR operation on checksum1 itself
+    ToReturn.append(checksum1)
+    ToReturn.append(checksum2)
 
     # return it
     return bytes(ToReturn)
