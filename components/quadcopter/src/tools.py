@@ -23,7 +23,6 @@ def unpack_control_packet(data:bytes, into:list[int]) -> bool:
     checksum1:int = 0x00 # start at 0
     checksum2:int = 0x00 # start at 0
     for i in range(9): # first 9 bytes (1 header byte, 2 throttle bytes, 2 pitch bytes, 2 roll bytes, 2 yaw bytes)
-        selfchecksum = selfchecksum ^ data[i]
         checksum1 = checksum1 ^ data[i]
         checksum2 = checksum2 ^ checksum1
     if checksum1 != data[9] or checksum2 != data[10]: # if the checksum1 we calculated does NOT match the checksum1 in the data stream OR the checksum2 we calculated does NOT match the checksum2 in the data stream, it did NOT pass the checksum! Could be corrupted data!
