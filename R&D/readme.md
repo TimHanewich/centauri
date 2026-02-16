@@ -55,6 +55,7 @@
 - `fbd5de0de2cc9d7a86db661d32e3ee9e1b32a7ba` - final commit before the handheld RPi converts to event-driven telemetry (away from regular packet-driven)
 - `0e39ab9c6f7535b9b8dad39d55be70867498bd2e` - final commit before the handheld RPi converts BACK to snapshot-driven telemetry
 - `441092dd6d612117bf2bb693eeb86aabf4128330` - final commit that contains the handheld transmitter code and data (later removed due to giving up on this effort for now)
+- `e1d70f56c18497f10c15b8a922afb1352613b059` - final commit with traditional 1-byte over-air checksums and *no* ProcessBuffer dump logic.
 
 ## Misc. Tips
 - [How to concatenate video with ffmpeg](https://copilot.microsoft.com/shares/KxoXheL2Kgo7QkC75ZyW9): `ffmpeg -f concat -i files.txt -c copy all.mp4`
