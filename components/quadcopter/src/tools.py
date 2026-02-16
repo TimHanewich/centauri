@@ -13,9 +13,11 @@ def unpack_control_packet(data:bytes, into:list[int]) -> bool:
     Returns True if the unpack was successful, False if it did not unpack because of the checksum failing to verify or the data was just not long enough.
     """
 
-    # return False right off the bat if the packet is not long enough
-    if len(data) < 10:
-        return False
+    # We previously had in a check here that the provided bytearray is the minimum length needed to be a real packet
+    # but I took that out for small performance gain
+    # why dont we need that?
+    # method I am using is providing an entire fixed-length "ProcessBuffer" to this (i.e. 256 bytes)
+    # so the length of the buffer wil ALWAYS be large enough
 
     # first, validate checksum
     selfchecksum:int = 0x00
