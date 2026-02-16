@@ -1,3 +1,8 @@
+# GOAL OF THIS FILE:
+# Say the ACTUAL command I was sending was throttle anywhere between 29% and 39%, 0% pitch, 0% roll, 0% yaw.
+# What ~99% throttle and ~-32% pitch could slot in to the throtte and pitch bytes but STILL pass the original checksum? 
+# Turns out there are a lot.
+
 def pack_control_packet(throttle:float, pitch:float, roll:float, yaw:float) -> bytes:
     """
     Packs a control packet to be sent to the drone.
@@ -82,14 +87,14 @@ def unpack_control_packet(data:bytes, into:list[int]) -> bool:
     # return true to indicate the unpack was successful
     return True
 
-REAL_THROTTE_MAX:float = 0.39
-REAL_THROTTLE_MIN:float = 0.29
+REAL_THROTTE_MAX:float = 0.39     # REAL throttle eventually was found to be this after corrupt packet
+REAL_THROTTLE_MIN:float = 0.29    # REAL throttle was LAST seen as this before corrupt packet... so it is in this range
 input_throttle_max:float = 1.00
-input_throttle_min:float = 0.98
-input_pitch_max:float = -0.31
+input_throttle_min:float = 0.985
+input_pitch_max:float = -0.315
 input_pitch_min:float = -0.33
 
-percent_step:float = 0.0000001
+percent_step:float = 0.00001
 steps_REAL_THROTTLE:int = int((REAL_THROTTE_MAX - REAL_THROTTLE_MIN) / percent_step)
 steps_throttle:int = int((input_throttle_max - input_throttle_min) / percent_step)
 steps_pitch:int = int(abs(input_pitch_max - input_pitch_min) / percent_step)
@@ -129,3 +134,7 @@ for i_REAL in range(steps_REAL_THROTTLE):
                 if thistuple not in successes:
                     print("Found one that would match " + str(round(REAL_THROTTLE * 100, 1)) + "% ACTUAL throttle, all else 0%: " + str(thistuple) + " (" + str(round(throttle * 100, 1)) + "% throttle, " + str(round(pitch * 100, 1)) + " % pitch)")
                     successes.append(thistuple)
+
+# print all
+print("------")
+print("TOTAL FOUND: " + str(len(successes)))
