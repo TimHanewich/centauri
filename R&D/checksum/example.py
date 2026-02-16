@@ -11,6 +11,7 @@ data.append(128) # roll byte 1
 data.append(0) # roll byte 2
 data.append(128) # yaw byte 1
 data.append(0) # yaw byte 2
+# after comes checksum(s) and \r\n terminator!
 
 
 # dual checksum
