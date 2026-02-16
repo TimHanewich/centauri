@@ -396,16 +396,22 @@ try:
                 # read into the rxBuffer (just a place to read them into)
                 bytesread:int = uart_hc12.readinto(rxBuffer, bytesavailable)
 
-                # Now copy them into the ProcessBuffer, but only ifwe have room for the entirety of it
-                # if we don't have room for all of it, ignore it
-                if bytesread <= len(ProcessBuffer) - ProcessBufferOccupied: # if we have room left in the process buffer that will fit all the bytes we just received
+                # Do we have room to move all of the newly received bytes into the process buffer?
+                # if we do, great!
+                # if we don't, clear it out (dump logic needed - see unfortunate flight from Feb 13, 2026)
+                # At this point, if it is full, it is probably full of corrupted/garbage data anyway! (no real packet used in this ecosystem will be that big!)
+                # So to prevent it from getting permanently full with garbage and thus refusing new pakets, dump it now
+                if (len(ProcessBuffer) - ProcessBufferOccupied) < bytesread: # if the available space remaining is NOT ENOUGH to fit ALL of the newly received data... clear!
+                    # set the count for how much space is occupied to 0 so it just begins rewriting from the beginning!
+                    # We dont have to ACTUALLY clear out the bytes... just have to note that they can be written over by moving the occupied marker back to 0!
+                    ProcessBufferOccupied = 0
 
-                    # copy the bytes we just received in the rxBuffer into the ProcessBuffer, byte by byte (one by one)
-                    for i in range(0, bytesread):
-                        ProcessBuffer[ProcessBufferOccupied + i] = rxBuffer[i]
+                # copy the bytes we just received in the rxBuffer into the ProcessBuffer, byte by byte (one by one)
+                for i in range(0, bytesread):
+                    ProcessBuffer[ProcessBufferOccupied + i] = rxBuffer[i]
 
-                    # increment how much of the ProcessBuffer is now occupied
-                    ProcessBufferOccupied = ProcessBufferOccupied + bytesread
+                # increment how much of the ProcessBuffer is now occupied
+                ProcessBufferOccupied = ProcessBufferOccupied + bytesread
 
             # Step 2: Do we have a complete line to work with (a "\r\n" terminator is there)
             # if we do, isolate it, process it
