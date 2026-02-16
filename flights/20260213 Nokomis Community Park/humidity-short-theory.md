@@ -16,6 +16,13 @@ But then it did not receive anything for a number of seconds! Why is that? Becau
 
 [This Claude chat](https://claude.ai/share/04fde4ac-4f0f-4162-bd11-726f4a050fc60) was helpful in validating this theory.
 
+## Why can't I chaulk this up to EMI in the new u.fl to SMA connector?
+This was my original guess - that the brand new u.fl to SMA connector is not good for it, either due to it not being propery shieded OR due to the increased length (6 --> 12 inches) OR due to it being broken in some way.
+
+I dont believe this to be the case. In testing at home (props off *and* props on for high-current test), it did not have this issue. Highly response to control input changing, got every packet.  Even at 100% throttle with props on!
+
+I leave a small sliver of chance that it still is EMI because during my props-on high current test, I had it strapped to a metal mesh surface which may have served as a ground plane helping to receive (which was not preset at the park).
+
 ## Rx Buffer Full Risk
 Look closely at how the drone's Rx code works, particularly the "conveyer belt" approach used. This could happen too.
 
