@@ -74,3 +74,56 @@ class DataPacket:
         self.m3_throttle = m3_throttle
         self.m4_throttle = m4_throttle
         self.lrecv_ms = lrecv_ms
+
+def unpack_log(log_path:str) -> list[DataPacket]:
+
+    # extract data from the file
+    f = open(log_path, "rb")
+    data:bytes = f.read()
+    f.close()
+
+    # unpack each, one by one
+    lines:list[bytes] = data.split("\r\n".encode())
+    packets:list[DataPacket] = []
+    for p in lines:
+        if len(p) > 0:
+            try:
+                dp:DataPacket = DataPacket()
+                dp.unpack(p)
+                packets.append(dp)
+            except Exception as ex:
+                print("Unpacking a frame failed. Skipping. Err: " + str(ex))
+    
+    return packets
+
+class ArmedFlightStats:
+    def __init__(self):
+        self.duration_seconds:float = 0.0        # duration that it was armed, in seconds
+        self.vbat_max:float = 0.0                # max vbat during flight
+        self.vbat_min:float = 0.0                # min vbat during flight
+        self.gforce_max:float = 0.0              # highest g-force experienced during flight
+        self.gforce_min:float = 0.0              # lowest g-force experienced during flight
+        self.throttle_avg:float = 0.0            # average throttle input during flight
+        self.rx_issue_ratio:float = 0.0          # what % of the packets had lrecv > 100ms (Rx issue)
+
+def ExtractStats(packets:list[DataPacket]) -> list[ArmedFlightStats]:
+
+    # Step 1: group the into armed groups
+    ArmedFlights:list[list[DataPacket]] = []
+    current:list[DataPacket] = None
+    for packet in packets:
+        if packet.input_throtte > 0:
+            if current == None:
+                current = []
+            current.append(packet)
+        else: # throttle = 0 (unarmed)
+            if current != None:
+                ArmedFlights.append(current)
+                current = None
+
+    
+        
+
+
+    ToReturn:list[ArmedFlightStats] = []
+        

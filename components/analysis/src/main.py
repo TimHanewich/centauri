@@ -1,28 +1,13 @@
-from tools import DataPacket
+import tools
 import csv
 
 # get the path of the log file
 path_log:str = input("Path of log file? ")
 path_log = path_log.replace("\"", "")
 
-# extract data from the file
-f = open(path_log, "rb")
-data:bytes = f.read()
-f.close()
-
-# unpack each, one by one
-lines:list[bytes] = data.split("\r\n".encode())
-print(str(len(lines)) + " frames in log file.")
-packets:list[DataPacket] = []
-for p in lines:
-    if len(p) > 0:
-        try:
-            dp:DataPacket = DataPacket()
-            dp.unpack(p)
-            packets.append(dp)
-        except Exception as ex:
-            print("Unpacking a frame failed. Skipping. Err: " + str(ex))
-print(str(len(packets)) + " packets unpacked")
+# unpack the log
+packets:tools.DataPacket = tools.unpack_log(path_log)
+print(str(len(packets)) + " logs unpacked")
 
 # get the path of the output file (csv)
 path_csv:str = input("Path of output CSV file? ")
