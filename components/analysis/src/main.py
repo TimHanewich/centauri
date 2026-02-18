@@ -1,4 +1,4 @@
-import tools
+from tools import DataPacket
 import csv
 
 # get the path of the log file
@@ -17,12 +17,13 @@ f.close()
 # unpack each, one by one
 lines:list[bytes] = data.split("\r\n".encode())
 print(str(len(lines)) + " frames in log file.")
-packets:list[dict] = []
+packets:list[DataPacket] = []
 for p in lines:
     if len(p) > 0:
         try:
-            unpacked:dict = tools.unpack_packet(p)
-            packets.append(unpacked)
+            dp:DataPacket = DataPacket()
+            dp.unpack(p)
+            packets.append(dp)
         except Exception as ex:
             print("Unpacking a frame failed. Skipping. Err: " + str(ex))
 print(str(len(packets)) + " packets unpacked")  
@@ -35,23 +36,23 @@ for packet in packets:
 
     # construct this row
     newrow:list = []
-    newrow.append(packet["ticks_ms"]/1000)
-    newrow.append(round(packet["vbat"], 1))
-    newrow.append(packet["pitch_rate"])
-    newrow.append(packet["roll_rate"])
-    newrow.append(packet["yaw_rate"])
-    newrow.append(packet["pitch_angle"])
-    newrow.append(packet["roll_angle"])
-    newrow.append(packet["gforce"])
-    newrow.append(packet["input_throttle"])
-    newrow.append(packet["input_pitch"])
-    newrow.append(packet["input_roll"])
-    newrow.append(packet["input_yaw"])
-    newrow.append(packet["m1_throttle"])
-    newrow.append(packet["m2_throttle"])
-    newrow.append(packet["m3_throttle"])
-    newrow.append(packet["m4_throttle"])
-    newrow.append(packet["lrecv_ms"])
+    newrow.append(packet.ticks_ms/1000) # convert ticks_ms to seconds
+    newrow.append(round(packet.vbat, 1))
+    newrow.append(packet.pitch_rate)
+    newrow.append(packet.roll_rates)
+    newrow.append(packet.yaw_rate)
+    newrow.append(packet.pitch_angle)
+    newrow.append(packet.roll_angle)
+    newrow.append(packet.gforce)
+    newrow.append(packet.input_throtte)
+    newrow.append(packet.input_pitch)
+    newrow.append(packet.input_roll)
+    newrow.append(packet.input_yaw)
+    newrow.append(packet.m1_throttle)
+    newrow.append(packet.m2_throttle)
+    newrow.append(packet.m3_throttle)
+    newrow.append(packet.m4_throttle)
+    newrow.append(packet.lrecv_ms)
 
     # append to rows
     rows.append(newrow)
