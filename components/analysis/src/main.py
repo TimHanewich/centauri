@@ -39,7 +39,7 @@ for packet in packets:
     newrow.append(packet.ticks_ms/1000) # convert ticks_ms to seconds
     newrow.append(round(packet.vbat, 1))
     newrow.append(packet.pitch_rate)
-    newrow.append(packet.roll_rates)
+    newrow.append(packet.roll_rate)
     newrow.append(packet.yaw_rate)
     newrow.append(packet.pitch_angle)
     newrow.append(packet.roll_angle)
