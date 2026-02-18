@@ -186,6 +186,17 @@ def ExtractStats(packets:list[DataPacket]) -> list[ArmedFlightStats]:
 
         # add this stats to list
         ToReturn.append(stats)
+
+    # Step 3: rearrange flights in order
+    sorted:list[ArmedFlightStats] = []
+    while len(ToReturn) > 0:
+        first:ArmedFlightStats = ToReturn[0]
+        for afs in ToReturn:
+            if afs.began_at < first.began_at:
+                first = afs
+        sorted.append(first)
+        ToReturn.remove(first)
+    ToReturn = sorted
         
     # return!
     return ToReturn
