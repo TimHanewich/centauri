@@ -5,10 +5,6 @@ import csv
 path_log:str = input("Path of log file? ")
 path_log = path_log.replace("\"", "")
 
-# get the path of the output file (csv)
-path_csv:str = input("Path of output CSV file? ")
-path_csv = path_csv.replace("\"", "")
-
 # extract data from the file
 f = open(path_log, "rb")
 data:bytes = f.read()
@@ -26,7 +22,11 @@ for p in lines:
             packets.append(dp)
         except Exception as ex:
             print("Unpacking a frame failed. Skipping. Err: " + str(ex))
-print(str(len(packets)) + " packets unpacked")  
+print(str(len(packets)) + " packets unpacked")
+
+# get the path of the output file (csv)
+path_csv:str = input("Path of output CSV file? ")
+path_csv = path_csv.replace("\"", "")
 
 # construct into a CSV file
 print("Preparing CSV...")
