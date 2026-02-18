@@ -15,6 +15,7 @@ print()
 for i in range(len(AllStats)):
     stats:tools.ArmedFlightStats = AllStats[i]
     print("FLIGHT #" + str(i+1))
+    print("\t" + "Began @ " + str(round(stats.began_at, 1)) + "s, Ended @ " + str(round(stats.ended_at, 1)) + "s")
     print("\t" + "Duration: " + str(int(round(stats.duration_seconds, 0))) + " seconds")
     print("\t" + "vbat: " + str(round(stats.vbat_min, 1)) + " - " + str(round(stats.vbat_max, 1)))
     print("\t" + "gforce: " + str(round(stats.gforce_min, 1)) + " - " + str(round(stats.gforce_max, 1)))
