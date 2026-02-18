@@ -174,13 +174,13 @@ def ExtractStats(packets:list[DataPacket]) -> list[ArmedFlightStats]:
 
         # throttle avg
         throttles:list[int] = []
-        for packet in packets:
+        for packet in group:
             throttles.append(packet.input_throtte)
         stats.throttle_avg = sum(throttles) / len(throttles)
 
         # lrecv avg
         lrecvs:list[int] = []
-        for packet in packets:
+        for packet in group:
             lrecvs.append(packet.lrecv_ms)
         stats.lrecv_avg_ms = int(round(sum(lrecvs) / len(lrecvs), 0))
 
