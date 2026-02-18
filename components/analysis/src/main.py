@@ -5,12 +5,29 @@ import csv
 path_log:str = input("Path of log file? ")
 path_log = path_log.replace("\"", "")
 
-# unpack the log
+# unpack the log into packets
 packets:tools.DataPacket = tools.unpack_log(path_log)
 print(str(len(packets)) + " logs unpacked")
 
+# perform statistics crunch
+AllStats:list[tools.ArmedFlightStats] = tools.ExtractStats(packets)
+print()
+for i in range(len(AllStats)):
+    stats:tools.ArmedFlightStats = AllStats[i]
+    print("FLIGHT #" + str(i+1))
+    print("\t" + "Duration: " + str(int(round(stats.duration_seconds, 0))) + " seconds")
+    print("\t" + "vbat: " + str(round(stats.vbat_min, 1)) + " - " + str(round(stats.vbat_max, 1)))
+    print("\t" + "gforce: " + str(round(stats.gforce_min, 1)) + " - " + str(round(stats.gforce_max, 1)))
+    print("\t" + "Avg. Throttle: " + str(round(stats.throttle_avg, 1)) + "%")
+    print("\t" + "Max LRecv: " + str(stats.lrecv_max_ms) + " ms")
+    print("\t" + "Avg LRecv: " + str(stats.lrecv_avg_ms) + " ms")
+    print()
+
+
 # get the path of the output file (csv)
 path_csv:str = input("Path of output CSV file? ")
+if path_csv == "":
+    exit()
 path_csv = path_csv.replace("\"", "")
 
 # construct into a CSV file
