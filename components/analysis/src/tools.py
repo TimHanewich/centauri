@@ -98,13 +98,23 @@ def unpack_log(log_path:str) -> list[DataPacket]:
 
 class ArmedFlightStats:
     def __init__(self):
-        self.duration_seconds:float = 0.0        # duration that it was armed, in seconds
-        self.vbat_max:float = 0.0                # max vbat during flight
-        self.vbat_min:float = 0.0                # min vbat during flight
-        self.gforce_max:float = 0.0              # highest g-force experienced during flight
-        self.gforce_min:float = 0.0              # lowest g-force experienced during flight
-        self.throttle_avg:float = 0.0            # average throttle input during flight
-        self.rx_issue_ratio:float = 0.0          # what % of the packets had lrecv > 100ms (Rx issue)
+        self.began_at:float = None           # When the armed flight began (timestamp), in seconds
+        self.ended_at:float = None           # When the armed flight ended (timestamp), in seconds
+        self.vbat_max:float = None           # max vbat during flight
+        self.vbat_min:float = None           # min vbat during flight
+        self.gforce_max:float = None         # highest g-force experienced during flight
+        self.gforce_min:float = None         # lowest g-force experienced during flight
+        self.throttle_avg:float = None       # average throttle input during flight
+        self.lrecv_max_ms:int = None         # max last received time, in ms
+        self.lrecv_avg_ms:int = None         # average lrecv time, in ms
+
+    @property
+    def duration_seconds(self) -> float:
+        if self.began_at == None or self.ended_at == None:
+            return None
+        else:
+            return self.ended_at - self.began_at
+
 
 def ExtractStats(packets:list[DataPacket]) -> list[ArmedFlightStats]:
 
@@ -121,9 +131,61 @@ def ExtractStats(packets:list[DataPacket]) -> list[ArmedFlightStats]:
                 ArmedFlights.append(current)
                 current = None
 
-    
-        
+    # still one in the chamber? If so, log it
+    if current != None:
+        ArmedFlights.append(current)
 
-
+    # Step 2: extract stats from each group
     ToReturn:list[ArmedFlightStats] = []
+    for group in ArmedFlights:
+
+        stats:ArmedFlightStats = ArmedFlightStats()
+
+        # find min/max data
+        for packet in group:
+            
+            # began
+            if stats.began_at == None or (packet.ticks_ms / 1000) < stats.began_at:
+                stats.began_at = packet.ticks_ms / 1000
+            
+            # ended
+            if stats.ended_at == None or (packet.ticks_ms / 1000) > stats.ended_at:
+                stats.ended_at = packet.ticks_ms / 1000
+
+            # vbat min
+            if stats.vbat_min == None or packet.vbat < stats.vbat_min:
+                stats.vbat_min = packet.vbat
+
+            # vbat max
+            if stats.vbat_max == None or packet.vbat > stats.vbat_max:
+                stats.vbat_max = packet.vbat
+
+            # gforce min
+            if stats.gforce_min == None or packet.gforce < stats.gforce_min:
+                stats.gforce_min = packet.gforce
+
+            # gforce max
+            if stats.gforce_max == None or packet.gforce > stats.gforce_max:
+                stats.gforce_max = packet.gforce
+
+            # lrecv max
+            if stats.lrecv_max_ms == None or packet.lrecv_ms > stats.lrecv_max_ms:
+                stats.lrecv_max_ms = packet.lrecv_ms
+
+        # throttle avg
+        throttles:list[int] = []
+        for packet in packets:
+            throttles.append(packet.input_throtte)
+        stats.throttle_avg = sum(throttles) / len(throttles)
+
+        # lrecv avg
+        lrecvs:list[int] = []
+        for packet in packets:
+            lrecvs.append(packet.lrecv_ms)
+        stats.lrecv_avg_ms = int(round(sum(lrecvs) / len(lrecvs), 0))
+
+        # add this stats to list
+        ToReturn.append(stats)
         
+    # return!
+    return ToReturn
