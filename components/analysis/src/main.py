@@ -26,7 +26,7 @@ for i in range(len(AllStats)):
 
 
 # get the path of the output file (csv)
-path_csv:str = input("Path of output CSV file? ")
+path_csv:str = input("Path of output CSV file? (enter nothing to exit)")
 if path_csv == "":
     exit()
 path_csv = path_csv.replace("\"", "")
