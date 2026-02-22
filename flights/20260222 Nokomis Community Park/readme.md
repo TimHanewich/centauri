@@ -33,15 +33,14 @@ Cloudy day, rain on horizon, even some drops falling from sky at some point, but
     - [Raw clip #8](https://github.com/TimHanewich/centauri/releases/download/49/GH010352.MP4)
     - [Raw clip #9](https://github.com/TimHanewich/centauri/releases/download/49/GH010353.MP4)
     - [All clips, concatenated on YouTube](https://youtu.be/mt7dAjAIeqw)
-- With Telemetry Overlay
-    - Flight #3:
-        - With Telemetry: [on YouTube](https://youtu.be/VrwWf6sYs7k), [download](https://github.com/TimHanewich/centauri/releases/download/51/export1.mp4)
-        - With Telemetry AND angles (angles may be incorrect): [on youtube](https://youtu.be/1ruFgxjx7Bo), [download](https://github.com/TimHanewich/centauri/releases/download/51/export2_angles.mp4)
+        
 
 ## Flight Matching
 - Flight #1 (11 seconds) = just an onground low-power test before taking off
 - Flight #2 (147 seconds)
 - Flight #3 (190 seconds) = onboard clip #2, 00:27 to 03:38 of gopro clip #4
+    - With Telemetry: [on YouTube](https://youtu.be/VrwWf6sYs7k), [download](https://github.com/TimHanewich/centauri/releases/download/51/export1.mp4)
+    - With Telemetry AND angles (angles may be incorrect): [on youtube](https://youtu.be/1ruFgxjx7Bo), [download](https://github.com/TimHanewich/centauri/releases/download/51/export2_angles.mp4)
 - Flight #4 (3 seconds)
 - Flight #5 (171 seconds)
 - Flight #6 (59 seconds) - *realized there was low battery on FPV monitor and flew back to plug it in*
