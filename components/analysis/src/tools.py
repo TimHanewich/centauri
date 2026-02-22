@@ -188,15 +188,8 @@ def ExtractStats(packets:list[DataPacket]) -> list[ArmedFlightStats]:
         ToReturn.append(stats)
 
     # Step 3: rearrange flights in order
-    sorted:list[ArmedFlightStats] = []
-    while len(ToReturn) > 0:
-        first:ArmedFlightStats = ToReturn[0]
-        for afs in ToReturn:
-            if afs.began_at < first.began_at:
-                first = afs
-        sorted.append(first)
-        ToReturn.remove(first)
-    ToReturn = sorted
+    # Actually, do NOT arrange them in order of start time. Why?
+    # When the drone re-starts, it will reset system time. So this could cause flights that actually happened later to be put in front of others.
         
     # return!
     return ToReturn
