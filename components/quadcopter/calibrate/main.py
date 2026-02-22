@@ -12,6 +12,7 @@ gpio_motor4:int = 18 # rear right, clockwise
 target_hz:int = 250 # the number of times to run the PID loop, per second. IMPORTANT: if you change this, you will also need to change the time-sensitive PID gains (integral and derivative). I did not build a time-scaling mechanism into those calculations.
 
 # Set up on 100% throttle
+print("Arming @ 100% throttle...")
 M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=2000000)
 M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=2000000)
 M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_ns=2000000)
@@ -19,6 +20,7 @@ M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=2
 led.on()
 
 # Wait 5 seconds
+print("Waiting 5 seconds...")
 time.sleep(5.0)
 
 # go to 0% throttle
