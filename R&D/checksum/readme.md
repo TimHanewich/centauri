@@ -8,3 +8,7 @@ A single byte checksum is likely insufficient for over-the-air communication:
 And as seen in [the 99% throttle anomaly from February 13, 2026](../../flights/20260213%20Nokomis%20Community%20Park/), I believe garbage data could be received *in between* a good packet, "taking the place of actual input data and then pass the checksum by chance.
 
 So adding the second checksum makes it 256x less likely that a random pass will happen.
+
+## Performance
+- Checksum verification on quadcopter **before** (with 1 byte): _ us
+- Checksum verification on quadcopter **after** (with 2 bytes): _ us
