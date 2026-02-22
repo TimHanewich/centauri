@@ -56,7 +56,7 @@ If you'd like to customize or experiment with the design, you can download a fol
 - [February 12, 2026 - re-designed rear arm with port to instead mount a mast for the antenna to be at the top](https://github.com/TimHanewich/centauri/releases/download/44/arm-antenna.zip)
 
 ## Wiring Diagram
-![wiring](https://i.imgur.com/t5JQn0k.png)
+![wiring](https://i.imgur.com/0YmcytB.png)
 
 With all the components assembled on the 3D-printed frame, you are now ready to wire everything up! The wiring diagram is depicted above, but you can also [download it as a SVG](https://github.com/TimHanewich/centauri/releases/download/13/wiring.drawio.svg) or open [the original design directly in draw.io](https://app.diagrams.net/#Uhttps%3A%2F%2Fraw.githubusercontent.com%2FTimHanewich%2Fcentauri%2Frefs%2Fheads%2Fmaster%2Fcomponents%2Fquadcopter%2Fwiring.drawio#%7B%22pageId%22%3A%22W1gebfnubh0FSxZTr-fW%22%7D).
 
