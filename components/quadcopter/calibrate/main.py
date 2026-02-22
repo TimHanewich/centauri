@@ -1,3 +1,6 @@
+# this is a lightweight script to re-calibrate all of the motors on the quadcopter.
+# WARNING: DO THIS WITH PROPS OFF!
+
 import machine
 import time
 
