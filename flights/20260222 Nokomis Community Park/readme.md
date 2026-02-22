@@ -45,6 +45,8 @@ Cloudy day, rain on horizon, even some drops falling from sky at some point, but
 - Flight #5 (171 seconds)
 - Flight #6 (59 seconds) - *realized there was low battery on FPV monitor and flew back to plug it in*
 - Flight #7 (158 seconds) = onboard clip #5, 02:13 to 04:51 of gopro clip #6
+    - With Telemetry: [on youtube](https://youtu.be/M7sAEZuMz2I), [download](https://github.com/TimHanewich/centauri/releases/download/52/export2_noangles.mp4)
+    - With Telemetry AND angles (angles may be incorrect): [on youtube](https://youtu.be/oPxl2cfeXX0), [download](https://github.com/TimHanewich/centauri/releases/download/52/export1.mp4)
 - Flight #8 (246 seconds) - *fly bys of camera*
 
 ## Batteries
