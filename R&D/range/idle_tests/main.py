@@ -15,6 +15,8 @@ M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1
 print("Counting down...")
 time.sleep(5.0)
 
+led = machine.Pin("LED", machine.Pin.OUT)
+
 # switch
 while True:
 
@@ -25,6 +27,7 @@ while True:
     M4.duty_ns(1_300_000)
 
     # wait
+    led.on()
     print("Now on. Waiting 5 seconds...")
     time.sleep(5.0)
 
@@ -35,5 +38,6 @@ while True:
     M4.duty_ns(1_000_000)
 
     # wait
+    led.off()
     print("Now off. Waiting 5 seconds...")
     time.sleep(5.0)
