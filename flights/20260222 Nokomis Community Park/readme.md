@@ -14,6 +14,8 @@ Cloudy day, rain on horizon, even some drops falling from sky at some point, but
 ## Files
 - Telemetry
     - [Raw log](https://github.com/TimHanewich/centauri/releases/download/48/log)
+    - [Unpacked as CSV](https://github.com/TimHanewich/centauri/releases/download/53/log.csv)
+    - [Saved as .xlsx with comments](https://github.com/TimHanewich/centauri/releases/download/53/log.xlsx)
 - Onboard video
     - [Raw clip #1](https://github.com/TimHanewich/centauri/releases/download/48/VID00001.AVI)
     - [Raw clip #2](https://github.com/TimHanewich/centauri/releases/download/48/VID00002.AVI)
