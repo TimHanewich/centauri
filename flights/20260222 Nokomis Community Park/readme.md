@@ -1,4 +1,5 @@
 # Flying at Nokomis Community Park on February 22, 2026
+![img](https://i.imgur.com/Z1927Fs.jpeg)
 
 New this time:
 1. Rewired power lines due to burn out in recent high-load testing.
@@ -35,6 +36,7 @@ Cloudy day, rain on horizon, even some drops falling from sky at some point, but
     - [Raw clip #8](https://github.com/TimHanewich/centauri/releases/download/49/GH010352.MP4)
     - [Raw clip #9](https://github.com/TimHanewich/centauri/releases/download/49/GH010353.MP4)
     - [All clips, concatenated on YouTube](https://youtu.be/mt7dAjAIeqw)
+- Pictures taken during the day: [On Imgur](https://imgur.com/a/fELYq5p)
         
 
 ## Flight Matching
