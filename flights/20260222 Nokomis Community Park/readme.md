@@ -54,6 +54,12 @@ Both batteries were used and flown down to approx. 15.1 volts.
 - Battery #1 absorbed 1,936 mAh charging afterwards.
 - Battery #2 absorbed 1,893 mAh charging afterwards.
 
+Altogether, that is **3,829 mAh** consumed, or **56.67 Wh** (nominal voltage of 14.8v for 4S LiPo).
+
+Flight time was approximately **971 seconds** (16.2 minutes). That comes out to an average power draw of **210 watts**!
+
+This is a rate of 236 mAh/minute, which would give me a theoretical max flight time of ~13.9 minutes on these 3,300 mAh 4S LiPo batteries.
+
 ## Extending Range from Here
 - Transmitter side:
     - Maybe the CP2102 is not supplying the Pi with enough current?
