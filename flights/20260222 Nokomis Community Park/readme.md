@@ -53,3 +53,10 @@ Cloudy day, rain on horizon, even some drops falling from sky at some point, but
 Both batteries were used and flown down to approx. 15.1 volts.
 - Battery #1 absorbed 1,936 mAh charging afterwards.
 - Battery #2 absorbed 1,893 mAh charging afterwards.
+
+## Extending Range from Here
+- Transmitter side:
+    - Maybe the CP2102 is not supplying the Pi with enough current?
+    - Maybe the Pi is not supplying the HC-12 with enough current?
+    - Is the power supply the HC-12 is getting clean?
+    - No ground plane? Put cookie sheet beneath antenna?
