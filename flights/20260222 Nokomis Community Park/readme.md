@@ -36,8 +36,7 @@ Cloudy day, rain on horizon, even some drops falling from sky at some point, but
     - [Raw clip #8](https://github.com/TimHanewich/centauri/releases/download/49/GH010352.MP4)
     - [Raw clip #9](https://github.com/TimHanewich/centauri/releases/download/49/GH010353.MP4)
     - [All clips, concatenated on YouTube](https://youtu.be/mt7dAjAIeqw)
-- Pictures taken during the day: [On Imgur](https://imgur.com/a/fELYq5p)
-        
+- Pictures taken during the day: [On Imgur](https://imgur.com/a/fELYq5p)     
 
 ## Flight Matching
 - Flight #1 (11 seconds) = just an onground low-power test before taking off
