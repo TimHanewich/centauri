@@ -30,6 +30,12 @@ Goal of today: test the new alpha value for the complementary filter to see if i
 
 ## Flights
 Numbered according to telemetry data (log):
+- Flight #3: 175 seconds
+    - GoPro clip #3
 - Flight #4: 208 seconds
     - Onboard clip #3
-    - GoPro clip 
+    - GoPro clip #4
+
+## Battery Depletion
+- Battery #1 absorbed _ mAh in charging afterwards.
+- Battery #2 absorbed _ mAh in charging afterwards.
