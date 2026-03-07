@@ -1,0 +1,35 @@
+# Flying at Nokmomis Community Park on March 7, 2026
+Goal of today: test the new alpha value for the complementary filter to see if it is more accurate in estimating the angles. I raised the alpha from 98% (`98`) to 99.92% (`9992`, also increasing integer division precision).
+
+## Media
+- Telemetry
+    - [Raw](https://github.com/TimHanewich/centauri/releases/download/57/log)
+- Onboard Videos
+    - [Raw Clip #1](https://github.com/TimHanewich/centauri/releases/download/57/VID00001.AVI)
+    - [Raw Clip #2](https://github.com/TimHanewich/centauri/releases/download/57/VID00002.AVI)
+    - [Raw Clip #3](https://github.com/TimHanewich/centauri/releases/download/57/VID00003.AVI)
+    - [Raw Clip #4](https://github.com/TimHanewich/centauri/releases/download/57/VID00004.AVI)
+    - [Raw Clip #5](https://github.com/TimHanewich/centauri/releases/download/57/VID00005.AVI)
+    - [Raw Clip #6](https://github.com/TimHanewich/centauri/releases/download/57/VID00006.AVI)
+    - [Raw Clip #7](https://github.com/TimHanewich/centauri/releases/download/57/VID00007.AVI)
+    - [Raw Clip #8](https://github.com/TimHanewich/centauri/releases/download/57/VID00008.AVI)
+    - [Raw Clip #9](https://github.com/TimHanewich/centauri/releases/download/57/VID00009.AVI)
+    - [All clips concatenated]()
+- GoPro Videos (ground-based)
+    - [Raw Clip #1](https://github.com/TimHanewich/centauri/releases/download/58/GH010354.MP4)
+    - [Raw Clip #2](https://github.com/TimHanewich/centauri/releases/download/58/GH010355.MP4)
+    - [Raw Clip #3](https://github.com/TimHanewich/centauri/releases/download/58/GH010356.MP4)
+    - [Raw Clip #4](https://github.com/TimHanewich/centauri/releases/download/58/GH010357.MP4)
+    - [Raw Clip #5](https://github.com/TimHanewich/centauri/releases/download/58/GH010358.MP4)
+    - [Raw Clip #6](https://github.com/TimHanewich/centauri/releases/download/58/GH010359.MP4)
+    - [Raw Clip #7](https://github.com/TimHanewich/centauri/releases/download/58/GH010360.MP4)
+    - [Raw Clip #8](https://github.com/TimHanewich/centauri/releases/download/58/GH010361.MP4)
+    - [Raw Clip #9](https://github.com/TimHanewich/centauri/releases/download/58/GH010362.MP4)
+    - [Raw Clip #10](https://github.com/TimHanewich/centauri/releases/download/58/GH010363.MP4)
+    - [Raw Clip #11](https://github.com/TimHanewich/centauri/releases/download/58/GH010364.MP4)
+
+## Flights
+Numbered according to telemetry data (log):
+- Flight #4: 208 seconds
+    - Onboard clip #3
+    - GoPro clip 
