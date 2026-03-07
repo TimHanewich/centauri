@@ -1,5 +1,7 @@
 # Flying at Nokmomis Community Park on March 7, 2026
-Goal of today: test the new alpha value for the complementary filter to see if it is more accurate in estimating the angles. I raised the alpha from 98% (`98`) to 99.92% (`9992`, also increasing integer division precision).
+Goal of today: test the new alpha value for the complementary filter to see if it is more accurate in estimating the angles. I raised the alpha from 98% (`98`) to 99.92% (`9992`, also increasing integer division precision). 
+
+**It didn't work!** It actually made the angle measurements worse. Maybe I over-shot.
 
 ## Media
 - Telemetry
