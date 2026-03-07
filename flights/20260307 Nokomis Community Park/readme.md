@@ -35,6 +35,13 @@ Numbered according to telemetry data (log):
 - Flight #4: 208 seconds
     - Onboard clip #3
     - GoPro clip #4
+    - Onboard with Telemetry (with angles): [On YouTube](https://youtu.be/vGqkx91Zgmk), [direct download](https://github.com/TimHanewich/centauri/releases/download/59/with_angles.mp4)
+    - Onboard with Telemetry (no angles): [On YouTube](https://youtu.be/evh0FCPapC8), [direct download](https://github.com/TimHanewich/centauri/releases/download/59/no_angles.mp4)
+- Flight #7: 65 seconds
+    - Onboard clip #5
+    - GoPro clip #6
+    - Onboard with Telemetry (with angles): [On YouTube](https://youtu.be/BdBN274wFLk), [direct download](https://github.com/TimHanewich/centauri/releases/download/60/export2_with_angles.mp4)
+    - Onboard with Telemetry (no angles): [On YouTube](https://youtu.be/2hx0c7SwhpA), [direct download](https://github.com/TimHanewich/centauri/releases/download/60/export1_no_angles.mp4)
 
 ## Battery Depletion
 - Battery #1 absorbed _ mAh in charging afterwards.
