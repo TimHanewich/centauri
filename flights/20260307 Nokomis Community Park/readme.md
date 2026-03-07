@@ -47,6 +47,7 @@ Numbered according to telemetry data (log):
     - In this flight there were **two** Rx Issues. I originally thought they were due to something around that flying zone (i.e. large tin roof?) but after reviewing telemetry, I think they can be explained:
         - 00:26 = maybe orientation had the battery/electronics directly between Rx antenna and Tx antenna. Maybe too high so in "whole" in donut?
         - 00:34 = perpendicular orientation to Tx antenna.
+        - When I flew very close to the benches, missing them by some miracle, that was *pilot error*. Me not doing a good job flying. Not an Rx issue.
 
 ## Battery Depletion
 - Battery #1 absorbed _ mAh in charging afterwards.
