@@ -42,6 +42,9 @@ Numbered according to telemetry data (log):
     - GoPro clip #6
     - Onboard with Telemetry (with angles): [On YouTube](https://youtu.be/BdBN274wFLk), [direct download](https://github.com/TimHanewich/centauri/releases/download/60/export2_with_angles.mp4)
     - Onboard with Telemetry (no angles): [On YouTube](https://youtu.be/2hx0c7SwhpA), [direct download](https://github.com/TimHanewich/centauri/releases/download/60/export1_no_angles.mp4)
+    - In this flight there were **two** Rx Issues. I originally thought they were due to something around that flying zone (i.e. large tin roof?) but after reviewing telemetry, I think they can be explained:
+        - 00:26 = maybe orientation had the battery/electronics directly between Rx antenna and Tx antenna. Maybe too high so in "whole" in donut?
+        - 00:34 = perpendicular orientation to Tx antenna.
 
 ## Battery Depletion
 - Battery #1 absorbed _ mAh in charging afterwards.
