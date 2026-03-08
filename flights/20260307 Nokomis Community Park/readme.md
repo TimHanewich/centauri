@@ -52,3 +52,7 @@ Numbered according to telemetry data (log):
 ## Battery Depletion
 - Battery #1 absorbed 2,660 mAh in charging afterwards.
 - Battery #2 absorbed 2,494 mAh in charging afterwards.
+
+That is 5,154 mAh of current used across **21 minutes and 34 seconds** (1,294 seconds) of flight time. That is **76.28** watt hours used for that flight time. 
+
+The comes to an average draw of **212 watts**. 
