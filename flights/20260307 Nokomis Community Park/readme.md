@@ -50,5 +50,5 @@ Numbered according to telemetry data (log):
         - When I flew very close to the benches, missing them by some miracle, that was *pilot error*. Me not doing a good job flying. Not an Rx issue.
 
 ## Battery Depletion
-- Battery #1 absorbed _ mAh in charging afterwards.
-- Battery #2 absorbed _ mAh in charging afterwards.
+- Battery #1 absorbed 2,660 mAh in charging afterwards.
+- Battery #2 absorbed 2,494 mAh in charging afterwards.
