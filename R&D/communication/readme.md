@@ -75,4 +75,4 @@ Two HC-12 radio transceiver modules will be used to facilitate bidirectional rem
         - Free text, encoded as UTF-8 (up to 50 characters)
 
 ## Other Resources
-- [communication.pptx](https://github.com/TimHanewich/centauri/releases/download/64/communication.pptx)
+- [communication.pptx](https://github.com/TimHanewich/centauri/releases/download/65/communication.pptx)
