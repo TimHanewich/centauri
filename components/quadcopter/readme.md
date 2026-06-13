@@ -47,6 +47,7 @@ To print all components at 30% infill, 149 grams of PLA are required, as shown b
 |MPU-6050 Frame|4 g|
 |LM2596 Frame|9 g|
 |GoPro Mount|8 g|
+|Antenna Mast (3 components)|15 g|
 
 If you'd like to customize or experiment with the design, you can download a folder containing all the iterative saves that led to the final Centauri frame. These snapshots make it easier to trace back to an earlier, less‑modified version of a part and adapt it to your needs:
 - [August 10, 2025 – original Centauri quadcopter design with two MCUs](https://github.com/TimHanewich/centauri/releases/download/1/design.zip)
