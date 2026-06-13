@@ -37,7 +37,7 @@ You can download the `.stl` files to 3D print the quadcopter body [from Thingive
 
 The Centauri frame is designed to balance simplicity and strength. Its 3D‑printed design is lightweight yet durable, making assembly straightforward without sacrificing structural integrity. With a 225 mm diagonal motor‑to‑motor distance, the frame supports 5‑inch propellers, offering an ideal setup for stable flight and responsive performance.
 
-To print all components at 30% infill, 149 grams of PLA are required, as shown below:
+To print all components at 30% infill, **164 grams** of PLA are required, as shown below:
 
 |Part|PLA @ 30% Infill|
 |-|-|
