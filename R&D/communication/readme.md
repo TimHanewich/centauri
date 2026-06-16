@@ -73,6 +73,3 @@ Two HC-12 radio transceiver modules will be used to facilitate bidirectional rem
             - Bit 1: *reserved*
             - Bit 0: `1` (packet identifier)
         - Free text, encoded as UTF-8 (up to 50 characters)
-
-## Other Resources
-- [communication.pptx](https://github.com/TimHanewich/centauri/releases/download/65/communication.pptx)
