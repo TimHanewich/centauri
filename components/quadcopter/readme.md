@@ -19,7 +19,7 @@ Here you'll find a list of all the components need to fabricate and assemble you
 |[4S LiPo Battery](https://a.co/d/f8O8tPR)|$32.29|
 |100,000 Ohm Resistor|$0.05|
 |22,000 Ohm Resistor|$0.05|
-|[LM2596 Buck Converter](https://a.co/d/f8O8tPR)|$1.30|
+|[LM2596 Buck Converter](https://a.co/d/00VLczKE)|$1.30|
 |1 [10 uf Capacitor](https://a.co/d/0aZQ7iJP)|$0.40|
 |1 [0.1 uf Capacitor](https://a.co/d/0iLqvKic)|$0.06|
 |2 [Ferrite Beads](https://a.co/d/06Z5uxa2)|$0.14|
