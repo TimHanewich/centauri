@@ -3,6 +3,8 @@ I have used [Dashware](https://dashware.software.informer.com/) for overlaying t
 - [Project Template](./project/) - place this in the projects directory (`\Documents\DashWare Projects`) and then rename the folder to whatever you want to call the project. When you open it in Dashware, it will prompt you to find the `data.csv` and `video.MP4` files.
     - This project contains all you need **Centauri data profile**, **Gauges**, etc.
 
+You can download the dashware software online or get the installer [here](https://github.com/TimHanewich/centauri/releases/download/69/dashware_1.7.37.exe).
+
 ## Important Note About Timing
 I noticed while recording on the DVR on my FPV monitor, I just wasn't able to get the telemetry Centauri logs synced with the video. And the desync appeared to be worse further into the video, as time goes on.
 
