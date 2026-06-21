@@ -27,6 +27,7 @@
         - 11:16 - this crash is caused by the props getting caught on the battery. Not radio related. But I think this may have jostled the AIO around further, possibly breaking it further.
         - 11:52 - I actually don't remember what happens here. I know it crashed and broke its rear right arm, but not sure how. Video feeds cuts out, but I'd be surprised if I was flying on the monitor here since I was just lifting off the ground. Maybe it also lost command control feed? anyway, it impacted the ground and broke the rear right arm.
 - [The onboard video, but first upscaled to 2k with ffmpeg so youtube does not compress it so badly](https://youtu.be/sO8H_UmjUlE)
+- Onboard video with telemetry overlay, the flight with the crash due to Rx issues only: [on youtube](https://youtu.be/dvK0Sow0WW8), [direct download](https://github.com/TimHanewich/centauri/releases/download/70/export1.mp4)
 
 ## Files
 - [Raw telemetry log](https://github.com/TimHanewich/centauri/releases/download/20/log)
