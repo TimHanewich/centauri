@@ -5,6 +5,13 @@ I have used [Dashware](https://dashware.software.informer.com/) for overlaying t
 
 You can download the dashware software online or get the installer [here](https://github.com/TimHanewich/centauri/releases/download/69/dashware_1.7.37.exe).
 
+## Steps to Overlaying Telemetry on Onboard Footage
+1. Convert the variable frame rate onboard footage to a **constant frame rate** using `FFMPEG` (see notes below)
+2. Observe different in timing + duration between two "points" in the flight you can clearly see in both **the telemetetry** and **the video**.
+3. The telemetry timing is correct. Comparing the video timing to it, you will see the video is either a little bit slower or faster. Do the math on what `%` the video needs to speed up or slow down by to **match the telemetry**.
+4. In Premiere Pro, position the `.avi` file in a `1920x1080` sequence with the original file magnified `180%` in the middle. And then speed up/slow down the duration by the `%` calculated above. Export that.
+5. **Dashware**: sync up timing of telemetry over the video in Dashware and export.
+
 ## Important Note About Timing
 I noticed while recording on the DVR on my FPV monitor, I just wasn't able to get the telemetry Centauri logs synced with the video. And the desync appeared to be worse further into the video, as time goes on.
 
