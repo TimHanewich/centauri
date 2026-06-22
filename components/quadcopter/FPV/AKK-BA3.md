@@ -26,6 +26,10 @@ Version 1 (low profile, but susceptible to the antenna mount portion being damag
 Version 2 (lifted sides to take the brunt of impact in the event of roll, protecting antenna mount of AIO module):
 ![v2](https://i.imgur.com/JVTK1yY.jpeg)
 
+Download the `.stl` files here:
+- [Top (module holder)](https://github.com/TimHanewich/centauri/releases/download/71/akk_frame_top.stl)
+- [Bottom (prong mount)](https://github.com/TimHanewich/centauri/releases/download/71/akk_frame_bottom.stl)
+
 I designed it in Blender; you can find all iterative design files below:
 - [Original Version 1](https://github.com/TimHanewich/centauri/releases/download/15/FPV.Mount.zip)
 - [January 20, 2026 (contains "lifted" version 2)](https://github.com/TimHanewich/centauri/releases/download/26/FPV.Mount.zip)
