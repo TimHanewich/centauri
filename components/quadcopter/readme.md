@@ -16,6 +16,8 @@ Here you'll find a list of all the components need to fabricate and assemble you
 |[4 Electronic Speed Controllers (ESCs)](https://a.co/d/jm61OU4)|$31.29|
 |[MPU-6050 IMU](https://a.co/d/429WnGv)|$3.67|
 |[HC-12](https://a.co/d/8L9nex9)|$9.49|
+|[TI.10.0111 433 MHz Antenna](https://www.digikey.com/en/products/detail/taoglas-limited/TI-10-0111/3131969)|$7.00|
+|[U.FL to SMA Coaxial Cable](https://a.co/d/01yhs0ip)|$1.60|
 |[4S LiPo Battery](https://a.co/d/f8O8tPR)|$32.29|
 |100,000 Ohm Resistor|$0.05|
 |22,000 Ohm Resistor|$0.05|
@@ -27,7 +29,7 @@ Here you'll find a list of all the components need to fabricate and assemble you
 |Misc. Screws and Nuts|$2.00|
 |Misc. Wire|$2.00|
 
-All in, the estimate in cost is approximately **$132 USD** - at least if you use parts I did above! You are welcome to experiment with different motors, propellers, ESCs, a smaller battery, etc.!
+All in, the estimate in cost is approximately **$141 USD** - at least if you use parts I did above! You are welcome to experiment with different motors, propellers, ESCs, a smaller battery, etc.!
 
 
 ## 3D Printed Body
