@@ -114,7 +114,7 @@ response:bytes = uart_hc12.read(uart_hc12.any())
 if "OK+FU3\r\n".encode() in response:
     print("HC-12 in FU3 mode successful!")
 else:
-    print("HC-12 not confirmed to be in HC-12 mode!")
+    print("HC-12 not confirmed to be in FU3 mode!")
     FATAL_ERROR()
 
 # Configure HC-12 while still in AT mode: channel = 2
@@ -572,7 +572,7 @@ try:
 
         # convert the desired pitch, roll, and yaw from (-32,768 to 32,767) into (-90 to +90) degrees per second
         # Multiply by 90,000 because we will interpret each as -90 d/s to +90 d/s
-        # We are multplying by 90,000 instead of 90,000 here so we can keep it in units of 1,000 and do integer math instead of floating point math
+        # We are multplying by 90,000 instead of 90 here so we can keep it in units of 1,000 and do integer math instead of floating point math
         desired_pitch_rate:int = (input_pitch_int16 * 90000) // 32767
         desired_roll_rate:int = (input_roll_int16 * 90000) // 32767
         desired_yaw_rate:int = (input_yaw_int16 * 90000) // 32767
