@@ -242,9 +242,9 @@ while time.ticks_diff(time.ticks_ms(), started_at_ticks_ms) < 3000: # 3 seconds
     if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
     if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
     if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-    gyro_x = gyro_x * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 326 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
-    gyro_y = gyro_y * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 326 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
-    gyro_z = gyro_z * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 326 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+    gyro_x = gyro_x * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+    gyro_y = gyro_y * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+    gyro_z = gyro_z * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
 
     # Transform accel data
     accel_x = (accel_data[0] << 8) | accel_data[1]
@@ -506,9 +506,9 @@ try:
         if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
         if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
         if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-        roll_rate = gyro_x * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 326 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
-        pitch_rate = gyro_y * 10000 // 328     # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 326 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
-        yaw_rate = gyro_z * 10000 // 328       # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 326 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+        roll_rate = gyro_x * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+        pitch_rate = gyro_y * 10000 // 328     # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+        yaw_rate = gyro_z * 10000 // 328       # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
 
         # Process & Transform raw accelerometer data
         # ~100 us
