@@ -22,6 +22,4 @@ This repository provides *everything* you need to build your own Centauri quadco
 |[Analysis Script](./components/analysis/)|![img](https://i.imgur.com/AcsRmQh.png)|Lightweight Python tool for unpacking binary telemetry logs stored on the quadcopter's MCU into human‑readable `.csv` files|
 
 ## License
-Copyright (C) 2026 Tim Hanewich
-
-This project is licensed under the GNU General Public License v3. See [license.md](./license.md) for details.
+Copyright 2026 Tim Hanewich. This project is licensed under the GNU General Public License v3. See [license.md](./license.md) for details.
