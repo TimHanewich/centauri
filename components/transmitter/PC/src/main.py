@@ -653,7 +653,7 @@ async def main() -> None:
                     pass
                 
             # sleep
-            await asyncio.sleep(0.05) # 20 Hz, faster than the 10 Hz the drone will send it at
+            await asyncio.sleep(0.05)
 
 
     # we are all set and ready to go. Confirm.
