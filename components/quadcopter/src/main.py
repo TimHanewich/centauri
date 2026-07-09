@@ -44,14 +44,13 @@ print("Importing other libraries...")
 import time
 import tools
 import os
-import gc
 
 ####################
 ##### SETTINGS #####
 ####################
 
-alpha:int = 98                 # complementary filter alpha value for pitch/roll angle estimation. A value closer to 100 (MAX 100!) favor's gyroscope's opinion, lower (MIN 0!) favors accelerometer (noisy)
-PID_SCALING_FACTOR:int = 10000 # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
+alpha:int = 9800                         # complementary filter alpha value for pitch/roll angle estimation. 0-10000: e.g. 9800 would be an alpha of 98% or 0.98, or 9992 would be an alpha of 99.92% or 0.9992. A value closer to 100% favor's gyroscope's opinion, lower favors accelerometer (noisy). It is the actual value x1000. So 9992 for example would effectively be 0.9992... so imagine the decimal point before!
+PID_SCALING_FACTOR:int = 10000           # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
 
 # Flight Control PID Gains
 # Set initial setting here to 0 for safety reasons, though they can be updated via settings update packet later
@@ -582,9 +581,10 @@ try:
             roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_since_ldr_ticks_us // 1_000_000)
 
             # Now use a complementary filter to determine angle (fuse accelerometer and gyro data)
+            # 10,000 is used below in the calculations because the alpha stored above is between 0 and 10,000 to represent 0.0 to 1.0. So we divide by 10,000 for the sake of scale.
             # takes ~50 us, uses 0 bytes of new memory
-            pitch_angle = ((pitch_angle_gyro * alpha) + (pitch_angle_accel * (100 - alpha))) // 100
-            roll_angle = ((roll_angle_gyro * alpha) + (roll_angle_accel * (100 - alpha))) // 100
+            pitch_angle = ((pitch_angle_gyro * alpha) + (pitch_angle_accel * (10_000 - alpha))) // 10_000
+            roll_angle = ((roll_angle_gyro * alpha) + (roll_angle_accel * (10_000 - alpha))) // 10_000
         else:
             pitch_angle = pitch_angle_accel
             roll_angle = roll_angle_accel
