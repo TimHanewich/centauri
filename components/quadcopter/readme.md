@@ -85,3 +85,6 @@ With your quadcopter fully assembled and wired up, all you need to do is flash t
 
 ## FPV Flying
 You can also fly Centauri as an FPV quadcopter just by fastening a FPV camera/VTX/antenna to it! I did this, read more about it [here](./FPV/)!
+
+## ESC Calibration Script
+I'm also providing a lightweight script to calibrate brand new ESCs, available in [/calibrate](./calibrate/).
