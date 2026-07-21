@@ -10,6 +10,3 @@ The all-up transmitter is composed of three key components working together to t
 - [**Transceiver Platform**](./transceiver/): A USB‑connected microcontroller paired with an HC‑12 radio module acts as the communication bridge between the PC and the quadcopter, enabling bidirectional data exchange over wireless signals. 
 - [**Python Program**](./PC/): Running on the PC, this program reads the controller inputs, converts them into structured data packets, and transmits them to the quadcopter. It also performs additional tasks, which are explained in later sections.  
 - **Xbox Controller**: An Xbox Series X/S controller (connected via USB to a PC) provides the pilot's input.  
-  - Throttle → Right Trigger  
-  - Pitch & Roll → Left Stick  
-  - Yaw → Right Stick (X axis)  
