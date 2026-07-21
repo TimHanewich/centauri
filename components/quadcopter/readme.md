@@ -33,7 +33,7 @@ All in, the estimate in cost is approximately **$141 USD** - at least if you use
 
 
 ## 3D Printed Body
-![body](https://i.imgur.com/kmZ4yZn.gif)
+![body](https://i.imgur.com/SGcsq0V.gif)
 
 You can download the `.stl` files to 3D print the quadcopter body [from Thingiverse here](https://www.thingiverse.com/thing:7194383).
 
