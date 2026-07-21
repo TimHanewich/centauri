@@ -713,7 +713,7 @@ try:
             vbat_u16:int = vbat_adc.read_u16() # read the value on the ADC pin, as a uint16 (0-65535)
 
             # Using the ADC reading, estimate the actual supply voltage
-            # I can do this because I have sampled what the ADC reading is at several KNOWN voltage supplies in tests previously (see R&D notes in this project)
+            # I can do this because I have sampled what the ADC reading is at several KNOWN voltage supplies in tests previously
             # Explanation of the values below:
             # -248,065 = "B" value in the equation y = mx + b. But B is multiplied by 1,000,000 for scaling purposes to avoid floating point math
             # 297 = "M" value in the equation y = mx + b. But M is multiplied by 1,000,000 for scaling purposes to avoid floating point math
