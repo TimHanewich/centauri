@@ -1,5 +1,4 @@
-# Analysis Script
-
+# Telemetry Extraction & Analysis
 The Centauri quadcopter logs telemetry directly onto the Raspberry Pi Pico’s onboard flash storage. After a flight, you can connect the Pico to a computer and extract the telemetry file (`log` in the root directory). This file is stored in a compact binary format, with densely encoded telemetry packets. To interpret the data, you’ll need a separate script that unpacks it into a human‑readable format such as a `.csv`.
 
 [This analysis script](./src/main.py) performs that conversion. When executed, it prompts for two inputs:
