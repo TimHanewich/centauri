@@ -11,25 +11,25 @@ Here you'll find a list of all the components need to fabricate and assemble you
 |Component|Est. Price (USD)|
 |-|-|
 |PLA for 3D Printing the Frame|$2.25|
-|[4 Brushless Motors](https://a.co/d/6Pua6ZV)|$38.99|
-|[4 Propellers (2 CW, 2 CWW)](https://a.co/d/6pNksCt)|$4.40|
-|[4 Electronic Speed Controllers (ESCs)](https://a.co/d/jm61OU4)|$31.29|
-|[MPU-6050 IMU](https://a.co/d/429WnGv)|$3.67|
-|[HC-12](https://a.co/d/8L9nex9)|$9.49|
+|[4 Brushless Motors](https://amzn.to/44lyILf)|$38.99|
+|[4 Propellers (2 CW, 2 CWW)](https://amzn.to/3QQwuAt)|$4.40|
+|[4 Electronic Speed Controllers (ESCs)](https://amzn.to/3SMnnBr)|$31.29|
+|[MPU-6050 IMU](https://amzn.to/4yh76Ev)|$3.67|
+|[HC-12](https://amzn.to/4eWx48V)|$9.49|
 |[TI.10.0111 433 MHz Antenna](https://www.digikey.com/en/products/detail/taoglas-limited/TI-10-0111/3131969)|$7.00|
-|[U.FL to SMA Coaxial Cable](https://a.co/d/01yhs0ip)|$1.60|
-|[4S LiPo Battery](https://a.co/d/f8O8tPR)|$32.29|
-|100,000 Ohm Resistor|$0.05|
-|22,000 Ohm Resistor|$0.05|
-|[LM2596 Buck Converter](https://a.co/d/00VLczKE)|$1.30|
-|1 [10 uf Capacitor](https://a.co/d/0aZQ7iJP)|$0.40|
-|1 [0.1 uf Capacitor](https://a.co/d/0iLqvKic)|$0.06|
-|2 [Ferrite Beads](https://a.co/d/06Z5uxa2)|$0.14|
-|Raspberry Pi Pico|$4.00|
+|[U.FL to SMA Coaxial Cable](https://amzn.to/4f92Hee)|$1.60|
+|[XT60 Connector](https://amzn.to/4vwD25n)|$1.00|
+|[4S LiPo Battery](https://amzn.to/3RwAqq7)|$32.29|
+|[100,000 Ohm Resistor and 22,000 Ohm Resistor](https://amzn.to/4aNJ0Yb)|$0.10|
+|[LM2596 Buck Converter](https://amzn.to/4vp6zh8)|$1.30|
+|1 [10 uf Capacitor](https://amzn.to/4bFcebU)|$0.40|
+|1 [0.1 uf Capacitor](https://amzn.to/44lKKUT)|$0.06|
+|2 [Ferrite Beads](https://amzn.to/3SVQRNa)|$0.14|
+|[Raspberry Pi Pico](https://amzn.to/4vZ5DkH)|$4.00|
 |Misc. Screws and Nuts|$2.00|
 |Misc. Wire|$2.00|
 
-All in, the estimate in cost is approximately **$141 USD** - at least if you use parts I did above! You are welcome to experiment with different motors, propellers, ESCs, a smaller battery, etc.!
+All in, the estimate in cost is approximately **$142 USD** - at least if you use parts I did above! You are welcome to experiment with different motors, propellers, ESCs, a smaller battery, etc.!
 
 
 ## 3D Printed Body

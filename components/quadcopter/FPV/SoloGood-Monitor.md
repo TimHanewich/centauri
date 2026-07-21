@@ -1,5 +1,5 @@
 # FPV Monitor: SoloGood
-I purchased [the SoloGood FPV Monitor](https://a.co/d/dc8PKzo) to watch the video:
+I purchased [the SoloGood FPV Monitor](https://amzn.to/4fwKjxb) to watch the video:
 - 4.3 inch screen size (16x9) - 800x480
 - 5.8 Ghz
 - 40 channels

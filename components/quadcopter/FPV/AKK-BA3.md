@@ -1,5 +1,5 @@
 # Camera, Transmitter, and Antenna Combo: AKK BA3
-I purchased [the AKK BA3 Camera, Transmitter, and Antenna Combo](https://a.co/d/6bDJUDt):
+I purchased [the AKK BA3 Camera, Transmitter, and Antenna Combo](https://amzn.to/4yjdSJW):
 - 5.8 GHz
 - 40 Channels
 - 3.3 to 5.5 volt supply
