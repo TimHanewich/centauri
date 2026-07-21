@@ -6,30 +6,30 @@ The Centauri quadcopter was completely designed and developed from the ground up
 This page contains everything you need to fully reconstruct the Centauri quadcopter exactly as you've seen in the demo videos.
 
 ## Components Needed
-Here you'll find a list of all the components need to fabricate and assemble your own Centauri quadcopter. In the components list below, I provide estimates for the prices for each component, normally just using the price that *I* paid for the component, along with that component link provided.
+Here you'll find a list of all the components needed to fabricate and assemble your own Centauri quadcopter, along with the component link provided.
 
-|Component|Est. Price (USD)|
-|-|-|
-|PLA for 3D Printing the Frame|$2.25|
-|[4 Brushless Motors](https://amzn.to/44lyILf)|$38.99|
-|[4 Propellers (2 CW, 2 CWW)](https://amzn.to/3QQwuAt)|$4.40|
-|[4 Electronic Speed Controllers (ESCs)](https://amzn.to/3SMnnBr)|$31.29|
-|[MPU-6050 IMU](https://amzn.to/4yh76Ev)|$3.67|
-|[HC-12](https://amzn.to/4eWx48V)|$9.49|
-|[TI.10.0111 433 MHz Antenna](https://www.digikey.com/en/products/detail/taoglas-limited/TI-10-0111/3131969)|$7.00|
-|[U.FL to SMA Coaxial Cable](https://amzn.to/4f92Hee)|$1.60|
-|[XT60 Connector](https://amzn.to/4vwD25n)|$1.00|
-|[4S LiPo Battery](https://amzn.to/3RwAqq7)|$32.29|
-|[100,000 Ohm Resistor and 22,000 Ohm Resistor](https://amzn.to/4aNJ0Yb)|$0.10|
-|[LM2596 Buck Converter](https://amzn.to/4vp6zh8)|$1.30|
-|1 [10 uf Capacitor](https://amzn.to/4bFcebU)|$0.40|
-|1 [0.1 uf Capacitor](https://amzn.to/44lKKUT)|$0.06|
-|2 [Ferrite Beads](https://amzn.to/3SVQRNa)|$0.14|
-|[Raspberry Pi Pico](https://amzn.to/4vZ5DkH)|$4.00|
-|Misc. Screws and Nuts|$2.00|
-|Misc. Wire|$2.00|
+|Component|
+|-|
+|PLA for 3D Printing the Frame|
+|[4 Brushless Motors](https://amzn.to/44lyILf)|
+|[4 Propellers (2 CW, 2 CWW)](https://amzn.to/3QQwuAt)|
+|[4 Electronic Speed Controllers (ESCs)](https://amzn.to/3SMnnBr)|
+|[MPU-6050 IMU](https://amzn.to/4yh76Ev)|
+|[HC-12](https://amzn.to/4eWx48V)|
+|[TI.10.0111 433 MHz Antenna](https://www.digikey.com/en/products/detail/taoglas-limited/TI-10-0111/3131969)|
+|[U.FL to SMA Coaxial Cable](https://amzn.to/4f92Hee)|
+|[XT60 Connector](https://amzn.to/4vwD25n)|
+|[4S LiPo Battery](https://amzn.to/3RwAqq7)|
+|[100,000 Ohm Resistor and 22,000 Ohm Resistor](https://amzn.to/4aNJ0Yb)|
+|[LM2596 Buck Converter](https://amzn.to/4vp6zh8)|
+|1 [10 uf Capacitor](https://amzn.to/4bFcebU)|
+|1 [0.1 uf Capacitor](https://amzn.to/44lKKUT)|
+|2 [Ferrite Beads](https://amzn.to/3SVQRNa)|
+|[Raspberry Pi Pico](https://amzn.to/4vZ5DkH)|
+|Misc. Screws and Nuts|
+|Misc. Wire|
 
-All in, the estimate in cost is approximately **$142 USD** - at least if you use parts I did above! You are welcome to experiment with different motors, propellers, ESCs, a smaller battery, etc.!
+You are welcome to experiment with different motors, propellers, ESCs, a smaller battery, etc.!
 
 
 ## 3D Printed Body
