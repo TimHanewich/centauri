@@ -26,7 +26,5 @@ This repository provides *everything* you need to build your own Centauri quadco
 
 You can join our maker community by joining the **Full Stack Flight Discord Server**! This is a space for any makers interested in building their own*iteration of *Centauri* to share progress and ideas, ask questions, and celebrate their successes. Click [here](https://discord.gg/wwqfmCUzGg) to join!
 
-*A 10-part series is coming shortly! Stay tuned.*
-
 ## License
 Copyright 2026 Tim Hanewich. This project is licensed under the GNU General Public License v3. See [license.md](./license.md) for details.
