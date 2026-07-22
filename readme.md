@@ -22,11 +22,9 @@ This repository provides *everything* you need to build your own Centauri quadco
 |[Telemetry Extracting](./components/analysis/)|![img](https://i.imgur.com/dSfSNne.png)|Python program for unpacking binary telemetry logs stored on the quadcopter's MCU into human‑readable `.csv` files|
 
 ## Join the Discord
-You can join our maker community by joining the **Full Stack Flight Discord Server**! This is a space for any makers interested in building their own*iteration of *Centauri* to share progress and ideas, ask questions, and celebrate their successes.
-
 ![join discord promo](https://i.imgur.com/NBVaQjr.png)
 
-Click [here](https://discord.gg/wwqfmCUzGg) to join!
+You can join our maker community by joining the **Full Stack Flight Discord Server**! This is a space for any makers interested in building their own*iteration of *Centauri* to share progress and ideas, ask questions, and celebrate their successes. Click [here](https://discord.gg/wwqfmCUzGg) to join!
 
 *A 10-part series is coming shortly! Stay tuned.*
 
