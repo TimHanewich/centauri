@@ -21,5 +21,14 @@ This repository provides *everything* you need to build your own Centauri quadco
 |[Transmitter](./components/transmitter/)|![img](https://i.imgur.com/dGlMm5V.png)|Serves as pilot's interface for controlling the quadcopter. Includes:<br>- [Main Python program for a PC](./components/transmitter/src/PC/)<br>- [USB Radio Transceiver Platform](./components/transmitter/readme.md#transceiver-platform)<br>- Custom binary communication protocol|
 |[Telemetry Extracting](./components/analysis/)|![img](https://i.imgur.com/dSfSNne.png)|Python program for unpacking binary telemetry logs stored on the quadcopter's MCU into human‑readable `.csv` files|
 
+## Join the Discord
+You can join our maker community by joining the **Full Stack Flight Discord Server**! This is a space for any makers interested in building their own*iteration of *Centauri* to share progress and ideas, ask questions, and celebrate their successes.
+
+![join discord promo](https://i.imgur.com/NBVaQjr.png)
+
+Click [here](https://discord.gg/wwqfmCUzGg) to join!
+
+*A 10-part series is coming shortly! Stay tuned.*
+
 ## License
 Copyright 2026 Tim Hanewich. This project is licensed under the GNU General Public License v3. See [license.md](./license.md) for details.
