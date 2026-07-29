@@ -23,6 +23,19 @@ This repository provides *everything* you need to build your own Centauri quadco
 |[Transmitter](./components/transmitter/)|![img](https://i.imgur.com/dGlMm5V.png)|Serves as pilot's interface for controlling the quadcopter. Includes:<br>- [Main Python program for a PC](./components/transmitter/src/PC/)<br>- [USB Radio Transceiver Platform](./components/transmitter/readme.md#transceiver-platform)<br>- Custom binary communication protocol|
 |[Telemetry Extracting](./components/analysis/)|![img](https://i.imgur.com/dSfSNne.png)|Python program for unpacking binary telemetry logs stored on the quadcopter's MCU into human‑readable `.csv` files|
 
+## Article Series
+Want the full story behind how Centauri was designed and built? Check out the *Full Stack Flight* article series:
+- [Full-Stack Flight: Building a Quadcopter Ecosystem from Scratch](https://medium.com/@timhanewich/full-stack-flight-building-a-quadcopter-ecosystem-from-scratch-18d43386bb6d)
+- [Full-Stack Flight, Chapter 1: The Centauri Ecosystem](https://medium.com/@timhanewich/full-stack-flight-chapter-1-the-centauri-ecosystem-eacfcecc90f5)
+- [Full-Stack Flight, Chapter 2: Defining a Communication Protocol](https://medium.com/@timhanewich/full-stack-flight-chapter-2-defining-a-communication-protocol-41bfc589a319)
+- [Full-Stack Flight, Chapter 3: Quadcopter, Part 1: Designing a 3D-Printed Airframe](https://medium.com/@timhanewich/full-stack-flight-chapter-3-quadcopter-part-1-designing-a-3d-printed-airframe-9d4f9021a68c)
+- [Full-Stack Flight, Chapter 4: Quadcopter, Part 2: Hardware and Electronics Package](https://medium.com/@timhanewich/full-stack-flight-chapter-4-quadcopter-part-2-hardware-and-electronics-package-69a5c26bc30b)
+- [Full-Stack Flight, Chapter 5: Quadcopter, Part 3: The Flight Controller](https://medium.com/@timhanewich/full-stack-flight-chapter-5-quadcopter-part-3-the-flight-controller-310b3f288975)
+- [Full-Stack Flight, Chapter 6: Transmitter, Part 1: Transceiver Platform](https://medium.com/@timhanewich/full-stack-flight-chapter-6-transmitter-part-1-transceiver-platform-7aee3793da9a)
+- [Full-Stack Flight, Chapter 7: Transmitter, Part 2: The Pilot's Control Interface](https://medium.com/@timhanewich/full-stack-flight-chapter-7-transmitter-part-2-the-pilots-control-interface-dd14b90d5169)
+- [Full-Stack Flight, Chapter 8: Unpacking Flight Telemetry for Analysis](https://medium.com/@timhanewich/full-stack-flight-chapter-8-unpacking-flight-telemetry-for-analysis-73d251a4a449)
+- [Full-Stack Flight, Chapter 9: Closing Thoughts](https://medium.com/@timhanewich/full-stack-flight-chapter-9-closing-thoughts-1f6855269e5f)
+
 ## Join the Discord
 ![join discord promo](https://i.imgur.com/NBVaQjr.png)
 
