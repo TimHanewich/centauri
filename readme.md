@@ -23,8 +23,8 @@ This repository provides *everything* you need to build your own Centauri quadco
 |[Transmitter](./components/transmitter/)|![img](https://i.imgur.com/dGlMm5V.png)|Serves as pilot's interface for controlling the quadcopter. Includes:<br>- [Main Python program for a PC](./components/transmitter/src/PC/)<br>- [USB Radio Transceiver Platform](./components/transmitter/readme.md#transceiver-platform)<br>- Custom binary communication protocol|
 |[Telemetry Extracting](./components/analysis/)|![img](https://i.imgur.com/dSfSNne.png)|Python program for unpacking binary telemetry logs stored on the quadcopter's MCU into human‑readable `.csv` files|
 
-## Article Series
-Want the full story behind how Centauri was designed and built? Check out the *Full Stack Flight* article series:
+## Build-Along Series
+Want to build your own Centauri? The *Full Stack Flight* series walks through exactly how it was designed and built, chapter by chapter, so you can follow along and do it yourself:
 - [Full-Stack Flight: Building a Quadcopter Ecosystem from Scratch](https://medium.com/@timhanewich/full-stack-flight-building-a-quadcopter-ecosystem-from-scratch-18d43386bb6d)
 - [Full-Stack Flight, Chapter 1: The Centauri Ecosystem](https://medium.com/@timhanewich/full-stack-flight-chapter-1-the-centauri-ecosystem-eacfcecc90f5)
 - [Full-Stack Flight, Chapter 2: Defining a Communication Protocol](https://medium.com/@timhanewich/full-stack-flight-chapter-2-defining-a-communication-protocol-41bfc589a319)
