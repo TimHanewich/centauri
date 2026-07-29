@@ -1,7 +1,7 @@
 ![banner](https://i.imgur.com/77WjAKV.png)
 
 ![Stars](https://img.shields.io/github/stars/TimHanewich/centauri?style=social)
-![Forks](https://img.shields.io/github/forks/user/repo?style=social)
+![Forks](https://img.shields.io/github/forks/TimHanewich/centauri?style=social)
 ![understandability](https://img.shields.io/badge/understandability-HIGH😄-blue)
 [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-red?logo=github)](https://github.com/sponsors/TimHanewich)
 
