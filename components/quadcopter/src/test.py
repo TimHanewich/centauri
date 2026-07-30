@@ -102,8 +102,8 @@ while True:
 
     # calculate angles: gyro
     us_elapsed:int = hz * 10_000
-    pitch_angle_gyro:int = pitch_angle + ((pitch_rate * us_elapsed) / 1_000_000)
-    roll_angle_gyro:int = roll_angle + ((roll_rate * us_elapsed) / 1_000_000)
+    pitch_angle_gyro:int = pitch_angle + ((pitch_rate * us_elapsed) // 1_000_000)
+    roll_angle_gyro:int = roll_angle + ((roll_rate * us_elapsed) // 1_000_000)
 
     # complementary filter
     alpha:int = 9800
