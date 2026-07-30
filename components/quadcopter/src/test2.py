@@ -61,6 +61,9 @@ print("Gyro Bias: " + str(gyro_bias_x) + ", " + str(gyro_bias_y) + ", " + str(gy
 # nonzero time too, so the true loop period drifts from the target period).
 last_loop_ticks_us:int = time.ticks_us()
 
+## TRACKING
+last_accel_pitch:int = 0
+
 while True:
 
     # Read
@@ -104,6 +107,10 @@ while True:
     pitch_angle_accel:int = tools.iatan2(accel_x, tools.isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
     roll_angle_accel:int = tools.iatan2(accel_y, tools.isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
 
+    # calc pitch angle to add for accel
+    pitch_angle_accel_added = pitch_angle_accel - last_accel_pitch
+    last_accel_pitch = pitch_angle_accel
+
     # calculate angles: gyro
     # Use the ACTUAL elapsed time (in microseconds) since the last iteration,
     # not an assumed period derived from hz, so drift from I2C/math overhead
@@ -112,7 +119,8 @@ while True:
     us_elapsed:int = time.ticks_diff(now_ticks_us, last_loop_ticks_us)
     last_loop_ticks_us = now_ticks_us
 
-    pitch_angle_gyro:int = pitch_angle + ((pitch_rate * us_elapsed) // 1_000_000)
+    pitch_angle_gyro_to_add:int = ((pitch_rate * us_elapsed) // 1_000_000)
+    pitch_angle_gyro:int = pitch_angle + pitch_angle_gyro_to_add
     roll_angle_gyro:int = roll_angle + ((roll_rate * us_elapsed) // 1_000_000)
 
     # complementary filter
@@ -127,7 +135,8 @@ while True:
     #print(str("Pitch Rate: " + str(pitch_rate) + ", Roll Rate: " + str(roll_rate) + ", Yaw Rate: " + str(yaw_rate)))
     #print("Accel X: " + str(accel_x) + ", Accel Y: " + str(accel_y) + ", Accel Z: " + str(accel_z))
     #print("Pitch Angle (Accel): " + str(pitch_angle_accel) + ", Roll Angle (Accel): " + str(roll_angle_accel))
-    print("Pitch Angle (Gyro): " + str(pitch_angle_gyro) + ", Pitch Angle (Accel): " + str(pitch_angle_accel) + ", Pitch Angle: " + str(pitch_angle))
+    ##print("Pitch Angle (Gyro): " + str(pitch_angle_gyro) + ", Pitch Angle (Accel): " + str(pitch_angle_accel) + ", Pitch Angle: " + str(pitch_angle))
+    print("Adds: Accel = " + str(pitch_angle_accel_added) + ", Gyro = " + str(pitch_angle_gyro_to_add))
 
 
     # wait
