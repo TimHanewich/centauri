@@ -239,11 +239,12 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
 # We use this instead of using the "math" module because:
 # A) the math module uses floating point math
 # B) the math module always allocates memory using math.atan2 and math.sqrt, which we want to avoid (to avoid garbage collection)
-# I'll be honest - I did NOT write these. These were written by GPT-5 via Copilot and I understand little about them... trig is complicated.
+# I'll be honest - I did NOT write these. These were written by AI and I understand little about them... trig is complicated.
 # The viper emitters speed it up significantly
 
 # Integer-based Square Root Estimator
 # uses Neton's method
+# Written by GPT-5 via Copilot
 @micropython.viper
 def isqrt(x: int) -> int:
     if x <= 0:
@@ -256,6 +257,8 @@ def isqrt(x: int) -> int:
         r = new_r
 
 # atan2 estimator (integer math)
+# Originally written by GPT-5 via Copilot
+# Enhanced by Claude Opus 5 on July 30, 2026
 @micropython.viper
 def iatan2(y:int, x:int) -> int:
     # constants scaled by 1000
