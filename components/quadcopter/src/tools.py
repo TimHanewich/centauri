@@ -278,15 +278,21 @@ def iatan2(y:int, x:int) -> int:
 
     angle = 0
 
+    # polynomial approx of atan(slope), where slope is 0-1000 representing 0.0-1.0:
+    #   atan(s) ~= (pi/4)*s + s*(1-s)*(0.2447 + 0.0663*s)
+    # This is the refined form. A plain (pi/4)*s is only exact at s=0 and s=1 and undershoots by
+    # ~21% in between, which biases the accelerometer's angle low across normal flight attitudes.
+    # Written so every operand stays non-negative: viper's // on negative values is not guaranteed
+    # to floor the same way CPython does, and this form sidesteps that entirely.
+    # Largest intermediate is 785,000, well inside viper's 32-bit signed int range.
     if abs_x >= abs_y:
         # slope = y/x
         slope = (abs_y * 1000) // abs_x
-        # polynomial approx of atan(slope)
-        angle = (PI_4 * slope) // 1000
+        angle = (PI_4 * slope) // 1000 + (slope * (1000 - slope) // 1000) * (2447 + 663 * slope // 1000) // 10000
     else:
         # slope = x/y
         slope = (abs_x * 1000) // abs_y
-        angle = (PI_2 - (PI_4 * slope) // 1000)
+        angle = PI_2 - ((PI_4 * slope) // 1000 + (slope * (1000 - slope) // 1000) * (2447 + 663 * slope // 1000) // 10000)
 
     # adjust quadrant
     if x < 0:
