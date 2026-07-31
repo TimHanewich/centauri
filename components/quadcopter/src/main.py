@@ -563,8 +563,9 @@ try:
         roll_angle_accel:int = tools.iatan2(accel_y, tools.isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
 
         # Now calculate how much time has elapsed since the last time we were here, about to use dead reckoning with the gyro's data to estimate the angles
-        elapsed_since_ldr_ticks_us:int = time.ticks_diff(time.ticks_us(), last_gyro_dead_reckoning_ticks_us) # how many ticks have elapsed sine the last dead reckoning
-        last_gyro_dead_reckoning_ticks_us = time.ticks_us() # update the time, just as a flag. This will establish a baseline for how long since we were last here on the next loop. And that timespan is very important to perform dead reckoning with the gyro data.
+        now_us:int = time.ticks_us()
+        elapsed_since_ldr_ticks_us:int = time.ticks_diff(now_us, last_gyro_dead_reckoning_ticks_us) # how many ticks have elapsed sine the last dead reckoning
+        last_gyro_dead_reckoning_ticks_us = now_us # update the time, just as a flag. This will establish a baseline for how long since we were last here on the next loop. And that timespan is very important to perform dead reckoning with the gyro data.
 
         # if the elapsed time since the last dead reckoning is less than 250 ms, we should use fusion
         # otherwise, we should just accept whatever the accelerometer is telling us (that will prob be more reliable than combining w/ the gyro's dead reckoning)
