@@ -242,16 +242,40 @@ def pack_telemetry(ticks_ms:int, vbat:int, pitch_rate:int, roll_rate:int, yaw_ra
 # I'll be honest - I did NOT write these. These were written by AI and I understand little about them... trig is complicated.
 # The viper emitters speed it up significantly
 
-# Integer-based Square Root Estimator
-# uses Neton's method
-# Written by GPT-5 via Copilot
+# Integer Square Root (exact, not an estimate - returns floor(sqrt(x)))
+# uses Newton's method
+# Originally written by GPT-5 via Copilot
+# Seeding enhanced by Claude Opus 5 on July 30, 2026
 @micropython.viper
 def isqrt(x: int) -> int:
     if x <= 0:
         return 0
-    r = x
+
+    # Seed with the smallest power of two >= sqrt(x).
+    # Starting at r = x makes Newton spend ~half of log2(x) iterations just halving before
+    # the quadratic convergence begins - that was ~14 divisions at 1g and 18 worst case.
+    # Since x < 2**bits implies sqrt(x) < 2**ceil(bits/2), this seed is always >= sqrt(x),
+    # which is what keeps the descent monotonic and the "new_r >= r" stop condition valid.
+    # Four compares replace ~11 divisions; the Pico's Cortex-M0+ has no divide instruction.
+    r = 1
+    t = x
+    if t >= 0x10000:
+        t = t >> 16
+        r = r << 8
+    if t >= 0x100:
+        t = t >> 8
+        r = r << 4
+    if t >= 0x10:
+        t = t >> 4
+        r = r << 2
+    if t >= 0x4:
+        t = t >> 2
+        r = r << 1
+    r = r << 1
+
+    # All operands stay non-negative, so >> 1 is safe under viper (unlike // on negatives).
     while True:
-        new_r = (r + x // r) // 2
+        new_r = (r + x // r) >> 1
         if new_r >= r:
             return r
         r = new_r
