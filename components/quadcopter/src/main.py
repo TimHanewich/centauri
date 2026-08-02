@@ -604,6 +604,7 @@ try:
             # takes ~50 us, uses 0 bytes of new memory
             pitch_angle = ((pitch_angle_gyro * alpha) + (pitch_angle_accel * (10_000 - alpha))) // 10_000
             roll_angle = ((roll_angle_gyro * alpha) + (roll_angle_accel * (10_000 - alpha))) // 10_000
+            
         else:
             pitch_angle = pitch_angle_accel
             roll_angle = roll_angle_accel
