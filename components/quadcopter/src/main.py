@@ -44,6 +44,8 @@ print("Importing other libraries...")
 import time
 import tools
 import os
+from tools import unpack_control_packet, unpack_settings_update, pack_telemetry
+from itrig import isqrt, iatan2, isin, icos, itan  # integer trigonometry functions
 
 ####################
 ##### SETTINGS #####
@@ -276,7 +278,7 @@ while time.ticks_diff(time.ticks_ms(), started_at_ticks_ms) < 3000: # 3 seconds
     accel_z = (accel_z * 1000) // 4096 # divide by scale factor for 8g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
     # use accel data to calculate current G-Force
-    gforce:int = tools.isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
+    gforce:int = isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
 
     # increment
     gxs = gxs + gyro_x
@@ -449,7 +451,7 @@ try:
                     if ProcessBuffer.startswith(TIMHPING): # PING: simple check of life. Checking "startswith" is quick, only ~70 us
                         uart_hc12.write(TIMHPONG) # PONG back
                     elif ProcessBuffer[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
-                        unpack_successful:bool = tools.unpack_control_packet(ProcessBuffer, control_input) # takes ~350 us, uses 0 bytes of new memory
+                        unpack_successful:bool = unpack_control_packet(ProcessBuffer, control_input) # takes ~350 us, uses 0 bytes of new memory
                         if unpack_successful:
                             input_throttle_uint16 = control_input[0]
                             input_pitch_int16 = control_input[1]
@@ -458,7 +460,7 @@ try:
                             #print("Throttle: " + str(input_throttle_uint16) + ", Pitch: " + str(input_pitch_int16) + ", Roll: " + str(input_roll_int16) + ", Yaw: " + str(input_yaw_int16))
                             control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
                     elif ProcessBuffer[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
-                        settings:dict = tools.unpack_settings_update(ProcessBuffer)
+                        settings:dict = unpack_settings_update(ProcessBuffer)
                         if settings != None:
                             pitch_kp = settings["pitch_kp"]
                             pitch_ki = settings["pitch_ki"]
@@ -552,15 +554,15 @@ try:
 
         # calculate g-force
         # ~100 us, 0 bytes of memory used
-        gforce:int = tools.isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
+        gforce:int = isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
         gforce = gforce - gforce_bias                                                         # subtract out bias, which was calculated during IMU calibration earlier    
 
         # calculate the "accelerometers opinion" of the pitch and roll angles
         # these will later be "fused" with the gyro's opinion via a complementary filter
         # This will output the pitch and roll angle as 1000x what it is (so like 5493 is 5.493 degrees)
         # 0 bytes of memory, takes ~145 us (as viper), but would take ~600 us if iatan2 and isqrt were NOT viper (i checked)
-        pitch_angle_accel:int = tools.iatan2(accel_x, tools.isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
-        roll_angle_accel:int = tools.iatan2(accel_y, tools.isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
+        pitch_angle_accel:int = iatan2(accel_x, isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
+        roll_angle_accel:int = iatan2(accel_y, isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
 
         # Now calculate how much time has elapsed since the last time we were here, about to use dead reckoning with the gyro's data to estimate the angles
         now_us:int = time.ticks_us()
@@ -759,7 +761,7 @@ try:
             # pack it
             # takes ~460 us, uses 0 bytes of new memory
             # note: while calling this function below takes > 400 us, it takes only around 200 within the function. Maybe 200 us wasted by calling a function. Can save time running it inline below.
-            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_gforce, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, lrecv_ago_ms, telemetry_packet_store)
+            pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_gforce, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, lrecv_ago_ms, telemetry_packet_store)
 
             # Record it by adding it to the temporary memory buffer we have going while in flight
             # takes ~490 us, uses 0 bytes of new memory. I tried slicing via memoryview and array itself and that takes much longer - like 2,000 us! I also tried storing the len(telemetry_packet_store) and reusing it... doesnt do anything.
