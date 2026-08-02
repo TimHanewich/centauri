@@ -42,7 +42,6 @@ M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1
 
 print("Importing other libraries...")
 import time
-import tools
 import os
 from tools import unpack_control_packet, unpack_settings_update, pack_telemetry
 from itrig import isqrt, iatan2, isin, icos, itan  # integer trigonometry functions
@@ -553,6 +552,8 @@ try:
         yaw_rate = yaw_rate * -1        # this ensures the drone rotating towards the right is a POSITIVE yaw rate, with a left turn being negative
 
         # Perform trigonometry for eular angle correction
+        # ~160 us
+        # 0 bytes of new memory used
         roll_rad:int = ((roll_angle  // 10) * 17453) // 100_000                          # convert angle to radians, retaining the 1,000x scale and also using integer math only
         pitch_rad:int = ((pitch_angle // 10) * 17453) // 100_000                         # convert angle to radians, retaining the 1,000x scale and also using integer math only
         sin_roll:int = isin(roll_rad)                                                    # this result is used multiple times, so do it once
@@ -561,6 +562,8 @@ try:
 
         # euler angle correction
         # Opus 5 assisted with the conversion of this from the old `math` method (float) to integer division
+        # ~60 us
+        # 0 bytes of new memory used
         inner:int = ((pitch_rate * sin_roll) // 1000) + ((yaw_rate * cos_roll) // 1000)
         roll_rate = roll_rate + ((inner // 10) * tan_pitch) // 100                                 # correct gyro_x (roll axis gyro rate) with euler angles
         pitch_rate = ((pitch_rate * cos_roll) // 1000) - ((yaw_rate * sin_roll) // 1000)           # correct gyro_y (pitch axis gyro rate) with euler angles
