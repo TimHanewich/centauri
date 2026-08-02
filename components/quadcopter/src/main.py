@@ -552,9 +552,22 @@ try:
         pitch_rate = pitch_rate * -1    # this ensures as the drone pitches down towards the ground, that is a NEGATIVE pitch rate. And a tile up would be positive
         yaw_rate = yaw_rate * -1        # this ensures the drone rotating towards the right is a POSITIVE yaw rate, with a left turn being negative
 
+        # Perform trigonometry for eular angle correction
+        roll_rad:int = ((roll_angle  // 10) * 17453) // 100_000                          # convert angle to radians, retaining the 1,000x scale and also using integer math only
+        pitch_rad:int = ((pitch_angle // 10) * 17453) // 100_000                         # convert angle to radians, retaining the 1,000x scale and also using integer math only
+        sin_roll:int = isin(roll_rad)                                                    # this result is used multiple times, so do it once
+        cos_roll:int = icos(roll_rad)                                                    # this result is used multiple times, so do it once
+        tan_pitch:int = itan(pitch_rad)                                                  # this is only used once but do it here so we have it. itan already clamps its own result to +/- 5,000 (about +/- 78 degrees of attitude), so no clamp is needed out here
+
+        # euler angle correction
+        # Opus 5 assisted with the conversion of this from the old `math` method (float) to integer division
+        inner:int = ((pitch_rate * sin_roll) // 1000) + ((yaw_rate * cos_roll) // 1000)
+        roll_rate = roll_rate + ((inner // 10) * tan_pitch) // 100                                 # correct gyro_x (roll axis gyro rate) with euler angles
+        pitch_rate = ((pitch_rate * cos_roll) // 1000) - ((yaw_rate * sin_roll) // 1000)           # correct gyro_y (pitch axis gyro rate) with euler angles
+
         # calculate g-force
         # ~100 us, 0 bytes of memory used
-        gforce:int = isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
+        gforce:int = isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)               # 1,000 would be 1g
         gforce = gforce - gforce_bias                                                         # subtract out bias, which was calculated during IMU calibration earlier    
 
         # calculate the "accelerometers opinion" of the pitch and roll angles
