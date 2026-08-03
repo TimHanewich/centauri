@@ -560,7 +560,8 @@ try:
         cos_roll:int = icos(roll_rad)                                                    # this result is used multiple times, so do it once
         tan_pitch:int = itan(pitch_rad)                                                  # this is only used once but do it here so we have it. itan already clamps its own result to +/- 5,000 (about +/- 78 degrees of attitude), so no clamp is needed out here
 
-        # Euler angle correction
+        # Euler angle correction: this performs a "correction" of the drone's body-axis gyro rates (relative to its body as the MPU-6050 is fixed) to the drone's Euler roll and pitch angles (imagine these fixed to pitch + roll axis to real world)
+        # After this section, "roll_rate" and "pitch_rate" are no longer JUST the MPU gyro X or Y... they are adjusted to the actual Euler angles!
         # Opus 5 assisted with the conversion of this from the old `math` method (float) to integer division
         # ~60 us
         # 0 bytes of new memory used
