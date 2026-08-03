@@ -551,7 +551,7 @@ try:
         pitch_rate = pitch_rate * -1    # this ensures as the drone pitches down towards the ground, that is a NEGATIVE pitch rate. And a tile up would be positive
         yaw_rate = yaw_rate * -1        # this ensures the drone rotating towards the right is a POSITIVE yaw rate, with a left turn being negative
 
-        # Perform trigonometry for eular angle correction
+        # Perform trigonometry for Euler angle correction
         # ~160 us
         # 0 bytes of new memory used
         roll_rad:int = ((roll_angle  // 10) * 17453) // 100_000                          # convert angle to radians, retaining the 1,000x scale and also using integer math only
@@ -560,7 +560,7 @@ try:
         cos_roll:int = icos(roll_rad)                                                    # this result is used multiple times, so do it once
         tan_pitch:int = itan(pitch_rad)                                                  # this is only used once but do it here so we have it. itan already clamps its own result to +/- 5,000 (about +/- 78 degrees of attitude), so no clamp is needed out here
 
-        # euler angle correction
+        # Euler angle correction
         # Opus 5 assisted with the conversion of this from the old `math` method (float) to integer division
         # ~60 us
         # 0 bytes of new memory used
