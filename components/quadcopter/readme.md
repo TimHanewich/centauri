@@ -19,7 +19,7 @@ Here you'll find a list of all the components needed to fabricate and assemble y
 |[TI.10.0111 433 MHz Antenna](https://www.digikey.com/en/products/detail/taoglas-limited/TI-10-0111/3131969)|
 |[U.FL to SMA Coaxial Cable](https://amzn.to/4f92Hee)|
 |[XT60 Connector](https://amzn.to/4vwD25n)|
-|[4S LiPo Battery](https://amzn.to/3RwAqq7)|
+|[4S LiPo Battery](https://amzn.to/4g6kKSM)|
 |[100,000 Ohm Resistor and 22,000 Ohm Resistor](https://amzn.to/4aNJ0Yb)|
 |[LM2596 Buck Converter](https://amzn.to/4vp6zh8)|
 |1 [10 uf Capacitor](https://amzn.to/4bFcebU)|
