@@ -8,12 +8,12 @@ DashWare</EndTitle>
   </Information>
   <InputSettings>
     <DataFiles>
-      <DataFile profile="Centauri" fileName="C:\Users\tim\Desktop\flight3.csv" currentTime="101.968" dataSynced="True" syncOffset="98.4271174437231" closedCourse="True" startFinishSetInUI="False" openCourseStartOffset="-1" openCourseFinishOffset="-1" lapStartX="0" lapStartY="0" lapEndX="0" lapEndY="0" lapToDraw="0" startFinishDistanceThreshold="40" showDistanceThreshold="True" ignoreFirstLap="True" ignoreLastLap="True" lapTimeHoldSecs="5" startTrim="101.968" endTrim="148.894">
+      <DataFile profile="Centauri" fileName="C:\Users\tim\Desktop\flight1.csv" currentTime="97.3373653430992" dataSynced="True" syncOffset="27.3080008430992" closedCourse="True" startFinishSetInUI="False" openCourseStartOffset="-1" openCourseFinishOffset="-1" lapStartX="0" lapStartY="0" lapEndX="0" lapEndY="0" lapToDraw="0" startFinishDistanceThreshold="40" showDistanceThreshold="True" ignoreFirstLap="True" ignoreLastLap="True" lapTimeHoldSecs="5" startTrim="58.528" endTrim="235.257">
         <LapSplits />
       </DataFile>
     </DataFiles>
     <VideoFiles>
-      <VideoFile trimStart="0" trimEnd="49500" videoUniqueID="" rotateVideo="False">C:\Users\tim\Desktop\flight3_cfr_rft.mp4</VideoFile>
+      <VideoFile trimStart="0" trimEnd="209500" videoUniqueID="" rotateVideo="False">C:\Users\tim\Desktop\flight1_rft.mp4</VideoFile>
     </VideoFiles>
   </InputSettings>
   <OutputSettings>
@@ -54,18 +54,21 @@ DashWare</EndTitle>
       <InputMapping gaugeInput="roll_rate" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Roll Rate" />
       <InputMapping gaugeInput="yaw_rate" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Yaw Rate" />
     </Gauge>
-    <Gauge name="Angles Readout" transparency="1" x="-0.2692371" y="190.9836">
+    <Gauge name="Angles Readout" transparency="1" x="-0.2692375" y="190.9836">
       <InputMapping gaugeInput="pitch_angle" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Pitch Angle" />
       <InputMapping gaugeInput="roll_angle" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Roll Angle" />
     </Gauge>
     <Gauge name="G-Force Readout" transparency="1" x="17.18182" y="147.3007">
       <InputMapping gaugeInput="gforce" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="G-Force" />
     </Gauge>
+    <Gauge name="LastRecv" transparency="1" x="16.67995" y="302.4067">
+      <InputMapping gaugeInput="LRECV_MS" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Cmd Last Received ms" />
+    </Gauge>
   </GaugeSettings>
   <ChartSettings>
     <ChartTab Type="Time">
       <Inputs>
-        <Input Filename="C:\Users\tim\Desktop\flight3.csv">
+        <Input Filename="C:\Users\tim\Desktop\flight1.csv">
           <Laps>
             <Lap Number="0" />
           </Laps>
@@ -85,7 +88,7 @@ DashWare</EndTitle>
     </ChartTab>
     <ChartTab Type="Distance">
       <Inputs>
-        <Input Filename="C:\Users\tim\Desktop\flight3.csv">
+        <Input Filename="C:\Users\tim\Desktop\flight1.csv">
           <Laps>
             <Lap Number="0" />
           </Laps>
