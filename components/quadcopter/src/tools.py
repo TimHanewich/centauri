@@ -42,11 +42,13 @@ def unpack_control_packet(data:bytes, into:list[int]) -> bool:
     # so the length of the buffer wil ALWAYS be large enough
 
     # first, validate checksums
+    # This is based on the Fletcher16 checksum, shown here: https://en.wikipedia.org/wiki/Fletcher%27s_checksum
+    # takes ~249 us
     checksum1:int = 0x00 # start at 0
     checksum2:int = 0x00 # start at 0
     for i in range(9): # first 9 bytes (1 header byte, 2 throttle bytes, 2 pitch bytes, 2 roll bytes, 2 yaw bytes)
-        checksum1 = checksum1 ^ data[i]
-        checksum2 = checksum2 ^ checksum1
+        checksum1 = (checksum1 + data[i]) % 255
+        checksum2 = (checksum2 + checksum1) % 255
     if checksum1 != data[9] or checksum2 != data[10]: # if the checksum1 we calculated does NOT match the checksum1 in the data stream OR the checksum2 we calculated does NOT match the checksum2 in the data stream, it did NOT pass the checksum! Could be corrupted data!
         return False # return false to indicate it was not unpacked successfully
     
