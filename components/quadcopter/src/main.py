@@ -525,9 +525,9 @@ try:
         if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
         if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
         if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-        roll_rate = gyro_x * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
-        pitch_rate = gyro_y * 10000 // 328     # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
-        yaw_rate = gyro_z * 10000 // 328       # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+        gyro_x = gyro_x * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+        gyro_y = gyro_y * 10000 // 328     # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+        gyro_z = gyro_z * 10000 // 328       # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
 
         # Process & Transform raw accelerometer data
         # ~100 us
@@ -542,9 +542,15 @@ try:
         accel_z = (accel_z * 1000) // 4096 # divide by scale factor for 8g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
         # subtract out (account for) gyro bias that was calculated during calibration phase
-        pitch_rate = pitch_rate - gyro_bias_y
-        roll_rate = roll_rate - gyro_bias_x
-        yaw_rate = yaw_rate - gyro_bias_z
+        gyro_x = gyro_x - gyro_bias_x
+        gyro_y = gyro_y - gyro_bias_y
+        gyro_z = gyro_z - gyro_bias_z
+
+        # assign gyro x,y,z to specific drone-body axes
+        # I do this here deliberately as something that is easy to change in case the orientation of the IMU changes (i.e. axes flip)
+        roll_rate = gyro_x
+        pitch_rate = gyro_y
+        yaw_rate = gyro_z
 
         # Because of how I have my IMU mounted, invert necessary axes
         # I could in theory not need to do this if I mounted it flipped over, but preferring to leave it as is physically and just make the adjustment here!
@@ -561,13 +567,13 @@ try:
         tan_pitch:int = itan(pitch_rad)                                                  # this is only used once but do it here so we have it. itan already clamps its own result to +/- 5,000 (about +/- 78 degrees of attitude), so no clamp is needed out here
 
         # Euler angle correction: this performs a "correction" of the drone's body-axis gyro rates (relative to its body as the MPU-6050 is fixed) to the drone's Euler roll and pitch angles (imagine these fixed to pitch + roll axis to real world)
-        # After this section, "roll_rate" and "pitch_rate" are no longer JUST the MPU gyro X or Y... they are adjusted to the actual Euler angles!
+        # This converts "roll_rate" and "pitch_rate" from just gyro x/y to adjusted to the actual Euler angles of the body
         # Opus 5 assisted with the conversion of this from the old `math` method (float) to integer division
         # ~60 us
         # 0 bytes of new memory used
         inner:int = ((pitch_rate * sin_roll) // 1000) + ((yaw_rate * cos_roll) // 1000)
-        roll_rate = roll_rate + ((inner // 10) * tan_pitch) // 100                                 # correct gyro_x (roll axis gyro rate) with euler angles
-        pitch_rate = ((pitch_rate * cos_roll) // 1000) - ((yaw_rate * sin_roll) // 1000)           # correct gyro_y (pitch axis gyro rate) with euler angles
+        roll_rate_euler = roll_rate + ((inner // 10) * tan_pitch) // 100                                 # correct gyro_x (roll axis gyro rate) with euler angles
+        pitch_rate_euler = ((pitch_rate * cos_roll) // 1000) - ((yaw_rate * sin_roll) // 1000)           # correct gyro_y (pitch axis gyro rate) with euler angles
 
         # calculate g-force
         # ~100 us, 0 bytes of memory used
@@ -597,8 +603,8 @@ try:
             # Because the pitch rate is in degrees per second... and we measured it as us, of which there are 1,000,000 us in one second.
             # so we have to divide by 1,000,000 to calculate how far, in degrees, it drifted in that time at that degrees/second rate
             # takes ~55 us, uses 0 bytes of new memory
-            pitch_angle_gyro:int = pitch_angle + (pitch_rate * elapsed_since_ldr_ticks_us // 1_000_000)
-            roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_since_ldr_ticks_us // 1_000_000)
+            pitch_angle_gyro:int = pitch_angle + (pitch_rate_euler * elapsed_since_ldr_ticks_us // 1_000_000)
+            roll_angle_gyro:int = roll_angle + (roll_rate_euler * elapsed_since_ldr_ticks_us // 1_000_000)
 
             # Now use a complementary filter to determine angle (fuse accelerometer and gyro data)
             # 10,000 is used below in the calculations because the alpha stored above is between 0 and 10,000 to represent 0.0 to 1.0. So we divide by 10,000 for the sake of scale.
