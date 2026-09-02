@@ -51,13 +51,6 @@ To print all components at 30% infill, **164 grams** of PLA are required, as sho
 |GoPro Mount|8 g|
 |Antenna Mast (3 components)|15 g|
 
-If you'd like to customize or experiment with the design, you can download a folder containing all the iterative saves that led to the final Centauri frame. These snapshots make it easier to trace back to an earlier, less‑modified version of a part and adapt it to your needs:
-- [August 10, 2025 – original Centauri quadcopter design with two MCUs](https://github.com/TimHanewich/centauri/releases/download/1/design.zip)
-- [September 17, 2025 – streamlined Centauri design with a single MCU (Pico), sensors removed, and zip‑tie slots added for securing the battery adapter](https://github.com/TimHanewich/centauri/releases/download/3/centauri-mono.zip)
-- [January 18, 2026 - designing the arm with a port for an SMA mount for an antenna](https://github.com/TimHanewich/centauri/releases/download/22/arm-antenna.zip)
-- [February 7, 2026 - designed a new arm with a SMA port for an antenna on the OUTSIDE of the body (rear)](https://github.com/TimHanewich/centauri/releases/download/35/arm-antenna.zip)
-- [February 12, 2026 - re-designed rear arm with port to instead mount a mast for the antenna to be at the top](https://github.com/TimHanewich/centauri/releases/download/44/arm-antenna.zip)
-
 ## Wiring Diagram
 ![wiring](https://i.imgur.com/0YmcytB.png)
 
