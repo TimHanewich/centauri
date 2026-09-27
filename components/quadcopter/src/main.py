@@ -50,8 +50,16 @@ from itrig import isqrt, iatan2, isin, icos, itan  # integer trigonometry functi
 ##### SETTINGS #####
 ####################
 
-alpha:int = 9800                         # complementary filter alpha value for pitch/roll angle estimation. 0-10000: e.g. 9800 would be an alpha of 98% or 0.98, or 9992 would be an alpha of 99.92% or 0.9992. A value closer to 100% favor's gyroscope's opinion, lower favors accelerometer (noisy). It is the actual value x1000. So 9992 for example would effectively be 0.9992... so imagine the decimal point before!
-PID_SCALING_FACTOR:int = 10000           # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
+# I2C Connection (for MPU6050 and SPARE)
+i2c_bus:int = 1       # the I2C bus being used to use (0 or 1)
+i2c_sda:int = 26      # the GPIO number
+i2c_scl:int = 27      # the GPIO number
+
+# UART Connection for HC-12
+hc12_uart_bus:int = 0      # the UART bus being used for the HC-12
+hc12_uart_tx:int = 16      # GPIO number of the pico pin that will be used to send data to the HC-12
+hc12_uart_rx:int = 17      # GPIO number of the pico pin that will be used to receive data from the HC-12
+hc12_set:int = 18          # GPIO number of the SET pin used with the HC-12
 
 # Flight Control PID Gains
 # Set initial setting here to 0 for safety reasons, though they can be updated via settings update packet later
@@ -66,6 +74,13 @@ yaw_ki:int = 0
 yaw_kd:int = 0
 i_limit:int = 0
 
+# PID Scaling Factor
+PID_SCALING_FACTOR:int = 10000           # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
+
+# Complimentary Filter
+alpha:int = 9800                         # complementary filter alpha value for pitch/roll angle estimation. 0-10000: e.g. 9800 would be an alpha of 98% or 0.98, or 9992 would be an alpha of 99.92% or 0.9992. A value closer to 100% favor's gyroscope's opinion, lower favors accelerometer (noisy). It is the actual value x1000. So 9992 for example would effectively be 0.9992... so imagine the decimal point before!
+
+# Telemetry Frames to record per second
 telemetry_frames_per_second:int = 4 # how many telemetry frames to record per second
 
 ####################
@@ -87,8 +102,8 @@ print("HC-12 SETUP")
 
 # set up UART interface for radio communications via HC-12
 print("Setting up HC-12 via UART...")
-hc12_set = machine.Pin(18, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
-uart_hc12 = machine.UART(0, tx=machine.Pin(16), rx=machine.Pin(17), baudrate=9600)
+hc12_set = machine.Pin(hc12_set, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
+uart_hc12 = machine.UART(hc12_uart_bus, tx=machine.Pin(hc12_uart_tx), rx=machine.Pin(hc12_uart_rx), baudrate=9600)
 uart_hc12.read(uart_hc12.any()) # clear out any RX buffer that may exist
 
 # pulse HC-12
@@ -184,14 +199,14 @@ print("MPU-6050 SETUP")
 
 # Confirm MPU-6050 is connected via I2C
 print("Setting up I2C...")
-i2c = machine.I2C(1, sda=machine.Pin(26), scl=machine.Pin(27))
+i2c = machine.I2C(i2c_bus, sda=machine.Pin(i2c_sda), scl=machine.Pin(i2c_scl))
 if 0x68 not in i2c.scan():
     print("MPU-6050 not connected via I2C!")
     FATAL_ERROR("MPU-6050 not connected!")
 else:
     send_special("IMU CON")
     print("MPU-6050 confirmed to be connected via I2C.")
-    
+
 # Set up MPU-6050
 print("Waking up MPU-6050...")
 i2c.writeto_mem(0x68, 0x6B, bytes([0])) # wake up 
