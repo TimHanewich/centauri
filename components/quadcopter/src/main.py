@@ -30,10 +30,10 @@ led.on()
 
 # right away, set up motor PWMs with frequency of 250 Hz and start at 0% throttle (yes, 1,000,000 ns is 0% throttle)
 # why do this right away? Some ESCs have a timeout that will refuse to turn on if the PWM signal is not received within a certain number of seconds of powering on
-gpio_motor1:int = 21 # front left, clockwise
-gpio_motor2:int = 20 # front right, counter clockwise
+gpio_motor1:int = 20 # front left, clockwise
+gpio_motor2:int = 21 # front right, counter clockwise
 gpio_motor3:int = 19 # rear left, counter clockwise
-gpio_motor4:int = 18 # rear right, clockwise
+gpio_motor4:int = 22 # rear right, clockwise
 target_hz:int = 250 # the number of times to run the PID loop, per second. IMPORTANT: if you change this, you will also need to change the time-sensitive PID gains (integral and derivative). I did not build a time-scaling mechanism into those calculations.
 M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=1000000)
 M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=1000000)
@@ -87,8 +87,8 @@ print("HC-12 SETUP")
 
 # set up UART interface for radio communications via HC-12
 print("Setting up HC-12 via UART...")
-hc12_set = machine.Pin(7, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
-uart_hc12 = machine.UART(1, tx=machine.Pin(8), rx=machine.Pin(9), baudrate=9600)
+hc12_set = machine.Pin(18, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
+uart_hc12 = machine.UART(0, tx=machine.Pin(16), rx=machine.Pin(17), baudrate=9600)
 uart_hc12.read(uart_hc12.any()) # clear out any RX buffer that may exist
 
 # pulse HC-12
@@ -184,23 +184,14 @@ print("MPU-6050 SETUP")
 
 # Confirm MPU-6050 is connected via I2C
 print("Setting up I2C...")
-i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17))
+i2c = machine.I2C(1, sda=machine.Pin(26), scl=machine.Pin(27))
 if 0x68 not in i2c.scan():
     print("MPU-6050 not connected via I2C!")
     FATAL_ERROR("MPU-6050 not connected!")
 else:
+    send_special("IMU CON")
     print("MPU-6050 confirmed to be connected via I2C.")
-
-# Confirm MPU-6050 is on and operational by reading the "whoami" register
-print("Reading MPU-6050 WHOAMI register...")
-whoami:int = i2c.readfrom_mem(0x68, 0x75, 1)[0]
-if whoami == 0x68:
-    print("MPU-6050 WHOAMI passed!")
-    send_special("IMU OK")
-else:
-    print("MPU-6050 WHOAMI Failed!")
-    FATAL_ERROR("MPU6050 WHOAMI Fail")
-
+    
 # Set up MPU-6050
 print("Waking up MPU-6050...")
 i2c.writeto_mem(0x68, 0x6B, bytes([0])) # wake up 
