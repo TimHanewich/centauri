@@ -25,6 +25,12 @@ print()
 ##### SETTINGS #####
 ####################
 
+# Motor GPIOs (throggle signal line for each ESC)
+gpio_motor1:int = 20 # front left, clockwise
+gpio_motor2:int = 21 # front right, counter clockwise
+gpio_motor3:int = 19 # rear left, counter clockwise
+gpio_motor4:int = 22 # rear right, clockwise
+
 # I2C Connection (for MPU6050 and SPARE)
 i2c_bus:int = 1       # the I2C bus being used to use (0 or 1)
 i2c_sda:int = 26      # the GPIO number
@@ -71,10 +77,6 @@ led.on()
 
 # right away, set up motor PWMs with frequency of 250 Hz and start at 0% throttle (yes, 1,000,000 ns is 0% throttle)
 # why do this right away? Some ESCs have a timeout that will refuse to turn on if the PWM signal is not received within a certain number of seconds of powering on
-gpio_motor1:int = 20 # front left, clockwise
-gpio_motor2:int = 21 # front right, counter clockwise
-gpio_motor3:int = 19 # rear left, counter clockwise
-gpio_motor4:int = 22 # rear right, clockwise
 target_hz:int = 250 # the number of times to run the PID loop, per second. IMPORTANT: if you change this, you will also need to change the time-sensitive PID gains (integral and derivative). I did not build a time-scaling mechanism into those calculations.
 M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=1000000)
 M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=1000000)
