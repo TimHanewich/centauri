@@ -21,31 +21,6 @@ print("----- CENTAURI FLIGHT CONTROLLER -----")
 print("github.com/TimHanewich/centauri")
 print()
 
-import machine
-
-# First thing is first: set up onboard LED, turn it on while loading
-print("Turning LED on...")
-led = machine.Pin("LED", machine.Pin.OUT)
-led.on()
-
-# right away, set up motor PWMs with frequency of 250 Hz and start at 0% throttle (yes, 1,000,000 ns is 0% throttle)
-# why do this right away? Some ESCs have a timeout that will refuse to turn on if the PWM signal is not received within a certain number of seconds of powering on
-gpio_motor1:int = 20 # front left, clockwise
-gpio_motor2:int = 21 # front right, counter clockwise
-gpio_motor3:int = 19 # rear left, counter clockwise
-gpio_motor4:int = 22 # rear right, clockwise
-target_hz:int = 250 # the number of times to run the PID loop, per second. IMPORTANT: if you change this, you will also need to change the time-sensitive PID gains (integral and derivative). I did not build a time-scaling mechanism into those calculations.
-M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=1000000)
-M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=1000000)
-M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_ns=1000000)
-M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1000000)
-
-print("Importing other libraries...")
-import time
-import os
-from tools import unpack_control_packet, unpack_settings_update, pack_telemetry
-from itrig import isqrt, iatan2, isin, icos, itan  # integer trigonometry functions
-
 ####################
 ##### SETTINGS #####
 ####################
@@ -86,6 +61,31 @@ telemetry_frames_per_second:int = 4 # how many telemetry frames to record per se
 ####################
 ####################
 ####################
+
+import machine
+
+# First thing is first: set up onboard LED, turn it on while loading
+print("Turning LED on...")
+led = machine.Pin("LED", machine.Pin.OUT)
+led.on()
+
+# right away, set up motor PWMs with frequency of 250 Hz and start at 0% throttle (yes, 1,000,000 ns is 0% throttle)
+# why do this right away? Some ESCs have a timeout that will refuse to turn on if the PWM signal is not received within a certain number of seconds of powering on
+gpio_motor1:int = 20 # front left, clockwise
+gpio_motor2:int = 21 # front right, counter clockwise
+gpio_motor3:int = 19 # rear left, counter clockwise
+gpio_motor4:int = 22 # rear right, clockwise
+target_hz:int = 250 # the number of times to run the PID loop, per second. IMPORTANT: if you change this, you will also need to change the time-sensitive PID gains (integral and derivative). I did not build a time-scaling mechanism into those calculations.
+M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=1000000)
+M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=1000000)
+M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_ns=1000000)
+M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1000000)
+
+print("Importing other libraries...")
+import time
+import os
+from tools import unpack_control_packet, unpack_settings_update, pack_telemetry
+from itrig import isqrt, iatan2, isin, icos, itan  # integer trigonometry functions
 
 # establish failure pattern
 def FATAL_ERROR(error_msg:str = None) -> None:
