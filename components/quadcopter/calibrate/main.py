@@ -27,11 +27,11 @@ import time
 led = machine.Pin("LED", machine.Pin.OUT)
 
 # Set up vars
-gpio_motor1:int = 21 # front left, clockwise
-gpio_motor2:int = 20 # front right, counter clockwise
+gpio_motor1:int = 20 # front left, clockwise
+gpio_motor2:int = 21 # front right, counter clockwise
 gpio_motor3:int = 19 # rear left, counter clockwise
-gpio_motor4:int = 18 # rear right, clockwise
-target_hz:int = 250 # the number of times to run the PID loop, per second. IMPORTANT: if you change this, you will also need to change the time-sensitive PID gains (integral and derivative). I did not build a time-scaling mechanism into those calculations.
+gpio_motor4:int = 22 # rear right, clockwise
+target_hz:int = 250
 
 # Set up on 100% throttle
 print("Arming @ 100% throttle...")
