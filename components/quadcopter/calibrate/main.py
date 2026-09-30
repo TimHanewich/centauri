@@ -20,6 +20,11 @@
 # this is a lightweight script to re-calibrate all of the motors on the quadcopter.
 # WARNING: DO THIS WITH PROPS OFF!
 
+# NOTE:
+# It may be best to do this one ESC at a time. 
+# I had some trouble with calibrating all four at a time: some not quite calibrating, some with different min/max points.
+# and this was fixed what I ONLY did one ESC
+
 import machine
 import time
 
