@@ -42,6 +42,9 @@ hc12_uart_tx:int = 16      # GPIO number of the pico pin that will be used to se
 hc12_uart_rx:int = 17      # GPIO number of the pico pin that will be used to receive data from the HC-12
 hc12_set:int = 18          # GPIO number of the SET pin used with the HC-12
 
+# The Pin (GPIO #) used for the analog-to-digital reading of the voltage divider, determining the battery voltage
+vbat_adc_gpio:int = 28
+
 # Flight Control PID Gains
 # Set initial setting here to 0 for safety reasons, though they can be updated via settings update packet later
 pitch_kp:int = 0
@@ -316,7 +319,7 @@ input_roll_int16:int = 0             # from -32768 to 32767, later interpreted t
 input_yaw_int16:int = 0              # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
 
 # set up ADC for reading the battery voltage
-vbat_adc = machine.ADC(machine.Pin(26))
+vbat_adc = machine.ADC(machine.Pin(vbat_adc_gpio))
 
 # Set up telemetry variables
 vbat:int = 0         # battery voltage between 6.0 and 16.8 volts, but expressed as an integer between 60 and 168 (pretend decimal point just before last digit. We do this so integer division can be used).
