@@ -20,30 +20,19 @@
 # this is a lightweight script to re-calibrate all of the motors on the quadcopter.
 # WARNING: DO THIS WITH PROPS OFF!
 
-# NOTE:
-# It may be best to do this one ESC at a time. 
-# I had some trouble with calibrating all four at a time: some not quite calibrating, some with different min/max points.
-# and this was fixed what I ONLY did one ESC
-
 import machine
 import time
 
 # set up led
 led = machine.Pin("LED", machine.Pin.OUT)
 
-# Set up vars
-gpio_motor1:int = 20 # front left, clockwise
-gpio_motor2:int = 21 # front right, counter clockwise
-gpio_motor3:int = 19 # rear left, counter clockwise
-gpio_motor4:int = 22 # rear right, clockwise
-target_hz:int = 250
+# Set up var
+gpio_motor:int = 20
 
 # Set up on 100% throttle
 print("Arming @ 100% throttle...")
-M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=2000000)
-M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=2000000)
-M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_ns=2000000)
-M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=2000000)
+target_hz:int = 250
+motor:machine.PWM = machine.PWM(machine.Pin(gpio_motor), freq=target_hz, duty_ns=2000000)
 led.on()
 
 # Wait 5 seconds
@@ -52,10 +41,7 @@ time.sleep(5.0)
 
 # go to 0% throttle
 print("Dropping to minimum throttle for calibration low point...")
-M1.duty_ns(1_000_000)
-M2.duty_ns(1_000_000)
-M3.duty_ns(1_000_000)
-M4.duty_ns(1_000_000)
+motor.duty_ns(1_000_000)
 led.off()
 
 print("Calibration complete!")
