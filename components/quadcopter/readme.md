@@ -66,11 +66,19 @@ With all the components assembled on the 3D-printed frame, you are now ready to 
 ## Flight Controller Firmware
 The Centauri Flight Controller firmware is written in MicroPython and is designed (at least to the best of my ability), to run as efficiently as possible, but within legibility reason.
 
-The flight controller code can be found [here](./src/). It is only two `.py` files:
-- `main.py` - the main flight controller program that receives pilot input over a radio channel, observes IMU readings, and applies thrust to reconcile actual gyroscopic rates with desired rates.
-- `tools.py` - contains helper functions for unpacking command input, packing telemetry data, and more.
+The flight controller code can be found [here](./src/).
 
-With your quadcopter fully assembled and wired up, all you need to do is flash these two files to the root directory of the Raspberry Pi Pico acting as the MCU. Assuming you wired each component to the Pico's GP pins as depicted in the wiring diagram, it will work without further configuration. Alternatively, you may need to make minor tweaks to the pin mappings.
+With your quadcopter fully assembled and wired up, all you need to do is flash these files to the root directory of the Raspberry Pi Pico acting as the MCU. Assuming you wired each component to the Pico's GP pins as depicted in the wiring diagram, it will work without further configuration. Alternatively, you may need to make minor tweaks to the pin mappings.
+
+## ESC Calibration Script
+I'm also providing a lightweight script to calibrate brand new ESCs, available in [/calibrate](./calibrate/).
+
+## FPV Flying
+You can also fly Centauri as an FPV quadcopter just by fastening a FPV camera/VTX/antenna to it! This is optional and not required to achieve flight, but if you want to fly via FPV goggles (or monitor), you should do this!
+
+I purchased and had a lot of success with the [AKK BA3](https://amzn.to/4yjdSJW) FPV All-in-One module. If you decide to use this in your quadcopter, you can use [this 3D-printed frame](https://www.thingiverse.com/thing:7229291) I designed for it to securely hold it in place on your quadcopter, mounted at the front. Print `prong_base.stl` and `akk_ba3_mount_v2.stl`.
+
+![v2](https://i.imgur.com/JVTK1yY.jpeg)
 
 ## Weight
 - Component weights
@@ -82,9 +90,3 @@ With your quadcopter fully assembled and wired up, all you need to do is flash t
     - With GoPro attached: [920 grams](https://i.imgur.com/8M9BNGq.jpeg)
         - GoPro, GoPro frame, and M4 screw + nut for attaching: [146 grams](https://i.imgur.com/HSME9m7.jpeg)
     - In "Configuration D" (antenna mast) with FPV camera attached: [824 grams](https://i.imgur.com/GGvb2es.jpeg)
-
-## FPV Flying
-You can also fly Centauri as an FPV quadcopter just by fastening a FPV camera/VTX/antenna to it! I did this, read more about it [here](./FPV/)!
-
-## ESC Calibration Script
-I'm also providing a lightweight script to calibrate brand new ESCs, available in [/calibrate](./calibrate/).
