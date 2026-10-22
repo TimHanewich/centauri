@@ -1,5 +1,5 @@
 ## Major Development Milestones
-These commits mark key milestones in Centauri's development. Each represents a completion of a significant improvement, usually to a functional component of the Centauri ecosystem. I note them here in case you wanted to "rewind" back to a version you are building!
+These commits mark key milestones in Centauri's development. Each represents a completion of a significant improvement, usually to a functional component of the Centauri ecosystem. I note them here in case you wanted to "rewind" back to a version you are building! *Note: if the commit is noted here, it has been flown, tested, and validated to work!*
 |Commit|Description|
 |-|-|
 |`880aef867fc2f1b2ec5d29fdde0b9acc81f665ad`|Increased fidelity on complementary fiter tuning (`alpha`).|
