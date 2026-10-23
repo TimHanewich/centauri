@@ -81,12 +81,13 @@ I purchased and had a lot of success with the [AKK BA3](https://amzn.to/4yjdSJW)
 ![v2](https://i.imgur.com/JVTK1yY.jpeg)
 
 ## Weight
-- Component weights
-    - Quadcopter fully assembled, without battery, FPV camera, or GoPro: 427 grams
-    - The 4S 3,300 mAh LiPo battery I use is 347 grams.
-- Asembled Operating Weights
-    - By itself, with 4S battery: ~774 grams
-    - With FPV camera attached: [790 grams](https://i.imgur.com/AakQhmH.jpeg)
-    - With GoPro attached: [920 grams](https://i.imgur.com/8M9BNGq.jpeg)
-        - GoPro, GoPro frame, and M4 screw + nut for attaching: [146 grams](https://i.imgur.com/HSME9m7.jpeg)
-    - In "Configuration D" (antenna mast) with FPV camera attached: [824 grams](https://i.imgur.com/GGvb2es.jpeg)
+
+### Individual Components
+- The 4S 3,300 mAh LiPo battery I use is 347 grams.
+- GoPro, GoPro frame, and M4 screw + nut for attaching: [146 grams](https://i.imgur.com/HSME9m7.jpeg)
+
+### Centauri Quadcopter V1
+- In "Configuration D" (antenna mast) with FPV camera attached: [824 grams](https://i.imgur.com/GGvb2es.jpeg)
+
+### Centauri Quadcopter V2
+- In "Configuration D" (antenna mast) with FPV camera attached: [782 grams](https://i.imgur.com/Kh0mNKz.jpeg)
