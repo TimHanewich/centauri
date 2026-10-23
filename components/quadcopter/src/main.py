@@ -61,6 +61,20 @@ i_limit:int = 0
 # PID Scaling Factor
 PID_SCALING_FACTOR:int = 10000           # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
 
+# Accelerometer Calibration: Primary Calibration (1,000x for sake of integer math)
+accel_calib_perform_primary:bool = True            # if primary calibration should even be performed at all. Will need to set this to "False" if you don't have m and b values loaded in to this section.
+accel_calib_x_m:int = 997                          # x axis "m" value in y=mx+b
+accel_calib_x_b:int = 37                           # x axis "b" value in y=mx+b
+accel_calib_y_m:int = 999                          # y axis "m" value in y=mx+b
+accel_calib_y_b:int = -23                          # y axis "b" value in y=mx+b
+accel_calib_z_m:int = 1003                         # z axis "m" value in y=mx+b
+accel_calib_z_b:int = -3                           # z axis "b" value in y=mx+b
+
+# Accelerometer Calibration: Secondary Calibration (1,000x for sake of integer math)
+accel_calib_perform_secondary:bool = True          # if secondary calibration should even be performed at all.
+accel_calib_pitch_angle_offset:int = 3688          # simple angle offset to "subtract out", observed when sitting level (likely offset in frame)
+accel_calib_roll_angle_offset:int = -2084          # simple angle offset to "subtract out", observed when sitting level (likely offset in frame)
+
 # Complimentary Filter
 alpha:int = 9800                         # complementary filter alpha value for pitch/roll angle estimation. 0-10000: e.g. 9800 would be an alpha of 98% or 0.98, or 9992 would be an alpha of 99.92% or 0.9992. A value closer to 100% favor's gyroscope's opinion, lower favors accelerometer (noisy). It is the actual value x1000. So 9992 for example would effectively be 0.9992... so imagine the decimal point before!
 
@@ -557,6 +571,15 @@ try:
         gyro_y = gyro_y - gyro_bias_y
         gyro_z = gyro_z - gyro_bias_z
 
+        # Accelerometer Calibration: Primary Calibration (if settings beckon it)
+        # Multiply by 1,000 is necessary to keep it in the 1000x scale
+        # ~73 us
+        # 0 new bytes
+        if accel_calib_perform_primary:
+            accel_x = (accel_x - accel_calib_x_b) * 1000 // accel_calib_x_m
+            accel_y = (accel_y - accel_calib_y_b) * 1000 // accel_calib_y_m
+            accel_z = (accel_z - accel_calib_z_b) * 1000 // accel_calib_z_m
+
         # assign gyro x,y,z to specific drone-body axes
         # I do this here deliberately as something that is easy to change in case the orientation of the IMU changes (i.e. axes flip)
         roll_rate = gyro_x
@@ -597,6 +620,13 @@ try:
         # 0 bytes of memory, takes ~145 us (as viper), but would take ~600 us if iatan2 and isqrt were NOT viper (i checked)
         pitch_angle_accel:int = iatan2(accel_x, isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
         roll_angle_accel:int = iatan2(accel_y, isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
+
+        # Accelerometer Calibration: Secondary Calibration (if settings beckon it)
+        # ~40 us
+        # 0 new bytes of memory
+        if accel_calib_perform_secondary:
+            pitch_angle_accel = pitch_angle_accel - accel_calib_pitch_angle_offset
+            roll_angle_accel = roll_angle_accel - accel_calib_roll_angle_offset
 
         # Now calculate how much time has elapsed since the last time we were here, about to use dead reckoning with the gyro's data to estimate the angles
         now_us:int = time.ticks_us()
