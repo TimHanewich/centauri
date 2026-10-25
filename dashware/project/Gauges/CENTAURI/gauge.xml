@@ -1,0 +1,6 @@
+<Gauge version="3" x="648.6281" y="8.203682" readOnly="False" width="540.3734" height="94.42007" transparency="1" thumbnailBackgroundTransparency="1" thumbnailBackgroundRed="135" thumbnailBackgroundGreen="206" thumbnailBackgroundBlue="235">
+  <Components>
+    <Image x="7.263062" y="13.07355" transparency="1" src="centauri.png" width="518.5841" height="61.0099" />
+  </Components>
+  <Inputs />
+</Gauge>

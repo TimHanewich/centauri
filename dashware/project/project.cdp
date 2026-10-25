@@ -8,12 +8,12 @@ DashWare</EndTitle>
   </Information>
   <InputSettings>
     <DataFiles>
-      <DataFile profile="Centauri" fileName="C:\Users\tim\Desktop\flight2.csv" currentTime="166.941543034072" dataSynced="True" syncOffset="25.741668156142" closedCourse="True" startFinishSetInUI="False" openCourseStartOffset="-1" openCourseFinishOffset="-1" lapStartX="0" lapStartY="0" lapEndX="0" lapEndY="0" lapToDraw="0" startFinishDistanceThreshold="40" showDistanceThreshold="True" ignoreFirstLap="True" ignoreLastLap="True" lapTimeHoldSecs="5" startTrim="48.544" endTrim="180.957">
+      <DataFile profile="Centauri" fileName="C:\Users\tim\Desktop\flight4.csv" currentTime="398.61" dataSynced="True" syncOffset="259.748110108759" closedCourse="True" startFinishSetInUI="False" openCourseStartOffset="-1" openCourseFinishOffset="-1" lapStartX="0" lapStartY="0" lapEndX="0" lapEndY="0" lapToDraw="0" startFinishDistanceThreshold="40" showDistanceThreshold="True" ignoreFirstLap="True" ignoreLastLap="True" lapTimeHoldSecs="5" startTrim="259.03" endTrim="398.61">
         <LapSplits />
       </DataFile>
     </DataFiles>
     <VideoFiles>
-      <VideoFile trimStart="20199.8762376238" trimEnd="139500" videoUniqueID="" rotateVideo="False">C:\Users\tim\Desktop\flight2_rft.mp4</VideoFile>
+      <VideoFile trimStart="0" trimEnd="139500" videoUniqueID="" rotateVideo="False">C:\Users\tim\Desktop\flight4_rft.mp4</VideoFile>
     </VideoFiles>
   </InputSettings>
   <OutputSettings>
@@ -64,11 +64,12 @@ DashWare</EndTitle>
     <Gauge name="LastRecv" transparency="1" x="18.80866" y="200.2285">
       <InputMapping gaugeInput="LRECV_MS" fromFastestLapSamePos="False" dataFileIndex="0" dataColumn="Cmd Last Received ms" />
     </Gauge>
+    <Gauge name="CENTAURI" transparency="1" x="689.0241" y="8.203682" />
   </GaugeSettings>
   <ChartSettings>
     <ChartTab Type="Time">
       <Inputs>
-        <Input Filename="C:\Users\tim\Desktop\flight2.csv">
+        <Input Filename="C:\Users\tim\Desktop\flight4.csv">
           <Laps>
             <Lap Number="0" />
           </Laps>
@@ -88,7 +89,7 @@ DashWare</EndTitle>
     </ChartTab>
     <ChartTab Type="Distance">
       <Inputs>
-        <Input Filename="C:\Users\tim\Desktop\flight2.csv">
+        <Input Filename="C:\Users\tim\Desktop\flight4.csv">
           <Laps>
             <Lap Number="0" />
           </Laps>
