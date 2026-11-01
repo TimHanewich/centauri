@@ -73,7 +73,7 @@ async def main() -> None:
     # set up status variables we will get from the drone (and display in the console!): system status
     vbat:float = 0.0 # volts
 
-    # For estimating remaining flight time
+    # Settings: for estimating remaining flight time
     bat_series:int = 4                 # How many cells in a series are being used to fly the drone. e.g. 4S, 3S, 2S, etc.
     bat_capacity:int = 3_300           # The capacity of the battery pack being used onboard the drone, in mAh. Used to approximate remaining flight time.
     cruise_power:int = 192             # the average power draw of the drone, in watts. Later used to approximate remaining flight time.
@@ -592,14 +592,18 @@ async def main() -> None:
                 dp.roll_angle = roll_angle
 
                 # calculate and plug in INFERRED telemetry variables
-                pack_nominal_voltage:float = 3.7 * bat_series                                         # calculate the battery's nominal voltage based on its architecture (number of cells in a series). e.g. 14.8 for a 4S
-                pack_capacity_full_wh:float = (pack_nominal_voltage * bat_capacity) / 1000.0          # calculate the total capacity of this pack, in watt hours
-                pack_soc:float = tools.soc(vbat / bat_series)                                         # estimate the battery state of charge (a percent). Provide it with the raw battery pack voltage divided by number of cells to get average voltage per cell.
-                pack_capacity_remaining_wh:float = pack_capacity_full_wh * pack_soc                   # calculate how much capacity, in watt hours, is remaining in this pack based on that SOC percent
-                flight_time_remaining_hours:float = cruise_power / pack_capacity_remaining_wh         # calculate the flight time remaining, in hours, given we know the watt hours remaining in the pack and we know the average watt draw while cruising
-                flight_time_remaining_minutes:float = flight_time_remaining_hours * 60                # convert to minutes
-                dp.drone_battery_soc = pack_soc                                                       # Plug in SOC (a percent)
-                dp.flight_time_remaining_minutes = flight_time_remaining_minutes                      # Plug in flight time remaining
+                pack_nominal_voltage:float = 3.7 * bat_series                                             # calculate the battery's nominal voltage based on its architecture (number of cells in a series). e.g. 14.8 for a 4S
+                pack_capacity_full_wh:float = (pack_nominal_voltage * bat_capacity) / 1000.0              # calculate the total capacity of this pack, in watt hours
+                pack_soc:float = tools.soc(vbat / bat_series)                                             # estimate the battery state of charge (a percent). Provide it with the raw battery pack voltage divided by number of cells to get average voltage per cell.
+                pack_capacity_remaining_wh:float = pack_capacity_full_wh * pack_soc                       # calculate how much capacity, in watt hours, is remaining in this pack based on that SOC percent
+                if pack_capacity_remaining_wh > 0.0:                                                      # check for zero values to avoid dividing by 0.0
+                    flight_time_remaining_hours:float = cruise_power / pack_capacity_remaining_wh         # calculate the flight time remaining, in hours, given we know the watt hours remaining in the pack and we know the average watt draw while cruising
+                    flight_time_remaining_minutes:float = flight_time_remaining_hours * 60                # convert to minutes
+                    dp.drone_battery_soc = pack_soc                                                       # Plug in SOC (a percent)
+                    dp.flight_time_remaining_minutes = flight_time_remaining_minutes                      # Plug in flight time remaining
+                else:                                                                                     # if pack capacity remaining is 0 watt hours, plug in 0s!
+                    dp.drone_battery_soc = 0.0
+                    dp.flight_time_remaining_minutes = 0.0
 
                 # plug in drone messages
                 dp.messages = drone_messages

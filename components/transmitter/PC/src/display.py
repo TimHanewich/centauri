@@ -115,7 +115,7 @@ def construct(dp:DisplayPack) -> rich.console.Group:
 
     # construct what to display in telemety column (telemetry from quadcopter)
     txt_status:str = ""
-    txt_status = txt_status + "[underline]Battery Info[/underline]"
+    txt_status = txt_status + "[underline]Battery[/underline]"
     txt_status = txt_status + "\n" + "Voltage: " + str(round(dp.drone_battery, 1)) + " v"
     txt_status = txt_status + "\n" + "SOC: " + str(round(dp.drone_battery_soc * 100, 0)) + "%"
     txt_status = txt_status + "\n" + "Remain: " + str(round(dp.flight_time_remaining_minutes, 1)) + " mins"
