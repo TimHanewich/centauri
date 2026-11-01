@@ -13,3 +13,48 @@ Key libraries used:
 - **[rich](https://pypi.org/project/rich/)** - renders a live telemetry dashboard during operation  
 - **[pyserial](https://pypi.org/project/pyserial/)** - manages serial communication with the transceiver  
 - **[keyboard](https://pypi.org/project/keyboard/)** - detects pilot keyboard commands for adjusting settings  
+
+## Getting up and running
+Note that **python version 3.12** must be installed and used as I have learned the **pygame** module is best on it.
+
+If you need to install python version 3.12:
+
+```
+py install 3.12
+```
+
+### Step 1: Create and Activate a Virtual Environment
+First navigate into the `src` folder in a terminal.
+
+Create a virtual environment specifically using version 3.12:
+
+```
+py -3.12 -m venv centauri_venv
+```
+
+### Step 2: Activate the virtual environment!
+On windows:
+
+```
+centauri_venv\Scripts\activate.bat
+```
+
+On Linux:
+
+```
+source centauri_venv/bin/activate
+```
+
+### Step 3: Install requirements
+Run:
+
+```
+python -m pip install -r requirements.txt
+```
+
+### Step 4: Run!
+Now you can run the program! Run:
+
+```
+python main.py
+```
