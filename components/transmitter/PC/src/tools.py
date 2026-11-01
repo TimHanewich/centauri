@@ -226,3 +226,14 @@ class NonlinearTransformer:
             return self._transform(percent)
         else:
             return (self._transform(abs(percent)) * -1)
+
+# LiPo cell state of charge estimator
+volts:list[float] = [3.30, 3.60, 3.68, 3.72, 3.76, 3.79, 3.82, 3.86, 3.92, 4.00, 4.10, 4.20]
+socs:list[float] = [0.0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+def soc(cell_voltage:float) -> float:
+    """Estimates LiPo cell state of charge (percentage) based on its voltage. Returns values between 0.0 and 1.0."""
+    if cell_voltage <= volts[0]: return 0.0
+    if cell_voltage >= volts[-1]: return 100.0
+    for i in range(1, len(volts)):
+        if cell_voltage <= volts[i]:
+            return socs[i-1] + (cell_voltage - volts[i-1]) * (socs[i] - socs[i-1]) / (volts[i] - volts[i-1])
