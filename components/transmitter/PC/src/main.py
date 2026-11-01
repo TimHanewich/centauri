@@ -316,7 +316,7 @@ async def main() -> None:
                         if throttle_settings_choice == "Load Profile":
                             idle_throttle = 0.2
                             max_throttle = 0.6
-                            print("[green]Throttle profile loaded.[/]")
+                            console.print("[green]Throttle profile loaded.[/]")
                             print()
 
                         elif throttle_settings_choice == "Set Values":
