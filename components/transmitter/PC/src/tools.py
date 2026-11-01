@@ -237,3 +237,24 @@ def soc(cell_voltage:float) -> float:
     for i in range(1, len(volts)):
         if cell_voltage <= volts[i]:
             return socs[i-1] + (cell_voltage - volts[i-1]) * (socs[i] - socs[i-1]) / (volts[i] - volts[i-1])
+
+# Multiple Choice Questions
+from rich.console import Console
+from rich.prompt import Prompt
+def multiple_choice(question:str, options:list[str]) -> str:
+    console = Console()
+
+    # print options
+    for i in range(0, len(options)):
+        console.print("[blue][bold]" + str(i+1) + "[/][/]: " + options[i])
+
+    # enumerate
+    ChoiceList:list[int] = []
+    for i in range(0, len(options)):
+        ChoiceList.append(str(i+1))
+
+    # ask
+    decision = int(Prompt.ask(question, choices=ChoiceList, show_choices=True))
+
+    # return what they selected
+    return options[decision-1]
