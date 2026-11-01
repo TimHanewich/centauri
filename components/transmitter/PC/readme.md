@@ -58,3 +58,11 @@ Now you can run the program! Run:
 ```
 python main.py
 ```
+
+**Note: if you are running on a linux machine, you will likely need root permission to run the `keyboard` module**. You can work around this by running `sudo` at the beginning of your command, but directly referencing the python executable and then the file. For example:
+
+```
+sudo /home/tim/Downloads/CENTAURI/centauri-venv/bin/python3 /home/tim/Downloads/CENTAURI/centauri/components/transmitter/PC/src/main.py
+```
+
+In the above example, `centauri-venv` is my virtual environment.
