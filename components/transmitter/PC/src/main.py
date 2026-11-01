@@ -155,7 +155,8 @@ async def main() -> None:
         controller.init()
         print("Controller #0, '" + controller.get_name() + "' will be used.")
 
-    # declare ser_port
+    # Prepare to set up serial port connection to transceiver platform
+    print()
     console.print("[u]Transceiver Setup[/u]")
     ser_port:str = None
 
@@ -165,7 +166,7 @@ async def main() -> None:
         import glob
         ports = glob.glob("/dev/ttyUSB*")
         if len(ports) == 1:
-            ser_port = ports[0]
+            ser_port = ports[0]g
         elif len(ports) == 0:
             print("No USB connections found under /dev/ttyUSB*")
         else:
