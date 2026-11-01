@@ -153,7 +153,7 @@ async def main() -> None:
     if num_joysticks > 0:
         controller = pygame.joystick.Joystick(0)
         controller.init()
-        print("Controller #0, '" + controller.get_name() + "' will be used.")
+        console.print("[green]Controller #0, '" + controller.get_name() + "' will be used.[/]")
 
     # Prepare to set up serial port connection to transceiver platform
     print()
