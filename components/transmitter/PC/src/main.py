@@ -38,6 +38,7 @@ import sys
 import keyboard
 from benchmark import cpu_benchmark
 import pyttsx3
+import threading
 
 async def main() -> None:
 
@@ -769,14 +770,16 @@ async def main() -> None:
     print()
     input("All set and ready to go! Enter to continue.")
 
+    # Launch continus TTS on another thread entirely
+    threading.Thread(target=continuous_tts, daemon=True).start()
+
     # get all threads going
     booted:float = time.time() # mark the boot time, in seconds. This will later be used to show system uptime
     task_read_xbox = asyncio.create_task(continuous_read_xbox())
     task_display = asyncio.create_task(continuous_display())
     task_radio_tx = asyncio.create_task(continuous_radio_tx())
     task_radio_rx = asyncio.create_task(continuous_radio_rx())
-    task_continuous_tts = asyncio.create_task(continuous_tts())
-    await asyncio.gather(task_read_xbox, task_display, task_radio_tx, task_radio_rx, task_continuous_tts) # infinitely wait for all to finish (which will never happen since they are infinitely running)
+    await asyncio.gather(task_read_xbox, task_display, task_radio_tx, task_radio_rx) # infinitely wait for all to finish (which will never happen since they are infinitely running)
 
 
 # run main program via asyncio
