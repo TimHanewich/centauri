@@ -763,7 +763,7 @@ async def main() -> None:
                 engine.say(tts_requests[0])
                 engine.runAndWait()
                 tts_requests.pop(0)
-            time.sleep(0.05)
+            await asyncio.sleep(0.05)
 
     # we are all set and ready to go. Confirm.
     print()
