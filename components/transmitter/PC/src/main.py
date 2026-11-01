@@ -516,6 +516,7 @@ async def main() -> None:
         nonlocal pitch
         nonlocal roll
         nonlocal yaw
+        nonlocal tts_requests
 
         # Establish nonlinear transformers for each input axis
         # These do two things:
@@ -555,6 +556,7 @@ async def main() -> None:
                     elif event.type == pygame.JOYBUTTONDOWN:
                         if event.button == 0: # A
                             armed = True
+                            tts_requests.append("Armed")
                         elif event.button == 1: # B
                             armed = False
                         elif event.button == 4: # LB
