@@ -173,6 +173,7 @@ async def main() -> None:
         print()
 
         # Open serial port
+        console.print("[underline]Connecting to Auxiliary Device[/]")
         print("Opening serial port...")
         try:
             ser:serial.Serial = serial.Serial(port=ser_port, baudrate=115200, timeout=5)
