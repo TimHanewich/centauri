@@ -279,6 +279,7 @@ async def main() -> None:
 
             # What do they want to do?
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
+            console.print("[underline][bold]SETTINGS MENU[/][/]")
             wanttodo:str = tools.multiple_choice("What do you want to do?", ["Transmitter Settings", "Drone Settings", "Return"])
             print()
 
