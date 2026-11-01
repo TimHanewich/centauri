@@ -275,16 +275,7 @@ async def main() -> None:
         # ask if they want to update settings continuously until they are right
         while True:
 
-            # Calculate the EFFECTIVE PID values (using PID multiplier)
-            pitch_kp_eff:int = round(pitch_kp * pid_master_multiplier)
-            pitch_ki_eff:int = round(pitch_ki * pid_master_multiplier)
-            pitch_kd_eff:int = round(pitch_kd * pid_master_multiplier)
-            roll_kp_eff:int = round(roll_kp * pid_master_multiplier)
-            roll_ki_eff:int = round(roll_ki * pid_master_multiplier)
-            roll_kd_eff:int = round(roll_kd * pid_master_multiplier)
-            yaw_kp_eff:int = round(yaw_kp * pid_master_multiplier)
-            yaw_ki_eff:int = round(yaw_ki * pid_master_multiplier)
-            yaw_kd_eff:int = round(yaw_kd * pid_master_multiplier)            
+                     
 
             # What do they want to do?
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
@@ -341,6 +332,17 @@ async def main() -> None:
 
                 # Ask what to do further
                 while True:
+
+                    # Calculate the EFFECTIVE PID values (using PID multiplier)
+                    pitch_kp_eff:int = round(pitch_kp * pid_master_multiplier)
+                    pitch_ki_eff:int = round(pitch_ki * pid_master_multiplier)
+                    pitch_kd_eff:int = round(pitch_kd * pid_master_multiplier)
+                    roll_kp_eff:int = round(roll_kp * pid_master_multiplier)
+                    roll_ki_eff:int = round(roll_ki * pid_master_multiplier)
+                    roll_kd_eff:int = round(roll_kd * pid_master_multiplier)
+                    yaw_kp_eff:int = round(yaw_kp * pid_master_multiplier)
+                    yaw_ki_eff:int = round(yaw_ki * pid_master_multiplier)
+                    yaw_kd_eff:int = round(yaw_kd * pid_master_multiplier)   
 
                     # print current settings
                     console.print("[u]PID Settings[/u]")
