@@ -37,6 +37,7 @@ import tools
 import sys
 import keyboard
 from benchmark import cpu_benchmark
+import pyttsx3
 
 async def main() -> None:
 
@@ -94,7 +95,8 @@ async def main() -> None:
     # For Display: set up messages received from drone
     drone_messages:list[display.Message] = []
 
-
+    # For Text-to-Speech service: messages to say
+    tts_requests:list[str] = []
 
 
 
@@ -746,6 +748,20 @@ async def main() -> None:
             # sleep
             await asyncio.sleep(0.05)
 
+    # set up contionuous text to speech service
+    async def continuous_tts() -> None:
+        nonlocal tts_requests
+
+        engine = pyttsx3.init()
+        engine.setProperty("rate", 150)
+        engine.setProperty("volume", 1.0)
+
+        while True:
+            if len(tts_requests) > 0:
+                engine.say(tts_requests[0])
+                engine.runAndWait()
+                tts_requests.pop(0)
+            time.sleep(0.05)
 
     # we are all set and ready to go. Confirm.
     print()
@@ -757,7 +773,8 @@ async def main() -> None:
     task_display = asyncio.create_task(continuous_display())
     task_radio_tx = asyncio.create_task(continuous_radio_tx())
     task_radio_rx = asyncio.create_task(continuous_radio_rx())
-    await asyncio.gather(task_read_xbox, task_display, task_radio_tx, task_radio_rx) # infinitely wait for all to finish (which will never happen since they are infinitely running)
+    task_continuous_tts = asyncio.create_task(continuous_tts())
+    await asyncio.gather(task_read_xbox, task_display, task_radio_tx, task_radio_rx, task_continuous_tts) # infinitely wait for all to finish (which will never happen since they are infinitely running)
 
 
 # run main program via asyncio
