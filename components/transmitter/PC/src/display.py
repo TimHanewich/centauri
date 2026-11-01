@@ -57,6 +57,10 @@ class DisplayPack:
         self.pitch_angle:int = 0 # in degrees
         self.roll_angle:int = 0 # in degrees
 
+        # telemetry inferred from the drone: battery info
+        self.drone_battery_soc:float = 0.0                         # the drone battery state of charge (e.g. 75%), inferred based on the pack's voltage
+        self.flight_time_remaining_minutes:float = 0.0             # the flight time remaining, in minutes. Inferred based on battery capacity remaining and cruise power needed (avg power draw).
+
         # messages being received from the drone
         self.messages:list[Message] = []
 
@@ -111,7 +115,11 @@ def construct(dp:DisplayPack) -> rich.console.Group:
 
     # construct what to display in telemety column (telemetry from quadcopter)
     txt_status:str = ""
-    txt_status = txt_status + "Battery: " + str(round(dp.drone_battery, 1)) + " v"
+    txt_status = txt_status + "[underline]Battery Info[/underline]"
+    txt_status = txt_status + "\n" + "Voltage: " + str(round(dp.drone_battery, 1)) + " v"
+    txt_status = txt_status + "\n" + "SOC: " + str(round(dp.drone_battery_soc * 100, 0)) + "%"
+    txt_status = txt_status + "\n" + "Remain: " + str(round(dp.flight_time_remaining_minutes, 1)) + " mins"
+    txt_status = txt_status + "\n\n" + "[underline]Body[/underline]"
     txt_status = txt_status + "\n" + "Pitch Rate: " + str(dp.pitch_rate) + " °/s"
     txt_status = txt_status + "\n" + "Roll Rate: " + str(dp.roll_rate) + " °/s"
     txt_status = txt_status + "\n" + "Yaw Rate: " + str(dp.yaw_rate) + " °/s"
