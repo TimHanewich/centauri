@@ -37,8 +37,6 @@ import tools
 import sys
 import keyboard
 from benchmark import cpu_benchmark
-import pyttsx3
-import threading
 
 async def main() -> None:
 
@@ -751,27 +749,9 @@ async def main() -> None:
             # sleep
             await asyncio.sleep(0.05)
 
-    # set up contionuous text to speech service
-    def continuous_tts() -> None:
-        nonlocal tts_requests
-
-        engine = pyttsx3.init()
-        engine.setProperty("rate", 150)
-        engine.setProperty("volume", 1.0)
-
-        while True:
-            if len(tts_requests) > 0:
-                engine.say(tts_requests[0])
-                engine.runAndWait()
-                tts_requests.pop(0)
-            time.sleep(0.05)
-
     # we are all set and ready to go. Confirm.
     print()
     input("All set and ready to go! Enter to continue.")
-
-    # Launch continus TTS on another thread entirely
-    threading.Thread(target=continuous_tts, daemon=True).start()
 
     # get all threads going
     booted:float = time.time() # mark the boot time, in seconds. This will later be used to show system uptime
