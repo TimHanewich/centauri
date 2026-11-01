@@ -597,7 +597,7 @@ async def main() -> None:
                 pack_soc:float = tools.soc(vbat / bat_series)                                             # estimate the battery state of charge (a percent). Provide it with the raw battery pack voltage divided by number of cells to get average voltage per cell.
                 pack_capacity_remaining_wh:float = pack_capacity_full_wh * pack_soc                       # calculate how much capacity, in watt hours, is remaining in this pack based on that SOC percent
                 if pack_capacity_remaining_wh > 0.0:                                                      # check for zero values to avoid dividing by 0.0
-                    flight_time_remaining_hours:float = cruise_power / pack_capacity_remaining_wh         # calculate the flight time remaining, in hours, given we know the watt hours remaining in the pack and we know the average watt draw while cruising
+                    flight_time_remaining_hours:float = pack_capacity_remaining_wh / cruise_power         # calculate the flight time remaining, in hours, given we know the watt hours remaining in the pack and we know the average watt draw while cruising
                     flight_time_remaining_minutes:float = flight_time_remaining_hours * 60                # convert to minutes
                     dp.drone_battery_soc = pack_soc                                                       # Plug in SOC (a percent)
                     dp.flight_time_remaining_minutes = flight_time_remaining_minutes                      # Plug in flight time remaining
