@@ -268,6 +268,9 @@ async def main() -> None:
         nonlocal yaw_kd
         nonlocal i_limit
         nonlocal pid_master_multiplier
+        nonlocal bat_series
+        nonlocal bat_capacity
+        nonlocal cruise_power
 
         # ask if they want to update settings continuously until they are right
         while True:
@@ -312,141 +315,150 @@ async def main() -> None:
             console.print(pid_tbl)
             print()
 
-            # Want to change?
-            print("Do you want to change these?")
-            console.print("[blue][bold]1[/blue][/bold] - Load Settings Profile")
-            console.print("[blue][bold]2[/blue][/bold] - Update Controller Settings")
-            console.print("[blue][bold]3[/blue][/bold] - Update PID settings")
-            console.print("[blue][bold]4[/blue][/bold] - Adjust only PID Master Multiplier (make a proportional change)")
-            console.print("[blue][bold]5[/blue][/bold] - Send settings to drone!")
-            console.print("[blue][bold]6[/blue][/bold] - Return")
+            # What do they want to do?
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
-            wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2", "3", "4", "5", "6"], show_choices=True)
-            if wanttodo == "1": # load settings profile
+            wanttodo:str = tools.multiple_choice("What do you want to do?", ["Transmitter Settings", "Drone Settings", "Return"])
+
+            if wanttodo == "Transmitter Settings": # transmitter settings
                 
-                # ideally, would want a prompt here to allow user to select from different settings profiles
-                # but maybe will add that later - for now, just load in default values
-
-                # Load controller setting values
-                idle_throttle = 0.20
-                max_throttle = 0.60
-
-                # Load PID setting values
-                pitch_kp = 4371
-                pitch_ki = 102
-                pitch_kd = 64286
-                roll_kp = 4371
-                roll_ki = 102
-                roll_kd = 64286
-                yaw_kp = 17143
-                yaw_ki = 137
-                yaw_kd = 0
-                i_limit = 350000
-                pid_master_multiplier = 1.0      # reset to 100%
-
-            elif wanttodo == "2": # update controller settings
-
-                print("Okay, let's update the controller settings.")
-
-                # collect idle and max until it is valid!
                 while True:
-                    idle_throttle = tools.ask_float("Idle Throttle")
-                    max_throttle = tools.ask_float("Max Throttle")
 
-                    # settings validation
-                    if max_throttle <= idle_throttle: 
-                        print("Max Throttle must be GREATER THAN idle throttle!")
-                        print("Try again please.")
-                    else:
+                    # ask transmitter settings
+                    transmitter_settings_choice:str = tools.multiple_choice("Transmitter Settings", ["Update Throttle Settings", "Update Battery Settings", "Return"])
+
+                    # handle choice
+                    if transmitter_settings_choice == "Update Throttle Settings":
+
+                        print("Okay, let's update the controller settings.")
+                        
+                        # collect idle and max until it is valid!
+                        while True:
+                            idle_throttle = tools.ask_float("Idle Throttle")
+                            max_throttle = tools.ask_float("Max Throttle")
+        
+                            # settings validation
+                            if max_throttle <= idle_throttle: 
+                                print("Max Throttle must be GREATER THAN idle throttle!")
+                                print("Try again please.")
+                            else:
+                                break
+
+                    elif transmitter_settings_choice == "Update Battery Settings":
+
+                        bat_series = tools.ask_integer("Battery pack cells in a series (e.g. 4S)?")
+                        bat_capacity = tools.ask_integer("Battery pack capacity, in mAh (e.g. 3,300)?")
+                        cruise_power = tools.ask_integer("Cruise Power, in watts (est. avg consumption while flying)?")
+                
+                    elif transmitter_settings_choice == "Return":
                         break
 
-            elif wanttodo == "3": # update PID settings
+
+            elif wanttodo == "Drone Settings": # drone settings
+
+                # Ask what to do further
+                while True:
+
+                    # What to do?
+                    drone_settings_choice:str = tools.multiple_choice("Drone Settings", ["Load PID Rate Profile", "Update PID Multiplier" "Update PID Rates", "Send PID Settings Drone", "Return"])
+
+                    # handle that
+                    if drone_settings_choice == "Load PID Rate Profile":
+
+                        # Load PID setting values
+                        pitch_kp = 4371
+                        pitch_ki = 102
+                        pitch_kd = 64286
+                        roll_kp = 4371
+                        roll_ki = 102
+                        roll_kd = 64286
+                        yaw_kp = 17143
+                        yaw_ki = 137
+                        yaw_kd = 0
+                        i_limit = 350000
+                        pid_master_multiplier = 1.0      # reset to 100%
+
+                    elif drone_settings_choice == "Update PID Multiplier":
+
+                        npmm:float = tools.ask_float("New PID Master Multiplier to use")
+                        pid_master_multiplier = npmm
+
+                    elif drone_settings_choice == "Update PID Rates":
+
+                        print("Okay, let's collect the new PID values.")
+                        
+                        # Collect new settings
+                        pitch_kp = tools.ask_integer("Pitch kP")
+                        pitch_ki = tools.ask_integer("Pitch kI")
+                        pitch_kd = tools.ask_integer("Pitch kD")
+                        roll_kp = tools.ask_integer("Roll kP")
+                        roll_ki = tools.ask_integer("Roll kI")
+                        roll_kd = tools.ask_integer("Roll kD")
+                        yaw_kp = tools.ask_integer("Yaw kP")
+                        yaw_ki = tools.ask_integer("Yaw kI")
+                        yaw_kd = tools.ask_integer("Yaw kD")
+                        i_limit = tools.ask_integer("I Limit")
+                        print()
+
+                    elif drone_settings_choice == "Send PID Settings to Drone":
+
+                        # Send a settings update (PID settings)
+                        if ser != None:
+                            print()
+                            print("Will now send out PID update!")
                 
-                print("Okay, let's collect the new PID values.")
+                            # try a certain number of times
+                            confirmed:bool = False
+                            attempts:int = 0
+                            while confirmed == False and attempts < 5:
+                
+                                console.print("[u]PID Update Attempt # " + str(attempts+1) + "[/u]")
+                
+                                # pack it
+                                print("Packing PID updates...")
+                                ToSend:bytes = tools.pack_settings_update(pitch_kp_eff, pitch_ki_eff, pitch_kd_eff, roll_kp_eff, roll_ki_eff, roll_kd_eff, yaw_kp_eff, yaw_ki_eff, yaw_kd_eff, i_limit)
+                
+                                # send it
+                                print("Sending PID updates...")
+                                ser.write(ToSend + "\r\n".encode())
+                                attempts = attempts + 1
+                
+                                # wait
+                                print("Settings packet sent!")
+                                print("Waiting a moment for it to register.")
+                                time.sleep(1.5)
+                
+                                # handle
+                                print("Checking for settings update confirmation...")
+                                if ser.in_waiting == 0:
+                                    print("No data at all received from drone. Was expecting settings update confirmation.")
+                                else: # There is some data available to read. Is it the confirmation?
+                                    recv:bytes = ser.read(ser.in_waiting) # read all available
+                                    if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
+                                        print("Settings update confirmation received from drone!")
+                                        confirmed = True
+                                        input("Return to continue.")
+                                    else:
+                                        print("Drone sent back " + str(len(recv)) + " bytes but it wasn't a successful settings update.")
+                
+                            # if it just straight up did not work, say so
+                            if confirmed == False: # it never confirmed, which means we went past the number of tries
+                                print("After a number of attempts, the drone did NOT confirm the PID settings update.")
+                                print("There is a good chance it did NOT update the settings values, so be careful!")
+                                input("Return to continue.")
+                            
+                        else:
+                            print("Transceiver not set up, so skipping sending it out!")
+                            input("Return to continue.")
 
-                # Collect new settings
-                pitch_kp = tools.ask_integer("Pitch kP")
-                pitch_ki = tools.ask_integer("Pitch kI")
-                pitch_kd = tools.ask_integer("Pitch kD")
-                roll_kp = tools.ask_integer("Roll kP")
-                roll_ki = tools.ask_integer("Roll kI")
-                roll_kd = tools.ask_integer("Roll kD")
-                yaw_kp = tools.ask_integer("Yaw kP")
-                yaw_ki = tools.ask_integer("Yaw kI")
-                yaw_kd = tools.ask_integer("Yaw kD")
-                i_limit = tools.ask_integer("I Limit")
-                print()
+                    elif drone_settings_choice == "Return":
+                        break
 
-            elif wanttodo == "4": # update only PID Master Multiplier
-                npmm:float = tools.ask_float("New PID Master Multiplier to use")
-                pid_master_multiplier = npmm
-            elif wanttodo == "5": # send to drone as is
-                print("Using those settings values!")
-                break # break out of the infinite loop of asking if the settings look good
-            elif wanttodo == "6": # cancel
+                        
+
+            elif wanttodo == "Return": # return
                 return # break out of this function and return to main screen by closing out of the function
-            else:
+            else: # something else
                 console.print("[red]Invalid choice.[/red]")
-
-        # Send a settings update (PID settings)
-        if ser != None:
-            print()
-            print("Will now send out PID update!")
-
-            # try a certain number of times
-            confirmed:bool = False
-            attempts:int = 0
-            while confirmed == False and attempts < 5:
-
-                console.print("[u]PID Update Attempt # " + str(attempts+1) + "[/u]")
-
-                # pack it
-                print("Packing PID updates...")
-                ToSend:bytes = tools.pack_settings_update(pitch_kp_eff, pitch_ki_eff, pitch_kd_eff, roll_kp_eff, roll_ki_eff, roll_kd_eff, yaw_kp_eff, yaw_ki_eff, yaw_kd_eff, i_limit)
-
-                # send it
-                print("Sending PID updates...")
-                ser.write(ToSend + "\r\n".encode())
-                attempts = attempts + 1
-
-                # wait
-                print("Settings packet sent!")
-                print("Waiting a moment for it to register.")
-                time.sleep(1.5)
-
-                # handle
-                print("Checking for settings update confirmation...")
-                if ser.in_waiting == 0:
-                    print("No data at all received from drone. Was expecting settings update confirmation.")
-                else: # There is some data available to read. Is it the confirmation?
-                    recv:bytes = ser.read(ser.in_waiting) # read all available
-                    if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
-                        print("Settings update confirmation received from drone!")
-                        confirmed = True
-                        input("Return to continue.")
-                    else:
-                        print("Drone sent back " + str(len(recv)) + " bytes but it wasn't a successful settings update.")
-
-            # if it just straight up did not work, say so
-            if confirmed == False: # it never confirmed, which means we went past the number of tries
-                print("After a number of attempts, the drone did NOT confirm the PID settings update.")
-                print("There is a good chance it did NOT update the settings values, so be careful!")
-                input("Return to continue.")
-            
-        else:
-            print("Transceiver not set up, so skipping sending it out!")
-            input("Return to continue.")
-
-
-
-
-
-
-
-
-
-
-
 
 
 
