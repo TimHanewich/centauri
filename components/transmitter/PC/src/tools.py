@@ -60,11 +60,12 @@ def pack_control_packet(throttle:float, pitch:float, roll:float, yaw:float) -> b
     ToReturn.extend(asint16.to_bytes(2, "big")) # pack as 2-bytes using big endian
 
     # Add 2-byte XOR-chain-based checksum
+    # This is based on the Fletcher16 checksum, shown here: https://en.wikipedia.org/wiki/Fletcher%27s_checksum
     checksum1:int = 0x00 # start with 0
     checksum2:int = 0x00 # start with 0
     for byte in ToReturn: # for each byte added so far
-        checksum1 = checksum1 ^ byte         # XOR operation on byte
-        checksum2 = checksum2 ^ checksum1    # XOR operation on checksum1 itself
+        checksum1 = (checksum1 + byte) % 255
+        checksum2 = (checksum2 + checksum1) % 255
     ToReturn.append(checksum1)
     ToReturn.append(checksum2)
 

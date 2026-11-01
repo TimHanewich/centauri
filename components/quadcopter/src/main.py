@@ -21,36 +21,29 @@ print("----- CENTAURI FLIGHT CONTROLLER -----")
 print("github.com/TimHanewich/centauri")
 print()
 
-import machine
-
-# First thing is first: set up onboard LED, turn it on while loading
-print("Turning LED on...")
-led = machine.Pin("LED", machine.Pin.OUT)
-led.on()
-
-# right away, set up motor PWMs with frequency of 250 Hz and start at 0% throttle (yes, 1,000,000 ns is 0% throttle)
-# why do this right away? Some ESCs have a timeout that will refuse to turn on if the PWM signal is not received within a certain number of seconds of powering on
-gpio_motor1:int = 21 # front left, clockwise
-gpio_motor2:int = 20 # front right, counter clockwise
-gpio_motor3:int = 19 # rear left, counter clockwise
-gpio_motor4:int = 18 # rear right, clockwise
-target_hz:int = 250 # the number of times to run the PID loop, per second. IMPORTANT: if you change this, you will also need to change the time-sensitive PID gains (integral and derivative). I did not build a time-scaling mechanism into those calculations.
-M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=1000000)
-M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=1000000)
-M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_ns=1000000)
-M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1000000)
-
-print("Importing other libraries...")
-import time
-import tools
-import os
-
 ####################
 ##### SETTINGS #####
 ####################
 
-alpha:int = 9800                         # complementary filter alpha value for pitch/roll angle estimation. 0-10000: e.g. 9800 would be an alpha of 98% or 0.98, or 9992 would be an alpha of 99.92% or 0.9992. A value closer to 100% favor's gyroscope's opinion, lower favors accelerometer (noisy). It is the actual value x1000. So 9992 for example would effectively be 0.9992... so imagine the decimal point before!
-PID_SCALING_FACTOR:int = 10000           # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
+# Motor GPIOs (throggle signal line for each ESC)
+gpio_motor1:int = 20 # front left, clockwise
+gpio_motor2:int = 21 # front right, counter clockwise
+gpio_motor3:int = 19 # rear left, counter clockwise
+gpio_motor4:int = 22 # rear right, clockwise
+
+# I2C Connection (for MPU6050 and SPARE)
+i2c_bus:int = 1       # the I2C bus being used to use (0 or 1)
+i2c_sda:int = 26      # the GPIO number
+i2c_scl:int = 27      # the GPIO number
+
+# UART Connection for HC-12
+hc12_uart_bus:int = 0      # the UART bus being used for the HC-12
+hc12_uart_tx:int = 16      # GPIO number of the pico pin that will be used to send data to the HC-12
+hc12_uart_rx:int = 17      # GPIO number of the pico pin that will be used to receive data from the HC-12
+hc12_set:int = 18          # GPIO number of the SET pin used with the HC-12
+
+# The Pin (GPIO #) used for the analog-to-digital reading of the voltage divider, determining the battery voltage
+vbat_adc_gpio:int = 28
 
 # Flight Control PID Gains
 # Set initial setting here to 0 for safety reasons, though they can be updated via settings update packet later
@@ -65,11 +58,53 @@ yaw_ki:int = 0
 yaw_kd:int = 0
 i_limit:int = 0
 
+# PID Scaling Factor
+PID_SCALING_FACTOR:int = 10000           # PID scaling factor that will later be used to "divide down" the PID values. We do this so the PID gains can be in a much larger range and thus can be further fine tuned.
+
+# Accelerometer Calibration: Primary Calibration (1,000x for sake of integer math)
+accel_calib_perform_primary:bool = True            # if primary calibration should even be performed at all. Will need to set this to "False" if you don't have m and b values loaded in to this section.
+accel_calib_x_m:int = 997                          # x axis "m" value in y=mx+b
+accel_calib_x_b:int = 37                           # x axis "b" value in y=mx+b
+accel_calib_y_m:int = 999                          # y axis "m" value in y=mx+b
+accel_calib_y_b:int = -23                          # y axis "b" value in y=mx+b
+accel_calib_z_m:int = 1003                         # z axis "m" value in y=mx+b
+accel_calib_z_b:int = -3                           # z axis "b" value in y=mx+b
+
+# Accelerometer Calibration: Secondary Calibration (1,000x for sake of integer math)
+accel_calib_perform_secondary:bool = True          # if secondary calibration should even be performed at all.
+accel_calib_pitch_angle_offset:int = 3688          # simple angle offset to "subtract out", observed when sitting level (likely offset in frame)
+accel_calib_roll_angle_offset:int = -2084          # simple angle offset to "subtract out", observed when sitting level (likely offset in frame)
+
+# Complimentary Filter
+alpha:int = 9800                         # complementary filter alpha value for pitch/roll angle estimation. 0-10000: e.g. 9800 would be an alpha of 98% or 0.98, or 9992 would be an alpha of 99.92% or 0.9992. A value closer to 100% favor's gyroscope's opinion, lower favors accelerometer (noisy). It is the actual value x1000. So 9992 for example would effectively be 0.9992... so imagine the decimal point before!
+
+# Telemetry Frames to record per second
 telemetry_frames_per_second:int = 4 # how many telemetry frames to record per second
 
 ####################
 ####################
 ####################
+
+import machine
+
+# First thing is first: set up onboard LED, turn it on while loading
+print("Turning LED on...")
+led = machine.Pin("LED", machine.Pin.OUT)
+led.on()
+
+# right away, set up motor PWMs with frequency of 250 Hz and start at 0% throttle (yes, 1,000,000 ns is 0% throttle)
+# why do this right away? Some ESCs have a timeout that will refuse to turn on if the PWM signal is not received within a certain number of seconds of powering on
+target_hz:int = 250 # the number of times to run the PID loop, per second. IMPORTANT: if you change this, you will also need to change the time-sensitive PID gains (integral and derivative). I did not build a time-scaling mechanism into those calculations.
+M1:machine.PWM = machine.PWM(machine.Pin(gpio_motor1), freq=target_hz, duty_ns=1000000)
+M2:machine.PWM = machine.PWM(machine.Pin(gpio_motor2), freq=target_hz, duty_ns=1000000)
+M3:machine.PWM = machine.PWM(machine.Pin(gpio_motor3), freq=target_hz, duty_ns=1000000)
+M4:machine.PWM = machine.PWM(machine.Pin(gpio_motor4), freq=target_hz, duty_ns=1000000)
+
+print("Importing other libraries...")
+import time
+import os
+from tools import unpack_control_packet, unpack_settings_update, pack_telemetry
+from itrig import isqrt, iatan2, isin, icos, itan  # integer trigonometry functions
 
 # establish failure pattern
 def FATAL_ERROR(error_msg:str = None) -> None:
@@ -86,8 +121,8 @@ print("HC-12 SETUP")
 
 # set up UART interface for radio communications via HC-12
 print("Setting up HC-12 via UART...")
-hc12_set = machine.Pin(7, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
-uart_hc12 = machine.UART(1, tx=machine.Pin(8), rx=machine.Pin(9), baudrate=9600)
+hc12_set = machine.Pin(hc12_set, machine.Pin.OUT) # the SET pin, used for going into and out of AT mode
+uart_hc12 = machine.UART(hc12_uart_bus, tx=machine.Pin(hc12_uart_tx), rx=machine.Pin(hc12_uart_rx), baudrate=9600)
 uart_hc12.read(uart_hc12.any()) # clear out any RX buffer that may exist
 
 # pulse HC-12
@@ -183,22 +218,13 @@ print("MPU-6050 SETUP")
 
 # Confirm MPU-6050 is connected via I2C
 print("Setting up I2C...")
-i2c = machine.I2C(0, sda=machine.Pin(16), scl=machine.Pin(17))
+i2c = machine.I2C(i2c_bus, sda=machine.Pin(i2c_sda), scl=machine.Pin(i2c_scl))
 if 0x68 not in i2c.scan():
     print("MPU-6050 not connected via I2C!")
     FATAL_ERROR("MPU-6050 not connected!")
 else:
+    send_special("IMU CON")
     print("MPU-6050 confirmed to be connected via I2C.")
-
-# Confirm MPU-6050 is on and operational by reading the "whoami" register
-print("Reading MPU-6050 WHOAMI register...")
-whoami:int = i2c.readfrom_mem(0x68, 0x75, 1)[0]
-if whoami == 0x68:
-    print("MPU-6050 WHOAMI passed!")
-    send_special("IMU OK")
-else:
-    print("MPU-6050 WHOAMI Failed!")
-    FATAL_ERROR("MPU6050 WHOAMI Fail")
 
 # Set up MPU-6050
 print("Waking up MPU-6050...")
@@ -276,7 +302,7 @@ while time.ticks_diff(time.ticks_ms(), started_at_ticks_ms) < 3000: # 3 seconds
     accel_z = (accel_z * 1000) // 4096 # divide by scale factor for 8g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
     # use accel data to calculate current G-Force
-    gforce:int = tools.isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
+    gforce:int = isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
 
     # increment
     gxs = gxs + gyro_x
@@ -307,7 +333,7 @@ input_roll_int16:int = 0             # from -32768 to 32767, later interpreted t
 input_yaw_int16:int = 0              # from -32768 to 32767, later interpreted to -90.0 to 90.0 degrees/second
 
 # set up ADC for reading the battery voltage
-vbat_adc = machine.ADC(machine.Pin(26))
+vbat_adc = machine.ADC(machine.Pin(vbat_adc_gpio))
 
 # Set up telemetry variables
 vbat:int = 0         # battery voltage between 6.0 and 16.8 volts, but expressed as an integer between 60 and 168 (pretend decimal point just before last digit. We do this so integer division can be used).
@@ -449,7 +475,7 @@ try:
                     if ProcessBuffer.startswith(TIMHPING): # PING: simple check of life. Checking "startswith" is quick, only ~70 us
                         uart_hc12.write(TIMHPONG) # PONG back
                     elif ProcessBuffer[0] & 0b00000001 == 0: # if bit 0 is 0, it is a control packet
-                        unpack_successful:bool = tools.unpack_control_packet(ProcessBuffer, control_input) # takes ~350 us, uses 0 bytes of new memory
+                        unpack_successful:bool = unpack_control_packet(ProcessBuffer, control_input) # takes ~350 us, uses 0 bytes of new memory
                         if unpack_successful:
                             input_throttle_uint16 = control_input[0]
                             input_pitch_int16 = control_input[1]
@@ -458,7 +484,7 @@ try:
                             #print("Throttle: " + str(input_throttle_uint16) + ", Pitch: " + str(input_pitch_int16) + ", Roll: " + str(input_roll_int16) + ", Yaw: " + str(input_yaw_int16))
                             control_input_last_received_ticks_ms = time.ticks_ms() # mark that we just now got control input
                     elif ProcessBuffer[0] & 0b00000001 != 0: # if bit 0 is 1, it is a settings update
-                        settings:dict = tools.unpack_settings_update(ProcessBuffer)
+                        settings:dict = unpack_settings_update(ProcessBuffer)
                         if settings != None:
                             pitch_kp = settings["pitch_kp"]
                             pitch_ki = settings["pitch_ki"]
@@ -524,9 +550,9 @@ try:
         if gyro_x >= 32768: gyro_x = ((65535 - gyro_x) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
         if gyro_y >= 32768: gyro_y = ((65535 - gyro_y) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
         if gyro_z >= 32768: gyro_z = ((65535 - gyro_z) + 1) * -1 # convert unsigned ints to signed ints (so there can be negatives)
-        roll_rate = gyro_x * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
-        pitch_rate = gyro_y * 10000 // 328     # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
-        yaw_rate = gyro_z * 10000 // 328       # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+        gyro_x = gyro_x * 10000 // 328      # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+        gyro_y = gyro_y * 10000 // 328     # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
+        gyro_z = gyro_z * 10000 // 328       # now, divide by the scale factor to get the actual degrees per second. Multiply by 10,000 to both offset the divisor being 328 (not 32.8 as specified for this gyro scale) AND ensure the output is 1000x more so we can do integer math
 
         # Process & Transform raw accelerometer data
         # ~100 us
@@ -541,30 +567,71 @@ try:
         accel_z = (accel_z * 1000) // 4096 # divide by scale factor for 8g range to get value. But before doing so, multiply by 1,000 because we will work with larger number to do integer math (faster) instead of floating point math (slow and memory leak)
 
         # subtract out (account for) gyro bias that was calculated during calibration phase
-        pitch_rate = pitch_rate - gyro_bias_y
-        roll_rate = roll_rate - gyro_bias_x
-        yaw_rate = yaw_rate - gyro_bias_z
+        gyro_x = gyro_x - gyro_bias_x
+        gyro_y = gyro_y - gyro_bias_y
+        gyro_z = gyro_z - gyro_bias_z
+
+        # Accelerometer Calibration: Primary Calibration (if settings beckon it)
+        # Multiply by 1,000 is necessary to keep it in the 1000x scale
+        # ~73 us
+        # 0 new bytes
+        if accel_calib_perform_primary:
+            accel_x = (accel_x - accel_calib_x_b) * 1000 // accel_calib_x_m
+            accel_y = (accel_y - accel_calib_y_b) * 1000 // accel_calib_y_m
+            accel_z = (accel_z - accel_calib_z_b) * 1000 // accel_calib_z_m
+
+        # assign gyro x,y,z to specific drone-body axes
+        # I do this here deliberately as something that is easy to change in case the orientation of the IMU changes (i.e. axes flip)
+        roll_rate = gyro_x
+        pitch_rate = gyro_y
+        yaw_rate = gyro_z
 
         # Because of how I have my IMU mounted, invert necessary axes
         # I could in theory not need to do this if I mounted it flipped over, but preferring to leave it as is physically and just make the adjustment here!
         pitch_rate = pitch_rate * -1    # this ensures as the drone pitches down towards the ground, that is a NEGATIVE pitch rate. And a tile up would be positive
         yaw_rate = yaw_rate * -1        # this ensures the drone rotating towards the right is a POSITIVE yaw rate, with a left turn being negative
 
+        # Perform trigonometry for Euler angle correction
+        # ~160 us
+        # 0 bytes of new memory used
+        roll_rad:int = ((roll_angle  // 10) * 17453) // 100_000                          # convert angle to radians, retaining the 1,000x scale and also using integer math only
+        pitch_rad:int = ((pitch_angle // 10) * 17453) // 100_000                         # convert angle to radians, retaining the 1,000x scale and also using integer math only
+        sin_roll:int = isin(roll_rad)                                                    # this result is used multiple times, so do it once
+        cos_roll:int = icos(roll_rad)                                                    # this result is used multiple times, so do it once
+        tan_pitch:int = itan(pitch_rad)                                                  # this is only used once but do it here so we have it. itan already clamps its own result to +/- 5,000 (about +/- 78 degrees of attitude), so no clamp is needed out here
+
+        # Euler angle correction: this performs a "correction" of the drone's body-axis gyro rates (relative to its body as the MPU-6050 is fixed) to the drone's Euler roll and pitch angles (imagine these fixed to pitch + roll axis to real world)
+        # This converts "roll_rate" and "pitch_rate" from just gyro x/y to adjusted to the actual Euler angles of the body
+        # Opus 5 assisted with the conversion of this from the old `math` method (float) to integer division
+        # ~60 us
+        # 0 bytes of new memory used
+        inner:int = ((pitch_rate * sin_roll) // 1000) + ((yaw_rate * cos_roll) // 1000)
+        roll_rate_euler = roll_rate + ((inner // 10) * tan_pitch) // 100                                 # correct gyro_x (roll axis gyro rate) with euler angles
+        pitch_rate_euler = ((pitch_rate * cos_roll) // 1000) - ((yaw_rate * sin_roll) // 1000)           # correct gyro_y (pitch axis gyro rate) with euler angles
+
         # calculate g-force
         # ~100 us, 0 bytes of memory used
-        gforce:int = tools.isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)         # 1,000 would be 1g
+        gforce:int = isqrt(accel_x*accel_x + accel_y*accel_y + accel_z*accel_z)               # 1,000 would be 1g
         gforce = gforce - gforce_bias                                                         # subtract out bias, which was calculated during IMU calibration earlier    
 
         # calculate the "accelerometers opinion" of the pitch and roll angles
         # these will later be "fused" with the gyro's opinion via a complementary filter
         # This will output the pitch and roll angle as 1000x what it is (so like 5493 is 5.493 degrees)
         # 0 bytes of memory, takes ~145 us (as viper), but would take ~600 us if iatan2 and isqrt were NOT viper (i checked)
-        pitch_angle_accel:int = tools.iatan2(accel_x, tools.isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
-        roll_angle_accel:int = tools.iatan2(accel_y, tools.isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
+        pitch_angle_accel:int = iatan2(accel_x, isqrt(accel_y * accel_y + accel_z * accel_z)) * 180_000 // 3142
+        roll_angle_accel:int = iatan2(accel_y, isqrt(accel_x * accel_x + accel_z * accel_z)) * 180_000 // 3142
+
+        # Accelerometer Calibration: Secondary Calibration (if settings beckon it)
+        # ~40 us
+        # 0 new bytes of memory
+        if accel_calib_perform_secondary:
+            pitch_angle_accel = pitch_angle_accel - accel_calib_pitch_angle_offset
+            roll_angle_accel = roll_angle_accel - accel_calib_roll_angle_offset
 
         # Now calculate how much time has elapsed since the last time we were here, about to use dead reckoning with the gyro's data to estimate the angles
-        elapsed_since_ldr_ticks_us:int = time.ticks_diff(time.ticks_us(), last_gyro_dead_reckoning_ticks_us) # how many ticks have elapsed sine the last dead reckoning
-        last_gyro_dead_reckoning_ticks_us = time.ticks_us() # update the time, just as a flag. This will establish a baseline for how long since we were last here on the next loop. And that timespan is very important to perform dead reckoning with the gyro data.
+        now_us:int = time.ticks_us()
+        elapsed_since_ldr_ticks_us:int = time.ticks_diff(now_us, last_gyro_dead_reckoning_ticks_us) # how many ticks have elapsed sine the last dead reckoning
+        last_gyro_dead_reckoning_ticks_us = now_us # update the time, just as a flag. This will establish a baseline for how long since we were last here on the next loop. And that timespan is very important to perform dead reckoning with the gyro data.
 
         # if the elapsed time since the last dead reckoning is less than 250 ms, we should use fusion
         # otherwise, we should just accept whatever the accelerometer is telling us (that will prob be more reliable than combining w/ the gyro's dead reckoning)
@@ -577,14 +644,15 @@ try:
             # Because the pitch rate is in degrees per second... and we measured it as us, of which there are 1,000,000 us in one second.
             # so we have to divide by 1,000,000 to calculate how far, in degrees, it drifted in that time at that degrees/second rate
             # takes ~55 us, uses 0 bytes of new memory
-            pitch_angle_gyro:int = pitch_angle + (pitch_rate * elapsed_since_ldr_ticks_us // 1_000_000)
-            roll_angle_gyro:int = roll_angle + (roll_rate * elapsed_since_ldr_ticks_us // 1_000_000)
+            pitch_angle_gyro:int = pitch_angle + (pitch_rate_euler * elapsed_since_ldr_ticks_us // 1_000_000)
+            roll_angle_gyro:int = roll_angle + (roll_rate_euler * elapsed_since_ldr_ticks_us // 1_000_000)
 
             # Now use a complementary filter to determine angle (fuse accelerometer and gyro data)
             # 10,000 is used below in the calculations because the alpha stored above is between 0 and 10,000 to represent 0.0 to 1.0. So we divide by 10,000 for the sake of scale.
             # takes ~50 us, uses 0 bytes of new memory
             pitch_angle = ((pitch_angle_gyro * alpha) + (pitch_angle_accel * (10_000 - alpha))) // 10_000
             roll_angle = ((roll_angle_gyro * alpha) + (roll_angle_accel * (10_000 - alpha))) // 10_000
+            
         else:
             pitch_angle = pitch_angle_accel
             roll_angle = roll_angle_accel
@@ -758,7 +826,7 @@ try:
             # pack it
             # takes ~460 us, uses 0 bytes of new memory
             # note: while calling this function below takes > 400 us, it takes only around 200 within the function. Maybe 200 us wasted by calling a function. Can save time running it inline below.
-            tools.pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_gforce, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, lrecv_ago_ms, telemetry_packet_store)
+            pack_telemetry(time.ticks_ms(), vbat, packable_pitch_rate, packable_roll_rate, packable_yaw_rate, packable_pitch_angle, packable_roll_angle, packable_gforce, packable_input_throttle, packable_input_pitch, packable_input_roll, packable_input_yaw, packable_m1_throttle, packable_m2_throttle, packable_m3_throttle, packable_m4_throttle, lrecv_ago_ms, telemetry_packet_store)
 
             # Record it by adding it to the temporary memory buffer we have going while in flight
             # takes ~490 us, uses 0 bytes of new memory. I tried slicing via memoryview and array itself and that takes much longer - like 2,000 us! I also tried storing the len(telemetry_packet_store) and reusing it... doesnt do anything.
