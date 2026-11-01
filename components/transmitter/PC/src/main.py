@@ -166,7 +166,8 @@ async def main() -> None:
         import glob
         ports = glob.glob("/dev/ttyUSB*")
         if len(ports) == 1:
-            ser_port = ports[0]g
+            ser_port = ports[0]
+            console.print("[green]Device '" + ports[0] + "' found and auto-selected![/]")
         elif len(ports) == 0:
             print("No USB connections found under /dev/ttyUSB*")
         else:
