@@ -280,7 +280,7 @@ async def main() -> None:
             # What do they want to do?
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
             console.print("[underline][bold]SETTINGS MENU[/][/]")
-            wanttodo:str = tools.multiple_choice("What do you want to do?", ["Transmitter Settings", "Drone Settings", "Return"])
+            wanttodo:str = tools.multiple_choice("What settings do you want to review and update?", ["Transmitter Settings", "Drone Settings", "Return"])
             print()
 
             # Handle what they selected
@@ -302,14 +302,14 @@ async def main() -> None:
                     print()
 
                     # ask transmitter settings
-                    transmitter_settings_choice:str = tools.multiple_choice("What do you want to do?", ["Update Throttle Settings", "Update Battery Settings", "Return"])
+                    transmitter_settings_choice:str = tools.multiple_choice("What do you want to do in Transmitter Settings?", ["Update Throttle Settings", "Update Battery Settings", "Return"])
                     print()
 
                     # handle choice
                     if transmitter_settings_choice == "Update Throttle Settings":
 
                         # ask if want to load profile or set unique
-                        throttle_settings_choice:str = tools.multiple_choice("What do you want to do?", ["Load Profile", "Set Values"])
+                        throttle_settings_choice:str = tools.multiple_choice("How do you want to update Throttle Settings?", ["Load Profile", "Set Values"])
                         print()
 
                         # handle
@@ -384,7 +384,7 @@ async def main() -> None:
                     print()
 
                     # What to do?
-                    drone_settings_choice:str = tools.multiple_choice("What do you want to do?", ["Load PID Rate Profile", "Update PID Multiplier" "Update PID Rates", "Send PID Settings Drone", "Return"])
+                    drone_settings_choice:str = tools.multiple_choice("What do you want to do in Drone Settings?", ["Load PID Rate Profile", "Update PID Multiplier" "Update PID Rates", "Send PID Settings Drone", "Return"])
                     print()
 
                     # handle that
