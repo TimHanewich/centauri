@@ -307,19 +307,31 @@ async def main() -> None:
                     # handle choice
                     if transmitter_settings_choice == "Update Throttle Settings":
 
-                        print("Okay, let's update the controller settings.")
-                        
-                        # collect idle and max until it is valid!
-                        while True:
-                            idle_throttle = tools.ask_float("Idle Throttle")
-                            max_throttle = tools.ask_float("Max Throttle")
-        
-                            # settings validation
-                            if max_throttle <= idle_throttle: 
-                                print("Max Throttle must be GREATER THAN idle throttle!")
-                                print("Try again please.")
-                            else:
-                                break
+                        # ask if want to load profile or set unique
+                        throttle_settings_choice:str = tools.multiple_choice("What do you want to do?", ["Load Profile", "Set Values"])
+
+                        # handle
+                        if throttle_settings_choice == "Load Profile":
+                            idle_throttle = 0.2
+                            max_throttle = 0.6
+                            print("[green]Throttle profile loaded.[/]")
+                            print()
+
+                        elif throttle_settings_choice == "Set Values":
+
+                            print("Okay, let's update the controller settings.")
+                            
+                            # collect idle and max until it is valid!
+                            while True:
+                                idle_throttle = tools.ask_float("Idle Throttle")
+                                max_throttle = tools.ask_float("Max Throttle")
+            
+                                # settings validation
+                                if max_throttle <= idle_throttle: 
+                                    print("Max Throttle must be GREATER THAN idle throttle!")
+                                    print("Try again please.")
+                                else:
+                                    break
 
                     elif transmitter_settings_choice == "Update Battery Settings":
 
