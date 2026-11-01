@@ -312,7 +312,7 @@ async def main() -> None:
                     print()
 
                     # ask transmitter settings
-                    transmitter_settings_choice:str = tools.multiple_choice("What do you want to do in Transmitter Settings?", ["Update Throttle Settings", "Update Battery Settings", "Return"])
+                    transmitter_settings_choice:str = tools.multiple_choice("What do you want to do in Transmitter Settings?", ["Update Throttle Settings", "Update Battery Settings - From Profile", "Update Battery Settings - Custom", "Return"])
                     print()
 
                     # handle choice
@@ -344,8 +344,28 @@ async def main() -> None:
                                     print("Try again please.")
                                 else:
                                     break
+                    elif transmitter_settings_choice == "Update Battery Settings - From Profile":
 
-                    elif transmitter_settings_choice == "Update Battery Settings":
+                        # list the profiles
+                        profile1:str = "4S 3,300 mAh LiPo"
+                        profile2:str = "4S 2,200 mAh Lipo"
+
+                        # ask which profile
+                        selected_battery_profile:str = tools.multiple_choice("Which battery profile?", [profile1, profile2])
+
+                        # handle
+                        if selected_battery_profile == profile1:
+                            bat_series = 4
+                            bat_capacity = 3300
+                            cruise_power = 192
+                        elif selected_battery_profile == profile2:
+                            bat_series = 4
+                            bat_capacity = 2200
+                            cruise_power = 192
+                        else:
+                            console.print("[red]Profile not recognized[/]")
+
+                    elif transmitter_settings_choice == "Update Battery Settings - Custom":
 
                         bat_series = tools.ask_integer("Battery pack cells in a series (e.g. 4S)?")
                         bat_capacity = tools.ask_integer("Battery pack capacity, in mAh (e.g. 3,300)?")
