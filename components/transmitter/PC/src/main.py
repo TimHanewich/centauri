@@ -284,36 +284,7 @@ async def main() -> None:
             roll_kd_eff:int = round(roll_kd * pid_master_multiplier)
             yaw_kp_eff:int = round(yaw_kp * pid_master_multiplier)
             yaw_ki_eff:int = round(yaw_ki * pid_master_multiplier)
-            yaw_kd_eff:int = round(yaw_kd * pid_master_multiplier)
-
-            # print current settings
-            print()
-            console.print("[blue][underline]----- CURRENT SETTINGS -----[/blue][/underline]")
-            print()
-            console.print("[u]Controller Settings[/u]")
-            console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
-            console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
-            print()
-            console.print("[u]PID Settings[/u]")
-            console.print("PID Master Multiplier: " + str(round(pid_master_multiplier, 2)))
-            console.print("I Limit: [blue]" + format(i_limit, ",") + "[/blue]")
-            pid_tbl:Table = Table()
-            pid_tbl.add_column("Axis")
-            pid_tbl.add_column("Raw Gain")
-            pid_tbl.add_column("[blue][bold]" + "Effective Gain" + "[/blue][/bold]")
-            pid_tbl.add_row("Pitch kP", format(pitch_kp, ","), "[blue][bold]" + format(pitch_kp_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("Pitch kI", format(pitch_ki, ","), "[blue][bold]" + format(pitch_ki_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("Pitch kD", format(pitch_kd, ","), "[blue][bold]" + format(pitch_kd_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row()
-            pid_tbl.add_row("Roll kP", format(roll_kp, ","), "[blue][bold]" + format(roll_kp_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("Roll kI", format(roll_ki, ","), "[blue][bold]" + format(roll_ki_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("Roll kD", format(roll_kd, ","), "[blue][bold]" + format(roll_kd_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row()
-            pid_tbl.add_row("Yaw kP", format(yaw_kp, ","), "[blue][bold]" + format(yaw_kp_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("Yaw kI", format(yaw_ki, ","), "[blue][bold]" + format(yaw_ki_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("yaw kD", format(yaw_kd, ","), "[blue][bold]" + format(yaw_kd_eff, ",") + "[/blue][/bold]")
-            console.print(pid_tbl)
-            print()
+            yaw_kd_eff:int = round(yaw_kd * pid_master_multiplier)            
 
             # What do they want to do?
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
@@ -322,6 +293,19 @@ async def main() -> None:
             if wanttodo == "Transmitter Settings": # transmitter settings
                 
                 while True:
+
+                    # Print Throttle Settings
+                    console.print("[u]Throttle Settings[/u]")
+                    console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
+                    console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
+                    print()
+
+                    # Print Battery Settings
+                    console.print("[u]Battery Settings[/u]")
+                    console.print("Cell Series: [blue]" + str(bat_series) + "[/blue]")
+                    console.print("Capacity: [blue]" + str(bat_capacity) + " mAh" + "[/blue]")
+                    console.print("Cruise Power: [blue]" + str(cruise_power) + " watts" + "[/blue]")
+                    print()
 
                     # ask transmitter settings
                     transmitter_settings_choice:str = tools.multiple_choice("Transmitter Settings", ["Update Throttle Settings", "Update Battery Settings", "Return"])
@@ -357,6 +341,28 @@ async def main() -> None:
 
                 # Ask what to do further
                 while True:
+
+                    # print current settings
+                    console.print("[u]PID Settings[/u]")
+                    console.print("PID Master Multiplier: " + str(round(pid_master_multiplier, 2)))
+                    console.print("I Limit: [blue]" + format(i_limit, ",") + "[/blue]")
+                    pid_tbl:Table = Table()
+                    pid_tbl.add_column("Axis")
+                    pid_tbl.add_column("Raw Gain")
+                    pid_tbl.add_column("[blue][bold]" + "Effective Gain" + "[/blue][/bold]")
+                    pid_tbl.add_row("Pitch kP", format(pitch_kp, ","), "[blue][bold]" + format(pitch_kp_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("Pitch kI", format(pitch_ki, ","), "[blue][bold]" + format(pitch_ki_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("Pitch kD", format(pitch_kd, ","), "[blue][bold]" + format(pitch_kd_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row()
+                    pid_tbl.add_row("Roll kP", format(roll_kp, ","), "[blue][bold]" + format(roll_kp_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("Roll kI", format(roll_ki, ","), "[blue][bold]" + format(roll_ki_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("Roll kD", format(roll_kd, ","), "[blue][bold]" + format(roll_kd_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row()
+                    pid_tbl.add_row("Yaw kP", format(yaw_kp, ","), "[blue][bold]" + format(yaw_kp_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("Yaw kI", format(yaw_ki, ","), "[blue][bold]" + format(yaw_ki_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("yaw kD", format(yaw_kd, ","), "[blue][bold]" + format(yaw_kd_eff, ",") + "[/blue][/bold]")
+                    console.print(pid_tbl)
+                    print()
 
                     # What to do?
                     drone_settings_choice:str = tools.multiple_choice("Drone Settings", ["Load PID Rate Profile", "Update PID Multiplier" "Update PID Rates", "Send PID Settings Drone", "Return"])
