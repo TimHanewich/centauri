@@ -752,7 +752,6 @@ async def main() -> None:
 
     # set up contionuous text to speech service
     async def continuous_tts() -> None:
-        return
         nonlocal tts_requests
 
         engine = pyttsx3.init()
