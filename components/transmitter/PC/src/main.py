@@ -303,12 +303,14 @@ async def main() -> None:
 
                     # ask transmitter settings
                     transmitter_settings_choice:str = tools.multiple_choice("What do you want to do?", ["Update Throttle Settings", "Update Battery Settings", "Return"])
+                    print()
 
                     # handle choice
                     if transmitter_settings_choice == "Update Throttle Settings":
 
                         # ask if want to load profile or set unique
                         throttle_settings_choice:str = tools.multiple_choice("What do you want to do?", ["Load Profile", "Set Values"])
+                        print()
 
                         # handle
                         if throttle_settings_choice == "Load Profile":
@@ -383,6 +385,7 @@ async def main() -> None:
 
                     # What to do?
                     drone_settings_choice:str = tools.multiple_choice("What do you want to do?", ["Load PID Rate Profile", "Update PID Multiplier" "Update PID Rates", "Send PID Settings Drone", "Return"])
+                    print()
 
                     # handle that
                     if drone_settings_choice == "Load PID Rate Profile":

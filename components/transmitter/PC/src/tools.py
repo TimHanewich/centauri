@@ -244,6 +244,9 @@ from rich.prompt import Prompt
 def multiple_choice(question:str, options:list[str]) -> str:
     console = Console()
 
+    # print multiple choice question
+    console.print("[bold]Question: " + question + "[/]")
+
     # print options
     for i in range(0, len(options)):
         console.print("[blue][bold]" + str(i+1) + "[/][/]: " + options[i])
@@ -254,7 +257,7 @@ def multiple_choice(question:str, options:list[str]) -> str:
         ChoiceList.append(str(i+1))
 
     # ask
-    decision = int(Prompt.ask(question, choices=ChoiceList, show_choices=True))
+    decision = int(Prompt.ask("Your decision?", choices=ChoiceList, show_choices=True))
 
     # return what they selected
     return options[decision-1]
