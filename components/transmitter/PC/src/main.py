@@ -394,7 +394,7 @@ async def main() -> None:
                     print()
 
                     # What to do?
-                    drone_settings_choice:str = tools.multiple_choice("What do you want to do in Drone Settings?", ["Load PID Rate Profile", "Update PID Multiplier" "Update PID Rates", "Send PID Settings to Drone", "Return"])
+                    drone_settings_choice:str = tools.multiple_choice("What do you want to do in Drone Settings?", ["Load PID Rate Profile", "Update PID Multiplier", "Update PID Rates", "Send PID Settings to Drone", "Return"])
                     print()
 
                     # handle that
