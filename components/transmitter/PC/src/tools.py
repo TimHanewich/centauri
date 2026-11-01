@@ -262,8 +262,8 @@ def multiple_choice(question:str, options:list[str]) -> str:
     # return what they selected
     return options[decision-1]
 
+# CPU Benchmarking
 import time
-
 def cpu_benchmark() -> int:
     """
     Returns the number of iterations it did within a 1-second timespan.
