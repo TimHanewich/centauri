@@ -280,7 +280,9 @@ async def main() -> None:
             # What do they want to do?
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
             wanttodo:str = tools.multiple_choice("What do you want to do?", ["Transmitter Settings", "Drone Settings", "Return"])
+            print()
 
+            # Handle what they selected
             if wanttodo == "Transmitter Settings": # transmitter settings
                 
                 while True:
@@ -299,7 +301,7 @@ async def main() -> None:
                     print()
 
                     # ask transmitter settings
-                    transmitter_settings_choice:str = tools.multiple_choice("Transmitter Settings", ["Update Throttle Settings", "Update Battery Settings", "Return"])
+                    transmitter_settings_choice:str = tools.multiple_choice("What do you want to do?", ["Update Throttle Settings", "Update Battery Settings", "Return"])
 
                     # handle choice
                     if transmitter_settings_choice == "Update Throttle Settings":
@@ -367,7 +369,7 @@ async def main() -> None:
                     print()
 
                     # What to do?
-                    drone_settings_choice:str = tools.multiple_choice("Drone Settings", ["Load PID Rate Profile", "Update PID Multiplier" "Update PID Rates", "Send PID Settings Drone", "Return"])
+                    drone_settings_choice:str = tools.multiple_choice("What do you want to do?", ["Load PID Rate Profile", "Update PID Multiplier" "Update PID Rates", "Send PID Settings Drone", "Return"])
 
                     # handle that
                     if drone_settings_choice == "Load PID Rate Profile":
