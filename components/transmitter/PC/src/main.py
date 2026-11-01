@@ -73,6 +73,11 @@ async def main() -> None:
     # set up status variables we will get from the drone (and display in the console!): system status
     vbat:float = 0.0 # volts
 
+    # For estimating remaining flight time
+    bat_series:int = 4                 # How many cells in a series are being used to fly the drone. e.g. 4S, 3S, 2S, etc.
+    bat_capacity:int = 3_300           # The capacity of the battery pack being used onboard the drone, in mAh. Used to approximate remaining flight time.
+    cruise_power:int = 192             # the average power draw of the drone, in watts. Later used to approximate remaining flight time.
+
     # set up status variables we will get from the drone (and display in the console!): control status
     pitch_rate:int = 0 # in degrees per second
     roll_rate:int = 0 # in degrees per second
