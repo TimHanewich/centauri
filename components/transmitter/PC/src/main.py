@@ -394,7 +394,7 @@ async def main() -> None:
                     print()
 
                     # What to do?
-                    drone_settings_choice:str = tools.multiple_choice("What do you want to do in Drone Settings?", ["Load PID Rate Profile", "Update PID Multiplier" "Update PID Rates", "Send PID Settings Drone", "Return"])
+                    drone_settings_choice:str = tools.multiple_choice("What do you want to do in Drone Settings?", ["Load PID Rate Profile", "Update PID Multiplier" "Update PID Rates", "Send PID Settings to Drone", "Return"])
                     print()
 
                     # handle that
@@ -484,6 +484,7 @@ async def main() -> None:
                             
                         else:
                             console.print("[red]Transceiver not set up, so unable to send out PID setting updates.[/]")
+                            print()
 
                     elif drone_settings_choice == "Return":
                         break
