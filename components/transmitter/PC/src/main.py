@@ -36,6 +36,7 @@ import serial
 import tools
 import sys
 import keyboard
+from benchmark import cpu_benchmark
 
 async def main() -> None:
 
@@ -114,8 +115,19 @@ async def main() -> None:
 
     # say hello
     print()
-    console.print("[bold][blue]Hello and welcome to the Centauri control system.[/bold][/blue]")
+    console.print("[bold][blue]Hello and welcome to the Centauri Transmitter system.[/bold][/blue]")
     console.print("[italic]github.com/TimHanewich/centauri[/italic]")
+    print()
+
+    # first step: benchmark CPU
+    console.print("[underline]CPU Benchmark[/]")
+    print("Running...")
+    calcs:int = cpu_benchmark()
+    print("Calculations performed in one second: " + format(calcs, ","))
+    if calcs < 500_000:
+        console.print("[red]Warning! This CPU seems slow and may give trouble when transmitting.[/]")
+    else:
+        console.print("[green]CPU performs well.[/]")
     print()
 
     # Initialize pygame and joystick module
