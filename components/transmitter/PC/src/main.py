@@ -591,6 +591,16 @@ async def main() -> None:
                 dp.pitch_angle = pitch_angle
                 dp.roll_angle = roll_angle
 
+                # calculate and plug in INFERRED telemetry variables
+                pack_nominal_voltage:float = 3.7 * bat_series                                         # calculate the battery's nominal voltage based on its architecture (number of cells in a series). e.g. 14.8 for a 4S
+                pack_capacity_full_wh:float = (pack_nominal_voltage * bat_capacity) / 1000.0          # calculate the total capacity of this pack, in watt hours
+                pack_soc:float = tools.soc(vbat / bat_series)                                         # estimate the battery state of charge (a percent). Provide it with the raw battery pack voltage divided by number of cells to get average voltage per cell.
+                pack_capacity_remaining_wh:float = pack_capacity_full_wh * pack_soc                   # calculate how much capacity, in watt hours, is remaining in this pack based on that SOC percent
+                flight_time_remaining_hours:float = cruise_power / pack_capacity_remaining_wh         # calculate the flight time remaining, in hours, given we know the watt hours remaining in the pack and we know the average watt draw while cruising
+                flight_time_remaining_minutes:float = flight_time_remaining_hours * 60                # convert to minutes
+                dp.drone_battery_soc = pack_soc                                                       # Plug in SOC (a percent)
+                dp.flight_time_remaining_minutes = flight_time_remaining_minutes                      # Plug in flight time remaining
+
                 # plug in drone messages
                 dp.messages = drone_messages
                 
