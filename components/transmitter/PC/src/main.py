@@ -483,8 +483,7 @@ async def main() -> None:
                                 input("Return to continue.")
                             
                         else:
-                            print("Transceiver not set up, so skipping sending it out!")
-                            input("Return to continue.")
+                            console.print("[red]Transceiver not set up, so unable to send out PID setting updates.[/]")
 
                     elif drone_settings_choice == "Return":
                         break
