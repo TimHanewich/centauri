@@ -37,6 +37,7 @@ import tools
 import sys
 import keyboard
 from benchmark import cpu_benchmark
+import platform
 
 async def main() -> None:
 
@@ -154,11 +155,26 @@ async def main() -> None:
         controller.init()
         print("Controller #0, '" + controller.get_name() + "' will be used.")
 
-    # ask what serial peripheral path to use for communications
-    print()
+    # declare ser_port
     console.print("[u]Transceiver Setup[/u]")
-    print("Attempt to open serial port will happen IMMEDIATELY upon you hitting enter")
-    ser_port:str = input("Serial port of your transceiver (i.e. 'COM3' or '/dev/ttyUSB0' or '/dev/ttyACM0'): ")
+    ser_port:str = None
+
+    # Auto-detect what peripheral path to use is for the transceiver platform
+    if platform.system() == "Linux":
+        print("Linux system detected. Checking for USB connections that could be the transceiver platform...")
+        import glob
+        ports = glob.glob("/dev/ttyUSB*")
+        if len(ports) == 1:
+            ser_port = ports[0]
+        elif len(ports) == 0:
+            print("No USB connections found under /dev/ttyUSB*")
+        else:
+            print("Multiple USB connections found: " + str(ports))
+
+    # If no port still, ask what serial peripheral path to use for communications
+    if ser_port == None:
+        print("Attempt to open serial port will happen IMMEDIATELY upon you hitting enter")
+        ser_port = input("Serial port of your transceiver (i.e. 'COM3' or '/dev/ttyUSB0' or '/dev/ttyACM0'): ")
 
     # set up serial and begin setup comms with drone
     ser:serial.Serial = None
