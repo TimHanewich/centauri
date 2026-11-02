@@ -7,3 +7,4 @@ These commits mark key milestones in Centauri's development. Each represents a c
 |`5c853569c82e61e2295a4fad8cb94631c98f1d2d`|Flight Controller & Transmitter update: Updated checksum algorithm to Fletcher16 for improved avoidance of corrupt control packets|
 |`61bab17eb4d671a2d8fb203ce7eb0f3bf9620548`|Flight Controller minor correction: keep gyro readings used for flight control separate from euler-adjusted for angle estimation, making the angle estimation more accurate. **THIS IS THE FINAL VERSION OF CENTAURI QUADCOPTER V1!**|
 |`1f67a8ac6fce3acbb701287ff98ccbec55b04caa`|Added accelerometer calibration correction|
+|`5e8c0b60966469d4939607b46287a93b7e8d8f35`|Transmitter updates: flight time calculations added, updates to settings menu, CPU benchmarking at boot, and serial auto-select for transceiver platform|

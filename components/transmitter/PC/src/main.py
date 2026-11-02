@@ -36,6 +36,8 @@ import serial
 import tools
 import sys
 import keyboard
+from benchmark import cpu_benchmark
+import platform
 
 async def main() -> None:
 
@@ -73,6 +75,11 @@ async def main() -> None:
     # set up status variables we will get from the drone (and display in the console!): system status
     vbat:float = 0.0 # volts
 
+    # Settings: for estimating remaining flight time
+    bat_series:int = 4                 # How many cells in a series are being used to fly the drone. e.g. 4S, 3S, 2S, etc.
+    bat_capacity:int = 3_300           # The capacity of the battery pack being used onboard the drone, in mAh. Used to approximate remaining flight time.
+    cruise_power:int = 192             # the average power draw of the drone, in watts. Later used to approximate remaining flight time.
+
     # set up status variables we will get from the drone (and display in the console!): control status
     pitch_rate:int = 0 # in degrees per second
     roll_rate:int = 0 # in degrees per second
@@ -98,8 +105,6 @@ async def main() -> None:
 
 
 
-
-
     #######################
     ##### SETUP BELOW #####
     #######################
@@ -109,8 +114,19 @@ async def main() -> None:
 
     # say hello
     print()
-    console.print("[bold][blue]Hello and welcome to the Centauri control system.[/bold][/blue]")
+    console.print("[bold][blue]Hello and welcome to the Centauri Transmitter system.[/bold][/blue]")
     console.print("[italic]github.com/TimHanewich/centauri[/italic]")
+    print()
+
+    # first step: benchmark CPU
+    console.print("[underline]CPU Benchmark[/]")
+    print("Running...")
+    calcs:int = cpu_benchmark()
+    print("Calculations performed in one second: " + format(calcs, ","))
+    if calcs < 500_000:
+        console.print("[red]Warning! This CPU seems slow and may give trouble when transmitting.[/]")
+    else:
+        console.print("[green]CPU performs well.[/]")
     print()
 
     # Initialize pygame and joystick module
@@ -137,13 +153,30 @@ async def main() -> None:
     if num_joysticks > 0:
         controller = pygame.joystick.Joystick(0)
         controller.init()
-        print("Controller #0, '" + controller.get_name() + "' will be used.")
+        console.print("[green]Controller #0, '" + controller.get_name() + "' will be used.[/]")
 
-    # ask what serial peripheral path to use for communications
+    # Prepare to set up serial port connection to transceiver platform
     print()
     console.print("[u]Transceiver Setup[/u]")
-    print("Attempt to open serial port will happen IMMEDIATELY upon you hitting enter")
-    ser_port:str = input("Serial port of your transceiver (i.e. 'COM3' or '/dev/ttyUSB0' or '/dev/ttyACM0'): ")
+    ser_port:str = None
+
+    # Auto-detect what peripheral path to use is for the transceiver platform
+    if platform.system() == "Linux":
+        print("Linux system detected. Checking for USB connections that could be the transceiver platform...")
+        import glob
+        ports = glob.glob("/dev/ttyUSB*")
+        if len(ports) == 1:
+            ser_port = ports[0]
+            console.print("[green]Device '" + ports[0] + "' found and auto-selected![/]")
+        elif len(ports) == 0:
+            print("No USB connections found under /dev/ttyUSB*")
+        else:
+            print("Multiple USB connections found: " + str(ports))
+
+    # If no port still, ask what serial peripheral path to use for communications
+    if ser_port == None:
+        print("Attempt to open serial port will happen IMMEDIATELY upon you hitting enter")
+        ser_port = input("Serial port of your transceiver (i.e. 'COM3' or '/dev/ttyUSB0' or '/dev/ttyACM0'): ")
 
     # set up serial and begin setup comms with drone
     ser:serial.Serial = None
@@ -158,6 +191,7 @@ async def main() -> None:
         print()
 
         # Open serial port
+        console.print("[underline]Connecting to Transceiver[/]")
         print("Opening serial port...")
         try:
             ser:serial.Serial = serial.Serial(port=ser_port, baudrate=115200, timeout=5)
@@ -181,7 +215,7 @@ async def main() -> None:
         response:bytes = ser.read(ser.in_waiting)
         print("Response of " + str(len(response)) + " bytes received from transceiver.")
         if "TRANPONG\r\n".encode() in response: # the expected response
-            print("Transceiver ping successful! It is operating normally.")
+            print("[green]Transceiver ping successful! It is operating normally.[/]")
         else:
             print("Transceiver did not respond with TRANSPONG, confirming it is alive. Are you sure it is working correctly? Response we received from it: " + str(response))
             ser.close()
@@ -263,185 +297,243 @@ async def main() -> None:
         nonlocal yaw_kd
         nonlocal i_limit
         nonlocal pid_master_multiplier
+        nonlocal bat_series
+        nonlocal bat_capacity
+        nonlocal cruise_power
 
         # ask if they want to update settings continuously until they are right
         while True:
 
-            # Calculate the EFFECTIVE PID values (using PID multiplier)
-            pitch_kp_eff:int = round(pitch_kp * pid_master_multiplier)
-            pitch_ki_eff:int = round(pitch_ki * pid_master_multiplier)
-            pitch_kd_eff:int = round(pitch_kd * pid_master_multiplier)
-            roll_kp_eff:int = round(roll_kp * pid_master_multiplier)
-            roll_ki_eff:int = round(roll_ki * pid_master_multiplier)
-            roll_kd_eff:int = round(roll_kd * pid_master_multiplier)
-            yaw_kp_eff:int = round(yaw_kp * pid_master_multiplier)
-            yaw_ki_eff:int = round(yaw_ki * pid_master_multiplier)
-            yaw_kd_eff:int = round(yaw_kd * pid_master_multiplier)
+                     
 
-            # print current settings
-            print()
-            console.print("[blue][underline]----- CURRENT SETTINGS -----[/blue][/underline]")
-            print()
-            console.print("[u]Controller Settings[/u]")
-            console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
-            console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
-            print()
-            console.print("[u]PID Settings[/u]")
-            console.print("PID Master Multiplier: " + str(round(pid_master_multiplier, 2)))
-            console.print("I Limit: [blue]" + format(i_limit, ",") + "[/blue]")
-            pid_tbl:Table = Table()
-            pid_tbl.add_column("Axis")
-            pid_tbl.add_column("Raw Gain")
-            pid_tbl.add_column("[blue][bold]" + "Effective Gain" + "[/blue][/bold]")
-            pid_tbl.add_row("Pitch kP", format(pitch_kp, ","), "[blue][bold]" + format(pitch_kp_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("Pitch kI", format(pitch_ki, ","), "[blue][bold]" + format(pitch_ki_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("Pitch kD", format(pitch_kd, ","), "[blue][bold]" + format(pitch_kd_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row()
-            pid_tbl.add_row("Roll kP", format(roll_kp, ","), "[blue][bold]" + format(roll_kp_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("Roll kI", format(roll_ki, ","), "[blue][bold]" + format(roll_ki_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("Roll kD", format(roll_kd, ","), "[blue][bold]" + format(roll_kd_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row()
-            pid_tbl.add_row("Yaw kP", format(yaw_kp, ","), "[blue][bold]" + format(yaw_kp_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("Yaw kI", format(yaw_ki, ","), "[blue][bold]" + format(yaw_ki_eff, ",") + "[/blue][/bold]")
-            pid_tbl.add_row("yaw kD", format(yaw_kd, ","), "[blue][bold]" + format(yaw_kd_eff, ",") + "[/blue][/bold]")
-            console.print(pid_tbl)
-            print()
-
-            # Want to change?
-            print("Do you want to change these?")
-            console.print("[blue][bold]1[/blue][/bold] - Load Settings Profile")
-            console.print("[blue][bold]2[/blue][/bold] - Update Controller Settings")
-            console.print("[blue][bold]3[/blue][/bold] - Update PID settings")
-            console.print("[blue][bold]4[/blue][/bold] - Adjust only PID Master Multiplier (make a proportional change)")
-            console.print("[blue][bold]5[/blue][/bold] - Send settings to drone!")
-            console.print("[blue][bold]6[/blue][/bold] - Return")
+            # What do they want to do?
             display.flush_input() # flush input right before asking so the "s" that was just pressed in does not show
-            wanttodo:str = Prompt.ask("What do you want to do?", choices=["1", "2", "3", "4", "5", "6"], show_choices=True)
-            if wanttodo == "1": # load settings profile
+            console.print("[underline][bold]SETTINGS MENU[/][/]")
+            wanttodo:str = tools.multiple_choice("What settings do you want to review and update?", ["Transmitter Settings", "Drone Settings", "Return"])
+            print()
+
+            # Handle what they selected
+            if wanttodo == "Transmitter Settings": # transmitter settings
                 
-                # ideally, would want a prompt here to allow user to select from different settings profiles
-                # but maybe will add that later - for now, just load in default values
-
-                # Load controller setting values
-                idle_throttle = 0.20
-                max_throttle = 0.60
-
-                # Load PID setting values
-                pitch_kp = 4371
-                pitch_ki = 102
-                pitch_kd = 64286
-                roll_kp = 4371
-                roll_ki = 102
-                roll_kd = 64286
-                yaw_kp = 17143
-                yaw_ki = 137
-                yaw_kd = 0
-                i_limit = 350000
-                pid_master_multiplier = 1.0      # reset to 100%
-
-            elif wanttodo == "2": # update controller settings
-
-                print("Okay, let's update the controller settings.")
-
-                # collect idle and max until it is valid!
                 while True:
-                    idle_throttle = tools.ask_float("Idle Throttle")
-                    max_throttle = tools.ask_float("Max Throttle")
 
-                    # settings validation
-                    if max_throttle <= idle_throttle: 
-                        print("Max Throttle must be GREATER THAN idle throttle!")
-                        print("Try again please.")
-                    else:
+                    # Print Throttle Settings
+                    console.print("[u]Throttle Settings[/u]")
+                    console.print("Idle Throttle: [blue]" + str(round(idle_throttle * 100, 0)) + "%[/blue]")
+                    console.print("Max Throttle: [blue]" + str(round(max_throttle * 100, 0)) + "%[/blue]")
+                    print()
+
+                    # Print Battery Settings
+                    console.print("[u]Battery Settings[/u]")
+                    console.print("Cell Series: [blue]" + str(bat_series) + "[/blue]")
+                    console.print("Capacity: [blue]" + str(bat_capacity) + " mAh" + "[/blue]")
+                    console.print("Cruise Power: [blue]" + str(cruise_power) + " watts" + "[/blue]")
+                    print()
+
+                    # ask transmitter settings
+                    transmitter_settings_choice:str = tools.multiple_choice("What do you want to do in Transmitter Settings?", ["Update Throttle Settings", "Update Battery Settings - From Profile", "Update Battery Settings - Custom", "Return"])
+                    print()
+
+                    # handle choice
+                    if transmitter_settings_choice == "Update Throttle Settings":
+
+                        # ask if want to load profile or set unique
+                        throttle_settings_choice:str = tools.multiple_choice("How do you want to update Throttle Settings?", ["Load Profile", "Set Values"])
+                        print()
+
+                        # handle
+                        if throttle_settings_choice == "Load Profile":
+                            idle_throttle = 0.2
+                            max_throttle = 0.6
+                            console.print("[green]Throttle profile loaded.[/]")
+                            print()
+
+                        elif throttle_settings_choice == "Set Values":
+
+                            print("Okay, let's update the controller settings.")
+                            
+                            # collect idle and max until it is valid!
+                            while True:
+                                idle_throttle = tools.ask_float("Idle Throttle")
+                                max_throttle = tools.ask_float("Max Throttle")
+            
+                                # settings validation
+                                if max_throttle <= idle_throttle: 
+                                    print("Max Throttle must be GREATER THAN idle throttle!")
+                                    print("Try again please.")
+                                else:
+                                    break
+                    elif transmitter_settings_choice == "Update Battery Settings - From Profile":
+
+                        # list the profiles
+                        profile1:str = "4S 3,300 mAh LiPo"
+                        profile2:str = "4S 2,200 mAh Lipo"
+
+                        # ask which profile
+                        selected_battery_profile:str = tools.multiple_choice("Which battery profile?", [profile1, profile2])
+
+                        # handle
+                        if selected_battery_profile == profile1:
+                            bat_series = 4
+                            bat_capacity = 3300
+                            cruise_power = 192
+                        elif selected_battery_profile == profile2:
+                            bat_series = 4
+                            bat_capacity = 2200
+                            cruise_power = 192
+                        else:
+                            console.print("[red]Profile not recognized[/]")
+
+                    elif transmitter_settings_choice == "Update Battery Settings - Custom":
+
+                        bat_series = tools.ask_integer("Battery pack cells in a series (e.g. 4S)?")
+                        bat_capacity = tools.ask_integer("Battery pack capacity, in mAh (e.g. 3,300)?")
+                        cruise_power = tools.ask_integer("Cruise Power, in watts (est. avg consumption while flying)?")
+                
+                    elif transmitter_settings_choice == "Return":
                         break
 
-            elif wanttodo == "3": # update PID settings
+
+            elif wanttodo == "Drone Settings": # drone settings
+
+                # Ask what to do further
+                while True:
+
+                    # Calculate the EFFECTIVE PID values (using PID multiplier)
+                    pitch_kp_eff:int = round(pitch_kp * pid_master_multiplier)
+                    pitch_ki_eff:int = round(pitch_ki * pid_master_multiplier)
+                    pitch_kd_eff:int = round(pitch_kd * pid_master_multiplier)
+                    roll_kp_eff:int = round(roll_kp * pid_master_multiplier)
+                    roll_ki_eff:int = round(roll_ki * pid_master_multiplier)
+                    roll_kd_eff:int = round(roll_kd * pid_master_multiplier)
+                    yaw_kp_eff:int = round(yaw_kp * pid_master_multiplier)
+                    yaw_ki_eff:int = round(yaw_ki * pid_master_multiplier)
+                    yaw_kd_eff:int = round(yaw_kd * pid_master_multiplier)   
+
+                    # print current settings
+                    console.print("[u]PID Settings[/u]")
+                    console.print("PID Master Multiplier: " + str(round(pid_master_multiplier, 2)))
+                    console.print("I Limit: [blue]" + format(i_limit, ",") + "[/blue]")
+                    pid_tbl:Table = Table()
+                    pid_tbl.add_column("Axis")
+                    pid_tbl.add_column("Raw Gain")
+                    pid_tbl.add_column("[blue][bold]" + "Effective Gain" + "[/blue][/bold]")
+                    pid_tbl.add_row("Pitch kP", format(pitch_kp, ","), "[blue][bold]" + format(pitch_kp_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("Pitch kI", format(pitch_ki, ","), "[blue][bold]" + format(pitch_ki_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("Pitch kD", format(pitch_kd, ","), "[blue][bold]" + format(pitch_kd_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row()
+                    pid_tbl.add_row("Roll kP", format(roll_kp, ","), "[blue][bold]" + format(roll_kp_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("Roll kI", format(roll_ki, ","), "[blue][bold]" + format(roll_ki_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("Roll kD", format(roll_kd, ","), "[blue][bold]" + format(roll_kd_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row()
+                    pid_tbl.add_row("Yaw kP", format(yaw_kp, ","), "[blue][bold]" + format(yaw_kp_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("Yaw kI", format(yaw_ki, ","), "[blue][bold]" + format(yaw_ki_eff, ",") + "[/blue][/bold]")
+                    pid_tbl.add_row("yaw kD", format(yaw_kd, ","), "[blue][bold]" + format(yaw_kd_eff, ",") + "[/blue][/bold]")
+                    console.print(pid_tbl)
+                    print()
+
+                    # What to do?
+                    drone_settings_choice:str = tools.multiple_choice("What do you want to do in Drone Settings?", ["Load PID Rate Profile", "Update PID Multiplier", "Update PID Rates", "Send PID Settings to Drone", "Return"])
+                    print()
+
+                    # handle that
+                    if drone_settings_choice == "Load PID Rate Profile":
+
+                        # Load PID setting values
+                        pitch_kp = 4371
+                        pitch_ki = 102
+                        pitch_kd = 64286
+                        roll_kp = 4371
+                        roll_ki = 102
+                        roll_kd = 64286
+                        yaw_kp = 17143
+                        yaw_ki = 137
+                        yaw_kd = 0
+                        i_limit = 350000
+                        pid_master_multiplier = 1.0      # reset to 100%
+
+                    elif drone_settings_choice == "Update PID Multiplier":
+
+                        npmm:float = tools.ask_float("New PID Master Multiplier to use")
+                        pid_master_multiplier = npmm
+
+                    elif drone_settings_choice == "Update PID Rates":
+
+                        print("Okay, let's collect the new PID values.")
+                        
+                        # Collect new settings
+                        pitch_kp = tools.ask_integer("Pitch kP")
+                        pitch_ki = tools.ask_integer("Pitch kI")
+                        pitch_kd = tools.ask_integer("Pitch kD")
+                        roll_kp = tools.ask_integer("Roll kP")
+                        roll_ki = tools.ask_integer("Roll kI")
+                        roll_kd = tools.ask_integer("Roll kD")
+                        yaw_kp = tools.ask_integer("Yaw kP")
+                        yaw_ki = tools.ask_integer("Yaw kI")
+                        yaw_kd = tools.ask_integer("Yaw kD")
+                        i_limit = tools.ask_integer("I Limit")
+                        print()
+
+                    elif drone_settings_choice == "Send PID Settings to Drone":
+
+                        # Send a settings update (PID settings)
+                        if ser != None:
+                            print()
+                            print("Will now send out PID update!")
                 
-                print("Okay, let's collect the new PID values.")
+                            # try a certain number of times
+                            confirmed:bool = False
+                            attempts:int = 0
+                            while confirmed == False and attempts < 5:
+                
+                                console.print("[u]PID Update Attempt # " + str(attempts+1) + "[/u]")
+                
+                                # pack it
+                                print("Packing PID updates...")
+                                ToSend:bytes = tools.pack_settings_update(pitch_kp_eff, pitch_ki_eff, pitch_kd_eff, roll_kp_eff, roll_ki_eff, roll_kd_eff, yaw_kp_eff, yaw_ki_eff, yaw_kd_eff, i_limit)
+                
+                                # send it
+                                print("Sending PID updates...")
+                                ser.write(ToSend + "\r\n".encode())
+                                attempts = attempts + 1
+                
+                                # wait
+                                print("Settings packet sent!")
+                                print("Waiting a moment for it to register.")
+                                time.sleep(1.5)
+                
+                                # handle
+                                print("Checking for settings update confirmation...")
+                                if ser.in_waiting == 0:
+                                    print("No data at all received from drone. Was expecting settings update confirmation.")
+                                else: # There is some data available to read. Is it the confirmation?
+                                    recv:bytes = ser.read(ser.in_waiting) # read all available
+                                    if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
+                                        print("Settings update confirmation received from drone!")
+                                        confirmed = True
+                                        input("Return to continue.")
+                                    else:
+                                        print("Drone sent back " + str(len(recv)) + " bytes but it wasn't a successful settings update.")
+                
+                            # if it just straight up did not work, say so
+                            if confirmed == False: # it never confirmed, which means we went past the number of tries
+                                print("After a number of attempts, the drone did NOT confirm the PID settings update.")
+                                print("There is a good chance it did NOT update the settings values, so be careful!")
+                                input("Return to continue.")
+                            
+                        else:
+                            console.print("[red]Transceiver not set up, so unable to send out PID setting updates.[/]")
+                            print()
 
-                # Collect new settings
-                pitch_kp = tools.ask_integer("Pitch kP")
-                pitch_ki = tools.ask_integer("Pitch kI")
-                pitch_kd = tools.ask_integer("Pitch kD")
-                roll_kp = tools.ask_integer("Roll kP")
-                roll_ki = tools.ask_integer("Roll kI")
-                roll_kd = tools.ask_integer("Roll kD")
-                yaw_kp = tools.ask_integer("Yaw kP")
-                yaw_ki = tools.ask_integer("Yaw kI")
-                yaw_kd = tools.ask_integer("Yaw kD")
-                i_limit = tools.ask_integer("I Limit")
-                print()
+                    elif drone_settings_choice == "Return":
+                        break
 
-            elif wanttodo == "4": # update only PID Master Multiplier
-                npmm:float = tools.ask_float("New PID Master Multiplier to use")
-                pid_master_multiplier = npmm
-            elif wanttodo == "5": # send to drone as is
-                print("Using those settings values!")
-                break # break out of the infinite loop of asking if the settings look good
-            elif wanttodo == "6": # cancel
+                        
+
+            elif wanttodo == "Return": # return
                 return # break out of this function and return to main screen by closing out of the function
-            else:
+            else: # something else
                 console.print("[red]Invalid choice.[/red]")
-
-        # Send a settings update (PID settings)
-        if ser != None:
-            print()
-            print("Will now send out PID update!")
-
-            # try a certain number of times
-            confirmed:bool = False
-            attempts:int = 0
-            while confirmed == False and attempts < 5:
-
-                console.print("[u]PID Update Attempt # " + str(attempts+1) + "[/u]")
-
-                # pack it
-                print("Packing PID updates...")
-                ToSend:bytes = tools.pack_settings_update(pitch_kp_eff, pitch_ki_eff, pitch_kd_eff, roll_kp_eff, roll_ki_eff, roll_kd_eff, yaw_kp_eff, yaw_ki_eff, yaw_kd_eff, i_limit)
-
-                # send it
-                print("Sending PID updates...")
-                ser.write(ToSend + "\r\n".encode())
-                attempts = attempts + 1
-
-                # wait
-                print("Settings packet sent!")
-                print("Waiting a moment for it to register.")
-                time.sleep(1.5)
-
-                # handle
-                print("Checking for settings update confirmation...")
-                if ser.in_waiting == 0:
-                    print("No data at all received from drone. Was expecting settings update confirmation.")
-                else: # There is some data available to read. Is it the confirmation?
-                    recv:bytes = ser.read(ser.in_waiting) # read all available
-                    if "SETUPOK".encode() in recv: # it should send "SETUPOK" as a special packet (plain text)
-                        print("Settings update confirmation received from drone!")
-                        confirmed = True
-                        input("Return to continue.")
-                    else:
-                        print("Drone sent back " + str(len(recv)) + " bytes but it wasn't a successful settings update.")
-
-            # if it just straight up did not work, say so
-            if confirmed == False: # it never confirmed, which means we went past the number of tries
-                print("After a number of attempts, the drone did NOT confirm the PID settings update.")
-                print("There is a good chance it did NOT update the settings values, so be careful!")
-                input("Return to continue.")
-            
-        else:
-            print("Transceiver not set up, so skipping sending it out!")
-            input("Return to continue.")
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -586,6 +678,20 @@ async def main() -> None:
                 dp.pitch_angle = pitch_angle
                 dp.roll_angle = roll_angle
 
+                # calculate and plug in INFERRED telemetry variables
+                pack_nominal_voltage:float = 3.7 * bat_series                                             # calculate the battery's nominal voltage based on its architecture (number of cells in a series). e.g. 14.8 for a 4S
+                pack_capacity_full_wh:float = (pack_nominal_voltage * bat_capacity) / 1000.0              # calculate the total capacity of this pack, in watt hours
+                pack_soc:float = tools.soc(vbat / bat_series)                                             # estimate the battery state of charge (a percent). Provide it with the raw battery pack voltage divided by number of cells to get average voltage per cell.
+                pack_capacity_remaining_wh:float = pack_capacity_full_wh * pack_soc                       # calculate how much capacity, in watt hours, is remaining in this pack based on that SOC percent
+                if pack_capacity_remaining_wh > 0.0:                                                      # check for zero values to avoid dividing by 0.0
+                    flight_time_remaining_hours:float = pack_capacity_remaining_wh / cruise_power         # calculate the flight time remaining, in hours, given we know the watt hours remaining in the pack and we know the average watt draw while cruising
+                    flight_time_remaining_minutes:float = flight_time_remaining_hours * 60                # convert to minutes
+                    dp.drone_battery_soc = pack_soc                                                       # Plug in SOC (a percent)
+                    dp.flight_time_remaining_minutes = flight_time_remaining_minutes                      # Plug in flight time remaining
+                else:                                                                                     # if pack capacity remaining is 0 watt hours, plug in 0s!
+                    dp.drone_battery_soc = 0.0
+                    dp.flight_time_remaining_minutes = 0.0
+
                 # plug in drone messages
                 dp.messages = drone_messages
                 
@@ -676,7 +782,6 @@ async def main() -> None:
                 
             # sleep
             await asyncio.sleep(0.05)
-
 
     # we are all set and ready to go. Confirm.
     print()
