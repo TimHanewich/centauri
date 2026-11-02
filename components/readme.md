@@ -4,6 +4,3 @@
 - [link](./link/) - A bare carrier board for building Centauri Link, a handheld radio monitor for reception checks and troubleshooting;
 components sold separately, soldering and assembly required.
 - [analysis](./analysis/) - Script to analyze the telemetery data Centauri logs.
-
-## Experimental
-I also began designing a small handheld receiver platform for verifying control commands are broadcasting. The blender files are unfinished, but can be downloaded [here](https://github.com/TimHanewich/centauri/releases/download/61/receiver-platform.zip).
