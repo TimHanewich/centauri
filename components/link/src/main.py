@@ -229,8 +229,8 @@ while True:
                 # increment sent count
                 packets_sent_count = packets_sent_count + 1
 
-                # Refresh display in SEND mode
-                d.show(display.SCREEN_SEND)    
+            # Refresh display in SEND mode
+            d.show(display.SCREEN_SEND)    
     
     # slight wait
     time.sleep(0.01) # 100 Hz refresh rate
