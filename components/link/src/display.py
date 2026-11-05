@@ -64,6 +64,27 @@ class Display:
             # "CENTAURI" up at top
             self._oled.text("CENTAURI", 32, 0)
 
+
+            # "/" or "\" in bottom of 
+            since_last_flipped_ticks_ms:int = time.ticks_diff(time.ticks_ms(), self._last_flipped_ticks_ms)
+            if since_last_flipped_ticks_ms > 1_000:                            # more than one second, so time to change it
+                self._last_shown_indicator = not self._last_shown_indicator    # flip
+                self._last_flipped_ticks_ms = time.ticks_ms()                  # mark the flip
+
+            # Show bottom right corner "still working" display
+            if self._last_shown_indicator:
+                self._oled.text("/", 120, 0)
+            else:
+                self._oled.text("\\", 120, 0)
+
+            # state of charge
+            soc:int = int(self.battery_soc * 100)
+            soc = min(max(soc, 0), 99)
+            soc_txt = str(soc)
+            while len(soc_txt) < 2:
+                soc_txt = " " + soc_txt
+            self._oled.text(soc_txt + "%", 104, 56)
+
             if screen == SCREEN_RECV:
 
                 # display
@@ -78,33 +99,13 @@ class Display:
                 # max width: 124
                 # height: 8
                 max_ms:int = 2500 # anything this or beyond is 100% of the bar
-                percent_of_max_ms:float = self.since_last_recv_ticks_ms / 2500
+                percent_of_max_ms:float = self.since_last_recv_ticks_ms / max_ms
                 bar_width:float = 124 * percent_of_max_ms
                 bar_width:int = int(min(max(bar_width, 0), 124)) # min/max it
                 self._oled.rect(2, 28, bar_width, 8, 1, True)
 
                 # packets received
                 self._oled.text("count: " + self.comma_int(self.packets_received_count), 0, 44)
-
-                # state of charge
-                soc:int = int(self.battery_soc * 100)
-                soc = min(max(soc, 0), 99)
-                soc_txt = str(soc)
-                while len(soc_txt) < 2:
-                    soc_txt = " " + soc_txt
-                self._oled.text(soc_txt + "%", 104, 56)
-
-                # "/" or "\" in bottom of 
-                since_last_flipped_ticks_ms:int = time.ticks_diff(time.ticks_ms(), self._last_flipped_ticks_ms)
-                if since_last_flipped_ticks_ms > 1_000:                            # more than one second, so time to change it
-                    self._last_shown_indicator = not self._last_shown_indicator    # flip
-                    self._last_flipped_ticks_ms = time.ticks_ms()                  # mark the flip
-
-                # Show bottom right corner "still working" display
-                if self._last_shown_indicator:
-                    self._oled.text("/", 120, 0)
-                else:
-                    self._oled.text("\\", 120, 0)
 
             elif screen == SCREEN_SEND:
                 pass
