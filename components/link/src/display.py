@@ -117,10 +117,10 @@ class Display:
                 # show a simpe "Packets Sent" count that increments
 
                 # show text
-                self._oled.text("Packets Sent: ", 16, 16)
+                self._oled.text("Packets Sent", 16, 20)
                 count_txt:str = self.comma_int(self.packets_sent_count)
                 count_txt_x_pos:int = int((128 - (len(count_txt) * 8)) / 2)
-                self._oled.text(count_txt, count_txt_x_pos, 28)
+                self._oled.text(count_txt, count_txt_x_pos, 32)
 
         elif screen == SCREEN_PRESS_BUTTON:
 
@@ -165,7 +165,7 @@ if __name__ == "__main__":
 
     d = Display(oled)
 
-    TESTING:str = "recv"
+    TESTING:str = "send"
 
     if TESTING == "recv":
         for i in range(0, 300):
