@@ -181,7 +181,7 @@ while True:
     d.since_last_recv_ticks_ms = ticks_ms_since_last_recv
 
     # display!
-    d.show(display.SCREEN_MAIN)
+    d.show(display.SCREEN_RECV)
 
     # slight wait
     time.sleep(0.01)

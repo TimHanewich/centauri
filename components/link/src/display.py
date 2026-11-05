@@ -5,7 +5,7 @@ import framebuf
 # CONSTANT
 SCREEN_LOADING:int = 0
 SCREEN_CENTAURI:int = 1
-SCREEN_MAIN:int = 2
+SCREEN_RECV:int = 2               # Receiving of packets (main mode)       
 SCREEN_ERROR:int = 3 
 SCREEN_PRESS_BUTTON:int = 4
 
@@ -37,7 +37,7 @@ class Display:
         # show
         self._oled.show()
 
-    def show(self, screen:int = SCREEN_MAIN) -> None:
+    def show(self, screen:int = SCREEN_RECV) -> None:
 
         # clear
         self._oled.fill(0)
@@ -58,7 +58,7 @@ class Display:
             img = framebuf.FrameBuffer(ba, 128, 64, framebuf.MONO_HLSB)
             self._oled.blit(img, 0, 0)
 
-        elif screen == SCREEN_MAIN:
+        elif screen == SCREEN_RECV:
 
             # "CENTAURI" up at top
             self._oled.text("CENTAURI", 32, 0)
