@@ -133,7 +133,8 @@ MODE_RECV:int = 0
 MODE_SEND:int = 1
 
 # Set up vars: general
-mode:int = MODE_SEND            # start in RECV mode (default)
+mode:int = MODE_SEND                                   # start in RECV mode (default)
+last_button_state_was_pressed:bool = False             # tracking the last button state as pressed (True) or depressed (False) so can wait for the full button pressed + depressed cycle to know when to switch modes
 
 # Set up vars: RECV mode
 rxbuffer:bytearray = bytearray()
@@ -164,6 +165,18 @@ while button_pressed():
 # go to normal display mode!
 while True:
 
+    # switch modes? If button WAS pressed before and is NOW depressed, now we "count that" as a button press and proceed to do whatever it should!
+    if button_pressed():
+        last_button_state_was_pressed = True
+    else:
+        if last_button_state_was_pressed == True:
+            if mode == MODE_RECV:
+                mode = MODE_SEND
+            elif mode == MODE_SEND:
+                mode = MODE_RECV
+
+        last_button_state_was_pressed = False # update the state so it doesnt get stuck in a cycle of press/depress
+
     # get battery voltage (from ADC)
     vbat_reading:int = battery_adc.read_u16()
     battery_voltage:float = 3.01 + (((vbat_reading - 38800) / (54000 - 38800)) * (4.21 - 3.01))                         # calculate the voltage on the pin based upon a test of known values (tested reading at 4.2V and reading at 3.0V)
@@ -173,13 +186,6 @@ while True:
         battery_voltage_carried = (battery_voltage_carried * vbat_alpha) + (battery_voltage * (1 - vbat_alpha))         # then calculated the moving average
     soc_approx:float = battery_monitor.soc(battery_voltage_carried)                                                     # get state of charge (percent) as an estimate using a lookup table
     d.battery_soc = soc_approx                                                                                          # add in SOC estimate as a percent directly (0.0 to 1.0)
-
-    # switch modes? If button is pressed
-    if button_pressed():
-        if mode == MODE_RECV:
-            mode = MODE_SEND
-        elif mode == MODE_SEND:
-            mode = MODE_RECV
 
     if mode == MODE_RECV:
 
