@@ -125,13 +125,21 @@ def button_pressed() -> bool:
     else:
         return True
 
-# Set up status variable containers
+# Set up static enums
+MODE_RECV:int = 0
+MODE_SEND:int = 1
+
+# Set up vars: general
+mode:int = MODE_RECV            # start in RECV mode (default)
+
+# Set up vars: RECV mode
 rxbuffer:bytearray = bytearray()
 control_input:list[int] = [0, 0, 0, 0]             # used to "unpack" control data into (dummy, not used in this project but necessary for the unpack code lifted out of the flight controller)
-
-# For Display variables
 recv_count:int = 0
 last_recv_at_ticks_ms:int = time.ticks_ms()        # just start at right now
+
+# Set up vars: SEND mode
+packets_sent_count:int = 0
 
 # press button to start
 d.show(display.SCREEN_PRESS_BUTTON) # show press button
@@ -147,34 +155,6 @@ while True:
 # go to normal display mode!
 while True:
 
-    # check if any bytes available
-    #print("Checking RX bytes available...")
-    recv:bytes = hc12.receive()
-    if recv != None:
-        if len(recv) > 0:
-            #print("Received bytes of length " + str(len(recv)))
-            rxbuffer.extend(recv)
-
-    # packet available?
-    if "\r\n".encode() in rxbuffer:
-        term_loc:int = rxbuffer.find("\r\n".encode(), 0)
-
-        # "bite off" that line
-        line:bytearray = rxbuffer[0:term_loc]               # the line, excluding the \r\n
-        rxbuffer = rxbuffer[term_loc + 2:]                  # set the rxbuffer to everything after the line and the \r\n
-
-        # is line a Centauri Control Packet from the Transmitter?
-        # Example packets from October 22, 2026
-        # Control Packet from Transmitter:
-        # b'\x00@\x00\xbf\xff@\x00\x8f\xff\xcf\xa0\r\n'              (13 bytes with the \r\n, 11 bytes excluding it)
-        # Status Packet from Quadcopter:
-        # b'\x00}\x8a^\x83T\xb7\r\n'                                 (9 bytes with the \r\n, 7 bytes excluding it)
-        if len(line) == 11: # so only attempt if the length is 11, which would be a Control Packet from the transmitter
-            unpacked:bool = unpack_control_packet(line, control_input)
-            if unpacked:
-                recv_count = recv_count + 1
-                last_recv_at_ticks_ms = time.ticks_ms()
-
     # get battery voltage (from ADC)
     vbat_reading:int = battery_adc.read_u16()
     battery_voltage:float = 3.01 + (((vbat_reading - 38800) / (54000 - 38800)) * (4.21 - 3.01))                         # calculate the voltage on the pin based upon a test of known values (tested reading at 4.2V and reading at 3.0V)
@@ -185,16 +165,47 @@ while True:
     soc_approx:float = battery_monitor.soc(battery_voltage_carried)                                                     # get state of charge (percent) as an estimate using a lookup table
     d.battery_soc = soc_approx                                                                                           # add in SOC estimate as a percent directly (0.0 to 1.0)
 
-    # plug in: count received
-    d.packets_received_count = recv_count
+    if mode == MODE_RECV:
 
-    # plug in: last recv ago (ms span)
-    ticks_ms_since_last_recv:int = time.ticks_diff(time.ticks_ms(), last_recv_at_ticks_ms)
-    d.since_last_recv_ticks_ms = ticks_ms_since_last_recv
+        # check if any bytes available
+        #print("Checking RX bytes available...")
+        recv:bytes = hc12.receive()
+        if recv != None:
+            if len(recv) > 0:
+                #print("Received bytes of length " + str(len(recv)))
+                rxbuffer.extend(recv)
 
-    # display!
-    d.show(display.SCREEN_RECV)
+        # packet available?
+        if "\r\n".encode() in rxbuffer:
+            term_loc:int = rxbuffer.find("\r\n".encode(), 0)
 
+            # "bite off" that line
+            line:bytearray = rxbuffer[0:term_loc]               # the line, excluding the \r\n
+            rxbuffer = rxbuffer[term_loc + 2:]                  # set the rxbuffer to everything after the line and the \r\n
+
+            # is line a Centauri Control Packet from the Transmitter?
+            # Example packets from October 22, 2026
+            # Control Packet from Transmitter:
+            # b'\x00@\x00\xbf\xff@\x00\x8f\xff\xcf\xa0\r\n'              (13 bytes with the \r\n, 11 bytes excluding it)
+            # Status Packet from Quadcopter:
+            # b'\x00}\x8a^\x83T\xb7\r\n'                                 (9 bytes with the \r\n, 7 bytes excluding it)
+            if len(line) == 11: # so only attempt if the length is 11, which would be a Control Packet from the transmitter
+                unpacked:bool = unpack_control_packet(line, control_input)
+                if unpacked:
+                    recv_count = recv_count + 1
+                    last_recv_at_ticks_ms = time.ticks_ms()
+
+            # plug in: count received
+            d.packets_received_count = recv_count
+        
+            # plug in: last recv ago (ms span)
+            ticks_ms_since_last_recv:int = time.ticks_diff(time.ticks_ms(), last_recv_at_ticks_ms)
+            d.since_last_recv_ticks_ms = ticks_ms_since_last_recv
+
+            # Refresh display in RECV mode
+            d.show(display.SCREEN_RECV)
+    
+    
     # slight wait
     time.sleep(0.01)
 
