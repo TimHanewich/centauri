@@ -207,30 +207,30 @@ while True:
             ticks_ms_since_last_recv:int = time.ticks_diff(time.ticks_ms(), last_recv_at_ticks_ms)
             d.since_last_recv_ticks_ms = ticks_ms_since_last_recv
 
-            # Refresh display in RECV mode
-            d.show(display.SCREEN_RECV)
+        # Refresh display in RECV mode
+        d.show(display.SCREEN_RECV)
 
-        elif mode == MODE_SEND:
+    elif mode == MODE_SEND:
 
-            # calculate time since a packet was LAST sent out
-            time_since_last_packet_sent_ticks_ms:int = time.ticks_diff(time.ticks_ms(), packet_last_sent_ticks_ms)
+        # calculate time since a packet was LAST sent out
+        time_since_last_packet_sent_ticks_ms:int = time.ticks_diff(time.ticks_ms(), packet_last_sent_ticks_ms)
 
-            # if we have not sent one in time, send one
-            transmission_rate_hz:int = 20                                           # how many time the transmitter broadcasts a command packet per second
-            ms_between_transmissions:int = 1000 / transmission_rate_hz              # how many ms should be between each transmission
-            if time_since_last_packet_sent_ticks_ms >= ms_between_transmissions:
+        # if we have not sent one in time, send one
+        transmission_rate_hz:int = 20                                           # how many time the transmitter broadcasts a command packet per second
+        ms_between_transmissions:int = 1000 / transmission_rate_hz              # how many ms should be between each transmission
+        if time_since_last_packet_sent_ticks_ms >= ms_between_transmissions:
 
-                # broadcast
-                hc12.send(command_packet_to_send)
+            # broadcast
+            hc12.send(command_packet_to_send)
 
-                # update last sent time
-                packet_last_sent_ticks_ms = time.ticks_ms()
+            # update last sent time
+            packet_last_sent_ticks_ms = time.ticks_ms()
 
-                # increment sent count
-                packets_sent_count = packets_sent_count + 1
+            # increment sent count
+            packets_sent_count = packets_sent_count + 1
 
-            # Refresh display in SEND mode
-            d.show(display.SCREEN_SEND)    
+        # Refresh display in SEND mode
+        d.show(display.SCREEN_SEND)    
     
     # slight wait
     time.sleep(0.01) # 100 Hz refresh rate
