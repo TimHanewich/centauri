@@ -146,7 +146,7 @@ if __name__ == "__main__":
     import machine 
     import time
 
-    i2c = machine.I2C(1, sda=machine.Pin(14), scl=machine.Pin(15))
+    i2c = machine.I2C(1, sda=machine.Pin(2), scl=machine.Pin(3))
     print(str(i2c.scan()))
     oled = ssd1306.SSD1306_I2C(128, 64, i2c)
 
