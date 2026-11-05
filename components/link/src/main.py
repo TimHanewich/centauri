@@ -133,7 +133,7 @@ MODE_RECV:int = 0
 MODE_SEND:int = 1
 
 # Set up vars: general
-mode:int = MODE_RECV            # start in RECV mode (default)
+mode:int = MODE_SEND            # start in RECV mode (default)
 
 # Set up vars: RECV mode
 rxbuffer:bytearray = bytearray()
@@ -200,12 +200,12 @@ while True:
                     recv_count = recv_count + 1
                     last_recv_at_ticks_ms = time.ticks_ms()
 
-            # plug in: count received
-            d.packets_received_count = recv_count
-        
-            # plug in: last recv ago (ms span)
-            ticks_ms_since_last_recv:int = time.ticks_diff(time.ticks_ms(), last_recv_at_ticks_ms)
-            d.since_last_recv_ticks_ms = ticks_ms_since_last_recv
+        # Display plug in: count received
+        d.packets_received_count = recv_count
+    
+        # Display plug in: last recv ago (ms span)
+        ticks_ms_since_last_recv:int = time.ticks_diff(time.ticks_ms(), last_recv_at_ticks_ms)
+        d.since_last_recv_ticks_ms = ticks_ms_since_last_recv
 
         # Refresh display in RECV mode
         d.show(display.SCREEN_RECV)
@@ -214,6 +214,7 @@ while True:
 
         # calculate time since a packet was LAST sent out
         time_since_last_packet_sent_ticks_ms:int = time.ticks_diff(time.ticks_ms(), packet_last_sent_ticks_ms)
+        print("Time since last sent: " + str(time_since_last_packet_sent_ticks_ms))
 
         # if we have not sent one in time, send one
         transmission_rate_hz:int = 20                                           # how many time the transmitter broadcasts a command packet per second
@@ -230,6 +231,7 @@ while True:
             packets_sent_count = packets_sent_count + 1
 
         # Refresh display in SEND mode
+        d.packets_sent_count = packets_sent_count
         d.show(display.SCREEN_SEND)    
     
     # slight wait
