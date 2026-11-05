@@ -168,7 +168,14 @@ while True:
     else:                                                                                                               # If we DO have a carried value
         battery_voltage_carried = (battery_voltage_carried * vbat_alpha) + (battery_voltage * (1 - vbat_alpha))         # then calculated the moving average
     soc_approx:float = battery_monitor.soc(battery_voltage_carried)                                                     # get state of charge (percent) as an estimate using a lookup table
-    d.battery_soc = soc_approx                                                                                           # add in SOC estimate as a percent directly (0.0 to 1.0)
+    d.battery_soc = soc_approx                                                                                          # add in SOC estimate as a percent directly (0.0 to 1.0)
+
+    # switch modes? If button is pressed
+    if button_pressed():
+        if mode == MODE_RECV:
+            mode = MODE_SEND
+        elif mode == MODE_SEND:
+            mode = MODE_RECV
 
     if mode == MODE_RECV:
 
