@@ -22,6 +22,9 @@ vbat_adc_gpio:int = 26
 # Lower values closer to 0.0 = fast response
 vbat_alpha:float = 0.99
 
+# Control Packet to broadcast in send mode
+command_packet:bytes = b'\x00\x00\x00\x80\x00\x80\x00\x80\x00\x81\x06'   # 0% throttle, 0% pitch, 0% roll, 0% yaw.    Constructed on November 5, 2026.
+
 ####################
 
 
@@ -140,6 +143,8 @@ last_recv_at_ticks_ms:int = time.ticks_ms()        # just start at right now
 
 # Set up vars: SEND mode
 packets_sent_count:int = 0
+packet_last_sent_ticks_ms:int = time.ticks_ms()                             # just mark right now
+command_packet_to_send:bytes = command_packet + "\r\n".encode()             # append the "\r\n" terminator to it so we don't have to do it each and every time later in a loop. THIS will be what we send.
 
 # press button to start
 d.show(display.SCREEN_PRESS_BUTTON) # show press button
@@ -204,8 +209,28 @@ while True:
 
             # Refresh display in RECV mode
             d.show(display.SCREEN_RECV)
-    
+
+        elif mode == MODE_SEND:
+
+            # calculate time since a packet was LAST sent out
+            time_since_last_packet_sent_ticks_ms:int = time.ticks_diff(time.ticks_ms(), packet_last_sent_ticks_ms)
+
+            # if we have not sent one in time, send one
+            transmission_rate_hz:int = 20                                           # how many time the transmitter broadcasts a command packet per second
+            ms_between_transmissions:int = 1000 / transmission_rate_hz              # how many ms should be between each transmission
+            if time_since_last_packet_sent_ticks_ms >= ms_between_transmissions:
+
+                # broadcast
+                hc12.send(command_packet_to_send)
+
+                # update last sent time
+                packet_last_sent_ticks_ms = time.ticks_ms()
+
+                # increment sent count
+                packets_sent_count = packets_sent_count + 1
+
+                # Refresh display in SEND mode
+                d.show(display.SCREEN_SEND)    
     
     # slight wait
-    time.sleep(0.01)
-
+    time.sleep(0.01) # 100 Hz refresh rate
