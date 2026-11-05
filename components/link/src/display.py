@@ -18,10 +18,15 @@ class Display:
         # store OLED (SSD-1306 interface)
         self._oled = oled
 
-        # display variables
+        # display variables: general
         self.battery_soc:float = 0.0               # a percent, between 0.0 and 1.0
+
+        # display variables: Receive Mode
         self.since_last_recv_ticks_ms:int = 0
         self.packets_received_count:int = 0
+
+        # display variables: Send Mode
+        self.packets_sent_count:int = 0
 
         # internal variables
         self._last_flipped_ticks_ms:int = 0         # timestamp of when it was last displayed, in ticks_ms
@@ -108,7 +113,14 @@ class Display:
                 self._oled.text("count: " + self.comma_int(self.packets_received_count), 0, 44)
 
             elif screen == SCREEN_SEND:
-                pass
+
+                # show a simpe "Packets Sent" count that increments
+
+                # show text
+                self._oled.text("Packets Sent: ", 16, 16)
+                count_txt:str = self.comma_int(self.packets_sent_count)
+                count_txt_x_pos:int = int((128 - (len(count_txt) * 8)) / 2)
+                self._oled.text(count_txt, count_txt_x_pos, 28)
 
         elif screen == SCREEN_PRESS_BUTTON:
 
