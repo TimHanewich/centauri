@@ -5,7 +5,8 @@ import framebuf
 # CONSTANT
 SCREEN_LOADING:int = 0
 SCREEN_CENTAURI:int = 1
-SCREEN_RECV:int = 2               # Receiving of packets (main mode)       
+SCREEN_RECV:int = 2               # Receiving of control packets (acts as drone, a passive observer)
+SCREEN_SEND:int = 5               # Sending of control packets (acts as transmitter)
 SCREEN_ERROR:int = 3 
 SCREEN_PRESS_BUTTON:int = 4
 
@@ -58,50 +59,55 @@ class Display:
             img = framebuf.FrameBuffer(ba, 128, 64, framebuf.MONO_HLSB)
             self._oled.blit(img, 0, 0)
 
-        elif screen == SCREEN_RECV:
+        elif screen == SCREEN_RECV or screen == SCREEN_SEND:
 
             # "CENTAURI" up at top
             self._oled.text("CENTAURI", 32, 0)
 
-            # display
-            self._oled.text("LRECV: " + str(self.since_last_recv_ticks_ms) + " ms", 0, 16)
+            if screen == SCREEN_RECV:
 
-            # LRECV loading bar: frame
-            self._oled.rect(0, 16+10, 128, 12, 1)
+                # display
+                self._oled.text("LRECV: " + str(self.since_last_recv_ticks_ms) + " ms", 0, 16)
 
-            # LRECV loading bar: value
-            # start X: 2
-            # start Y: 12
-            # max width: 124
-            # height: 8
-            max_ms:int = 2500 # anything this or beyond is 100% of the bar
-            percent_of_max_ms:float = self.since_last_recv_ticks_ms / 2500
-            bar_width:float = 124 * percent_of_max_ms
-            bar_width:int = int(min(max(bar_width, 0), 124)) # min/max it
-            self._oled.rect(2, 28, bar_width, 8, 1, True)
+                # LRECV loading bar: frame
+                self._oled.rect(0, 16+10, 128, 12, 1)
 
-            # packets received
-            self._oled.text("count: " + self.comma_int(self.packets_received_count), 0, 44)
+                # LRECV loading bar: value
+                # start X: 2
+                # start Y: 12
+                # max width: 124
+                # height: 8
+                max_ms:int = 2500 # anything this or beyond is 100% of the bar
+                percent_of_max_ms:float = self.since_last_recv_ticks_ms / 2500
+                bar_width:float = 124 * percent_of_max_ms
+                bar_width:int = int(min(max(bar_width, 0), 124)) # min/max it
+                self._oled.rect(2, 28, bar_width, 8, 1, True)
 
-            # state of charge
-            soc:int = int(self.battery_soc * 100)
-            soc = min(max(soc, 0), 99)
-            soc_txt = str(soc)
-            while len(soc_txt) < 2:
-                soc_txt = " " + soc_txt
-            self._oled.text(soc_txt + "%", 104, 56)
+                # packets received
+                self._oled.text("count: " + self.comma_int(self.packets_received_count), 0, 44)
 
-            # "/" or "\" in bottom of 
-            since_last_flipped_ticks_ms:int = time.ticks_diff(time.ticks_ms(), self._last_flipped_ticks_ms)
-            if since_last_flipped_ticks_ms > 1_000:                            # more than one second, so time to change it
-                self._last_shown_indicator = not self._last_shown_indicator    # flip
-                self._last_flipped_ticks_ms = time.ticks_ms()                  # mark the flip
+                # state of charge
+                soc:int = int(self.battery_soc * 100)
+                soc = min(max(soc, 0), 99)
+                soc_txt = str(soc)
+                while len(soc_txt) < 2:
+                    soc_txt = " " + soc_txt
+                self._oled.text(soc_txt + "%", 104, 56)
 
-            # Show bottom right corner "still working" display
-            if self._last_shown_indicator:
-                self._oled.text("/", 120, 0)
-            else:
-                self._oled.text("\\", 120, 0)
+                # "/" or "\" in bottom of 
+                since_last_flipped_ticks_ms:int = time.ticks_diff(time.ticks_ms(), self._last_flipped_ticks_ms)
+                if since_last_flipped_ticks_ms > 1_000:                            # more than one second, so time to change it
+                    self._last_shown_indicator = not self._last_shown_indicator    # flip
+                    self._last_flipped_ticks_ms = time.ticks_ms()                  # mark the flip
+
+                # Show bottom right corner "still working" display
+                if self._last_shown_indicator:
+                    self._oled.text("/", 120, 0)
+                else:
+                    self._oled.text("\\", 120, 0)
+
+            elif screen == SCREEN_SEND:
+                pass
 
         elif screen == SCREEN_PRESS_BUTTON:
 
