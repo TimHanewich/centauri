@@ -157,6 +157,10 @@ while True:
     if button_pressed():
         break # get out of while loop
 
+# wait for button to be depressed
+while button_pressed():
+    time.sleep(0.01)
+
 # go to normal display mode!
 while True:
 
