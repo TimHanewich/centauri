@@ -214,7 +214,6 @@ while True:
 
         # calculate time since a packet was LAST sent out
         time_since_last_packet_sent_ticks_ms:int = time.ticks_diff(time.ticks_ms(), packet_last_sent_ticks_ms)
-        print("Time since last sent: " + str(time_since_last_packet_sent_ticks_ms))
 
         # if we have not sent one in time, send one
         transmission_rate_hz:int = 20                                           # how many time the transmitter broadcasts a command packet per second
