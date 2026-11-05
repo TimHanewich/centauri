@@ -133,7 +133,7 @@ MODE_RECV:int = 0
 MODE_SEND:int = 1
 
 # Set up vars: general
-mode:int = MODE_SEND                                   # start in RECV mode (default)
+mode:int = MODE_RECV                                   # start in RECV mode (default)
 last_button_state_was_pressed:bool = False             # tracking the last button state as pressed (True) or depressed (False) so can wait for the full button pressed + depressed cycle to know when to switch modes
 
 # Set up vars: RECV mode
