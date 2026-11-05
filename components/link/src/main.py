@@ -125,6 +125,14 @@ def button_pressed() -> bool:
     else:
         return True
 
+# Set up status variable containers
+rxbuffer:bytearray = bytearray()
+control_input:list[int] = [0, 0, 0, 0]             # used to "unpack" control data into (dummy, not used in this project but necessary for the unpack code lifted out of the flight controller)
+
+# For Display variables
+recv_count:int = 0
+last_recv_at_ticks_ms:int = time.ticks_ms()        # just start at right now
+
 # press button to start
 d.show(display.SCREEN_PRESS_BUTTON) # show press button
 while True:
@@ -135,14 +143,6 @@ while True:
     # check if pressed
     if button_pressed():
         break # get out of while loop
-
-# Set up status variable containers
-rxbuffer:bytearray = bytearray()
-control_input:list[int] = [0, 0, 0, 0]             # used to "unpack" control data into (dummy, not used in this project but necessary for the unpack code lifted out of the flight controller)
-
-# For Display variables
-recv_count:int = 0
-last_recv_at_ticks_ms:int = time.ticks_ms()        # just start at right now
 
 # go to normal display mode!
 while True:
