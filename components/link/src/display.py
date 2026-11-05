@@ -176,4 +176,8 @@ if __name__ == "__main__":
             time.sleep(0.1)
 
     elif TESTING == "send":
-        d.show(SCREEN_SEND)
+        for i in range(0, 300):
+            d.packets_sent_count = i * 100
+            d.battery_soc = i / 100
+            d.show(SCREEN_SEND)
+            time.sleep(0.1)
