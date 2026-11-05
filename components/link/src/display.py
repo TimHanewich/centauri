@@ -165,13 +165,15 @@ if __name__ == "__main__":
 
     d = Display(oled)
 
-    # Test Receive Mode
-    #for i in range(0, 300):
-    #    d.since_last_recv_ticks_ms = i*10
-    #    d.packets_received_count = i * 100
-    #    d.battery_soc = i / 100
-    #    d.show()
-    #    time.sleep(0.1)
+    TESTING:str = "recv"
 
-    # Test Send mode
-    d.show(SCREEN_SEND)
+    if TESTING == "recv":
+        for i in range(0, 300):
+            d.since_last_recv_ticks_ms = i*10
+            d.packets_received_count = i * 100
+            d.battery_soc = i / 100
+            d.show()
+            time.sleep(0.1)
+
+    elif TESTING == "send":
+        d.show(SCREEN_SEND)
