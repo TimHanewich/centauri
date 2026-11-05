@@ -100,6 +100,18 @@ else:
     exit()
 time.sleep(0.5)
 
+# Configure HC-12: power
+d.status("Set HC-12 Power")
+hc12.power = 8
+time.sleep(0.2)
+d.status("Confirming...")
+if hc12.power == 8:
+    d.status("Power good!")
+else:
+    d.status("Power fail")
+    exit()
+time.sleep(0.5)
+
 # set up battery ADC
 battery_adc = machine.ADC(machine.Pin(vbat_adc_gpio))
 battery_monitor:BatteryMonitor = BatteryMonitor(PROFILE_18650)
