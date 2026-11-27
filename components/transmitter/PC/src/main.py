@@ -376,11 +376,11 @@ async def main() -> None:
                         if selected_battery_profile == profile1:
                             bat_series = 4
                             bat_capacity = 3300
-                            cruise_power = 192
+                            cruise_power = 195
                         elif selected_battery_profile == profile2:
                             bat_series = 4
                             bat_capacity = 2200
-                            cruise_power = 192
+                            cruise_power = 154
                         else:
                             console.print("[red]Profile not recognized[/]")
 
